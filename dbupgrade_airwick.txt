@@ -1,0 +1,5 @@
+/* 02042018 */
+use airwick;
+create table tax_print (f_id integer primary key auto_increment, f_date date, f_time time, f_db smallint, f_order nvarchar(32), f_queryCode smallint,
+f_queryJson text, f_replyJson text, f_replyResult smallint, f_replyText text, f_replyTaxCode nvarchar(32));
+

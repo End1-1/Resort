@@ -1,0 +1,51 @@
+#include "logging.h"
+
+#include <QFile>
+#include <QDateTime>
+#include <QDir>
+#include <QDebug>
+
+bool logEnabled = false;
+QElapsedTimer timer;
+
+logging::logging()
+{
+
+}
+
+void logging::writeLog(const QString &text)
+{
+    if (!logEnabled) {
+        return;
+    }
+    quint64 e = timer.elapsed();
+    timer.restart();
+    qDebug() << e << text;
+    QDir d;
+    QString logFile = d.homePath() + "/" + _APPLICATION_ + "/log.txt";
+    QFile f(logFile);
+    if (f.open(QIODevice::Append)) {
+        QString fullText = QString("%1 %2: %3\r\n").arg(e).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")).arg(text);
+        f.write(fullText.toUtf8());
+        f.close();
+    }
+}
+
+void logging::writeLog(const QString &text, QElapsedTimer &t)
+{
+    if (!logEnabled) {
+        return;
+    }
+    quint64 e = t.elapsed();
+    t.restart();
+    qDebug() << e << text;
+    timer.restart();
+    QDir d;
+    QString logFile = d.homePath() + "/" + _APPLICATION_ + "/log.txt";
+    QFile f(logFile);
+    if (f.open(QIODevice::Append)) {
+        QString fullText = QString("%1 %2: %3\r\n").arg(e).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")).arg(text);
+        f.write(fullText.toUtf8());
+        f.close();
+    }
+}

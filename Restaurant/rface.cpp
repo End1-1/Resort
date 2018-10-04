@@ -86,7 +86,6 @@ RFace::RFace(QWidget *parent) :
     fCommand(0)
 {
     ui->setupUi(this);
-    ui->lbWorkingDate->setText(QString("%1\n%2").arg(tr("Working date")).arg(WORKING_DATE.toString(def_date_format)));
     ui->tblTables->setItemDelegate(new TableItemDelegate());
     fCurrenTableState = 0;
     fTimerCounter = 0;
@@ -132,6 +131,14 @@ RFace::RFace(QWidget *parent) :
     }
     connect(this, SIGNAL(updateCache(int,QString)), &fCacheOne, SLOT(updateCache(int,QString)));
     __rface = this;
+
+    fDD.exec("select current_timestamp");
+    fDD.nextRow();
+    if (QDateTime::currentDateTime() < fDD.getValue(0).toDateTime().addSecs(-300)) {
+        fIsConfigured = false;
+        message_error(tr("Server time and workstation time note same, aborting."));
+        return;
+    }
 }
 
 RFace::~RFace()
@@ -204,6 +211,7 @@ void RFace::secondDbError()
 
 void RFace::timeout()
 {
+    ui->lbWorkingDate->setText(QString("%1\n%2 %3").arg(tr("Working date")).arg(WORKING_DATE.toString(def_date_format)).arg(QTime::currentTime().toString("HH:mm")));
     fTimerCounter++;
     if (fTimerCounter % hall_refresh_timeout == 0) {
         fHall.refresh();

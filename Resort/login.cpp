@@ -3,7 +3,9 @@
 #include "loginsettings.h"
 #include "databasesconnections.h"
 #include "cacherights.h"
+#include "cacheusersgroups.h"
 #include "appconfig.h"
+#include "cachecheckoutinvoice.h"
 #include "ecomboboxcompleter.h"
 #include <QProcess>
 #include <windows.h>
@@ -198,6 +200,14 @@ void Login::on_btnLogin_clicked()
         message_error(fDD.fLastError);
         return;
     }
+
+    fDD.exec("select current_timestamp");
+    fDD.nextRow();
+    if (QDateTime::currentDateTime() < fDD.getValue(0).toDateTime().addSecs(-300)) {
+        message_error(tr("Server time and workstation time note same, aborting."));
+        return;
+    }
+
     fDD[":username"] = ui->leUsername->text();
     fDD[":password"] = ui->lePassword->text();
     fDD.exec("select f_id, f_firstName, f_lastName, f_group, concat(f_firstName, ' ', f_lastName) as f_fullName from users where length(f_username)>0 and f_username=:username and f_password=md5(:password)");
@@ -300,11 +310,16 @@ void Login::on_btnLogin_clicked()
         fDD[":f_active"] = 0;
         fDD[":f_comp"] = def_station + QHostInfo::localHostName();
         fDD.insert("serv_tax", false);
-    }
+    }   
 
     BaseUID::fUserId = WORKING_USERID;
     EDateEditFirstDate = WORKING_DATE;
     CacheRights::fGroup = WORKING_USERGROUP;
+    CacheUsersGroups ug;
+    if (ug.get(WORKING_USERGROUP)) {
+        EDateEditMinDate = ug.fMinDate();
+        CheckoutMinDate = ug.fMinDate();
+    }
 
     accept();
 }

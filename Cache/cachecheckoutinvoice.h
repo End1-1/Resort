@@ -5,6 +5,8 @@
 
 #define cid_checkout_invoice 63
 
+extern QDate CheckoutMinDate;
+
 class CacheCheckoutInvoice : public CacheBaseStruct
 {
 public:

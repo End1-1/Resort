@@ -1,6 +1,8 @@
 #include "cachecheckoutinvoice.h"
 #include "preferences.h"
 
+QDate CheckoutMinDate = QDate::currentDate().addDays(-365);
+
 CacheCheckoutInvoice::CacheCheckoutInvoice() :
     CacheBaseStruct()
 {
@@ -15,7 +17,11 @@ CacheCheckoutInvoice::CacheCheckoutInvoice() :
                 "group by 1) i on i.f_inv=r.f_invoice "
             "where r.f_endDate > ':date1' and r.f_state=3 :cond "
             "order by r.f_endDate desc ";
-    fLoadQuery.replace(":date1", __preferences.getDb(def_working_day).toDate().addDays(-365).toString(def_mysql_date_format));
+    QDate d = __preferences.getDb(def_working_day).toDate().addDays(-365);
+    if (d < CheckoutMinDate) {
+        d = CheckoutMinDate;
+    }
+    fLoadQuery.replace(":date1", d.toString(def_mysql_date_format));
     fReplaceUpdateQuery = ":cond";
     fUpdateQuery = " and r.f_invoice=:f_id";
     fCacheId = cid_checkout_invoice;

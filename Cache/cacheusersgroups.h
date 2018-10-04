@@ -11,6 +11,7 @@ public:
     CacheUsersGroups();
     inline QString fCode() { return getString("f_id"); }
     inline QString fName() { return getString("f_" + def_lang); }
+    inline QDate fMinDate() { return getDate("f_minDate"); }
 };
 
 #endif // CACHEUSERSGROUPS_H

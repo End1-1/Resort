@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QSettings>
+#include <QUuid>
 #include <QNetworkProxy>
 
 DlgMain::DlgMain(QWidget *parent) :
@@ -56,6 +57,7 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->tblConn->setColumnWidth(2, 120);
     ui->tblConn->setColumnWidth(3, 120);
     ui->tblConn->setColumnWidth(7, 40);
+    ui->tblConn->setColumnWidth(10, 0);
 }
 
 DlgMain::~DlgMain()
@@ -283,11 +285,30 @@ void DlgMain::parseCommand(const QString &command)
             ui->tblConn->setItem(row, 6, new QTableWidgetItem());
             QTcpPushButton *btn = new QTcpPushButton(cmd->fSocket);
             ui->tblConn->setCellWidget(row, 7, btn);
+            ui->tblConn->setItem(row, 8, new QTableWidgetItem(cmd->fUsername));
+            QString session = QUuid::createUuid().toByteArray().replace("{", "").replace("}", "");
+            ui->tblConn->setItem(row, 9, new QTableWidgetItem());
+            ui->tblConn->setItem(row, 10, new QTableWidgetItem(session));
+            session = QString("{\"command\":\"session\",\"session\":\"%1\"}").arg(session);
+            QByteArray ds;
+            int s = session.toUtf8().length();
+            ds.append(reinterpret_cast<const char*>(&s), sizeof(s));
+            ds.append(session.toUtf8());
+            cmd->fSocket->write(ds.data(), ds.length());
+            cmd->fSocket->flush();
+            cmd->fSocket->waitForBytesWritten();
         }
         return;
     } else if (jValCmd.toString() == "draft") {
         fTcpSocketsDraft.insert(cmd->fSocket, cmd);
         return;
+    } else if (jValCmd.toString() == "logout") {
+        QString session = jObjCmd["session"].toString();
+        for (int i = 0; i < ui->tblConn->rowCount(); i++) {
+            if (ui->tblConn->item(i, 10)->text() == session) {
+                ui->tblConn->item(i, 9)->setText(tr("Logout"));
+            }
+        }
     }
 
     QJsonDocument jDocBroadcast(jObjCmd);

@@ -41,7 +41,11 @@ private slots:
 
     void on_btnTools_clicked();
 
+protected:
+    virtual void closeEvent(QCloseEvent *e);
+
 private:
+    bool fCanClose;
     CacheOne fCacheOne;
     Ui::RFace *ui;
     Hall fHall;

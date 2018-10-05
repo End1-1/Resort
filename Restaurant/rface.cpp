@@ -86,6 +86,7 @@ RFace::RFace(QWidget *parent) :
     fCommand(0)
 {
     ui->setupUi(this);
+    fCanClose = false;
     ui->tblTables->setItemDelegate(new TableItemDelegate());
     fCurrenTableState = 0;
     fTimerCounter = 0;
@@ -249,6 +250,8 @@ void RFace::parseCommand(const QString &command)
         int cacheId = jObj.value("cache").toInt();
         QString item = jObj.value("item").toString();
         emit updateCache(cacheId, item);
+    } else if (cmd == "session") {
+        AppConfig::fAppSession = jObj["session"].toString();
     } else {
         QVariantMap m = jObj.toVariantMap();
         switch (m["command"].toInt()) {
@@ -273,8 +276,17 @@ void RFace::on_tableWidget_clicked(const QModelIndex &index)
 
 void RFace::on_btnExit_clicked()
 {
+    QString session = QString("{\"command\":{\"command\":\"logout\",\"session\":\"%1\"}}").arg(AppConfig::fAppSession);
+    int s = session.length();
+    QByteArray bs;
+    bs.append(reinterpret_cast<const char*>(&s), sizeof(s));
+    bs.append(session);
+    fSocket.write(bs.data(), bs.length());
+    fSocket.flush();
+    fSocket.waitForBytesWritten();
     fSocket.disconnect();
-    accept();
+    fCanClose = true;
+    qApp->quit();
 }
 
 User *RFace::login()
@@ -405,4 +417,14 @@ void RFace::on_btnTools_clicked()
         d->openTools();
         delete d;
     }
+}
+
+void RFace::closeEvent(QCloseEvent *e)
+{
+    if (fCanClose) {
+        QDialog::closeEvent(e);
+        return;
+    }
+    e->ignore();
+    on_btnExit_clicked();
 }

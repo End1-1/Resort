@@ -8,6 +8,7 @@ class AppConfig
 public:
     AppConfig();
     static QString fServerAddress;
+    static QString fAppSession;
 };
 
 #endif // APPCONFIG_H

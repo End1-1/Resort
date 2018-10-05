@@ -463,6 +463,8 @@ void MainWindow::parseSocketCommand(const QString &command)
         int cacheId = jObj.value("cache").toInt();
         QString item = jObj.value("item").toString();
         emit updateCache(cacheId, item);
+    } else if (cmd == "session") {
+        AppConfig::fAppSession = jObj["session"].toString();
     } else {
         QVariantMap m = jObj.toVariantMap();
         for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
@@ -501,6 +503,14 @@ void MainWindow::logout()
         tabCloseRequested(0);
     }
     CacheOne::clearAll();
+    QString session = QString("{\"command\":{\"command\":\"logout\",\"session\":\"%1\"}}").arg(AppConfig::fAppSession);
+    int s = session.length();
+    QByteArray bs;
+    bs.append(reinterpret_cast<const char*>(&s), sizeof(s));
+    bs.append(session);
+    fSocket.write(bs.data(), bs.length());
+    fSocket.flush();
+    fSocket.waitForBytesWritten();
     fSocket.close();
     ui->actionChange_password->setVisible(false);
     fStatusLabelLeft->setText(tr("Not connected"));
@@ -1768,6 +1778,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
         return;
     }
+    logout();
     QMainWindow::closeEvent(event);
 }
 

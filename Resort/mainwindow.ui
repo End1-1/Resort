@@ -78,6 +78,7 @@
     <addaction name="actionLock"/>
     <addaction name="actionChange_password"/>
     <addaction name="separator"/>
+    <addaction name="actionDisable_second_database"/>
     <addaction name="actionConfigure_Welcome_Page"/>
     <addaction name="actionDatabases"/>
     <addaction name="actionPreferences"/>
@@ -160,7 +161,6 @@
     <addaction name="actionGlobal_config"/>
     <addaction name="actionReport_buillder"/>
     <addaction name="actionExport_invoices"/>
-    <addaction name="actionSynchronization"/>
     <addaction name="actionExport_active_reservations"/>
     <addaction name="actionExport_data"/>
     <addaction name="actionExport_reservations"/>
@@ -1347,6 +1347,11 @@
    </property>
    <property name="text">
     <string>T-report</string>
+   </property>
+  </action>
+  <action name="actionDisable_second_database">
+   <property name="text">
+    <string>Disable second database</string>
    </property>
   </action>
  </widget>

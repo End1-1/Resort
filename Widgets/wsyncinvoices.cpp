@@ -321,7 +321,9 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
 {
     bool result = true;
     QString errors;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD(true, false);
+    DoubleDatabase fSec(fSDb);
+    fSec.open(true, false);
     fDD.startTransaction();
     fSDb.startTransaction();
     if (fReserv.getValue(0, "f").toInt() > 0) {
@@ -337,7 +339,7 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
     fReserv.getBindValues(0, fSDb.fBindValues);
     QString reservCode = fSDb.fBindValues[":f_id"].toString();
     if (ui->chOverrideDuplicate->isChecked()) {
-        fSDb.exec("delete from f_reservation where f_id=" + ap(reservCode));
+        fSec.exec("delete from f_reservation where f_id=" + ap(reservCode));
     }
     result = result && fSDb.insert("f_reservation", false);
     if (!result) {
@@ -345,8 +347,8 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
     }
 
     /* RESERVATION GUESTS */
-    fSDb[":f_reservation"] = reservCode;
-    fSDb.exec("delete from f_reservation_guests where f_reservation=:f_reservation");
+    fSec[":f_reservation"] = reservCode;
+    fSec.exec("delete from f_reservation_guests where f_reservation=:f_reservation");
     for (int i = 0; i < fReservGuests.rowCount(); i++) {
         fReservGuests.getBindValues(i, fSDb.fBindValues);
         result = result && fSDb.insert("f_reservation_guests", false) > 0;
@@ -363,10 +365,10 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
             continue;
         }
         fVauchers.getBindValues(i, fSDb.fBindValues);
-        if (fSDb.fBindValues[":f_cityLedger"].toInt() > 0) {
+        if (fSDb.fBindValues[":f_cityledger"].toInt() > 0) {
             DoubleDatabase drbe(fSDb);
             drbe.open(true, false);
-            drbe[":f_id"] = fSDb.fBindValues[":f_cityLedger"];
+            drbe[":f_id"] = fSDb.fBindValues[":f_cityledger"];
             drbe.exec("select * from f_city_ledger where f_id=:f_id");
             if (!drbe.nextRow()) {
                 result = false;
@@ -377,13 +379,13 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
                         || fSDb.fBindValues[":f_source"].toString() == VAUCHER_RECEIPT_N
                         || fSDb.fBindValues[":f_source"].toString() == VAUCHER_ROOM_RATE_N
                         || fSDb.fBindValues[":f_source"].toString() == VAUCHER_POINT_SALE_N) {
-                    fSDb.fBindValues[":f_paymentComment"] = drbe.getValue("f_name").toString();
+                    fSDb.fBindValues[":f_paymentcomment"] = drbe.getValue("f_name").toString();
 
                     if (fSDb.fBindValues[":f_source"].toString() == VAUCHER_RECEIPT_N) {
-                        fSDb.fBindValues[":f_finalName"] = tr("PAYMENT") + " " + drbe.getValue("f_name").toString();
+                        fSDb.fBindValues[":f_finalname"] = tr("PAYMENT") + " " + drbe.getValue("f_name").toString();
                     }
                     if (fSDb.fBindValues[":f_source"].toString() == VAUCHER_REFUND_N) {
-                        fSDb.fBindValues[":f_finalName"] = tr("REFUND") + " " + drbe.getValue("f_name").toString();
+                        fSDb.fBindValues[":f_finalname"] = tr("REFUND") + " " + drbe.getValue("f_name").toString();
                     }
                 }
             }
@@ -460,9 +462,9 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
         }
 
     }
-    fSDb[":f_startDate"] = minDate;
-    fSDb[":f_checkInDate"] = minDate;
-    fSDb[":f_endDate"] = maxDate2;
+    fSDb[":f_startdate"] = minDate;
+    fSDb[":f_checkindate"] = minDate;
+    fSDb[":f_enddate"] = maxDate2;
     result = result && fSDb.update("f_reservation", where_id(ap(reservCode)));
     if (!result) {
         errors += "[Dst f_reservation] " + fSDb.fLastError + "<br>";

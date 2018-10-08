@@ -202,6 +202,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(shortcat11, SIGNAL(activated()), this, SLOT(shortcutFullScreen()));
     QShortcut *shortCat4 = new QShortcut(QKeySequence("F4"), this);
     connect(shortCat4, SIGNAL(activated()), this, SLOT(on_actionRoomChart_triggered()));
+    QShortcut *shortSecondDb = new QShortcut(QKeySequence("F10"), this);
+    connect(shortSecondDb, SIGNAL(activated()), this, SLOT(on_actionDisable_second_database_triggered()));
 
     ui->menuStorehouse->setVisible(false);
     ui->menuDiscount_system->setVisible(false);
@@ -540,6 +542,9 @@ void MainWindow::enableMainMenu(bool value)
         ui->menuBar->actions()[i]->setEnabled(true);
     }
 
+    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    ui->actionDisable_second_database->setVisible(r__(cr__do_no_write_second_db) && dbParams.count() == 4);
+
     ui->menuBar->actions().at(1)->setVisible(r__(cr__menu_reservation)); //Resevation
     ui->actionRoomChart->setVisible(r__(cr__room_chart));
     ui->actionNew_reservation->setVisible(r__(cr__edit_reservation));
@@ -698,6 +703,7 @@ void MainWindow::disableMainMenu()
         ui->menuBar->actions()[i]->setEnabled(false);
         ui->menuBar->actions()[i]->setVisible(true);
     }
+    ui->actionDisable_second_database->setVisible(false);
 }
 
 void MainWindow::on_actionRoom_list_triggered()
@@ -2198,4 +2204,25 @@ void MainWindow::on_actionExecute_failed_sql_triggered()
 void MainWindow::on_actionT_report_triggered()
 {
     FTStoreReport::openFilterReport<FTStoreReport, WReportGrid>();
+}
+
+void MainWindow::on_actionDisable_second_database_triggered()
+{
+    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    if (dbParams.count() != 4) {
+        return;
+    }
+    if (!r__(cr__do_no_write_second_db)) {
+        return;
+    }
+    doubleDatabase = !doubleDatabase;
+    if (doubleDatabase) {
+        DoubleDatabase dd;
+        dd.resetDoNotUse();
+        setStyleSheet("");
+        ui->actionDisable_second_database->setText(tr("Disable second database"));
+    } else {
+        setStyleSheet("background: rgb(255,150,150);");
+        ui->actionDisable_second_database->setText(tr("Enable second database"));
+    }
 }

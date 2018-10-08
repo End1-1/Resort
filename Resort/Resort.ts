@@ -33,13 +33,6 @@
     </message>
 </context>
 <context>
-    <name>BroadcastThread</name>
-    <message>
-        <source>Broadcast socket error</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ChSample</name>
     <message>
         <source>Form</source>
@@ -5361,6 +5354,14 @@ for this operation</source>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
     </message>
+    <message>
+        <source>f_minDate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min date</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUserPasswords</name>
@@ -10565,6 +10566,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>You cannot unlock this station</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Server time and workstation time note same, aborting.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18535,6 +18540,10 @@ commission</source>
     </message>
     <message>
         <source>This is not editable group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min date</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

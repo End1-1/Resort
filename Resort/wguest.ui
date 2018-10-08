@@ -317,6 +317,9 @@
        <property name="Field" stdset="0">
         <string>f_dateBirth</string>
        </property>
+       <property name="DoNotCheckMinDate" stdset="0">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
@@ -338,14 +341,14 @@
    <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
-   <class>EQTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">eqcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">eqtextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

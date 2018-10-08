@@ -496,6 +496,7 @@ void DoubleDatabase::getBindValues(QMap<QString, QVariant> &b)
 
 void DoubleDatabase::getBindValues(int row, QMap<QString, QVariant> &b)
 {
+    b.clear();
     for (QMap<QString, int>::const_iterator it = fNameColumnMap.begin(); it != fNameColumnMap.end(); it++) {
         b[":" + it.key()] = getValue(row, it.key());
     }

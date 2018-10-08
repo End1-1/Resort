@@ -1,7 +1,7 @@
 #include "edateedit.h"
 
 QDate EDateEditFirstDate = QDate::currentDate();
-QDate EDateEditMinDate = QDate::fromString("2000-01-01", "yyyy-MM-dd");
+QDate EDateEditMinDate = QDate::fromString("1900-01-01", "yyyy-MM-dd");
 
 EDateEdit::EDateEdit(QWidget *parent) :
     QLineEdit(parent)
@@ -12,15 +12,25 @@ EDateEdit::EDateEdit(QWidget *parent) :
     setMaximumWidth(100);
     fRow = 0;
     fColumn = 0;
+    fDoNoCheckMinDate = false;
 }
 
 void EDateEdit::setText(const QString &text)
 {
     QDate d = QDate::fromString(text, def_date_format);
-    if (d < EDateEditMinDate) {
+    if (d.isValid() && d < EDateEditMinDate && !fDoNoCheckMinDate) {
         d = EDateEditMinDate;
     }
     QLineEdit::setText(d.toString(def_date_format));
+}
+
+void EDateEdit::setDate(const QDate &date)
+{
+    QDate d = date;
+    if (d.isValid() && d < EDateEditMinDate && !fDoNoCheckMinDate) {
+        d = EDateEditMinDate;
+    }
+    setText(d.toString(def_date_format));
 }
 
 QString EDateEdit::getField()
@@ -31,6 +41,16 @@ QString EDateEdit::getField()
 void EDateEdit::setField(const QString &field)
 {
     fField = field;
+}
+
+bool EDateEdit::getCheckMinDate()
+{
+    return fDoNoCheckMinDate;
+}
+
+void EDateEdit::setCheckMinDate(bool v)
+{
+    fDoNoCheckMinDate = v;
 }
 
 void EDateEdit::focusInEvent(QFocusEvent *e)
@@ -52,8 +72,10 @@ void EDateEdit::setBgColor(const QColor &color)
 void EDateEdit::newText(const QString &arg1)
 {
     QDate d = QDate::fromString(arg1, def_date_format);
-    if (d < EDateEditMinDate) {
-        d = EDateEditMinDate;
+    if (d.isValid() && d < EDateEditMinDate) {
+        if (!fDoNoCheckMinDate) {
+            d = EDateEditMinDate;
+        }
     }
     fIsValid = d.isValid();
     if (d.isValid()) {
@@ -62,7 +84,9 @@ void EDateEdit::newText(const QString &arg1)
         setBgColor(Qt::red);
     }
     int cp = cursorPosition();
-    QLineEdit::setText(d.toString(def_date_format));
+    if (d.isValid()) {
+        QLineEdit::setText(d.toString(def_date_format));
+    }
     setCursorPosition(cp);
     emit dateChanged(d);
 }

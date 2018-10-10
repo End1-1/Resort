@@ -56,7 +56,7 @@
      <item row="1" column="1">
       <widget class="EQLineEdit" name="leShort">
        <property name="maxLength">
-        <number>2</number>
+        <number>3</number>
        </property>
        <property name="Field" stdset="0">
         <string>f_short</string>

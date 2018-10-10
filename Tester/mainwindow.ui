@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>731</width>
     <height>300</height>
    </rect>
   </property>
@@ -19,12 +19,55 @@
      <rect>
       <x>60</x>
       <y>50</y>
-      <width>75</width>
+      <width>151</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Go</string>
+     <string>Go Update cash</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnGoMakeNewConnection">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>90</y>
+      <width>151</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Go make new connection</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leMSleep">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>90</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leMKCount">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>90</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leUSleep">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>50</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -33,7 +76,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>731</width>
      <height>21</height>
     </rect>
    </property>

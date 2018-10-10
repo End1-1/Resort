@@ -39,6 +39,14 @@ WGuest::~WGuest()
     delete ui;
 }
 
+void WGuest::setValues()
+{
+    RowEditorDialog::setValues();
+    if (fValues.count()) {
+        ui->leTitle->setInitialValue(fValues.at(1).toString());
+    }
+}
+
 
 WGuest *WGuest::guest(QList<QVariant> &values, bool noCheckNation)
 {

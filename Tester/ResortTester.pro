@@ -33,7 +33,10 @@ SOURCES += \
     ../Base/doubledatabase.cpp \
     ../Base/preferences.cpp \
     ../Base/utils.cpp \
-    ../Base/appconfig.cpp
+    ../Base/appconfig.cpp \
+    ../Base/logging.cpp \
+    ../Controls/edateedit.cpp \
+    qsockettextthread.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +47,10 @@ HEADERS += \
     ../Base/doubledatabase.h \
     ../Base/preferences.h \
     ../Base/utils.h \
-    ../Base/appconfig.h
+    ../Base/appconfig.h \
+    ../Base/logging.h \
+    ../Controls/edateedit.h \
+    qsockettextthread.h
 
 FORMS += \
         mainwindow.ui

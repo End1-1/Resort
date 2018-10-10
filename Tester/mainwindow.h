@@ -18,6 +18,8 @@ public:
 private slots:
     void on_btnGo_clicked();
 
+    void on_btnGoMakeNewConnection_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

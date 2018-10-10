@@ -39,6 +39,7 @@ void DatabaseConnection::on_btnOk_clicked()
 
     fPreferences.appendDatabase(ui->leName->text(), ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(), ui->leMainPassword->text(),
                                     "", "", "", "");
+    fPreferences.saveConfig();
     accept();
 }
 

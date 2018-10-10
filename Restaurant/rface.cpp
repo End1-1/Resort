@@ -276,6 +276,9 @@ void RFace::on_tableWidget_clicked(const QModelIndex &index)
 
 void RFace::on_btnExit_clicked()
 {
+    if (!message_question(tr("Confirm to close application")) ) {
+        return;
+    }
     QString session = QString("{\"command\":{\"command\":\"logout\",\"session\":\"%1\"}}").arg(AppConfig::fAppSession);
     int s = session.length();
     QByteArray bs;

@@ -11659,6 +11659,14 @@ or contact to administrator</source>
         <source>T-report</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disable second database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable second database</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>

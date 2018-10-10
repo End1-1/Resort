@@ -14,6 +14,7 @@ class WGuest : public RowEditorDialog
 public:
     static WGuest *guest(QList<QVariant> &values, bool noCheckNation = true);
     ~WGuest();
+    virtual void setValues();
 private slots:
     void on_btnCancel_clicked();
     void on_btnOk_clicked();

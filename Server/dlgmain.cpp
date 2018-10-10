@@ -2,6 +2,7 @@
 #include "ui_dlgmain.h"
 #include "defines.h"
 #include "qtcppushbutton.h"
+#include "logging.h"
 #include "doubledatabase.h"
 #include <QCloseEvent>
 #include <QHostAddress>
@@ -13,6 +14,9 @@
 #include <QSettings>
 #include <QUuid>
 #include <QNetworkProxy>
+#include <QMutex>
+
+QMutex mutex;
 
 DlgMain::DlgMain(QWidget *parent) :
     QDialog(parent),
@@ -81,6 +85,9 @@ void DlgMain::closeEvent(QCloseEvent *e)
 
 void DlgMain::logActivity(const QString &action)
 {
+    if (ui->chDoNotLog->isChecked()) {
+        return;
+    }
     QDateTime d = QDateTime::currentDateTime();
     QString log = QString("%1: %2")
             .arg(d.toString(def_date_time_format))
@@ -114,6 +121,7 @@ void DlgMain::iconClicked(QSystemTrayIcon::ActivationReason reason)
 
 void DlgMain::newConnection()
 {
+    QMutexLocker ml(&mutex);
     QTcpSocket *s = fTcpServer.nextPendingConnection();
     logActivity(QString("New connection. Client: %1:%2")
                 .arg(QHostAddress(s->peerAddress().toIPv4Address()).toString())
@@ -127,6 +135,7 @@ void DlgMain::newConnection()
 
 void DlgMain::clientDisconnected()
 {
+    QMutexLocker ml(&mutex);
     QTcpSocket *s = static_cast<QTcpSocket*>(sender());
     for (int i = 0; i < ui->tblConn->rowCount(); i++) {
         if (ui->tblConn->item(i, 0)->data(Qt::UserRole + 1).toInt() == 1) {
@@ -245,7 +254,7 @@ void DlgMain::datagramRead()
                     db2[":f_user"] = jObj["client"].toString();
                     db2[":f_db"] = db.getValue(i, "f_id");
                     db2[":f_right"] = 1;
-                    db.insert("f_access", false);
+                    db2.insert("f_access", false);
                 }
             }
             QJsonDocument jDocReply(jObjReply);
@@ -257,6 +266,7 @@ void DlgMain::datagramRead()
 
 void DlgMain::parseCommand(const QString &command)
 {
+    QMutexLocker ml(&mutex);
     Command *cmd = static_cast<Command*>(sender());
     logActivity("Command: " + command);
     QJsonDocument jDoc = QJsonDocument::fromJson(command.toUtf8());
@@ -270,33 +280,35 @@ void DlgMain::parseCommand(const QString &command)
         if (cmd->identify(db)) {
             cmd->fUsername = jObjDb.value("user").toString();
             fTcpSockets.insert(cmd->fSocket, cmd);
-            int row = ui->tblConn->rowCount();
-            ui->tblConn->setRowCount(row + 1);
-            QTableWidgetItem *item = new QTableWidgetItem(QHostAddress(cmd->fSocket->peerAddress().toIPv4Address()).toString());
-            ui->tblConn->setItem(row, 0, new QTableWidgetItem());
-            QImage img(":/ball-green.png");
-            ui->tblConn->item(row, 0)->setData(Qt::DecorationRole, img);
-            ui->tblConn->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(cmd->fSocket));
-            ui->tblConn->setItem(row, 1, item);
-            ui->tblConn->setItem(row, 2, new QTableWidgetItem(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")));
-            ui->tblConn->setItem(row, 3, new QTableWidgetItem());
-            ui->tblConn->setItem(row, 4, new QTableWidgetItem(db));
-            ui->tblConn->setItem(row, 5, new QTableWidgetItem());
-            ui->tblConn->setItem(row, 6, new QTableWidgetItem());
-            QTcpPushButton *btn = new QTcpPushButton(cmd->fSocket);
-            ui->tblConn->setCellWidget(row, 7, btn);
-            ui->tblConn->setItem(row, 8, new QTableWidgetItem(cmd->fUsername));
-            QString session = QUuid::createUuid().toByteArray().replace("{", "").replace("}", "");
-            ui->tblConn->setItem(row, 9, new QTableWidgetItem());
-            ui->tblConn->setItem(row, 10, new QTableWidgetItem(session));
-            session = QString("{\"command\":\"session\",\"session\":\"%1\"}").arg(session);
-            QByteArray ds;
-            int s = session.toUtf8().length();
-            ds.append(reinterpret_cast<const char*>(&s), sizeof(s));
-            ds.append(session.toUtf8());
-            cmd->fSocket->write(ds.data(), ds.length());
-            cmd->fSocket->flush();
-            cmd->fSocket->waitForBytesWritten();
+
+                int row = ui->tblConn->rowCount();
+                ui->tblConn->setRowCount(row + 1);
+                QTableWidgetItem *item = new QTableWidgetItem(QHostAddress(cmd->fSocket->peerAddress().toIPv4Address()).toString());
+                ui->tblConn->setItem(row, 0, new QTableWidgetItem());
+                QImage img(":/ball-green.png");
+                ui->tblConn->item(row, 0)->setData(Qt::DecorationRole, img);
+                ui->tblConn->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(cmd->fSocket));
+                ui->tblConn->setItem(row, 1, item);
+                ui->tblConn->setItem(row, 2, new QTableWidgetItem(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")));
+                ui->tblConn->setItem(row, 3, new QTableWidgetItem());
+                ui->tblConn->setItem(row, 4, new QTableWidgetItem(db));
+                ui->tblConn->setItem(row, 5, new QTableWidgetItem());
+                ui->tblConn->setItem(row, 6, new QTableWidgetItem());
+                QTcpPushButton *btn = new QTcpPushButton(cmd->fSocket);
+                ui->tblConn->setCellWidget(row, 7, btn);
+                ui->tblConn->setItem(row, 8, new QTableWidgetItem(cmd->fUsername));
+                QString session = QUuid::createUuid().toByteArray().replace("{", "").replace("}", "");
+                ui->tblConn->setItem(row, 9, new QTableWidgetItem());
+                ui->tblConn->setItem(row, 10, new QTableWidgetItem(session));
+                session = QString("{\"command\":\"session\",\"session\":\"%1\"}").arg(session);
+                QByteArray ds;
+                int s = session.toUtf8().length();
+                ds.append(reinterpret_cast<const char*>(&s), sizeof(s));
+                ds.append(session.toUtf8());
+                cmd->fSocket->write(ds.data(), ds.length());
+                cmd->fSocket->flush();
+                cmd->fSocket->waitForBytesWritten();
+
         }
         return;
     } else if (jValCmd.toString() == "draft") {
@@ -309,6 +321,7 @@ void DlgMain::parseCommand(const QString &command)
                 ui->tblConn->item(i, 9)->setText(tr("Logout"));
             }
         }
+        return;
     }
 
     QJsonDocument jDocBroadcast(jObjCmd);
@@ -325,14 +338,16 @@ void DlgMain::parseCommand(const QString &command)
             continue;
         }
         it.key()->write(dataToSend, dataToSend.length());
-        it.key()->flush();
-        for (int i = 0; i < ui->tblConn->rowCount(); i++) {
-            if (ui->tblConn->item(i, 0)->data(Qt::UserRole + 1).toInt() == 1) {
-                continue;
-            }
-            if (it.key() == static_cast<QTcpPushButton*>(ui->tblConn->cellWidget(i, 7))->fSocket) {
-                ui->tblConn->item(i, 6)->setData(Qt::DisplayRole, QString::number(ui->tblConn->item(i, 6)->data(Qt::DisplayRole).toInt() + dataToSend.length()));
-                goto QUIT;
+ //       it.key()->flush();
+        if (!ui->chDoNotLog->isChecked()) {
+            for (int i = 0; i < ui->tblConn->rowCount(); i++) {
+                if (ui->tblConn->item(i, 0)->data(Qt::UserRole + 1).toInt() == 1) {
+                    continue;
+                }
+                if (it.key() == static_cast<QTcpPushButton*>(ui->tblConn->cellWidget(i, 7))->fSocket) {
+                    ui->tblConn->item(i, 6)->setData(Qt::DisplayRole, QString::number(ui->tblConn->item(i, 6)->data(Qt::DisplayRole).toInt() + dataToSend.length()));
+                    goto QUIT;
+                }
             }
         }
         QUIT:

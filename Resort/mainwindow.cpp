@@ -567,7 +567,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionExpected_arrivals->setVisible(r__(cr__report_guest));
     ui->actionExpected_arrivals_simple->setVisible(r__(cr__report_guest));
     ui->actionRe_checkin->setVisible(r__(cr__re_checkin));
-    ui->actionCall_history->setVisible(r__(cr__calls_history));
+    ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin) || r__(cr__call_tout));
     ui->actionNotes->setVisible(r__(cr__notes));
     ui->actionContacts->setVisible(r__(cr__contacts));
     ui->actionRemarks->setVisible(r__(cr__remarks));
@@ -645,6 +645,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionSetup_Tax_Printer->setVisible(r__(cr__setup_tax));
     ui->actionRoom_inventory->setVisible(r__(cr__directory_hotel_room_inventory));
     ui->actionRoom_inventory_states->setVisible(r__(cr__directory_hotel_room_inventory_state));
+    ui->actionNationality_file->setVisible(r__(cr__nationality));
 #ifdef _HOTEL_
     ui->actionCostumers_cars->setVisible(false);
     ui->actionModels_of_cars->setVisible(false);

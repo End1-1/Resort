@@ -120,7 +120,7 @@
 #define cr__analytics_guest_by_nationality 111
 #define cr__do_no_write_second_db 112
 #define cr__exec_failed_sql_queries 113
-#define cr__1
+#define cr__nationality 114
 #define cr__1
 #define cr__1
 #define cr__1

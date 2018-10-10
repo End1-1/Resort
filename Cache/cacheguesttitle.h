@@ -10,7 +10,7 @@ class CacheGuestTitle : public CacheBaseStruct
 {
 public:
     CacheGuestTitle();
-    inline QString fId() {return getString("f_id"); }
+    inline QString fId() {return getString("f_" + def_lang); }
     inline QString fName() {return getString("f_" + def_lang); }
 };
 

@@ -249,6 +249,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chRoomStateChange">
+         <property name="text">
+          <string>Changes of room states</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>83</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -260,16 +270,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomStateChange">
-         <property name="text">
-          <string>Changes of room states</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>83</number>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -1113,6 +1113,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>25</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chNationalityFile">
+         <property name="text">
+          <string>Nationality</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>114</number>
          </property>
         </widget>
        </item>

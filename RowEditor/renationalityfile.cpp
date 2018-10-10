@@ -48,5 +48,28 @@ void RENationalityFile::on_btnCancel_clicked()
 
 void RENationalityFile::on_btnSave_clicked()
 {
+    DoubleDatabase fDD(true, false);
+    fDD[":f_short"] = ui->leShort->text();
+    fDD.exec("select f_id from f_nationality where f_short=:f_short");
+    QString err;
+    if (fDD.nextRow()) {
+        if (ui->leCode->asInt() > 0) {
+            if (ui->leCode->asInt() != fDD.getInt(0)) {
+                err += tr("Nationality short name exists") + "<br>";
+            }
+        } else {
+            err += tr("Nationality short name exists") + "<br>";
+        }
+    }
+    if (ui->leName->isEmpty()) {
+        err += tr("Naionality name is empty") + "<br>";
+    }
+    if (ui->leShort->isEmpty()) {
+        err += tr("Naionality short name is empty")  + "<br>";
+    }
+    if (err.length() > 0) {
+        message_error(err);
+        return;
+    }
     save();
 }

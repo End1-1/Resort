@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     ../Base/preferences.cpp \
     ../Base/doubledatabase.cpp \
     ../Base/baseuid.cpp \
-    qtcppushbutton.cpp
+    qtcppushbutton.cpp \
+    ../Base/logging.cpp
 
 HEADERS  += dlgmain.h \
     ../Base/defines.h \
@@ -28,7 +29,8 @@ HEADERS  += dlgmain.h \
     ../Base/preferences.h \
     ../Base/doubledatabase.h \
     ../Base/baseuid.h \
-    qtcppushbutton.h
+    qtcppushbutton.h \
+    ../Base/logging.h
 
 FORMS    += dlgmain.ui
 

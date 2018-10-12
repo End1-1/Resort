@@ -9,10 +9,17 @@ DlgReserveShortInfo::DlgReserveShortInfo(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->leCheckoutUsercode->setSelector(this, cache(cid_users), ui->leCheckoutUserName);
+    fTrackControl = new TrackControl(TRACK_RESERVATION);
+    fTrackControl->addWidget(ui->deCheckin, "Checkin date");
+    fTrackControl->addWidget(ui->teCheckin, "Checkin time");
+    fTrackControl->addWidget(ui->deDeparture, "Departure date");
+    fTrackControl->addWidget(ui->teCheckin, "Departure time");
+    fTrackControl->addWidget(ui->leCheckoutUsercode, "Checkout user code");
 }
 
 DlgReserveShortInfo::~DlgReserveShortInfo()
 {
+    delete fTrackControl;
     delete ui;
 }
 
@@ -48,6 +55,7 @@ void DlgReserveShortInfo::on_btnOK_clicked()
     fDD[":f_time"] = ui->teCheckout->time();
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD.exec("update m_register set f_wdate=:f_wdate, f_rdate=:f_rdate, f_time=:f_time where f_source='CO' and f_inv=:f_inv");
+    fTrackControl->saveChanges();
     message_info(tr("Saved"));
 }
 
@@ -66,5 +74,8 @@ bool DlgReserveShortInfo::loadInfo()
     ui->teCheckin->setTime(fDD.getValue("f_checkInTime").toTime());
     ui->teCheckout->setTime(fDD.getValue("f_checkOutTime").toTime());
     ui->leCheckoutUsercode->setInitialValue(fDD.getValue("f_checkOutUser").toInt());
+    fTrackControl->fReservation = ui->leCode->text();
+    fTrackControl->fInvoice = ui->leInvoice->text();
+    fTrackControl->resetChanges();
     return true;
 }

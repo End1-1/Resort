@@ -637,5 +637,8 @@ bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
     if (!isSelect) {
         isSelect = sqlQuery.mid(0, 4).compare("call", Qt::CaseInsensitive) == 0;
     }
+    if (!isSelect) {
+        isSelect = sqlQuery.mid(0, 4).compare("drop", Qt::CaseInsensitive) == 0;
+    }
     return true;
 }

@@ -19,6 +19,7 @@
 #include "cachetaxmap.h"
 #include "cacheinvoiceitem.h"
 #include "dlgpretax.h"
+#include "dlgreserveshortinfo.h"
 #include "vauchers.h"
 #include "dlgcityadvance.h"
 #include "dlgtaxback.h"
@@ -62,6 +63,14 @@ WInvoice::WInvoice(QWidget *parent) :
     ui->btnTransfer->setEnabled(r__(cr__transfer_vaucher));
     ui->btnTransferAmount->setEnabled(r__(cr__transfer_vaucher));
     connect(cache(cid_active_room), SIGNAL(updated(int,QString)), this, SLOT(cacheUpdated(int, QString)));
+    connect(ui->leCheckInTime, &EQLineEdit::customButtonClicked, [this](bool v) {
+        Q_UNUSED(v);
+        if (!r__(cr__super_correction)) {
+            return;
+        }
+        DlgReserveShortInfo::loadShortInfo(ui->leReserveID->text());
+        loadInvoice(ui->leInvoice->text());
+    });
 }
 
 WInvoice::~WInvoice()

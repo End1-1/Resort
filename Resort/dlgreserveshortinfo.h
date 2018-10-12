@@ -2,6 +2,7 @@
 #define DLGRESERVESHORTINFO_H
 
 #include "basedialog.h"
+#include "trackcontrol.h"
 
 namespace Ui {
 class DlgReserveShortInfo;
@@ -23,6 +24,7 @@ private slots:
 private:
     Ui::DlgReserveShortInfo *ui;
     bool loadInfo();
+    TrackControl *fTrackControl;
 };
 
 #endif // DLGRESERVESHORTINFO_H

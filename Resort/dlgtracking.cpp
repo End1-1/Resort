@@ -33,7 +33,7 @@ void DlgTracking::showTracking(int trackId, const QString &windowId)
             "f_action, f_value1, f_value2 "
             "from airlog.log "
             "where f_type=:f_table and (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
-            "order by f_date, f_time";
+            "order by f_date desc, f_time desc";
     d->loadTrack(query, trackId, windowId);
     d->exec();
     delete d;

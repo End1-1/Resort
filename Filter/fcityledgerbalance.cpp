@@ -13,7 +13,8 @@ FCityLedgerBalance::FCityLedgerBalance(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("C/L Total balance"), ":/images/balance.png");
     fReportGrid->fStaticQuery = " \
             select m.f_cityLedger, cl.f_name,  \
-            sum(m.f_amountAmd*m.f_sign)*-1, truncate(sum((m.f_amountAmd/m.f_amountUsd)*m.f_sign)*-1, 1)  \
+            sum(if(m.f_source='RV', m.f_amountAmd*m.f_sign*-1, m.f_amountamd*m.f_sign)), \
+            truncate(sum(if (m.f_source='RV', m.f_amountAmd*m.f_sign*-1, m.f_amountamd*m.f_sign)), 1)  \
             from m_register m \
             inner join f_city_ledger cl on cl.f_id=m.f_cityLedger \
             where m.f_finance=1 and  cl.f_id>0 and f_canceled=0 \

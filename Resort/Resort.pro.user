@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.5.0, 2018-10-11T15:40:45. -->
+<!-- Written by QtCreator 4.5.0, 2018-10-17T12:12:51. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -134,7 +134,7 @@
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.Arguments">/C del .\release\res_res.o</value>
-      <value type="QString" key="ProjectExplorer.ProcessStep.Command">cmd.exe</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Command">c:/windows/system32/cmd.exe</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.WorkingDirectory">%{buildDir}</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Process Step</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>

@@ -15,7 +15,6 @@ RC_FILE = res.rc
 
 DEFINES += _RESORT_
 DEFINES += _HOTEL_
-#DEFINES += _WASH_
 
 SOURCES += main.cpp\
         mainwindow.cpp \

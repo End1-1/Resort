@@ -4632,6 +4632,10 @@ for this operation</source>
         <source>Saved</source>
         <translation type="unfinished">Պահպանված է</translation>
     </message>
+    <message>
+        <source>HH:mm:ss</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgRoom</name>
@@ -5891,6 +5895,10 @@ for this operation</source>
     </message>
     <message>
         <source>Execute failed sql queries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nationality</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13596,6 +13604,18 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Nationality file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nationality short name exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Naionality name is empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Naionality short name is empty</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

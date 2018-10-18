@@ -13,8 +13,10 @@ FCityLedgerBalance::FCityLedgerBalance(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("C/L Total balance"), ":/images/balance.png");
     fReportGrid->fStaticQuery = " \
             select m.f_cityLedger, cl.f_name,  \
-            sum(if(m.f_source='RV', m.f_amountAmd*m.f_sign*-1, m.f_amountamd*m.f_sign)), \
-            truncate(sum(if (m.f_source='RV', m.f_amountAmd*m.f_sign*-1, m.f_amountamd*m.f_sign)), 1)  \
+                    sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+                    m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount , \
+            truncate(sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd/m.f_amountusd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+                (m.f_amountAmd/m.f_amountusd)*m.f_sign*-1, (m.f_amountAmd/m.f_amountusd)*m.f_sign*1))), 1)  \
             from m_register m \
             inner join f_city_ledger cl on cl.f_id=m.f_cityLedger \
             where m.f_finance=1 and  cl.f_id>0 and f_canceled=0 \
@@ -40,7 +42,8 @@ void FCityLedgerBalance::apply(WReportGrid *rg)
     query = query.replace(":f_wdate1", ui->deStart->dateMySql());
 
     if (!ui->chZeroBalance->isChecked()) {
-        query.replace(":having", " having truncate(sum((m.f_amountAmd/m.f_amountUsd)*m.f_sign), 1) <> 0 ");
+        query.replace(":having", " having truncate(sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd/m.f_amountusd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+                      (m.f_amountAmd/m.f_amountusd)*m.f_sign*-1, (m.f_amountAmd/m.f_amountusd)*m.f_sign*1))), 1) <> 0 ");
     } else {
         query.replace(":having", "");
     }

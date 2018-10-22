@@ -140,8 +140,9 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
         CacheCityLedger c;
         if (c.get(code)) {
             fDD[":f_cityLedger"] = ui->lePartnerCode->asInt();
-            fDD.exec("select sum(if(f_source='RV', f_amountAmd*f_sign*-1, f_amountAmd*f_sign)) from m_register "
-                       "where f_cityLedger=:f_cityLedger and f_canceled=0 and f_finance=1 ");
+            fDD.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+                     m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) from m_register m \
+                     where f_cityLedger=:f_cityLedger and f_canceled=0 and f_finance=1 ");
             if (fDD.nextRow()) {
                 ui->leBalance->setText(fDD.getString(0));
             }

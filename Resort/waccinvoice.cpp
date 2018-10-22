@@ -598,21 +598,51 @@ void WAccInvoice::on_btnViewCorrections_clicked()
 void WAccInvoice::on_btnEliminate_clicked()
 {
     DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
+    l.open(true, false);
     QModelIndexList rows = ui->tblData->selectionModel()->selectedRows();
     if (rows.count() == 0 && ui->tblData->rowCount() == 0) {
         if (message_confirm(tr("<b>This operation cannot be undon, continue?<b>")) != QDialog::Accepted) {
             return;
         }
+        QStringList guestToDelete;
+        DoubleDatabase dbGuest(fDD);
+        dbGuest.open(true, false);
+        dbGuest[":f_id"] = ui->leReservationId->text();
+        dbGuest.exec("select f_guest from f_reservation where f_id=:f_id union select f_guest from f_reservation_guests where f_reservation=:f_id");
+        for (int i =0; i < dbGuest.rowCount(); i++) {
+            bool found = false;
+            fDD[":f_guest"] = dbGuest.getValue(i, 0);
+            fDD[":f_reservation"] = ui->leReservationId->text();
+            fDD.exec("select * from f_reservation where f_guest=:f_guest and f_id<>:f_id");
+            found = fDD.nextRow();
+            if (!found) {
+                fDD[":f_guest"] = dbGuest.getValue(i, 0);
+                fDD[":f_reservation"] = ui->leReservationId->text();
+                fDD.exec("select * from f_reservation_guests where f_guest=:f_guest and f_reservation<>:f_id");
+                found = fDD.nextRow();
+            }
+            if (!found) {
+                guestToDelete << dbGuest.getString(i, 0);
+            }
+        }
+        foreach (QString s, guestToDelete) {
+            fDD[":f_id"] = s;
+            fDD.exec("delete from f_guests where f_id=:f_id");
+        }
         fDD[":f_inv"] = ui->leInvoice->text();
         fDD.exec("delete from m_register where f_inv=:f_inv");
         fDD[":f_reservation"] = ui->leReservationId->text();
-        fDD.exec("delete from m_register where f_res=:f_res");
+        fDD.exec("delete from m_register where f_res=:f_reservation");
         fDD[":f_doc"] = ui->leReservationId->text();
         fDD.exec("delete from m_register where f_doc=:f_doc");
         fDD[":f_invoice"] = ui->leInvoice->text();
         fDD.exec("delete from f_reservation where f_invoice=:f_invoice");
         fDD[":f_reservation"] = ui->leReservationId->text();
         fDD.exec("delete from f_reservation_guests where f_reservation=:f_reservation");
+        l[":f_invoice"] = ui->leInvoice->text();
+        l[":f_reservation"] = ui->leReservationId->text();
+        l.exec("delete from log where f_invoice=:f_invoice or f_reservation=:f_reservation");
         fTrackControl->insert("Invoice eliminated", "", "");
         fTrackControl->saveChanges();
         message_info(tr("The invoice was eliminated"));
@@ -634,10 +664,19 @@ void WAccInvoice::on_btnEliminate_clicked()
         fDD.exec("delete from o_header where f_id=:f_id");
         fDD[":f_header"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
         fDD.exec("delete from o_dish where f_header=:f_header");
+        fDD.exec("delete from resort.o_dish_qty where f_rec not in (select f_id from resort.o_dish)");
+        l[":f_rec"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
+        l[":f_invoice"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
+        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     } else if (ui->tblData->toString(rows.at(0).row(), 10) == VAUCHER_EVENT_N) {
         fDD[":f_id"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
         fDD.exec("delete from o_event where f_id=:f_id");
+        l[":f_rec"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
+        l[":f_invoice"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
+        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     }
+    l[":f_rec"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
+    l.exec("delete from log where f_rec=:f_rec");
     QString oldValue = QString("%1 %2(%3) %4 %5")
             .arg(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString())
             .arg(ui->tblData->item(rows.at(0).row(), 5)->data(Qt::EditRole).toString())

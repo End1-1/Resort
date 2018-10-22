@@ -196,6 +196,8 @@ void FVauchers::eliminateVoucher()
     if (message_confirm(QString("<h1><font color=\"red\">%1</font></h1>").arg(tr("Confirm to permanently remove voucher"))) != QDialog::Accepted) {
         return;
     }
+    DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
+    l.open(true, false);
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = out.at(0);
     fDD.exec("delete from m_register where f_id=:f_id");
@@ -204,11 +206,20 @@ void FVauchers::eliminateVoucher()
         fDD.exec("delete from o_header where f_id=:f_id");
         fDD[":f_header"] = out.at(0);
         fDD.exec("delete from o_dish where f_header=:f_header");
+        fDD.exec("delete from resort.o_dish_qty where f_rec not in (select f_id from resort.o_dish)");
+        l[":f_rec"] = out.at(0);
+        l[":f_invoice"] = out.at(0);
+        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     }
     if (out.at(1).toString() == VAUCHER_EVENT_N) {
         fDD[":f_id"] = out.at(0);
         fDD.exec("delete from o_event where f_id=:f_id");
+        l[":f_rec"] = out.at(0);
+        l[":f_invoice"] = out.at(0);
+        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     }
+    l[":f_rec"] = out.at(0);
+    l.exec("delete from log where f_rec=:f_rec");
     fReportGrid->fModel->removeRow(row);
 }
 

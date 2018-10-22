@@ -66,7 +66,7 @@ void DlgTracking::on_chOld_clicked(bool checked)
         fDD.exec(query);
         Utils::fillTableWithData(ui->tblData, fDD.fDbRows);
         DoubleDatabase db;
-        db.setDatabase("10.1.0.44", "hna", "root", "rootjan2018", 1);
+        db.setDatabase("10.1.0.33", "testb", "root", "rootjan2018", 1);
         db.open(true, false);
         db[":f_windowId"] = fWindow;
         db.exec(query);
@@ -91,6 +91,4 @@ void DlgTracking::on_chOld_clicked(bool checked)
         db.close();
         Utils::fillTableWithData(ui->tblData, db.fDbRows);
     }
-
-
 }

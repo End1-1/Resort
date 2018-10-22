@@ -711,6 +711,12 @@ void FRestaurantTotal::removePermanently()
     fDD.exec("delete from o_header where f_id=:f_id");
     fDD[":f_id"] = val.at(0);
     fDD.exec("delete from m_register where f_id=:f_id");
+    fDD.exec("delete from resort.o_dish_qty where f_rec not in (select f_id from resort.o_dish)");
+    DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
+    l.open(true, false);
+    l[":f_rec"] = val.at(0);
+    l[":f_invoice"] = val.at(0);
+    l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     fDD.commit();
     message_info(tr("Please, refresh report to view the changes"));
 }

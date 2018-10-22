@@ -192,8 +192,8 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
         pt->fAdgCode.append(ui->tblData->toString(i, 4));
         pt->fCodeList.append(ui->tblData->toString(i, 5));
         pt->fNameList.append(ui->tblData->toString(i, 0));
-        pt->fQtyList.append(ui->tblData->toString(i, 1));
-        pt->fPriceList.append(ui->tblData->toString(i, 6));
+        pt->fQtyList.append(float_str(ui->tblData->toDouble(i, 1), 2));
+        pt->fPriceList.append(float_str(ui->tblData->toDouble(i, 6), 2));
         pt->fTaxNameList.append(ui->tblData->toString(i, 0));
     }
     fDD[":f_tax"] = 1;
@@ -203,16 +203,8 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
     fDD.exec("update m_register set f_fiscal=1 where f_id=:f_id");
     pt->fInvoice = ui->leOrder->text();
     pt->build();
-    switch (cpm.fCode().toInt()) {
-    case PAYMENT_CASH:
-        pt->fAmountCash = float_str(total, 2);
-        pt->fAmountCard = "0";
-        break;
-    default:
-        pt->fAmountCard = float_str(total, 2);
-        pt->fAmountCash = "0";
-        break;
-    }
+    pt->fAmountCash = float_str(ui->leTotal->asDouble() - ui->leCardAmount->asDouble(), 2);
+    pt->fAmountCard = float_str(ui->leCardAmount->asDouble(), 2);
     pt->print();
     delete pt;
 }

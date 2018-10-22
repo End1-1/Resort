@@ -213,6 +213,16 @@
        </spacer>
       </item>
       <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Card</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="EQLineEdit" name="leCardAmount"/>
+      </item>
+      <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Total</string>

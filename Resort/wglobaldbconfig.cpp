@@ -293,7 +293,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
-    fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC')");
+    fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC', 'dd')");
     bool result = fDD.exec(query);
     fTrackControl->saveChanges();
     if (result) {

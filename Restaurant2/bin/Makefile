@@ -198,6 +198,7 @@ Makefile: ../../../Resort2/Restaurant2/Restaurant.pro ../../../../Qt5.10.0/5.10.
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/qt_config.prf \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/win32-g++/qmake.conf \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/toolchain.prf \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/default_pre.prf \
@@ -366,6 +367,7 @@ Makefile: ../../../Resort2/Restaurant2/Restaurant.pro ../../../../Qt5.10.0/5.10.
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/qt_config.prf:
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/win32-g++/qmake.conf:
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/toolchain.prf:
 ../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/features/default_pre.prf:

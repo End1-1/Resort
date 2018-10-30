@@ -154,6 +154,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chGuestByNationality, "Guests by nationality")
             .addWidget(ui->chDoNotUseSecondDB, "Dont use second database")
             .addWidget(ui->chNationalityFile, "Nationality file")
+            .addWidget(ui->chInhouseGuestAnyTime, "Inhouse guest any period")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

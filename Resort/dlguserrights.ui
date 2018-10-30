@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -298,6 +298,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>49</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chInhouseGuestAnyTime">
+         <property name="text">
+          <string>Inhouse guests, any period</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>115</number>
          </property>
         </widget>
        </item>

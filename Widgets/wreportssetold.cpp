@@ -112,7 +112,7 @@ void WReportsSetOld::rbClicked()
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = rb->fData["rep"];
     fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum from serv_reports where f_id=:f_id");
-    if (fDD.rowCount() == 0) {
+    if (!fDD.nextRow()) {
         message_error(tr("Cannot load report data."));
         return;
     }
@@ -183,7 +183,7 @@ void WReportsSetOld::on_btnGo_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = eb->fData["rep"];    
     fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum, f_name from serv_reports where f_id=:f_id");
-    if (fDD.rowCount() == 0) {
+    if (!fDD.nextRow()) {
         message_error(tr("Cannot load report data."));
         return;
     }
@@ -217,10 +217,10 @@ void WReportsSetOld::on_btnGo_clicked()
        } else if (isComboCompleter(it.key()) || isComboMonth(it.key())) {
            EComboBoxCompleter *c = static_cast<EComboBoxCompleter*>(it.key());
            if (c->currentData().toString().isEmpty()) {
-               query.replace(it.value(), fFilterDefExpr[c]);
+               query.replace(it.value(),  fFilterDefExpr[c] );
            } else {
                QString repStr = fFilterBuilds[c];
-               query.replace(it.value(), repStr.replace(it.value(), c->currentData().toString()));
+               query.replace(it.value(), repStr.replace(it.value(), c->currentData().toString()) );
            }
        }
     }

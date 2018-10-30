@@ -7,6 +7,10 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui(new Ui::FInHouseGuest)
 {
     ui->setupUi(this);
+    ui->deDate->setVisible(r__(cr__inhouse_anytime));
+    ui->chDate->setVisible(r__(cr__inhouse_anytime));
+    ui->teTime->setVisible(r__(cr__inhouse_anytime));
+    ui->chTime->setVisible(r__(cr__inhouse_anytime));
 }
 
 FInHouseGuest::~FInHouseGuest()
@@ -16,7 +20,21 @@ FInHouseGuest::~FInHouseGuest()
 
 void FInHouseGuest::apply(WReportGrid *rg)
 {
-    QString where = "where r.f_state=1 order by r.f_room ";
+    QString where;
+    if (ui->chDate->isChecked() || ui->chTime->isChecked()) {
+        where += " where (r.f_state=1 or r.f_state=3) ";
+    } else {
+        where += " where (r.f_state=1) ";
+    }
+    if (ui->chDate->isChecked()) {
+        where += " and "+ ui->deDate->dateMySql() + " between r.f_startDate and r.f_endDate ";
+    }
+    if (ui->chTime->isChecked()) {
+        where += QString(" and ADDTIME(CONVERT(%1, DATETIME), '%2') "
+                         "between ADDTIME(CONVERT(r.f_startDate, DATETIME), r.f_checkintime) "
+                         "and ADDTIME(CONVERT(r.f_endDate, DATETIME), if(r.f_checkouttime is null, '12:00:00', r.f_checkouttime))").arg(ui->deDate->dateMySql()).arg(ui->teTime->time().toString("HH:mm:ss"));
+    }
+    where += "order by r.f_room ";
     buildQuery(rg, where);
 
     QMap<QString, int> total;
@@ -88,12 +106,26 @@ void FInHouseGuest::apply(WReportGrid *rg)
 
 QWidget *FInHouseGuest::firstElement()
 {
-    return ui->leDate;
+    return ui->deDate;
 }
 
 QString FInHouseGuest::reportTitle()
 {
     return QString("%1, %2")
             .arg(tr("In house guests"))
-            .arg(ui->leDate->text());
+            .arg(ui->deDate->text());
+}
+
+void FInHouseGuest::on_chDate_clicked(bool checked)
+{
+    ui->deDate->setEnabled(checked);
+}
+
+void FInHouseGuest::on_chTime_clicked(bool checked)
+{
+    ui->teTime->setEnabled(checked);
+    if (checked) {
+        ui->deDate->setEnabled(true);
+        ui->chDate->setChecked(true);
+    }
 }

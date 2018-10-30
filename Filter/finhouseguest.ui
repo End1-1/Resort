@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>649</width>
     <height>41</height>
    </rect>
   </property>
@@ -14,9 +14,6 @@
    <string>Form</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
-    <widget class="EDateEdit" name="leDate"/>
-   </item>
    <item>
     <widget class="EQCheckBox" name="chDisplayRate">
      <property name="focusPolicy">
@@ -81,6 +78,37 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="EDateEdit" name="deDate">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chDate">
+     <property name="text">
+      <string>Search by date</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTimeEdit" name="teTime">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="displayFormat">
+      <string>HH:mm</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chTime">
+     <property name="text">
+      <string>Search by time (less)</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

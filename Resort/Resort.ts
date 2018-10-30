@@ -2480,6 +2480,10 @@ rooms</source>
         <source>Saved</source>
         <translation type="unfinished">Պահպանված է</translation>
     </message>
+    <message>
+        <source>Card</source>
+        <translation type="unfinished">Քարտ</translation>
+    </message>
 </context>
 <context>
     <name>DlgGroupParams</name>

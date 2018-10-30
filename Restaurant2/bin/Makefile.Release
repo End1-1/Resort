@@ -11,7 +11,7 @@ MAKEFILE      = Makefile.Release
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DUNICODE -D_UNICODE -D_WASH_ -DQT_NO_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
+DEFINES       = -DUNICODE -D_UNICODE -D_WASH_ -D_RESTAURANT_ -DQT_NO_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_XML_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wextra -Wall -W $(DEFINES)
 CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++11 -Wextra -Wall -W -fexceptions -mthreads $(DEFINES)
 INCPATH       = -I../../../Resort2/Restaurant2 -I. -I../../../Resort2/Base -I../../../Resort2/Controls -I../../../Resort2/Cache -I../../../Resort2/Print -I../../../Resort2/Resort -I../../../Resort2/Selector -I/Qt/projects/NewTax -I/OpenSSL-Win32.0/include -I/OpenSSL-Win32.0/include/openssl -I../../../../Qt5.10.0/5.10.0/mingw53_32/include -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtPrintSupport -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtANGLE -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtSql -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtXml -I../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore -Irelease -I. -I../../../../Qt5.10.0/5.10.0/mingw53_32/mkspecs/win32-g++ 
@@ -10921,6 +10921,33 @@ release/rface.o: ../../../Resort2/Restaurant2/rface.cpp ../../../Resort2/Restaur
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qtimer.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qbasictimer.h \
 		ui_rface.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/rlogin.h \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../Resort2/Restaurant2/rdesk.h \
@@ -11133,7 +11160,33 @@ release/rlogin.o: ../../../Resort2/Restaurant2/rlogin.cpp ../../../Resort2/Resta
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rlogin.h
+		ui_rlogin.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rlogin.o ../../../Resort2/Restaurant2/rlogin.cpp
 
 release/rmessage.o: ../../../Resort2/Restaurant2/rmessage.cpp ../../../Resort2/Restaurant2/rmessage.h \
@@ -11310,7 +11363,35 @@ release/rmessage.o: ../../../Resort2/Restaurant2/rmessage.cpp ../../../Resort2/R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rmessage.h
+		ui_rmessage.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QTextEdit \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtextedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextdocument.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rmessage.o ../../../Resort2/Restaurant2/rmessage.cpp
 
 release/utils.o: ../../../Resort2/Base/utils.cpp ../../../Resort2/Base/utils.h \
@@ -12721,6 +12802,34 @@ release/rdesk.o: ../../../Resort2/Restaurant2/rdesk.cpp ../../../Resort2/Restaur
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qtimer.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qbasictimer.h \
 		ui_rdesk.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Base/paymentmode.h \
 		../../../Resort2/Restaurant2/rchangelanguage.h \
 		../../../Resort2/Restaurant2/dlgdeptholder.h \
@@ -13150,11 +13259,32 @@ release/splash.o: ../../../Resort2/Restaurant2/splash.cpp ../../../Resort2/Resta
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_splash.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QMovie \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qmovie.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qimagereader.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qimageiohandler.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qplugin.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qpointer.h \
@@ -13337,7 +13467,35 @@ release/rchangelanguage.o: ../../../Resort2/Restaurant2/rchangelanguage.cpp ../.
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rchangelanguage.h
+		ui_rchangelanguage.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rchangelanguage.o ../../../Resort2/Restaurant2/rchangelanguage.cpp
 
 release/rchangemenu.o: ../../../Resort2/Restaurant2/rchangemenu.cpp ../../../Resort2/Restaurant2/rchangemenu.h \
@@ -13515,6 +13673,34 @@ release/rchangemenu.o: ../../../Resort2/Restaurant2/rchangemenu.cpp ../../../Res
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_rchangemenu.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/dishestable.h \
 		../../../Resort2/Restaurant2/splash.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rchangemenu.o ../../../Resort2/Restaurant2/rchangemenu.cpp
@@ -13693,7 +13879,35 @@ release/rpaymenttype.o: ../../../Resort2/Restaurant2/rpaymenttype.cpp ../../../R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rpaymenttype.h
+		ui_rpaymenttype.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rpaymenttype.o ../../../Resort2/Restaurant2/rpaymenttype.cpp
 
 release/rselecttable.o: ../../../Resort2/Restaurant2/rselecttable.cpp ../../../Resort2/Restaurant2/rselecttable.h \
@@ -13872,6 +14086,31 @@ release/rselecttable.o: ../../../Resort2/Restaurant2/rselecttable.cpp ../../../R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		../../../Resort2/Restaurant2/hall.h \
 		ui_rselecttable.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/rchangehall.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QItemDelegate \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qitemdelegate.h \
@@ -14054,7 +14293,32 @@ release/rchangehall.o: ../../../Resort2/Restaurant2/rchangehall.cpp ../../../Res
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		../../../Resort2/Restaurant2/hall.h \
-		ui_rchangehall.h
+		ui_rchangehall.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rchangehall.o ../../../Resort2/Restaurant2/rchangehall.cpp
 
 release/rkeyboard.o: ../../../Resort2/Restaurant2/rkeyboard.cpp ../../../Resort2/Restaurant2/rkeyboard.h \
@@ -14167,6 +14431,44 @@ release/rkeyboard.o: ../../../Resort2/Restaurant2/rkeyboard.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractbutton.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qicon.h \
 		ui_rkeyboard.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qabstractitemmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qitemselectionmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyleoption.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvalidator.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qregularexpression.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyle.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabbar.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qrubberband.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
 		../../../Resort2/Base/defines.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QObject \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDate \
@@ -14188,7 +14490,6 @@ release/rkeyboard.o: ../../../Resort2/Restaurant2/rkeyboard.cpp ../../../Resort2
 		../../../Resort2/Controls/edateedit.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLineEdit \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlineedit.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextcursor.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextformat.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpen.h \
@@ -14196,21 +14497,6 @@ release/rkeyboard.o: ../../../Resort2/Restaurant2/rkeyboard.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QTableWidget \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtablewidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtableview.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemview.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractscrollarea.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qabstractitemmodel.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qitemselectionmodel.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemdelegate.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyleoption.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractspinbox.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvalidator.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qregularexpression.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qslider.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyle.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabbar.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabwidget.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qrubberband.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QSettings \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qsettings.h \
 		../../../Resort2/Base/database.h \
@@ -14230,7 +14516,6 @@ release/rkeyboard.o: ../../../Resort2/Restaurant2/rkeyboard.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdatetimeedit.h \
 		../../../Resort2/Base/baseuid.h \
 		../../../Resort2/Base/doubledatabase.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDebug \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDateTime \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
@@ -14414,7 +14699,31 @@ release/rdishcomment.o: ../../../Resort2/Restaurant2/rdishcomment.cpp ../../../R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rdishcomment.h
+		ui_rdishcomment.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../Resort2/Restaurant2/rkeyboard.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rdishcomment.o ../../../Resort2/Restaurant2/rdishcomment.cpp
 
 release/dlgsmile.o: ../../../Resort2/Restaurant2/dlgsmile.cpp ../../../Resort2/Restaurant2/dlgsmile.h \
@@ -14595,6 +14904,27 @@ release/dlgsmile.o: ../../../Resort2/Restaurant2/dlgsmile.cpp ../../../Resort2/R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qtimer.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qbasictimer.h \
 		ui_dlgsmile.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QBitmap \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qbitmap.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgsmile.o ../../../Resort2/Restaurant2/dlgsmile.cpp
@@ -14774,6 +15104,29 @@ release/rtools.o: ../../../Resort2/Restaurant2/rtools.cpp ../../../Resort2/Resta
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_rtools.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
 		../../../Resort2/Restaurant2/rdesk.h \
 		../../../Resort2/Restaurant2/dishestable.h \
 		../../../Resort2/Restaurant2/splash.h \
@@ -14968,6 +15321,30 @@ release/rnumbers.o: ../../../Resort2/Restaurant2/rnumbers.cpp ../../../Resort2/R
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_rnumbers.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
 		../../../Resort2/Restaurant2/rmessage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rnumbers.o ../../../Resort2/Restaurant2/rnumbers.cpp
 
@@ -15145,7 +15522,32 @@ release/rmodifiers.o: ../../../Resort2/Restaurant2/rmodifiers.cpp ../../../Resor
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_rmodifiers.h
+		ui_rmodifiers.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/rmodifiers.o ../../../Resort2/Restaurant2/rmodifiers.cpp
 
 release/ecolorlineedit.o: ../../../Resort2/Controls/ecolorlineedit.cpp ../../../Resort2/Controls/ecolorlineedit.h \
@@ -16298,6 +16700,32 @@ release/dlgreservation.o: ../../../Resort2/Restaurant2/dlgreservation.cpp ../../
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgreservation.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Restaurant2/rkeyboard.h \
 		../../../Resort2/Restaurant2/rmessage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgreservation.o ../../../Resort2/Restaurant2/dlgreservation.cpp
 
@@ -21228,6 +21656,33 @@ release/dlgcomplexdish.o: ../../../Resort2/Restaurant2/dlgcomplexdish.cpp ../../
 		../../../Resort2/Restaurant2/dishestable.h \
 		../../../Resort2/Restaurant2/splash.h \
 		ui_dlgcomplexdish.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QScrollBar \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qscrollbar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgcomplexdish.o ../../../Resort2/Restaurant2/dlgcomplexdish.cpp
@@ -21580,13 +22035,68 @@ release/pprintpreview.o: ../../../Resort2/Print/pprintpreview.cpp ../../../Resor
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvector2d.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtouchdevice.h \
 		ui_pprintpreview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qicon.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QComboBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcombobox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyleoption.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvalidator.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qregularexpression.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyle.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabbar.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qrubberband.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qabstractitemmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGraphicsView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgraphicsview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpainter.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextoption.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qscrollarea.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qitemselectionmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLineEdit \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlineedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextcursor.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextformat.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QScrollArea \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QResizeEvent \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QScrollBar \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qscrollbar.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QShowEvent \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDesktopWidget \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtPrintSupport/QPrinterInfo \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtPrintSupport/qprinterinfo.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtPrintSupport/qtprintsupportglobal.h \
@@ -22729,7 +23239,30 @@ release/dlgselecttaxcashmode.o: ../../../Resort2/Restaurant2/dlgselecttaxcashmod
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_dlgselecttaxcashmode.h
+		ui_dlgselecttaxcashmode.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgselecttaxcashmode.o ../../../Resort2/Restaurant2/dlgselecttaxcashmode.cpp
 
 release/dlgbreakfast.o: ../../../Resort2/Restaurant2/dlgbreakfast.cpp ../../../Resort2/Restaurant2/dlgbreakfast.h \
@@ -22912,9 +23445,40 @@ release/dlgbreakfast.o: ../../../Resort2/Restaurant2/dlgbreakfast.cpp ../../../R
 		../../../Resort2/Base/user.h \
 		../../../Resort2/Base/paymentmode.h \
 		ui_dlgbreakfast.h \
-		../../../Resort2/Controls/epushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Controls/eqtablewidget.h \
+		../../../Resort2/Controls/eqcheckbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QCheckBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcheckbox.h \
+		../../../Resort2/Controls/eqcombobox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QComboBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcombobox.h \
+		../../../Resort2/Controls/epushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFocusEvent \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../Resort2/Print/pprintscene.h \
 		../../../Resort2/Print/pdefaults.h \
@@ -23378,6 +23942,33 @@ release/dlgbanket.o: ../../../Resort2/Restaurant2/dlgbanket.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		../../../Resort2/Base/user.h \
 		ui_dlgbanket.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Base/paymentmode.h \
 		../../../Resort2/Restaurant2/rnumbers.h \
 		../../../Resort2/Restaurant2/rpaymenttype.h \
@@ -23598,7 +24189,35 @@ release/dlgbanketitems.o: ../../../Resort2/Restaurant2/dlgbanketitems.cpp ../../
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_dlgbanketitems.h
+		ui_dlgbanketitems.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgbanketitems.o ../../../Resort2/Restaurant2/dlgbanketitems.cpp
 
 release/dlglist.o: ../../../Resort2/Restaurant2/dlglist.cpp ../../../Resort2/Restaurant2/dlglist.h \
@@ -23775,7 +24394,38 @@ release/dlglist.o: ../../../Resort2/Restaurant2/dlglist.cpp ../../../Resort2/Res
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_dlglist.h
+		ui_dlglist.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Restaurant2/rkeyboard.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlglist.o ../../../Resort2/Restaurant2/dlglist.cpp
 
 release/dlgdate.o: ../../../Resort2/Restaurant2/dlgdate.cpp ../../../Resort2/Restaurant2/dlgdate.h \
@@ -23883,7 +24533,50 @@ release/dlgdate.o: ../../../Resort2/Restaurant2/dlgdate.cpp ../../../Resort2/Res
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfiledevice.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvector2d.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtouchdevice.h \
-		ui_dlgdate.h
+		ui_dlgdate.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qicon.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDateEdit \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdatetimeedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdatetime.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvalidator.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qregularexpression.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qabstractitemmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qitemselectionmodel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyleoption.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyle.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabbar.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qrubberband.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgdate.o ../../../Resort2/Restaurant2/dlgdate.cpp
 
 release/edateedit.o: ../../../Resort2/Controls/edateedit.cpp ../../../Resort2/Controls/edateedit.h \
@@ -24331,6 +25024,30 @@ release/dlgvoidback.o: ../../../Resort2/Restaurant2/dlgvoidback.cpp ../../../Res
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgvoidback.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QScrollBar \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qscrollbar.h
@@ -24719,6 +25436,30 @@ release/dlgorders.o: ../../../Resort2/Restaurant2/dlgorders.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgorders.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/rmessage.h \
 		/Qt/projects/NewTax/printtax.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/QTcpSocket \
@@ -24914,6 +25655,34 @@ release/dlgonebreakfasat.o: ../../../Resort2/Restaurant2/dlgonebreakfasat.cpp ..
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		../../../Resort2/Base/user.h \
 		ui_dlgonebreakfasat.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Print/pprintscene.h \
 		../../../Resort2/Print/pdefaults.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QSize \
@@ -25282,7 +26051,31 @@ release/dlggettext.o: ../../../Resort2/Restaurant2/dlggettext.cpp ../../../Resor
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_dlggettext.h
+		ui_dlggettext.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../Resort2/Restaurant2/rkeyboard.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlggettext.o ../../../Resort2/Restaurant2/dlggettext.cpp
 
 release/dlgconnecttoserver.o: ../../../Resort2/Restaurant2/dlgconnecttoserver.cpp ../../../Resort2/Restaurant2/dlgconnecttoserver.h \
@@ -25465,6 +26258,28 @@ release/dlgconnecttoserver.o: ../../../Resort2/Restaurant2/dlgconnecttoserver.cp
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qtimer.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qbasictimer.h \
 		ui_dlgconnecttoserver.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QJsonObject \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qjsonobject.h \
@@ -26436,6 +27251,34 @@ release/dlgcarselection.o: ../../../Resort2/Restaurant2/dlgcarselection.cpp ../.
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgcarselection.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/dlgreservation.h \
 		../../../Resort2/Restaurant2/rdishcomment.h \
 		../../../Resort2/Restaurant2/dlgdeptholder.h \
@@ -26772,6 +27615,33 @@ release/dlgpayment.o: ../../../Resort2/Restaurant2/dlgpayment.cpp ../../../Resor
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgpayment.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../Resort2/Restaurant2/dlglist.h \
 		../../../Resort2/Restaurant2/rnumbers.h \
@@ -26962,6 +27832,35 @@ release/dlgdeptholder.o: ../../../Resort2/Restaurant2/dlgdeptholder.cpp ../../..
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistwidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlistview.h \
 		ui_dlgdeptholder.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QListWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Restaurant2/rkeyboard.h \
 		../../../Resort2/Restaurant2/rmessage.h \
 		../../../Resort2/Cache/cacherestdebtholder.h \
 		../../../Resort2/Cache/cachebase.h \
@@ -27438,7 +28337,21 @@ release/dlgprinttaxnew.o: ../../../Resort2/Restaurant2/dlgprinttaxnew.cpp ../../
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
-		ui_dlgprinttaxnew.h
+		ui_dlgprinttaxnew.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgprinttaxnew.o ../../../Resort2/Restaurant2/dlgprinttaxnew.cpp
 
 release/cachecouponseria.o: ../../../Resort2/Cache/cachecouponseria.cpp ../../../Resort2/Cache/cachecouponseria.h \
@@ -27764,6 +28677,39 @@ release/dlgsalary.o: ../../../Resort2/Restaurant2/dlgsalary.cpp ../../../Resort2
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		ui_dlgsalary.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Controls/eqtablewidget.h \
+		../../../Resort2/Controls/eqcheckbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QCheckBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcheckbox.h \
+		../../../Resort2/Controls/eqcombobox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QComboBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcombobox.h \
+		../../../Resort2/Controls/epushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFocusEvent \
 		../../../Resort2/Restaurant2/dlglist.h \
 		../../../Resort2/Restaurant2/dlgreservation.h \
 		../../../Resort2/Restaurant2/rmessage.h \
@@ -28308,6 +29254,38 @@ release/dlgprinttaxsm.o: ../../../Resort2/Resort/dlgprinttaxsm.cpp ../../../Reso
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qtimer.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qbasictimer.h \
 		ui_dlgprinttaxsm.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QFrame \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPlainTextEdit \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qplaintextedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtextedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextdocument.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qabstracttextdocumentlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qglyphrun.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qrawfont.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qfontdatabase.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QJsonObject \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qjsonobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/dlgprinttaxsm.o ../../../Resort2/Resort/dlgprinttaxsm.cpp
@@ -28484,6 +29462,33 @@ release/message.o: ../../../Resort2/Resort/message.cpp ../../../Resort2/Resort/m
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		ui_message.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QClipboard \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qclipboard.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QTextDocument \
@@ -28767,41 +29772,17 @@ release/printtax.o: ../../../Resort2/Print/printtax.cpp /Qt/projects/NewTax/prin
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qjsondocument.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qjsonvalue.h \
 		ui_printtax.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QFile \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfile.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfiledevice.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDir \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdir.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfileinfo.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QProcess \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qprocess.h \
-		../../../Resort2/Base/paymentmode.h \
-		../../../Resort2/Resort/dlgprinttaxsm.h \
-		../../../Resort2/Resort/baseextendeddialog.h \
-		../../../Resort2/Base/basedialog.h \
-		../../../Resort2/Base/base.h \
-		../../../Resort2/Base/defines.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDate \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdatetime.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/QHostInfo \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/qhostinfo.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/qhostaddress.h \
-		../../../Resort2/Base/preferences.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QMap \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFont \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qfont.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QAction \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qaction.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtwidgetsglobal.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtguiglobal.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtgui-config.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtwidgets-config.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qkeysequence.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qwidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qwindowdefs.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qwindowdefs_win.h \
-		../../../Resort2/Base/utils.h \
-		../../../Resort2/Controls/edateedit.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLineEdit \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlineedit.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtwidgetsglobal.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtwidgets-config.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qwidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qmargins.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpaintdevice.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qrect.h \
@@ -28821,25 +29802,42 @@ release/printtax.o: ../../../Resort2/Print/printtax.cpp /Qt/projects/NewTax/prin
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qimage.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpixelformat.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpixmap.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qfont.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qfontmetrics.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qfontinfo.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qsizepolicy.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qcursor.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qkeysequence.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qevent.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qurl.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qurlquery.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfile.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfiledevice.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvector2d.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtouchdevice.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextcursor.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextformat.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpen.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextoption.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QTableWidget \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtablewidget.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtableview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qicon.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qactiongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QApplication \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qcoreapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qeventloop.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qguiapplication.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qinputmethod.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QButtonGroup \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QGridLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qgridlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlayoutitem.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qboxlayout.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QHeaderView \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qheaderview.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemview.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qframe.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qabstractitemmodel.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qitemselectionmodel.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractitemdelegate.h \
@@ -28847,13 +29845,65 @@ release/printtax.o: ../../../Resort2/Print/printtax.cpp /Qt/projects/NewTax/prin
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractspinbox.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qvalidator.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qregularexpression.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qicon.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qslider.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractslider.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qstyle.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabbar.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtabwidget.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qrubberband.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLabel \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlabel.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QSpacerItem \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QTableWidget \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtablewidget.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtableview.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QVBoxLayout \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QWidget \
+		../../../Resort2/Controls/eqcheckbox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QCheckBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcheckbox.h \
+		../../../Resort2/Controls/eqlineedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QLineEdit \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qlineedit.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextcursor.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextformat.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qpen.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/qtextoption.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QToolButton \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtoolbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QResizeEvent \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QMouseEvent \
+		../../../Resort2/Controls/eqtablewidget.h \
+		../../../Resort2/Controls/edateedit.h \
+		../../../Resort2/Base/defines.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDate \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdatetime.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/QHostInfo \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/qhostinfo.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/qhostaddress.h \
+		../../../Resort2/Controls/eqcombobox.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QComboBox \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcombobox.h \
+		../../../Resort2/Controls/epushbutton.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFocusEvent \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QFile \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDir \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdir.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qfileinfo.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QProcess \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qprocess.h \
+		../../../Resort2/Base/paymentmode.h \
+		../../../Resort2/Resort/dlgprinttaxsm.h \
+		../../../Resort2/Resort/baseextendeddialog.h \
+		../../../Resort2/Base/basedialog.h \
+		../../../Resort2/Base/base.h \
+		../../../Resort2/Base/preferences.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QMap \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFont \
+		../../../Resort2/Base/utils.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QList \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QSettings \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qsettings.h \
@@ -28864,39 +29914,19 @@ release/printtax.o: ../../../Resort2/Print/printtax.cpp /Qt/projects/NewTax/prin
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtSql/QSqlQuery \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtSql/qsqlquery.h \
 		../../../Resort2/Base/databaseresult.h \
-		../../../Resort2/Controls/eqlineedit.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QToolButton \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qtoolbutton.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qabstractbutton.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QResizeEvent \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QMouseEvent \
 		../../../Resort2/Controls/eqdateedit.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDateEdit \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdatetimeedit.h \
 		../../../Resort2/Base/baseuid.h \
 		../../../Resort2/Base/doubledatabase.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QVariant \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDebug \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDateTime \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QDialog \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qdialog.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QKeyEvent \
 		../../../Resort2/Resort/message.h \
-		../../../Resort2/Controls/epushbutton.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QPushButton \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qpushbutton.h \
 		../../../Resort2/Controls/trackcontrol.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QString \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QMessageBox \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qmessagebox.h \
-		../../../Resort2/Controls/eqtablewidget.h \
-		../../../Resort2/Controls/eqcheckbox.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QCheckBox \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcheckbox.h \
-		../../../Resort2/Controls/eqcombobox.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/QComboBox \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtWidgets/qcombobox.h \
-		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtGui/QFocusEvent \
 		../../../Resort2/Resort/broadcastthread.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QThread \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qthread.h \

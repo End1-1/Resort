@@ -54,7 +54,7 @@ void DlgExecFailedSqls::on_btnStart_clicked()
     DoubleDatabase dsrc;
     QString db = "hnaw";
 #ifdef QT_DEBUG
-    db = "resort2";
+    db = "resort";
 #endif
     dsrc.setDatabase(BaseUID::fAirHost, db, BaseUID::fAirUser, BaseUID::fAirPass, 1); //resort
     dsrc.open(true, false);

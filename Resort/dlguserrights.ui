@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>6</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -1040,6 +1040,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>66</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chRoomArrangement">
+         <property name="text">
+          <string>Room arrangement</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>116</number>
          </property>
         </widget>
        </item>

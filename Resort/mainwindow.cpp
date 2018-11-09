@@ -28,6 +28,7 @@
 #include "reroominventory.h"
 #include "reroominventorystate.h"
 #include "fsalesbycar.h"
+#include "froomarrangement.h"
 #include "fcash.h"
 #include "dlgexecfailedsqls.h"
 #include "ftstorereport.h"
@@ -625,6 +626,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_int) || r__(cr__call_out) || r__(cr__call_tin) || r__(cr__call_tout));
     ui->actionMonthly_occupancy_percentages->setVisible(r__(cr__analytics_monthly_occupancy_perc));
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
+    ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
 
     ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
 
@@ -2226,4 +2228,9 @@ void MainWindow::on_actionDisable_second_database_triggered()
         setStyleSheet("background: rgb(255,150,150);");
         ui->actionDisable_second_database->setText(tr("Enable second database"));
     }
+}
+
+void MainWindow::on_actionRoom_arrangement_triggered()
+{
+    FRoomArrangement::openFilterReport<FRoomArrangement, WReportGrid>();
 }

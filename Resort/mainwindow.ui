@@ -239,6 +239,7 @@
     <addaction name="actionMonthly_occupancy_percentages"/>
     <addaction name="actionNaitonality_report_by_period"/>
     <addaction name="actionGuest_by_nationality"/>
+    <addaction name="actionRoom_arrangement"/>
    </widget>
    <widget class="QMenu" name="menuOther_Reports">
     <property name="title">
@@ -1352,6 +1353,15 @@
   <action name="actionDisable_second_database">
    <property name="text">
     <string>Disable second database</string>
+   </property>
+  </action>
+  <action name="actionRoom_arrangement">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/reports.png</normaloff>:/images/reports.png</iconset>
+   </property>
+   <property name="text">
+    <string>Room arrangement</string>
    </property>
   </action>
  </widget>

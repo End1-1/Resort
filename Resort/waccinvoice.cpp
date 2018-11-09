@@ -614,12 +614,12 @@ void WAccInvoice::on_btnEliminate_clicked()
             bool found = false;
             fDD[":f_guest"] = dbGuest.getValue(i, 0);
             fDD[":f_reservation"] = ui->leReservationId->text();
-            fDD.exec("select * from f_reservation where f_guest=:f_guest and f_id<>:f_id");
+            fDD.exec("select * from f_reservation where f_guest=:f_guest and f_id<>:f_reservation");
             found = fDD.nextRow();
             if (!found) {
                 fDD[":f_guest"] = dbGuest.getValue(i, 0);
                 fDD[":f_reservation"] = ui->leReservationId->text();
-                fDD.exec("select * from f_reservation_guests where f_guest=:f_guest and f_reservation<>:f_id");
+                fDD.exec("select * from f_reservation_guests where f_guest=:f_guest and f_reservation<>:f_reservation");
                 found = fDD.nextRow();
             }
             if (!found) {
@@ -783,7 +783,7 @@ void WAccInvoice::on_btnMoveItem_clicked()
     if (d->exec() == QDialog::Accepted) {
         
         fDD[":f_invoice"] = d->fResult;
-        fDD.exec("select r.f_room, g.guest "
+        fDD.exec("select r.f_id, r.f_room, g.guest "
                   "from f_reservation r "
                   "inner join guests g on g.f_id=r.f_guest "
                   "where r.f_invoice=:f_invoice");
@@ -791,13 +791,14 @@ void WAccInvoice::on_btnMoveItem_clicked()
         fDD[":f_inv"] = d->fResult;
         fDD[":f_room"] = fDD.getValue("f_room");
         fDD[":f_guest"] = fDD.getValue("guest");
+        fDD[":f_res"] = fDD.getValue("f_id");
         fDD.update("m_register", where_id(ap(ui->tblData->toString(row, 0))));
         fDD[":f_id"] = ui->tblData->toString(row, 0);
-        fDD.exec("select f_source from m_register where f_id=:f_id");
+        fDD.exec("select * from m_register where f_id=:f_id");
         fDD.nextRow();
         if (fDD.getValue("f_source").toString() == VAUCHER_POINT_SALE_N) {
-            fDD[":f_paymentModeComment"] = fDD.getValue("f_room").toString() + ", " + fDD.getValue("guest").toString();
-            fDD[":f_roomComment"] = fDD.getValue("f_room").toString() + ", " + fDD.getValue("guest").toString();
+            fDD[":f_paymentModeComment"] = fDD.getValue("f_room").toString() + ", " + fDD.getValue("f_guest").toString();
+            fDD[":f_roomComment"] = fDD.getValue("f_room").toString() + ", " + fDD.getValue("f_guest").toString();
             fDD[":f_reservation"] = ui->leReservationId->text();
             fDD.update("o_header", where_id(ap(ui->tblData->toString(row, 0))));
         }

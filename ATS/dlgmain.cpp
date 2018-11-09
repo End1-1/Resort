@@ -41,7 +41,10 @@ DlgMain::DlgMain(QWidget *parent) :
     ui(new Ui::DlgMain)
 {
     ui->setupUi(this);
-
+#ifndef QT_DEBUG
+    ui->leRawData->setVisible(false);
+    ui->btnTest->setVisible(false);
+#endif
     fCanClose = false;
     fTrayMenu.addAction(tr("Quit ATS"), this, SLOT(appTerminate()));
     fCanClose = false;
@@ -77,6 +80,7 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->leAirDb->setText(s.value(def_air_db).toString());
     ui->leAirUser->setText(s.value(def_air_user).toString());
     ui->leAirPass->setText(s.value(def_air_pass).toString());
+    ui->leRawData->setText(s.value("test").toString());
 
     fPref.appendDatabase("MainDb", ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), "", "", "", "");
     fPref.initFromDb("MainDb", "", 0);
@@ -187,6 +191,7 @@ void DlgMain::processLine(const QString &line)
     } else {
         secondDb = false;
     }
+    fDb.resetDoNotUse();
     if (!fDb.open(true, secondDb)) {
         callLog("DB connection error");
         return;
@@ -545,4 +550,15 @@ void DlgMain::on_leAirPass_textChanged(const QString &arg1)
 {
     QSettings s(def_smarthotel, def_smarthotel_ats);
     s.setValue(def_air_pass, arg1);
+}
+
+void DlgMain::on_btnTest_clicked()
+{
+    processLine(ui->leRawData->text());
+}
+
+void DlgMain::on_leRawData_textChanged(const QString &arg1)
+{
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue("test", arg1);
 }

@@ -26,6 +26,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QTableWidget" name="tblData">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
          <column>
           <property name="text">
            <string>ID</string>
@@ -79,7 +82,28 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="te"/>
+        <widget class="QTextEdit" name="te">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="leRawData">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnTest">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="text">
+          <string>Test</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -154,6 +178,9 @@
        </item>
        <item row="10" column="1">
         <widget class="QPushButton" name="btnReconnect">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
          <property name="text">
           <string>Connect</string>
          </property>
@@ -448,6 +475,32 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>leUserId</tabstop>
+  <tabstop>leHost</tabstop>
+  <tabstop>leDb</tabstop>
+  <tabstop>leUsername</tabstop>
+  <tabstop>lePassword</tabstop>
+  <tabstop>chFileLog</tabstop>
+  <tabstop>leATSPort</tabstop>
+  <tabstop>cbComData</tabstop>
+  <tabstop>cbComParity</tabstop>
+  <tabstop>cbATS</tabstop>
+  <tabstop>btnReconnect</tabstop>
+  <tabstop>leAirHost</tabstop>
+  <tabstop>leAirDb</tabstop>
+  <tabstop>leAirUser</tabstop>
+  <tabstop>leAirPass</tabstop>
+  <tabstop>leLine</tabstop>
+  <tabstop>leTime</tabstop>
+  <tabstop>leIncomingNumber</tabstop>
+  <tabstop>lePathToExecutable</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>tblData</tabstop>
+  <tabstop>te</tabstop>
+  <tabstop>btnTest</tabstop>
+  <tabstop>leRawData</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

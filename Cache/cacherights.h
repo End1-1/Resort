@@ -122,7 +122,7 @@
 #define cr__exec_failed_sql_queries 113
 #define cr__nationality 114
 #define cr__inhouse_anytime 115
-#define cr__1
+#define cr__room_arrangement 116
 #define cr__1
 #define cr__1
 #define cr__1

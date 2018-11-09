@@ -5905,6 +5905,10 @@ for this operation</source>
         <source>Nationality</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Inhouse guests, any period</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -8243,6 +8247,18 @@ ee</source>
     </message>
     <message>
         <source>In house guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search by date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HH:mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search by time (less)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

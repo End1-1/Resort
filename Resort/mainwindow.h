@@ -258,6 +258,8 @@ private slots:
 
     void on_actionDisable_second_database_triggered();
 
+    void on_actionRoom_arrangement_triggered();
+
 private:
     Ui::MainWindow *ui;
     QTimer fTimer;

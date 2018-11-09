@@ -30031,6 +30031,8 @@ debug/printtaxn.o: ../../../NewTax/printtaxn.cpp /Qt/projects/NewTax/printtaxn.h
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtNetwork/qhostaddress.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QJsonObject \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qjsonobject.h \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QDateTime \
+		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/qdatetime.h \
 		../../../../Qt5.10.0/5.10.0/mingw53_32/include/QtCore/QRegExp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug/printtaxn.o ../../../NewTax/printtaxn.cpp
 

@@ -155,6 +155,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chDoNotUseSecondDB, "Dont use second database")
             .addWidget(ui->chNationalityFile, "Nationality file")
             .addWidget(ui->chInhouseGuestAnyTime, "Inhouse guest any period")
+            .addWidget(ui->chRoomArrangement, "Room arrangement report")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

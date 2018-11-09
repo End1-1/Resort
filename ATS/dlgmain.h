@@ -58,6 +58,8 @@ private slots:
     void on_leAirDb_textChanged(const QString &arg1);
     void on_leAirUser_textChanged(const QString &arg1);
     void on_leAirPass_textChanged(const QString &arg1);
+    void on_btnTest_clicked();
+    void on_leRawData_textChanged(const QString &arg1);
 };
 
 #endif // DLGMAIN_H

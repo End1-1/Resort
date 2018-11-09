@@ -2,6 +2,7 @@
 #include "ui_dlgtransfer.h"
 #include "cachebed.h"
 #include "cacheactiveroom.h"
+#include "vauchers.h"
 
 #define HINT_ROOM_TO 1
 #define HINT_ROOM_FROM 2
@@ -98,7 +99,18 @@ void DlgTransfer::on_btnOk_clicked()
     for (int i = 0, count = ui->tblData->rowCount(); i < count; i++) {
         fDD[":f_inv"] = ui->leInvoiceTo->text();
         fDD[":f_res"] = ui->leReserveTo->text();
+        fDD[":f_guest"] = ui->leGuestTo->text();
         fDD.update("m_register", where_id(ap(ui->tblData->item(i, 0)->text())));
+        fDD[":f_id"] = ui->tblData->item(i, 0)->text();
+        fDD.exec("select * from m_register where f_id=:f_id");
+        if (fDD.nextRow()) {
+            if (fDD.getString("f_source") == VAUCHER_POINT_SALE_N) {
+                fDD[":f_paymentModeComment"] = fDD.getString("f_room") + ", " + fDD.getString("f_guest");
+                fDD[":f_roomComment"] = fDD.getString("f_room") + ", " + fDD.getString("f_guest");
+                fDD[":f_reservation"] = ui->leReserveTo->text();
+                fDD.update("o_header", where_id(ap(ui->tblData->item(i, 0)->text())));
+            }
+        }
         fTrackControl->insert("Move out from invoice", QString("%1 / %2 / %3 / %4")
                                   .arg(ui->leInvoiceFrom->text())
                                   .arg(ui->tblData->item(i, 1)->text())

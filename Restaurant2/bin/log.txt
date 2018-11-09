@@ -1,1 +1,1 @@
-select f_id, f_lockHost, f_order from r_table
+update r_table set f_lockHost='',f_lockTime=0 where f_id=1

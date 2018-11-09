@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FRoomArrangement</class>
+ <widget class="QWidget" name="FRoomArrangement">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>939</width>
+    <height>61</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Year</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="EQComboBox" name="cbYear">
+     <item>
+      <property name="text">
+       <string>2017</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2018</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="EQCheckBox" name="ch1">
+     <property name="text">
+      <string>January</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="EQCheckBox" name="ch2">
+     <property name="text">
+      <string>February</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="EQCheckBox" name="ch3">
+     <property name="text">
+      <string>Mart</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="EQCheckBox" name="ch4">
+     <property name="text">
+      <string>April</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="EQCheckBox" name="ch5">
+     <property name="text">
+      <string>May</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="EQCheckBox" name="ch6">
+     <property name="text">
+      <string>June</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="EQCheckBox" name="ch7">
+     <property name="text">
+      <string>July</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="EQCheckBox" name="ch8">
+     <property name="text">
+      <string>August</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="EQCheckBox" name="ch9">
+     <property name="text">
+      <string>September</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="EQCheckBox" name="ch10">
+     <property name="text">
+      <string>October</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="6">
+    <widget class="EQCheckBox" name="ch11">
+     <property name="text">
+      <string>November</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7">
+    <widget class="EQCheckBox" name="ch12">
+     <property name="text">
+      <string>December</string>
+     </property>
+     <property name="Tag" stdset="0">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EQComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">eqcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

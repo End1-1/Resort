@@ -234,6 +234,39 @@
           </widget>
          </item>
          <item>
+          <widget class="QToolButton" name="btnDuplicateFiscal">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>5555</width>
+             <height>5555</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>DUPLICATE
+FISCAL</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="btnPrintReceipt">
            <property name="minimumSize">
             <size>

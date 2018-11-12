@@ -871,3 +871,107 @@ void DlgBanket::on_pushButton_2_clicked()
         air.close();
     }
 }
+
+void DlgBanket::on_btnDuplicateFiscal_clicked()
+{
+    QString ordNum;
+    if (!DlgGetText::getText(ordNum, "PE-")) {
+        return;
+    }
+    if (ordNum.trimmed().isEmpty()) {
+        return;
+    }
+    if (fPreferences.getDb(def_tax_port).toInt() == 0) {
+        message_error(tr("Setup tax printer first"));
+        return;
+    }
+    DoubleDatabase fDD;
+    fDD.open(true, doubleDatabase);
+    fDD[":f_id"] = ordNum;
+    fDD.exec("select * from o_event where f_id=:f_id and f_state=1 ");
+    if (!fDD.nextRow()) {
+        message_error(tr("Invalid event number"));
+    }
+    HallStruct *h = 0;
+    for (int i = 0; i < Hall::fBanketHall.count(); i++) {
+        if (Hall::fBanketHall.at(i)->fId == fDD.getInt("f_hall")) {
+            h = Hall::fBanketHall.at(i);
+            break;
+        }
+    }
+    if (!h) {
+        message_error(tr("No hall selected"));
+        return;
+    }
+
+    CacheInvoiceItem i;
+    if (!i.get(fDD.getInt("f_itemCode"))) {
+        message_error(tr("No invoice item defined for event"));
+        return;
+    }
+    CacheTaxMap tm;
+    if (!tm.get(i.fCode())) {
+        message_error(tr("No tax department defined for ") + i.fName());
+        return;
+    }
+
+    PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
+                  fPreferences.getDb(def_tax_port).toInt(),
+                  fPreferences.getDb(def_tax_password).toString());
+    ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), fDD.getDouble("f_total"), 1);
+
+    switch (fDD.getInt("f_paymentMode")) {
+    case PAYMENT_CASH:
+//        pt->fAmountCash = float_str(total, 2);
+//        pt->fAmountCard = "0";
+        break;
+    case PAYMENT_CARD:/*
+        pt->fAmountCard = float_str(total, 2);
+        pt->fAmountCash = "0";*/
+        break;
+    default:
+        message_error(tr("Printing fiscal receipt is not available for selected payment mode"));
+        return;
+    }
+    DoubleDatabase air;
+    air.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    air.open(true, false);
+
+    QString in, out, err;
+    int result = ptn.makeJsonAndPrint(fDD.getInt("f_paymentMode") == PAYMENT_CARD ? fDD.getDouble("f_total") : 0, 0, in, out, err);
+    if (result != pt_err_ok) {
+        air[":f_date"] = QDate::currentDate();
+        air[":f_time"] = QTime::currentTime();
+        air[":f_db"] = 1;
+        air[":f_order"] = fDoc;
+        air[":f_queryCode"] = opcode_PrintTaxN;
+        air[":f_queryJson"] = in;
+        air[":f_replyJson"] = out;
+        air[":f_replyResult"] = result;
+        air[":f_replyJson"] = out;
+        air[":f_replyText"] = err;
+        air[":f_replyTaxCode"] = "-";
+        air.insert("tax_print", false);
+
+        message_error(out + QString("<br>") + err);
+        return;
+    }
+    air[":f_date"] = QDate::currentDate();
+    air[":f_time"] = QTime::currentTime();
+    air[":f_db"] = 1;
+    air[":f_order"] = fDoc;
+    air[":f_queryCode"] = opcode_PrintTaxN;
+    air[":f_queryJson"] = in;
+    air[":f_replyJson"] = out;
+    air[":f_replyResult"] = result;
+    air[":f_replyJson"] = out;
+    air[":f_replyText"] = err;
+    air[":f_replyTaxCode"] = 1;
+    air.insert("tax_print", false);
+    air.close();
+
+    fDD[":f_tax"] = 1;
+    fDD.update("o_event", where_id(ap(fDoc)));
+    fDD[":f_fiscal"] = 1;
+    fDD.update("m_register", where_id(ap(fDoc)));
+}

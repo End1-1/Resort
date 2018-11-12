@@ -52,6 +52,8 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_btnDuplicateFiscal_clicked();
+
 private:
     TrackControl *fTrackControl;
     Ui::DlgBanket *ui;

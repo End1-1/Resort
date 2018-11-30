@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>48</height>
+    <width>910</width>
+    <height>53</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -164,6 +164,13 @@
      </item>
      <item row="1" column="5">
       <widget class="EQLineEdit" name="leID"/>
+     </item>
+     <item row="1" column="9">
+      <widget class="QPushButton" name="btnClearLog">
+       <property name="text">
+        <string>Clear log</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

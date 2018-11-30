@@ -5909,6 +5909,10 @@ for this operation</source>
         <source>Inhouse guests, any period</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Room arrangement</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -9718,6 +9722,93 @@ ledger</source>
     </message>
 </context>
 <context>
+    <name>FRoomArrangement</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2017</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2018</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>January</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>February</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>April</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>May</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>June</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>July</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>August</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>September</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>October</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>November</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>December</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room arrangement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B/O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B/B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No month is selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FRoomState</name>
     <message>
         <source>Form</source>
@@ -11693,6 +11784,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Enable second database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room arrangement</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

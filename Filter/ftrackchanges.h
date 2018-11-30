@@ -15,6 +15,9 @@ public:
     ~FTrackChanges();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+private slots:
+    void on_btnClearLog_clicked();
+
 private:
     Ui::FTrackChanges *ui;
 };

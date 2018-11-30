@@ -3,6 +3,7 @@
 #include "wreportgrid.h"
 #include "cachetrackingtables.h"
 #include "cacheusers.h"
+#include "dlgclearlog.h"
 
 FTrackChanges::FTrackChanges(QWidget *parent) :
     WFilterBase(parent),
@@ -46,4 +47,12 @@ void FTrackChanges::apply(WReportGrid *rg)
 QWidget *FTrackChanges::firstElement()
 {
     return ui->deStart;
+}
+
+void FTrackChanges::on_btnClearLog_clicked()
+{
+    DlgClearLog *d = new DlgClearLog(this);
+    d->exec();
+    delete d;
+    apply(fReportGrid);
 }

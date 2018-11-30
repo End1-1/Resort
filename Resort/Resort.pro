@@ -378,7 +378,8 @@ SOURCES += main.cpp\
     dlgexecfailedsqls.cpp \
     ../Filter/fdishes.cpp \
     ../Filter/ftstorereport.cpp \
-    ../Filter/froomarrangement.cpp
+    ../Filter/froomarrangement.cpp \
+    dlgclearlog.cpp
 
 HEADERS  += mainwindow.h \
     login.h \
@@ -745,7 +746,8 @@ HEADERS  += mainwindow.h \
     dlgexecfailedsqls.h \
     ../Filter/fdishes.h \
     ../Filter/ftstorereport.h \
-    ../Filter/froomarrangement.h
+    ../Filter/froomarrangement.h \
+    dlgclearlog.h
 
 FORMS    += mainwindow.ui \
     login.ui \
@@ -965,7 +967,8 @@ FORMS    += mainwindow.ui \
     dlgexecfailedsqls.ui \
     ../Filter/fdishes.ui \
     ../Filter/ftstorereport.ui \
-    ../Filter/froomarrangement.ui
+    ../Filter/froomarrangement.ui \
+    dlgclearlog.ui
 
 RESOURCES += \
     res.qrc

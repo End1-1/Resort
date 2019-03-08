@@ -19,7 +19,7 @@
 #define cr__menu_restaurant 10
 #define cr__menu_direcotory 11
 #define cr__contacts 12
-#define cr__partners 13
+#define cr__cardex_list 13
 #define cr__guests 14
 #define cr__credit_cards 15
 #define cr__menu_cityledger 16
@@ -55,7 +55,7 @@
 #define cr__checkout 46
 #define cr__calls_history 47
 #define cr__notes 48
-#define cr__report_guest 49
+#define cr__report_guest_notused 49
 #define cr__o_movement 50
 #define cr__o_cancelation 51
 #define cr__o_print_unlimited_receipt 52
@@ -123,6 +123,27 @@
 #define cr__nationality 114
 #define cr__inhouse_anytime 115
 #define cr__room_arrangement 116
+#define cr__room_assignment 117
+#define cr__expected_arrivals_pax 118
+#define cr__expected_arrivals_deparutures 119
+#define cr__inhouse_guest 120
+#define cr__room_status_change 121
+#define cr__wakeupcall 122
+#define cr__hotel_hierarcgy 123
+#define cr__daily_transactions 124
+#define cr__cityledger_list 125
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
+#define cr__1
 #define cr__1
 #define cr__1
 #define cr__1

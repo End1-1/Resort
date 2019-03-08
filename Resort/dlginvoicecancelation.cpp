@@ -37,7 +37,8 @@ void DlgInvoiceCancelation::addRow(const QList<QVariant> &data)
         msg += data.at(i).toString() + " /";
     }
     fTrackControl->insert("Invoice cancelation", msg, "");
-    if (QDate::fromString(data.at(2).toString(), def_date_format) != WORKING_DATE) {
+    QDate d = QDate::fromString(data.at(2).toString(), def_mysql_date_format);
+    if (d != WORKING_DATE) {
         fRaise = true;
     }
 }

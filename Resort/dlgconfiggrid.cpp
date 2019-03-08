@@ -22,6 +22,7 @@ DlgConfigGrid::DlgConfigGrid(QWidget *parent) :
         }
     }
     adjustSize();
+    fReset = false;
 }
 
 DlgConfigGrid::~DlgConfigGrid()
@@ -29,7 +30,7 @@ DlgConfigGrid::~DlgConfigGrid()
     delete ui;
 }
 
-bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, QWidget *parent)
+bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, bool &reset, QWidget *parent)
 {
     DlgConfigGrid *d = new DlgConfigGrid(parent);
     d->ui->fcbFontName->setCurrentText(fontName);
@@ -40,6 +41,7 @@ bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, QWi
         fontName = d->ui->fcbFontName->currentText();
         fontSize = d->ui->spFontSize->value();
         fontBold = d->ui->chFontBold->isChecked();
+        reset = d->fReset;
     }
     delete d;
     return result;
@@ -56,4 +58,13 @@ void DlgConfigGrid::on_btnOK_clicked()
 void DlgConfigGrid::on_btnCancel_clicked()
 {
     reject();
+}
+
+void DlgConfigGrid::on_btnReset_clicked()
+{
+    ui->fcbFontName->setCurrentFont(QFont(qApp->font()));
+    ui->spFontSize->setValue(qApp->font().pointSize());
+    ui->chFontBold->setChecked(qApp->font().bold());
+    fReset = true;
+    accept();
 }

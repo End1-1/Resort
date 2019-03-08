@@ -63,7 +63,7 @@ void FDailyMovement::apply(WReportGrid *rg)
             .setColumn(0, "", tr("Voucher")) //15
             .setColumn((ui->chCanceled->isChecked() ? 100 : 0), "", tr("Cancel by")) //16
             .setColumn(0, "", tr("RecId")) //17
-            .setColumn(0, "", tr("Invoice")) //18
+            .setColumn(80, "", tr("Invoice")) //18
             .setColumn(0, "", tr("Payment mode")) // 19
             ;
     QStringList items = fPreferences.getDb(def_daily_movement_items).toString().split(";", QString::SkipEmptyParts);
@@ -74,7 +74,6 @@ void FDailyMovement::apply(WReportGrid *rg)
             processItems(s);
         }
     }
-   // rg->fModel->fDD.fDbRows = rg->fDbRows;
     rg->fModel->apply(0);
     for (int i = 0; i < rg->fModel->rowCount(); i++) {
         if (rg->fModel->data(i, 0).toString().contains(tr("SUBTOTAL FOR")) ||
@@ -85,77 +84,6 @@ void FDailyMovement::apply(WReportGrid *rg)
         }
     }
     rg->fModel->removeRow(rg->fModel->rowCount() - 1);
-    /*
-    QString query = fReportGrid->fStaticQuery;
-    query = query.replace(":f_wdate", ui->deStart->dateMySql())
-            .replace(":f_canceled", (ui->chCanceled->isChecked() ? "1" : "0"))
-            .replace(":where", where);
-
-    fReportGrid->fModel->setSqlQuery(query);
-    fReportGrid->fModel->apply(fReportGrid);0
-    int i = 0;
-    while (i < fReportGrid->fModel->rowCount() - 1) {
-        if (fReportGrid->fModel->data(i, 4).toInt() == 30) {
-            if (fReportGrid->fModel->data(i, 8).toString() == "CITY LEDGER"
-                    && (fReportGrid->fModel->data(i, 14).toString() == "RV"
-                        || fReportGrid->fModel->data(i, 14).toString() == "AV")) {
-                fReportGrid->fModel->removeRow(i);
-                continue;
-            }
-        }
-        i++;
-    }
-
-    QList<int> cols;
-    cols << 10 << 11 << 12;
-    rg->fModel->insertSubTotals(17, cols);
-    double cash = 0, card = 0, bank = 0;
-    for (int i = 0; i < rg->fModel->rowCount(); i++) {
-        if (rg->fModel->data(i, 4).toInt() == fPreferences.getDb(def_advance_voucher_id).toInt()
-                || rg->fModel->data(i, 4).toInt() == fPreferences.getDb(def_receip_vaucher_id).toInt()) {
-            if (rg->fModel->data(i, 8).toString() == "CASH") {
-                cash += rg->fModel->data(i, 10, Qt::EditRole).toDouble();
-            } else if (rg->fModel->data(i, 8).toString().contains("CARD", Qt::CaseInsensitive)) {
-                card += rg->fModel->data(i, 10, Qt::EditRole).toDouble();
-            } else if (rg->fModel->data(i, 8).toString().contains("BANK", Qt::CaseInsensitive)) {
-                bank += rg->fModel->data(i, 10, Qt::EditRole).toDouble();
-            }
-        }
-
-        if (rg->fModel->data(i, 0).toString().contains("Subtotal", Qt::CaseInsensitive)) {
-            int itemCode = rg->fModel->data(i - 1, 4).toInt();
-            if (itemCode == fPreferences.getDb(def_advance_voucher_id).toInt()) {
-                itemCode = fPreferences.getDb(def_receip_vaucher_id).toInt();
-            }
-            CI_InvoiceItem *ii = CacheInvoiceItem::instance()->get(itemCode);
-            if (!ii) {
-                message_error(tr("Invoice item missing for") + "\r\n" + QString::number(itemCode));
-                return;
-            }
-            rg->fModel->setData(i, 0, QString("%1 %2").arg(tr("Subtotal")).arg(ii.fName()));
-            if (itemCode == fPreferences.getDb(def_receip_vaucher_id).toInt()) {
-                QList<QVariant> emptyRow;
-                         //  1      2     3     4     5    6    7     8      9    10    11    12    13    14    15    16    17    18
-                emptyRow << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "";
-                emptyRow[0] = QString("%1").arg(tr("TOTAL CASH"));
-                emptyRow[10] = cash;
-                rg->fModel->insertRow(i, emptyRow);
-                rg->fTableView->setSpan(i, 0, 1, 10);
-                i++;
-                emptyRow[0] = QString("%1").arg(tr("TOTAL CARD"));
-                emptyRow[10] = card;
-                rg->fModel->insertRow(i, emptyRow);
-                rg->fTableView->setSpan(i, 0, 1, 10);
-                i++;
-                emptyRow[0] = QString("%1").arg(tr("TOTAL BANK"));
-                emptyRow[10] = bank;
-                rg->fModel->insertRow(i, emptyRow);
-                rg->fTableView->setSpan(i, 0, 1, 10);
-                i++;
-            }
-        }
-    }
-    */
 }
 
 QWidget *FDailyMovement::firstElement()

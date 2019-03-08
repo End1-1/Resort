@@ -157,11 +157,8 @@ public slots:
     void on_actionYearly_financial_report_triggered();
 
     void on_actionUtils_triggered();
-
     void on_actionExport_data_triggered();
-
     void on_actionAdvance_report_triggered();
-
     void on_actionRestaurant_online_triggered();
     void on_actionPartners_group_triggered();
 
@@ -178,20 +175,13 @@ public slots:
     void on_actionOpen_breakfast_triggered();
 
     void on_actionMonthly_occupancy_percentages_triggered();
-
     void on_actionNaitonality_report_by_period_triggered();
-
     void on_actionCancelation_No_show_fees_triggered();
-
     void on_actionCancelation_No_show_fee_triggered();
-
     void on_actionSales_by_storages_triggered();
     void on_actionReservation_groups_triggered();
-
     void on_actionConfigure_Welcome_Page_triggered();
-
     void on_actionGuest_by_nationality_triggered();
-
     void on_actionModels_of_cars_triggered();
     void on_actionCostumers_cars_triggered();
     void on_actionReport_by_payment_triggered();
@@ -211,6 +201,10 @@ public slots:
     void on_actionSales_report_by_cars_triggered();
     void on_actionDiscount_total_triggered();
     void on_actionCostumers_triggered();
+    void on_actionWakeup_calls_triggered();
+    void on_actionDaily_transactions_triggered();
+    void on_actionHotel_hierarchy_triggered();
+
 
 protected:
     void closeEvent(QCloseEvent *event);

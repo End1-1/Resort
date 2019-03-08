@@ -379,7 +379,11 @@ SOURCES += main.cpp\
     ../Filter/fdishes.cpp \
     ../Filter/ftstorereport.cpp \
     ../Filter/froomarrangement.cpp \
-    dlgclearlog.cpp
+    dlgclearlog.cpp \
+    ../Filter/fwakeupcall.cpp \
+    dlgwakepcalls.cpp \
+    ../Filter/fdailytransaction.cpp \
+    ../Filter/fhotelhierarchy.cpp
 
 HEADERS  += mainwindow.h \
     login.h \
@@ -747,7 +751,11 @@ HEADERS  += mainwindow.h \
     ../Filter/fdishes.h \
     ../Filter/ftstorereport.h \
     ../Filter/froomarrangement.h \
-    dlgclearlog.h
+    dlgclearlog.h \
+    ../Filter/fwakeupcall.h \
+    dlgwakepcalls.h \
+    ../Filter/fdailytransaction.h \
+    ../Filter/fhotelhierarchy.h
 
 FORMS    += mainwindow.ui \
     login.ui \
@@ -968,7 +976,11 @@ FORMS    += mainwindow.ui \
     ../Filter/fdishes.ui \
     ../Filter/ftstorereport.ui \
     ../Filter/froomarrangement.ui \
-    dlgclearlog.ui
+    dlgclearlog.ui \
+    ../Filter/fwakeupcall.ui \
+    dlgwakepcalls.ui \
+    ../Filter/fdailytransaction.ui \
+    ../Filter/fhotelhierarchy.ui
 
 RESOURCES += \
     res.qrc

@@ -11,6 +11,7 @@ FTrackChanges::FTrackChanges(QWidget *parent) :
 {
     ui->setupUi(this);
     fReportGrid->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
+    fReportGrid->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 2);
     ui->deStart->setDate(QDate::currentDate().addDays(-30));
     ui->deEnd->setDate(QDate::currentDate());
     ui->leType->setSelector(this, cache(cid_tracking_tables), ui->leType);

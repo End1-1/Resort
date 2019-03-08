@@ -6,7 +6,6 @@
 #include <QDesktopWidget>
 #include <QPrinterInfo>
 #include <QGraphicsPixmapItem>
-#include <QDebug>
 
 PPrintPreview::PPrintPreview(QWidget *parent) :
     QDialog(parent),
@@ -153,7 +152,6 @@ void PPrintPreview::on_cbZoom_currentIndexChanged(int index)
     ui->gv->setMinimumSize(size);
     ui->gv->setMaximumSize(size);
     ui->gv->scale(deltaScaleFactor, deltaScaleFactor);
-    qDebug() << ui->gv->geometry();
 }
 
 void PPrintPreview::on_btnZoopIn_clicked()

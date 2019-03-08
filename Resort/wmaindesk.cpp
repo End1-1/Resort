@@ -102,6 +102,8 @@ WMainDesk::WMainDesk(QWidget *parent) :
     connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     timeout();
     fTimer.start(30000);
+    ui->btnEndOfDay->setVisible(r__(cr__eod));
+    ui->btnGroupReservation->setVisible(r__(cr__reservation_group_reservation));
 }
 
 WMainDesk::~WMainDesk()
@@ -709,6 +711,10 @@ void WMainDesk::on_leJumpToRoom_editingFinished()
 
 void WMainDesk::on_tblRoom_doubleClicked(const QModelIndex &index)
 {
+    if (!r__(cr__room_status_change)) {
+        message_error(tr("Access denied"));
+        return;
+    }
     if (!index.isValid()) {
         return;
     }

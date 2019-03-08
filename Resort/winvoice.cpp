@@ -23,6 +23,7 @@
 #include "vauchers.h"
 #include "dlgcityadvance.h"
 #include "dlgtaxback.h"
+#include "dlgwakepcalls.h"
 #include "dlgadvance.h"
 #include "dlgprinttaxsideoption.h"
 #include "dlgpostbreakfast.h"
@@ -62,6 +63,7 @@ WInvoice::WInvoice(QWidget *parent) :
     ui->btnDiscount->setEnabled(r__(cr__discount_vaucher));
     ui->btnTransfer->setEnabled(r__(cr__transfer_vaucher));
     ui->btnTransferAmount->setEnabled(r__(cr__transfer_vaucher));
+    ui->btnWakeup->setVisible(r__(cr__wakeupcall));
     connect(cache(cid_active_room), SIGNAL(updated(int,QString)), this, SLOT(cacheUpdated(int, QString)));
     connect(ui->leCheckInTime, &EQLineEdit::customButtonClicked, [this](bool v) {
         Q_UNUSED(v);
@@ -712,7 +714,7 @@ void WInvoice::on_btnCheckout_clicked()
             BroadcastThread::cmdRefreshCache(cid_red_reservation, n.fId());
         }
         clearInvoice();
-        fTabWidget->removeTab(fTabIndex);
+        removeFromTabWidget();
     } else {
         fDD.rollback();
     }
@@ -897,7 +899,7 @@ void WInvoice::on_btnCancel_clicked()
         d->addRow(row);
     }
     if (noall) {
-        message_info(tr("Some ent╚ries was excluded from selection, because insufficiently of privileges"));
+        message_info(tr("Some entries was excluded from selection, because insufficiently of privileges"));
     }
     if (haveEntries) {
         if (d->exec() == QDialog::Accepted) {
@@ -1297,4 +1299,9 @@ void WInvoice::on_btnPostMinibar_clicked()
 {
     DlgPostBreakfast::postBreakfast(ui->leInvoice->text(), DlgPostBreakfast::ptMinibar);
     loadInvoice(ui->leInvoice->text());
+}
+
+void WInvoice::on_btnWakeup_clicked()
+{
+    DlgWakepCalls::openWakeupCalls(ui->leRoomCode->text());
 }

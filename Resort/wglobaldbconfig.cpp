@@ -177,6 +177,8 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leMinibarDishId->setText(fPreferences.getDb(def_minibar_default_dish).toString());
     ui->chPasswordRequired->setChecked(fPreferences.getDb(def_passport_required).toInt());
     ui->chShowLogs->setChecked(fPreferences.getDb(def_show_logs).toBool());
+    ui->leCheckinVoucherId->setText(fPreferences.getDb(def_checkin_voucher_id).toString());
+    ui->cbInvoiceHeader->setCurrentIndex(fPreferences.getDb(def_invoice_header_mode).toInt());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -204,6 +206,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->leRoomArrangement, "Default room arrangement")
             .addWidget(ui->leReceiptVaucherId, "Receipt vaucher id")
             .addWidget(ui->leReservationVoucherId, "Reservation voucher id")
+            .addWidget(ui->leCheckinVoucherId, "Checkin voucher id")
             .addWidget(ui->leAdvanceVoucherId, "Advance voucher id")
             .addWidget(ui->leRoomRateChangeId, "Room rate change voucher id")
             .addWidget(ui->leBreakfastHallId, "Breakfast hall id")
@@ -214,6 +217,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->leMinibarDishId, "Minibar dish id")
             .addWidget(ui->chPasswordRequired, "Passport required")
             .addWidget(ui->chShowLogs, "Show logs")
+            .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
             ;
 
     getCompSettings();
@@ -267,6 +271,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_room_arrangement, ui->leRoomArrangement->text());
     values.insert(def_receip_vaucher_id, ui->leReceiptVaucherId->text());
     values.insert(def_reservation_voucher_id, ui->leReservationVoucherId->text());
+    values.insert(def_checkin_voucher_id, ui->leCheckinVoucherId->text());
     values.insert(def_room_rate_change_id, ui->leRoomRateChangeId->text());
     values.insert(def_advance_voucher_id, ui->leAdvanceVoucherId->text());
     values.insert(def_breakfast_default_hall, ui->leBreakfastHallId->text());
@@ -277,6 +282,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_minibar_default_dish, ui->leMinibarDishId->text());
     values.insert(def_passport_required, QString::number((int)ui->chPasswordRequired->isChecked()));
     values.insert(def_show_logs, QString::number(ui->chShowLogs->isChecked()));
+    values.insert(def_invoice_header_mode, QString::number(ui->cbInvoiceHeader->currentIndex()));
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
     QMapIterator<QString, QString> it(values);

@@ -3,6 +3,8 @@
 #include "pprintpreview.h"
 #include "pprintscene.h"
 #include "ptextrect.h"
+#include "cachereservation.h"
+#include "cacheusers.h"
 #include "pimage.h"
 #include "cacheroom.h"
 #include "pprintheader.h"
@@ -212,7 +214,7 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     ps->addTableRow(top, rowHeight, col, val, &th);
     top += 20;
     col.clear();
-    col << 20 << 200 << 300 << 200 << 600 << 300 << 490;
+    col << 20 << 300 << 300 << 200 << 600 << 300 << 390;
     val << tr("Rooming")
         << fSource->valueForWidget("Rate")
         << tr("VAT")
@@ -220,6 +222,28 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
         << tr("Status")
         << fSource->valueForWidget("Status");
     ps->addTableRow(top, rowHeight, col, val, &th);
+    val << tr("Mode of payment")
+        << fSource->valueForWidget("Payment mode")
+        << tr("Advance")
+        << fSource->valueForWidget("Advance")
+        << ""
+        << "";
+    ps->addTableRow(top, rowHeight, col, val, &th);
+    top += 60;
+    th.setBorders(false, false, false, false);
+    top += ps->addTextRect(20, top, 200, rowHeight, tr("Signature"), &th)->textHeight();
+    ps->addLine(20, top, 600, top, QPen(QBrush(Qt::SolidPattern), 3));
+    top += 30;
+    top += ps->addTextRect(20, top, 2100, rowHeight * 10, tr("Remarks: ") + fSource->valueForWidget("Remarks"), &th)->textHeight();
+    top += 10;
+    CacheReservation cr;
+    if (cr.get(fSource->valueForWidget("Doc number"))) {
+        CacheUsers cu;
+        if (cu.get(cr.fAuthor())) {
+            top += ps->addTextRect(20, top, 2000, rowHeight, tr("Operator: " ) + cu.fName(), &th)->textHeight();
+        }
+    }
+    top += ps->addTextRect(20, top, 2000, rowHeight, tr("Printed: ") + QDateTime::currentDateTime().toString(def_date_time_format), &th)->textHeight();
     pp->exec();
     delete pp;
     accept();

@@ -14,6 +14,7 @@
 #include "fcanceledreservations.h"
 #include "recoupon.h"
 #include "freportbypayment.h"
+#include "fhotelhierarchy.h"
 #include "guestcheckin.h"
 #include "wreportroom.h"
 #include "fdiscountreport.h"
@@ -22,6 +23,7 @@
 #include "wwelcome.h"
 #include "fdiscounttotal.h"
 #include "fhouseitems.h"
+#include "fwakeupcall.h"
 #include "favailablerooms.h"
 #include "fbreakfast.h"
 #include "fmonthlyoccperc.h"
@@ -30,6 +32,7 @@
 #include "fsalesbycar.h"
 #include "froomarrangement.h"
 #include "fcash.h"
+#include "fdailytransaction.h"
 #include "dlgexecfailedsqls.h"
 #include "ftstorereport.h"
 #include "renationalityfile.h"
@@ -564,9 +567,10 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
 
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
-    ui->actionIn_house_guest->setVisible(r__(cr__report_guest));
-    ui->actionExpected_arrivals->setVisible(r__(cr__report_guest));
-    ui->actionExpected_arrivals_simple->setVisible(r__(cr__report_guest));
+    ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
+    ui->actionExpected_arrivals->setVisible(r__(cr__expected_arrivals_deparutures));
+    ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_pax));
+    ui->actionRoom_assignment->setVisible(r__(cr__room_assignment));
     ui->actionRe_checkin->setVisible(r__(cr__re_checkin));
     ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin) || r__(cr__call_tout));
     ui->actionNotes->setVisible(r__(cr__notes));
@@ -575,6 +579,9 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionHotel_status->setVisible(r__(cr__hotel_status));
     ui->actionRoom_inventory_2->setVisible(r__(cr__reception_room_inventory));
     ui->actionList_of_checkin_guests->setVisible(r__(cr__list_of_checking_guests));
+    ui->actionWakeup_calls->setVisible(r__(cr__wakeupcall));
+    ui->actionHotel_hierarchy->setVisible(r__(cr__hotel_hierarcgy));
+    ui->actionDaily_transactions->setVisible(r__(cr__daily_transactions));
 
     ui->menuBar->actions().at(3)->setVisible(r__(cr__menu_cashier)); // Cashier
     ui->actionCurrencies->setVisible(r__(cr__currencies));
@@ -632,9 +639,9 @@ void MainWindow::enableMainMenu(bool value)
 
     ui->menuBar->actions().at(10)->setVisible(r__(cr__menu_direcotory)); //Directory hotel
     ui->actionContacts->setVisible(r__(cr__contacts));
-    ui->actionPartners->setVisible(r__(cr__partners));
-    ui->actionPartners_group->setVisible(r__(cr__partners));
-    ui->actionCity_Ledger->setVisible(r__(cr__partners));
+    ui->actionPartners->setVisible(r__(cr__cardex_list));
+    ui->actionPartners_group->setVisible(r__(cr__cardex_list));
+    ui->actionCity_Ledger->setVisible(r__(cr__cityledger_list));
     ui->actionNationality_file->setVisible(r__(cr__guests));
     ui->actionGuest_file->setVisible(r__(cr__guests));
     ui->actionGuest_titles->setVisible(r__(cr__guests));
@@ -2233,4 +2240,19 @@ void MainWindow::on_actionDisable_second_database_triggered()
 void MainWindow::on_actionRoom_arrangement_triggered()
 {
     FRoomArrangement::openFilterReport<FRoomArrangement, WReportGrid>();
+}
+
+void MainWindow::on_actionWakeup_calls_triggered()
+{
+    FWakeupCall::openFilterReport<FWakeupCall, WReportGrid>();
+}
+
+void MainWindow::on_actionDaily_transactions_triggered()
+{
+    FDailyTransaction::openFilterReport<FDailyTransaction, WReportGrid>();
+}
+
+void MainWindow::on_actionHotel_hierarchy_triggered()
+{
+    FHotelHierarchy::openFilterReport<FHotelHierarchy, WReportGrid>();
 }

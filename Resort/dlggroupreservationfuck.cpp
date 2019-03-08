@@ -714,7 +714,7 @@ void DlgGroupReservationFuck::save()
         fDD[":f_lastEdit"] = WORKING_USERID;
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             DoubleDatabase did;
-            did.open(true, true);
+            did.open(true, doubleDatabase);
             QString rsId = uuid(VAUCHER_RESERVATION_N);
             did.insertId("f_reservation", rsId);
             ui->tblRoom->setItemWithValue(i, 0, rsId);
@@ -810,7 +810,7 @@ void DlgGroupReservationFuck::save()
     countReserve();
     fDD.commit();
     fDD.close();
-    fDD.open(true, true);
+    fDD.open(true, doubleDatabase);
 }
 
 void DlgGroupReservationFuck::on_btnSave_clicked()

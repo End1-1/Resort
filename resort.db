@@ -1,0 +1,2 @@
+/* resort database */
+create table f_wakeupcalls (f_id integer primary key auto_increment, f_invoice varchar(16), f_date date, f_time time)

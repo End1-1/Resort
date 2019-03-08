@@ -16,15 +16,19 @@ class DlgConfigGrid : public BaseDialog
 public:
     explicit DlgConfigGrid(QWidget *parent = 0);
     ~DlgConfigGrid();
-    static bool config(QString &fontName, int &fontSize, bool &fontBold, QWidget *parent);
+    static bool config(QString &fontName, int &fontSize, bool &fontBold, bool &reset, QWidget *parent);
+
 private slots:
     void on_btnOK_clicked();
 
     void on_btnCancel_clicked();
 
+    void on_btnReset_clicked();
+
 private:
     Ui::DlgConfigGrid *ui;
     GOWidget *fAddWidget;
+    bool fReset;
 };
 
 #endif // DLGCONFIGGRID_H

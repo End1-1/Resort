@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QDebug>
+#include <QMessageBox>
 
 bool logEnabled = false;
 QElapsedTimer timer;
@@ -28,6 +29,8 @@ void logging::writeLog(const QString &text)
         QString fullText = QString("%1 %2: %3\r\n").arg(e).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")).arg(text);
         f.write(fullText.toUtf8());
         f.close();
+    } else {
+        QMessageBox::critical(0, "Error", "Cannot write log");
     }
 }
 
@@ -47,5 +50,7 @@ void logging::writeLog(const QString &text, QElapsedTimer &t)
         QString fullText = QString("%1 %2: %3\r\n").arg(e).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")).arg(text);
         f.write(fullText.toUtf8());
         f.close();
+    } {
+        QMessageBox::critical(0, "Error", "Cannot write log");
     }
 }

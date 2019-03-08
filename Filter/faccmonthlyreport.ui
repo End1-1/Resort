@@ -150,6 +150,11 @@
          <string>2018</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>2019</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -248,14 +253,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">eqcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

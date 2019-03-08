@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -105,26 +105,6 @@
          </property>
          <property name="Tag" stdset="0">
           <number>90</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInvoiceCancelWorkingDate">
-         <property name="text">
-          <string>Invoice cancelation on the working date</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>20</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInvCancelPrevDate">
-         <property name="text">
-          <string>Invoice cancelation before working date</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <string>19</string>
          </property>
         </widget>
        </item>
@@ -292,12 +272,42 @@
         </widget>
        </item>
        <item>
-        <widget class="EQCheckBox" name="chGuestReport">
+        <widget class="EQCheckBox" name="chExpectedArrivalsPax">
          <property name="text">
-          <string>Guest reports</string>
+          <string>Expected arrivals / pax</string>
          </property>
          <property name="Tag" stdset="0">
-          <number>49</number>
+          <number>118</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chExpectedArrivalsPax_2">
+         <property name="text">
+          <string>Expected arrivals / departures</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>119</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chDailyTransactions">
+         <property name="text">
+          <string>Daily transactions</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>124</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chInhouseGuest">
+         <property name="text">
+          <string>Inhouse guests</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>120</number>
          </property>
         </widget>
        </item>
@@ -308,6 +318,26 @@
          </property>
          <property name="Tag" stdset="0">
           <number>115</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chRoomAssignmen">
+         <property name="text">
+          <string>Room assignment</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>117</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chRoomStatusChange">
+         <property name="text">
+          <string>Room status change</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>121</number>
          </property>
         </widget>
        </item>
@@ -378,6 +408,26 @@
          </property>
          <property name="Tag" stdset="0">
           <number>98</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chWakeupCalls">
+         <property name="text">
+          <string>Wakeup calls</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>122</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chHotelHierarchy">
+         <property name="text">
+          <string>Hotel hierarchy</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>123</number>
          </property>
         </widget>
        </item>
@@ -565,6 +615,26 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chCancelCurrentDate">
+         <property name="text">
+          <string>Voucher cancelation on current date</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chCancelPreviousDate">
+         <property name="text">
+          <string>Voucher cancelation on previous date</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>19</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -608,7 +678,7 @@
         </widget>
        </item>
        <item>
-        <widget class="EQCheckBox" name="checkBox">
+        <widget class="EQCheckBox" name="chAvailableCLAmounts">
          <property name="text">
           <string>Avaiable amounts</string>
          </property>
@@ -1099,10 +1169,20 @@
        <item>
         <widget class="EQCheckBox" name="chPartners">
          <property name="text">
-          <string>Partners</string>
+          <string>Cardex</string>
          </property>
          <property name="Tag" stdset="0">
           <number>13</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chCityledgerList">
+         <property name="text">
+          <string>City ledger</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>125</number>
          </property>
         </widget>
        </item>
@@ -1348,36 +1428,6 @@
           <size>
            <width>20</width>
            <height>359</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabStorehouse">
-      <attribute name="title">
-       <string>Storehouse</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <item>
-        <widget class="EQCheckBox" name="chStoreHouseAllItems">
-         <property name="text">
-          <string>All items</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>86</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_10">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>566</height>
           </size>
          </property>
         </spacer>

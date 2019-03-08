@@ -41,13 +41,13 @@ QWidget *FInhouseDetailBalance::firstElement()
 void FInhouseDetailBalance::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
-    rg->fModel->setColumn(120, "", tr("Invoice"))
+    rg->fModel->setColumn(90, "", tr("Invoice"))
             .setColumn(40, "", tr("Room"))
             .setColumn(200, "", tr("Guest"))
             .setColumn(200, "", tr("Description"))
-            .setColumn(100, "", tr("Debit"))
-            .setColumn(100, "", tr("Credit"))
-            .setColumn(150, "", tr("Payment"))
+            .setColumn(80, "", tr("Debit"))
+            .setColumn(80, "", tr("Credit"))
+            .setColumn(140, "", tr("Payment"))
             .setColumn(150, "", tr("Comment"));
     QString query = "select r.f_invoice, r.f_room, g.guest, m.f_finalName, d.f_amountAmd, c.f_amountAmd, pm.f_" + def_lang + ", "
             "c.f_paymentComment "
@@ -65,6 +65,9 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
     rg->fModel->apply(rg);
     QList<int> col;
     col << 4 << 5;
+    QList<double> vals;
+    rg->fModel->sumOfColumns(col, vals);
+    rg->setTblTotalData(col, vals);
     rg->fModel->insertSubTotals(0, col);
     QString curr;
     for (int i = 0; i < rg->fModel->rowCount(); i++) {
@@ -78,6 +81,11 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
             rg->fModel->setData(i, 2, "");
         } else {
             curr = rg->fModel->data(i, 0).toString();
+        }
+    }
+    for (int i = 0; i < rg->fModel->rowCount(); i++) {
+        if (rg->fModel->stringData(i, 6) == tr("CITY LEDGER")) {
+            rg->fModel->setData(i, 3, tr("CHECKOUT"));
         }
     }
 }

@@ -1534,6 +1534,25 @@ name</source>
     </message>
 </context>
 <context>
+    <name>DlgClearLog</name>
+    <message>
+        <source>Clear log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm to delete history for</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DlgConfigGrid</name>
     <message>
         <source>Report options</source>
@@ -1558,6 +1577,10 @@ name</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4055,6 +4078,30 @@ rooms</source>
         <source>Registration Card</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Mode of payment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Signature</source>
+        <translation type="unfinished">Ստորագրություն</translation>
+    </message>
+    <message>
+        <source>Remarks: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operator: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Printed: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgPrintTaxSM</name>
@@ -5449,10 +5496,6 @@ for this operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>19</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>End of day</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5470,10 +5513,6 @@ for this operation</source>
     </message>
     <message>
         <source>Reception</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Guest reports</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5550,7 +5589,7 @@ for this operation</source>
     </message>
     <message>
         <source>Partners</source>
-        <translation type="unfinished">Գործընկերներ</translation>
+        <translation type="obsolete">Գործընկերներ</translation>
     </message>
     <message>
         <source>Guest</source>
@@ -5710,14 +5749,6 @@ for this operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invoice cancelation on the working date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invoice cancelation before working date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Arrivals and birthdays panel on Welcome</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5835,7 +5866,7 @@ for this operation</source>
     </message>
     <message>
         <source>Storehouse</source>
-        <translation type="unfinished">Պահեստ</translation>
+        <translation type="obsolete">Պահեստ</translation>
     </message>
     <message>
         <source>Length of stay</source>
@@ -5913,6 +5944,50 @@ for this operation</source>
         <source>Room arrangement</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Expected arrivals / pax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals / departures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Daily transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inhouse guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room assignment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room status change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup calls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel hierarchy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voucher cancelation on current date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voucher cancelation on previous date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -5941,6 +6016,53 @@ for this operation</source>
     <name>DlgViewInvoiceCorrections</name>
     <message>
         <source>Corrections</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DlgWakepCalls</name>
+    <message>
+        <source>Wakeup call</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GroupBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="unfinished">Ժամ</translation>
+    </message>
+    <message>
+        <source>Every day</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Հեռացնել</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6106,6 +6228,21 @@ voucher</source>
     </message>
     <message>
         <source>Settings will apply in next time logon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup
+calls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Daily
+Transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel
+hierarchy</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6275,6 +6412,10 @@ ee</source>
     </message>
     <message>
         <source>2018</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7227,6 +7368,10 @@ ee</source>
         <source>Nothing was selected</source>
         <translation type="unfinished">Ոչինչ նշված չէ</translation>
     </message>
+    <message>
+        <source>INVOICE</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FCityTrayLedger</name>
@@ -7576,6 +7721,69 @@ ee</source>
     <message>
         <source>Amount, USD</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FDailyTransaction</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Daily transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished">Տեսակ</translation>
+    </message>
+    <message>
+        <source>Operator</source>
+        <translation type="unfinished">Օպերատոր</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="unfinished">Ժամ</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Depature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
     </message>
 </context>
 <context>
@@ -8173,6 +8381,25 @@ ee</source>
     </message>
 </context>
 <context>
+    <name>FHotelHierarchy</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel hierarchy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Floor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Building</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FHouseItems</name>
     <message>
         <source>Form</source>
@@ -8311,6 +8538,14 @@ ee</source>
     <message>
         <source>Comment</source>
         <translation type="unfinished">Լրացուցիչ</translation>
+    </message>
+    <message>
+        <source>CITY LEDGER</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHECKOUT</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8740,6 +8975,10 @@ ee</source>
     </message>
     <message>
         <source>Avg room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9713,11 +9952,11 @@ ledger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>oh.f_dateOpen;oh.f_dateClose;cast(sec_to_time(f_dateclose-f_dateopen) as CHAR(10))</source>
+        <source>Duration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Duration</source>
+        <source>oh.f_dateOpen;oh.f_dateClose;timediff(oh.f_dateclose, oh.f_dateopen)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9805,6 +10044,10 @@ ledger</source>
     </message>
     <message>
         <source>No month is selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -10235,6 +10478,10 @@ ledger</source>
         <source>Logs disabled</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clear log</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FVauchers</name>
@@ -10464,6 +10711,41 @@ ledger</source>
     </message>
 </context>
 <context>
+    <name>FWakeupCall</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup calls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="unfinished">Ժամ</translation>
+    </message>
+    <message>
+        <source>Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FYearlyFinancialReport</name>
     <message>
         <source>Form</source>
@@ -10551,6 +10833,10 @@ ledger</source>
     </message>
     <message>
         <source>2018</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -11790,6 +12076,22 @@ or contact to administrator</source>
         <source>Room arrangement</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Room assignment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup calls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Daily transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel hierarchy</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>
@@ -12183,6 +12485,14 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Cannot print empty invoice. Contact with program developer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S/N</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -16168,6 +16478,22 @@ Reserve</source>
         <source>Database removed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Invoice header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room number in the header, S/N in common info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S/N in the header, room number in common info </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkin voucher id</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -16895,15 +17221,19 @@ amount to C/L</source>
         <translation type="unfinished">Ոչինչ նշված չէ</translation>
     </message>
     <message>
-        <source>Some ent╚ries was excluded from selection, because insufficiently of privileges</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The start is reached</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>The end is reached</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alarm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some entries was excluded from selection, because insufficiently of privileges</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17099,6 +17429,10 @@ reservation</source>
     </message>
     <message>
         <source>Changing the state of the room is not available in this case</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Access denied</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17640,6 +17974,10 @@ if empty</source>
         <source>Unknown filter widget. Contact to administrator.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>2019</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WReservation</name>
@@ -18168,6 +18506,22 @@ commission</source>
     </message>
     <message>
         <source>Save reservation first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The guest not exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHECKIN #</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save first</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -19103,6 +19457,21 @@ voucher</source>
     </message>
     <message>
         <source>The global configuration of program was modified, you need to logout then login again to load new configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wakeup
+calls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Daily
+Transactions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel
+hierarchy</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

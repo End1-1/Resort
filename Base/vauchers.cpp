@@ -111,7 +111,7 @@ void openVaucher(const QString &vaucher, const QString &id)
 bool removeVaucher(const QString &id, const QString &reason)
 {
     Preferences p;
-    DoubleDatabase db(true, true);
+    DoubleDatabase db(true, doubleDatabase);
     QString src, name;
     int doc, rec, item, fiscal;
     QString f_inv;
@@ -158,7 +158,7 @@ bool removeVaucher(const QString &id, const QString &reason)
             }
         }
     } else if (src == "TR") {
-        DoubleDatabase dr(true, true);
+        DoubleDatabase dr(true, doubleDatabase);
         dr[":f_canceled"] = 1;
         dr[":f_cancelUser"] = p.getLocal(def_working_user_id).toInt();
         dr[":f_cancelDate"] = QDateTime::currentDateTime();

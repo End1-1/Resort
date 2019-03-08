@@ -81,7 +81,7 @@ void DlgCardex::on_btnOk_clicked()
 {
     DoubleDatabase fDD(true, doubleDatabase);
     DoubleDatabase did;
-    did.open(true, true);
+    did.open(true, doubleDatabase);
     if (ui->leCardexGroupCode->isEmpty()) {
         message_error(tr("Cardex group is not selected"));
         return;

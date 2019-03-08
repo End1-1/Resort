@@ -568,7 +568,7 @@ ledger</string>
       <string>Show open and close date</string>
      </property>
      <property name="Field" stdset="0">
-      <string>oh.f_dateOpen;oh.f_dateClose;cast(sec_to_time(f_dateclose-f_dateopen) as CHAR(10))</string>
+      <string>oh.f_dateOpen;oh.f_dateClose;timediff(oh.f_dateclose, oh.f_dateopen)</string>
      </property>
     </widget>
    </item>

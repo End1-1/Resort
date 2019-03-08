@@ -290,7 +290,7 @@ void StoreDoc::saveDoc(int docState)
         return;
     }
     DoubleDatabase d2(fDD);
-    d2.open(true, true);
+    d2.open(true, doubleDatabase);
     for (int i = 0; i < ui->tblGoods->rowCount(); i++) {
         if (ui->tblGoods->toInt(i, 0) == 0) {
             fDD[":f_id"] = 0;

@@ -26,15 +26,15 @@ void FAccMonthlyReport::getInvoiceContent(QList<QList<QVariant> > &rows, QMap<QS
     dd.open(true, false);
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
-    QString date = "date_format(ic.f_wdate, '%d/%m/%x')";
+    QString date = "date_format(ic.f_wdate, '%d/%m/%Y')";
     if (ui->rbWeek->isChecked()) {
-        date = "date_format(ic.f_wdate, '%v, %m/%x')";
+        date = "date_format(ic.f_wdate, '%v, %m/%Y')";
     }
     if (ui->rbMonth->isChecked()) {
-        date = "date_format(ic.f_wdate, '%m/%x')";
+        date = "date_format(ic.f_wdate, '%m/%Y')";
     }
     if (ui->rbYear->isChecked()) {
-        date = "date_format(ic.f_wdate, '%x')";
+        date = "date_format(ic.f_wdate, '%Y')";
     }
     dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
     dd.exec("select " + date + ", sum(abs(ic.f_amountAmd*f_sign)) "
@@ -53,15 +53,15 @@ void FAccMonthlyReport::getGPOSContent(QList<QList<QVariant> > &rows, QMap<QStri
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_date1"] = ui->deStart->date();
     fDD[":f_date2"] = ui->deEnd->date();
-    QString date = "date_format(ic.f_date, '%d/%m/%x')";
+    QString date = "date_format(ic.f_date, '%d/%m/%Y')";
     if (ui->rbWeek->isChecked()) {
-        date = "date_format(o.f_dateCash, '%v, %m/%x')";
+        date = "date_format(o.f_dateCash, '%v, %m/%Y')";
     }
     if (ui->rbMonth->isChecked()) {
-        date = "date_format(o.f_dateCash, '%m/%x')";
+        date = "date_format(o.f_dateCash, '%m/%Y')";
     }
     if (ui->rbYear->isChecked()) {
-        date = "date_format(o.f_dateCash, '%x')";
+        date = "date_format(o.f_dateCash, '%Y')";
     }
     fDD.exec("select " + date + ", sum(d.f_total) "
                "from o_dish d "
@@ -159,7 +159,7 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
 //    getInvoiceContent(rows, dateMap, 11, "9"); //airport
 //    getInvoiceContent(rows, dateMap, 12, "68,73"); //bank/events
 //    getInvoiceContent(rows, dateMap, 13, "17"); //break
-    //Total
+//    Total
     for (int i = 0; i < rows.count(); i++) {
         rows[i][14] = 0.0;
         for (int j = 2; j < 14; j++) {
@@ -174,7 +174,6 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
         if (rows[i][16].toDouble() > 0) {
             rows[i][18] = rows[i][2].toDouble() / rows[i][16].toDouble();
         }
-
     }
 
     QString date = "date_format(f_date, '%d/%m/%x')";

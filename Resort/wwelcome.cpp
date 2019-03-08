@@ -62,8 +62,8 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnNewReservation->setVisible(r__(cr__edit_reservation));
     ui->btnNewGroupResevation->setVisible(r__(cr__reservation_group_reservation));
     ui->btnReservations->setVisible(r__(cr__reservations));
-    ui->btnInhouseGuest->setVisible(r__(cr__report_guest));
-    ui->btnArrivalDeparture->setVisible(r__(cr__report_guest));
+    ui->btnInhouseGuest->setVisible(r__(cr__inhouse_guest));
+    ui->btnArrivalDeparture->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->btnCallHistory->setVisible(r__(cr__calls_history));
     ui->btnNotes->setVisible(r__(cr__notes));
     ui->btnContacts->setVisible(r__(cr__contacts));
@@ -91,6 +91,9 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnReportsSet->setVisible(r__(cr__reports_set));
     ui->btnOnlineInvoice->setVisible(r__(cr__edit_reservation));
     ui->btnStatistic->setVisible(r__(cr__reports_set));
+    ui->btnWakupCalls->setVisible(r__(cr__wakeupcall));
+    ui->btnDailyTransactions->setVisible(r__(cr__daily_transactions));
+    ui->btnHotelHierarchy->setVisible(r__(cr__hotel_hierarcgy));
     loadInfo();
 
     connect(&fTimer, SIGNAL(timeout()), SLOT(loadInfo()));
@@ -133,12 +136,12 @@ void WWelcome::showEvent(QShowEvent *event)
 {
     BaseWidget::showEvent(event);
     QObjectList ol = ui->w1->children();
-//    foreach (QObject *o, ol) {
-//        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
-//        if (t) {
-//            t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
-//        }
-//    }
+    foreach (QObject *o, ol) {
+        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        if (t) {
+            t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
+        }
+    }
     ui->wl1->addStretch();
     ol = ui->w2->children();
     int cnt = ui->wv1->width() / ui->btnCheckoutInvoices->width();
@@ -171,6 +174,13 @@ void WWelcome::showEvent(QShowEvent *event)
                     ui->wl1->addWidget(t);
                 }
             }
+        }
+    }
+    ol = ui->w4->children();
+    foreach (QObject *o, ol) {
+        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        if (t) {
+            t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
         }
     }
     if (cntt > cnt) {
@@ -356,4 +366,19 @@ void WWelcome::on_btnOnlineInvoice_clicked()
 void WWelcome::on_btnStatistic_clicked()
 {
     fMainWindow->on_actionStatistics_triggered();
+}
+
+void WWelcome::on_btnWakupCalls_clicked()
+{
+    fMainWindow->on_actionWakeup_calls_triggered();
+}
+
+void WWelcome::on_btnDailyTransactions_clicked()
+{
+    fMainWindow->on_actionDaily_transactions_triggered();
+}
+
+void WWelcome::on_btnHotelHierarchy_clicked()
+{
+    fMainWindow->on_actionHotel_hierarchy_triggered();
 }

@@ -222,7 +222,7 @@ bool RowEditorDialog::saveOnly()
     }
     if (id->asInt() == 0) {
         DoubleDatabase did;
-        did.open(true, true);
+        did.open(true, doubleDatabase);
         did[":f_id"] = 0;
         id->setInt(did.insert(fTable, true));
     }

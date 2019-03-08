@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QStyleFactory>
 #include <QTranslator>
+#include <QMessageBox>
+#include <QDir>
 
 int main(int argc, char *argv[])
 {
@@ -39,9 +41,13 @@ int main(int argc, char *argv[])
     }
     if (params.contains("logging")) {
         logEnabled = true;
+        writelog("Logging enabled");
+        QDir d;
+        QMessageBox::information(0, "Logging", "Logging is enabled into " + d.homePath() + "/" + _APPLICATION_ + "/log.txt");
     }
 #ifdef QT_DEBUG
     logEnabled = true;
+    writelog("Logging enabled");
 #endif
 
     a.setWindowIcon(QIcon(":/images/app.ico"));

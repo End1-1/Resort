@@ -1,6 +1,5 @@
 #include "eqtablewidget.h"
 #include "utils.h"
-#include <QDebug>
 #include <QItemSelectionModel>
 #include <QStyledItemDelegate>
 
@@ -33,7 +32,12 @@ EQTableWidget::EQTableWidget(QWidget *parent) :
 
 void EQTableWidget::setValue(int row, int column, const QVariant &data, int role)
 {
-    item(row, column)->setData(role, data);
+    QTableWidgetItem *i = item(row, column);
+    if (!i) {
+        i = new QTableWidgetItem();
+        setItem(row, column, i);
+    }
+    i->setData(role, data);
 }
 
 double EQTableWidget::sumOfColumn(int column)

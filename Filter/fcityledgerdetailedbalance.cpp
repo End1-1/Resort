@@ -44,6 +44,7 @@ void FCityLedgerDetailedBalance::apply(WReportGrid *rg)
             .setColumn(110, "", tr("BALANCE AMD"))
             .setColumn(100, "", tr("ROOM"))
             .setColumn(100, "", tr("VOUCHER"))
+            .setColumn(100, "", tr("INVOICE"))
             ;
    // rg->fModel->setSqlQuery();
     rg->fModel->apply(query.split(";", QString::SkipEmptyParts));
@@ -52,7 +53,7 @@ void FCityLedgerDetailedBalance::apply(WReportGrid *rg)
     sumCols << 3 << 4;
     rg->fModel->sumOfColumns(sumCols, sumVals);
     QList<QVariant> emptyRow;
-    emptyRow << "" << "" << "" << "" << "" << "" << "" << "" ;
+    emptyRow << "" << "" << "" << "" << "" << "" << "" << "" << "";
     double openBalance = 0;
     if (rg->fModel->data(0, 3, Qt::EditRole).toDouble() != 0) {
         openBalance = rg->fModel->data(0, 3, Qt::EditRole).toDouble();
@@ -169,7 +170,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
     PImage *logo = new PImage("logo_print.png");
     ps->addItem(logo);
     logo->setRect(QRectF(20, 10, 500, 300));
-    QFont f1("Arial", 25);
+    QFont f1("Arial", 22);
     f1.setBold(true);
     th.setFont(f1);
     th.setTextAlignment(Qt::AlignCenter);
@@ -183,9 +184,9 @@ bool FCityLedgerDetailedBalance::handlePrint()
     th.setBorders(true, true, true, true);
     QList<int> cols;
     QStringList vals;
-    cols << 20 << 200 << 800 << 210 << 210 << 190 << 150 << 220;
+    cols << 10 << 180 << 760 << 180 << 180 << 180 << 150 << 200 << 200;
     vals << tr("DATE") << tr("DESCRIPTION") << tr("DEBIT AMD") << tr("CREDIT AMD")
-         << tr("BALANCE AMD") << tr("ROOM") << tr("VOUCHER");
+         << tr("BALANCE AMD") << tr("ROOM") << tr("VOUCHER") << tr("INVOICE");
     ps->addTableRow(top, rowHeight, cols, vals, &th);
 
     f1.setBold(false);
@@ -257,7 +258,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
     }
 
     th.setBorders(true, true, true, true);
-    cols << 1200 << 400 << 500;
+    cols << 1130 << 400 << 500;
     vals << tr("OPEN BALANCE") << fReportGrid->fModel->data(r, 7).toString();
     ps->addTableRow(top, rowHeight , cols, vals, &th);
 

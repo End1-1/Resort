@@ -6,7 +6,6 @@
 #include "dlgselector.h"
 #include <QStyle>
 #include <QRegExpValidator>
-#include <QDebug>
 
 EQLineEdit::EQLineEdit(QWidget *parent) :
     QLineEdit(parent)
@@ -38,7 +37,6 @@ EQLineEdit::~EQLineEdit()
 void EQLineEdit::setText(const QString &text)
 {
     QString t = fAlwaysUpper ? text.toUpper() : text;
-    qDebug() << t;
     const QValidator *v = validator();
     if (v) {
         if (!strcmp(v->metaObject()->className(), "QDoubleValidator")) {

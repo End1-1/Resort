@@ -21,18 +21,6 @@ void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QStr
     fPrintTax.addGoods(dep, adgt, code, name, price, qty);
 }
 
-//int DlgPrintTaxSM::printTax(const QString &dep, const QString &order, double cardAmount)
-//{
-//    DlgPrintTaxSM *d = new DlgPrintTaxSM(fPreferences.getDefaultParentForMessage());
-//    d->ui->teResult->setPlainText(QString("%1: %2").arg(tr("Printing")).arg(order));
-//    d->fOrder = order;
-//    d->fDep = dep;
-//    d->fCardAmount = cardAmount;
-//    int result = d->exec();
-//    delete d;
-//    return result;
-//}
-
 int DlgPrintTaxSM::exec()
 {
     fPrintMode = tm_receipt;

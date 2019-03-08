@@ -113,8 +113,8 @@ private slots:
     void on_deEntry_textEdited(const QString &arg1);
     void on_deDeparture_textEdited(const QString &arg1);
     void on_cbArrangment_currentIndexChanged(int index);
-
     void on_btnAllNation_clicked();
+    void on_btnWakeup_clicked();
 
 private:
     Ui::WReservationRoomTab *ui;

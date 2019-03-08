@@ -53,22 +53,15 @@ private slots:
     void on_btnPrintAdvance_clicked();
     void on_btnPrevInvoice_clicked();
     void on_btnNextInvoice_clicked();
-
     void on_btnTaxBack_clicked();
-
     void on_btnAdvance_clicked();
-
     void on_btnManualTax_clicked();
-
     void on_btnRefTax_clicked();
-
     void on_btnTaxBack_2_clicked();
-
     void on_btnPostBreakfast_clicked();
-
     void on_btnTransferAmountCL_clicked();
-
     void on_btnPostMinibar_clicked();
+    void on_btnWakeup_clicked();
 
 private:
     Ui::WInvoice *ui;

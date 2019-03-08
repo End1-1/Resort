@@ -132,5 +132,8 @@
         <file>images/minibar.png</file>
         <file>images/email.png</file>
         <file>images/paper-plane.png</file>
+        <file>images/storehouse.png</file>
+        <file>images/alarm.png</file>
+        <file>images/hierarchy.png</file>
     </qresource>
 </RCC>

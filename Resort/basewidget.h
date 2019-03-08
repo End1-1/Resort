@@ -40,6 +40,7 @@ public:
     QString valueForWidget(const QString &name);
 protected:
     QTabWidget *fTabWidget;
+    void removeFromTabWidget();
     int fTabIndex;
     TrackControl *fTrackControl;
     virtual void setupTab();

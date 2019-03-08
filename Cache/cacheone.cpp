@@ -289,9 +289,6 @@ CacheInstance *CacheOne::getCache(int id)
         cbs = new CacheVaucher();
         break;
     default:
-#ifdef QT_DEBUG
-    qDebug() << "YOU FORGOT THE ID " << id;
-#endif
         exit(0);
         break;
     }

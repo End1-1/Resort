@@ -1,5 +1,6 @@
 #include "doubledatabase.h"
 #include "baseuid.h"
+#include "logging.h"
 #include <QMutexLocker>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -205,9 +206,9 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             return false;
         }
     }
-#ifdef QT_DEBUG
-    logEvent("#1 " + lastQuery(q1));
-#endif
+    if (logEnabled) {
+        logEvent("#1 " + lastQuery(q1));
+    }
 
     if (!isSelect) {
 
@@ -215,9 +216,9 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             QSqlQuery *q2 = new QSqlQuery(fDb2);
             result = exec(q2, sqlQuery, isSelect);
             if (result) {
-#ifdef QT_DEBUG
-                logEvent("#2 " + lastQuery(q2));
-#endif
+                if (logEnabled) {
+                    logEvent("#2 " + lastQuery(q2));
+                }
             } else {
                 goto FAIL;
             }

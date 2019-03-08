@@ -28,15 +28,22 @@ DlgWelcomeButtonConfig::DlgWelcomeButtonConfig(QWidget *parent) :
             t->setChecked(fPreferences.getUser("welbtn_" + t->text()).toInt());
         }
     }
-    ui->w1->setVisible(false);
+    ol = ui->w4->children();
+    foreach (QObject *o, ol) {
+        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        if (t) {
+            t->setChecked(fPreferences.getUser("welbtn_" + t->text()).toInt());
+        }
+    }
+    //ui->w1->setVisible(false);
     adjustSize();
 
     ui->btnRoomChart->setVisible(r__(cr__room_chart));
     ui->btnNewReservation->setVisible(r__(cr__edit_reservation));
     ui->btnNewGroupResevation->setVisible(r__(cr__edit_reservation));
     ui->btnReservations->setVisible(r__(cr__reservations));
-    ui->btnInhouseGuest->setVisible(r__(cr__report_guest));
-    ui->btnArrivalDeparture->setVisible(r__(cr__report_guest));
+    ui->btnInhouseGuest->setVisible(r__(cr__inhouse_guest));
+    ui->btnArrivalDeparture->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->btnCallHistory->setVisible(r__(cr__calls_history));
     ui->btnNotes->setVisible(r__(cr__notes));
     ui->btnContacts->setVisible(r__(cr__contacts));
@@ -63,6 +70,9 @@ DlgWelcomeButtonConfig::DlgWelcomeButtonConfig(QWidget *parent) :
     ui->btnReportSet->setVisible(r__(cr__reports_set));
     ui->btnOnlineInvoice->setVisible(r__(cr__edit_reservation));
     ui->btnStatistics->setVisible(r__(cr__reports_set));
+    ui->btnWakeupCalls->setVisible(r__(cr__wakeupcall));
+    ui->btnDailyTransactions->setVisible(r__(cr__daily_transactions));
+    ui->btnHotelHierarchy->setVisible(r__(cr__hotel_hierarcgy));
 
     ui->btnExportActiveReservation->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc) && ui->btnExportActiveReservation->isVisible());
     ui->btnExportRestaurant->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc) && ui->btnExportRestaurant->isVisible());
@@ -100,6 +110,13 @@ void DlgWelcomeButtonConfig::on_btnOk_clicked()
         }
     }
     ol = ui->w3->children();
+    foreach (QObject *o, ol) {
+        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        if (t) {
+            fPreferences.setUser(fDbName, "welbtn_" + t->text(), t->isChecked() ? "1" : "0");
+        }
+    }
+    ol = ui->w4->children();
     foreach (QObject *o, ol) {
         EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
         if (t) {

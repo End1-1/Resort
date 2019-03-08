@@ -10,7 +10,8 @@ FMonthlyOccPerc::FMonthlyOccPerc(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("Yearly summary occupancy report"), ":/images/reports.png");
     ui->cbYear->addItem("2017");
     ui->cbYear->addItem("2018");
-    ui->cbYear->setCurrentIndex(1);
+    ui->cbYear->addItem("2019");
+    ui->cbYear->setCurrentIndex(2);
 }
 
 FMonthlyOccPerc::~FMonthlyOccPerc()

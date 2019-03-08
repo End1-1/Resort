@@ -233,31 +233,32 @@ void DlgBanket::on_btnPayment_clicked()
         paymentMode = PAYMENT_CARD;
         cardName = "AMEX";
         break;
-/*
+
     case 6: {
         DlgReservation *d = new DlgReservation(this);
         d->loadRoom();
+        QString invoice, guest, room;
         if (d->exec() == QDialog::Accepted) {
-            fDD[":f_reservation"] = d->fReservationId;
-            fDD.update("o_header", where_id(fTable->fOrder));
+            DoubleDatabase fDD(true, true);
             fDD[":f_id"] = d->fReservationId;
             fDD.exec("select f_invoice, f_room, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName) "
                        "from f_reservation r "
                        "inner join f_guests g on g.f_id=r.f_guest "
                        "where r.f_id=:f_id");
-            invoice = fDbRows.at(0).at(0).toInt();
-            room = fDbRows.at(0).at(1).toString();
-            guest = fDbRows.at(0).at(2).toString();
+            fDD.nextRow();
+            invoice = fDD.getString(0);
+            room = fDD.getString(1);
+            guest = fDD.getString(2);
             cardName = QString("%1, %2").arg(room).arg(guest);
         } else {
             delete d;
             return;
         }
-        cardCode = 0;
+        cardCode = room.toInt();
         paymentMode = PAYMENT_ROOM;
-        cardName = paymentModeComment;
+        cardName = invoice;
         break;
-    } */
+    }
     case 7: {
         DlgReservation *d = new DlgReservation(this);
         d->loadCL();
@@ -481,10 +482,11 @@ void DlgBanket::on_btnSave_clicked()
     if (fDoc.isEmpty()) {
         fDoc = uuid(VAUCHER_EVENT_N);
         fDD.insertId("o_event", fDoc);
+    } else {
+        fDD.update("o_event", where_id(ap(fDoc)));
     }
-    fDD.insertId("m_register", fDoc);
-    fDD.update("o_event", where_id(ap(fDoc)));
 
+    fDD.insertId("m_register", fDoc);
     fDD[":f_source"] = VAUCHER_EVENT_N;
     fDD[":f_wdate"] = WORKING_DATE;
     fDD[":f_rdate"] = QDate::currentDate();
@@ -506,13 +508,24 @@ void DlgBanket::on_btnSave_clicked()
     fDD[":f_sign"] = (cityLedger == 0 ? 1 : -1);
     fDD[":f_doc"] = fDoc;
     fDD[":f_rec"] = 0;
-    fDD[":f_inv"] = 0;
+    fDD[":f_inv"] = ui->lePaymentComment->text();
     fDD[":f_finance"] = 1;
     fDD[":f_remarks"] = "";
     fDD[":f_canceled"] = 0;
     fDD[":f_cancelReason"] = "";
     fDD[":f_side"] = 0;
     fDD.update("m_register", where_id(ap(fDoc)));
+
+    fDD[":f_id"] = ui->lePaymentComment->text();
+    fDD.exec("select f_invoice, f_room, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName) "
+               "from f_reservation r "
+               "inner join f_guests g on g.f_id=r.f_guest "
+               "where r.f_id=:f_id");
+    if (fDD.nextRow()) {
+        fDD[":f_room"] = fDD.getString(1);
+        fDD[":f_guest"] = fDD.getString(2);
+        fDD.update("m_register", where_id(ap(ui->lePaymentComment->text())));
+    }
 
     fTrackControl->insert("Save event", "", "");
     fTrackControl->saveChanges();

@@ -50,18 +50,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         return;
     }
     fCompanySideItems.clear();
-    /*
-    fDD[":f_date"] = WORKING_DATE.addDays(1);
-    fDD[":f_state"] = RESERVE_CHECKIN;
-    fDD.exec("select r.f_id, ri.f_itemId "
 
-                "inner join f_reservation r on r.f_id=rm.f_reservation "
-                "inner join f_reservation_item_side ri on ri.f_reservation=r.f_id "
-                "where rm.f_date=:f_date and r.f_state=:f_state ");
-    while (fDD.nextRow()) {
-        fCompanySideItems[it->at(0).toInt()].append(it->at(1).toInt());
-    }
-    */
     QString query;
     bool first = true;
     bool result = true;

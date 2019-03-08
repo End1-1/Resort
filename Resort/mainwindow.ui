@@ -203,12 +203,16 @@
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
     <addaction name="actionExpected_arrivals"/>
+    <addaction name="actionDaily_transactions"/>
     <addaction name="actionRe_checkin"/>
+    <addaction name="actionRoom_assignment"/>
     <addaction name="actionContacts"/>
     <addaction name="actionNotes"/>
     <addaction name="actionRemarks"/>
     <addaction name="actionHotel_status"/>
     <addaction name="actionRoom_inventory_2"/>
+    <addaction name="actionWakeup_calls"/>
+    <addaction name="actionHotel_hierarchy"/>
    </widget>
    <widget class="QMenu" name="menuCachier">
     <property name="title">
@@ -1362,6 +1366,42 @@
    </property>
    <property name="text">
     <string>Room arrangement</string>
+   </property>
+  </action>
+  <action name="actionRoom_assignment">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/storehouse.png</normaloff>:/images/storehouse.png</iconset>
+   </property>
+   <property name="text">
+    <string>Room assignment</string>
+   </property>
+  </action>
+  <action name="actionWakeup_calls">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/alarm.png</normaloff>:/images/alarm.png</iconset>
+   </property>
+   <property name="text">
+    <string>Wakeup calls</string>
+   </property>
+  </action>
+  <action name="actionDaily_transactions">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/category.png</normaloff>:/images/category.png</iconset>
+   </property>
+   <property name="text">
+    <string>Daily transactions</string>
+   </property>
+  </action>
+  <action name="actionHotel_hierarchy">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/hierarchy.png</normaloff>:/images/hierarchy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hotel hierarchy</string>
    </property>
   </action>
  </widget>

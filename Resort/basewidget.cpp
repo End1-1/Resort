@@ -58,11 +58,7 @@ void BaseWidget::closeEvent(QCloseEvent *event)
 
 void BaseWidget::handleBroadcast(const QMap<QString, QVariant> &data)
 {
-#ifdef QT_DEBUG
-    qDebug() << data;
-#else
-    Q_UNUSED(data)
-#endif
+    Q_UNUSED(data);
 }
 
 bool BaseWidget::event(QEvent *event)
@@ -102,5 +98,15 @@ QString BaseWidget::valueForWidget(const QString &name)
         return fTrackControl->newValue(name);
     } else {
         return "TrackControl is null";
+    }
+}
+
+void BaseWidget::removeFromTabWidget()
+{
+    for (int i = 0; i < fTabWidget->count(); i++) {
+        if (fTabWidget->widget(i) == this) {
+            fTabWidget->removeTab(i);
+            deleteLater();
+        }
     }
 }

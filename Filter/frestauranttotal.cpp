@@ -68,7 +68,7 @@ FRestaurantTotal::FRestaurantTotal(QWidget *parent) :
     fReportGrid->fIncludes["oh.f_dateCash"] = false;
     fReportGrid->fIncludes["oh.f_dateOpen"] = false;
     fReportGrid->fIncludes["oh.f_dateClose"] = false;
-    fReportGrid->fIncludes["cast(sec_to_time(f_dateclose-f_dateopen) as CHAR(10))"] = false;
+    fReportGrid->fIncludes["timediff(oh.f_dateclose, oh.f_dateopen)"] = false;
     fReportGrid->fIncludes["oh.f_hall"] = false;
     fReportGrid->fIncludes["h.f_name"] = false;
     fReportGrid->fIncludes["oh.f_table"] = false;
@@ -157,7 +157,7 @@ void FRestaurantTotal::apply(WReportGrid *rg)
            << "oh.f_dateCash"
            << "oh.f_dateOpen"
            << "oh.f_dateClose"
-           << "cast(sec_to_time(f_dateclose-f_dateopen) as CHAR(10))"
+           << "timediff(oh.f_dateclose, oh.f_dateopen)"
            << "oh.f_hall"
            << "h.f_name"
            << "oh.f_table"

@@ -412,7 +412,7 @@ void TableModel::searchInTable(const QString &text)
     }
 }
 
-void TableModel::appendRow(const QList<QVariant> &values)
+int TableModel::appendRow(const QList<QVariant> &values)
 {
     int row = fRows.count() - 1;
     if (row < 0) {
@@ -422,7 +422,7 @@ void TableModel::appendRow(const QList<QVariant> &values)
     fDD.fDbRows.append(values);
     fRows.append(fDD.rowCount() - 1);
     endInsertRows();
-
+    return fRows.count() - 1;
 }
 
 void TableModel::appendColumns(int count, const QStringList &titles)

@@ -35,7 +35,7 @@ void WCashEntry::save()
 {
     DoubleDatabase fDD(true, doubleDatabase);
     DoubleDatabase d2(fDD);
-    d2.open(true, true);
+    d2.open(true, doubleDatabase);
     if (!ui->chEnable->isChecked()) {
         return;
     }

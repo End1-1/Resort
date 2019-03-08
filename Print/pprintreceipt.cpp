@@ -239,16 +239,6 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
 
     QPrinter printer;
     printer.setPrinterName(printerName.toUpper());
-//    QPrintDialog pd(&printer);
-//    Q_UNUSED(pd);
-//    QPrinterInfo pi(printer);
-//    QList<int> res = pi.supportedResolutions();
-//    int maxRes = 1200;
-//    foreach (int r , res) {
-//        maxRes = maxRes > r ? r : maxRes;
-//        qDebug() << r << "/" << printer.resolution();
-//    }
-//    //printer.setResolution(maxRes);
     QMatrix m;
     m.scale(3, 3);
     QPainter painter(&printer);

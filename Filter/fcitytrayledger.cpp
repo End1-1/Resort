@@ -35,7 +35,7 @@ QWidget *FCityTrayLedger::firstElement()
 void FCityTrayLedger::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
-    rg->fModel->setColumn(0, "", tr("Invoice"))
+    rg->fModel->setColumn(100, "", tr("Invoice"))
             .setColumn(40, "", tr("Room"))
             .setColumn(220, "", tr("Guest"))
             .setColumn(30, "", tr("Pax"))

@@ -60,7 +60,7 @@ public:
     TableModel &setColumn(Column *column);
     void setSqlQuery(const QString &query);
     void searchInTable(const QString &text);
-    void appendRow(const QList<QVariant> &values);
+    int appendRow(const QList<QVariant> &values);
     void appendColumns(int count, const QStringList &titles);
     void insertRow(int row, const QList<QVariant> &values);
     void removeRow(int row);

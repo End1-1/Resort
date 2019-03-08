@@ -95,9 +95,6 @@ void FDishes::apply(WReportGrid *rg)
 
 void FDishes::doubleClickOnRow(const QList<QVariant> row)
 {
-    foreach(QVariant v, row) {
-        qDebug() << v;
-    }
     QList<QVariant> vals = row;
     for (int i = vals.count() - 1; i > currCols; i--) {
         vals.removeAt(i);

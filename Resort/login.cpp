@@ -100,6 +100,7 @@ void Login::readDatagram()
                 DoubleDatabase::logEvent(QString("use direct: ") + (__s.value("db_direct_connection").toBool() ? "true" : "false"));
                 if (!__s.value("db_direct_connection").toBool()) {
                     AppConfig::fServerAddress =  jObj.value("host").toString();
+                    AppConfig::fServerPort = jObj.value("port").toInt();
                     BaseUID::fAirHost = jObj.value("host").toString();
                     BaseUID::fAirDbName = jObj.value("database").toString();
                     BaseUID::fAirUser = jObj.value("username").toString();
@@ -182,6 +183,7 @@ void Login::getDatabases()
                     "", "", "", "");
             ui->cbDatabase->addItem(db.dc_name);
             AppConfig::fServerAddress = db.dc_main_host;
+            AppConfig::fServerPort = SERVER_DEFAULT_PORT;
             DoubleDatabase::logEvent("O, shit!");
         }
     }
@@ -237,6 +239,16 @@ void Login::on_btnLogin_clicked()
     __dd1Database = d.dc_main_path;
     __dd1Username = d.dc_main_user;
     __dd1Password = d.dc_main_pass;
+    if (__s.value("db_direct_connection").toBool()) {
+        TrackControl::fDbHost = __dd1Host;
+        TrackControl::fDbDb = __dd1Database;
+        TrackControl::fDbUser = __dd1Username;
+        TrackControl::fDbPass = __dd1Password;
+        BaseUID::fAirHost = __dd1Host;
+        BaseUID::fAirDbName = "airwick";
+        BaseUID::fAirUser = __dd1Username;
+        BaseUID::fAirPass = __dd1Password;
+    }
 
     bool secondDb = !r__(cr__do_no_write_second_db);
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);

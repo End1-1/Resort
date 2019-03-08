@@ -45,9 +45,6 @@ void CacheInstance::load()
         sql = sql.replace(fStruct->fReplaceUpdateQuery, "");
     }
     fDD.exec(sql, fRows, fColumnNameMap);
-#ifdef QT_DEBUG
-        qDebug() << "Cache #" << fStruct->fCacheId << " successfully loaded" << e.elapsed(); e.restart();
-#endif
     fStruct->postProcess(this);
 }
 
@@ -59,11 +56,6 @@ void CacheInstance::clear()
 
 void CacheInstance::update(const QString &code)
 {
-#ifdef QT_DEBUG
-    qDebug() << "Start update" << code;
-    QElapsedTimer e;
-    e.start();
-#endif
     DoubleDatabase fDD(true, false);
     QMutexLocker m(&__mutex);
     fDD[":f_id"] = code;

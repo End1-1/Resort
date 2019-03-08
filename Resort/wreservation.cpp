@@ -400,15 +400,15 @@ void WReservation::on_btnCheckIn_clicked()
     QString errorString;    
     WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->currentWidget());
     allSaved = allSaved && r->checkIn(errorString);
+    ui->btnCheckIn->setEnabled(r->reserveState() == RESERVE_RESERVE);
     if (allSaved) {
         if (ui->tab->count() == 1) {
-            fMainWindow->fTab->removeTab(fTabIndex);
+            removeFromTabWidget();
         }
         message_info(tr("Checkin completed"));
     } else {
         message_error(tr("Checkin failed") + "<br>" + errorString);
     }
-    ui->btnCheckIn->setEnabled(r->reserveState() == RESERVE_RESERVE);
 }
 
 void WReservation::on_btnCancelation_clicked()

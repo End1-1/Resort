@@ -90,7 +90,8 @@ void FRoomArrangement::apply(WReportGrid *rg)
             "left join f_reservation bo on bo.f_invoice=m.f_inv and bo.f_arrangement=1 and bo.f_state in (1,3) "
             "left join f_reservation bb on bb.f_invoice=m.f_inv and bb.f_arrangement=2 and bb.f_state in (1,3) "
             "where m.f_itemCode in (" + fPreferences.getDb(def_room_charge_id).toString() + ") "
-            "and extract(year from m.f_wdate)=%1 and extract(month from m.f_wdate) in (%2) group by 1").arg(ui->cbYear->currentText()).arg(c);
+            "and extract(year from m.f_wdate)=%1 and extract(month from m.f_wdate) in (%2) "
+            " and m.f_canceled=0 group by 1").arg(ui->cbYear->currentText()).arg(c);
             ;
     rg->fModel->setSqlQuery(sql);
     rg->fModel->apply(rg);

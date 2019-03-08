@@ -87,6 +87,9 @@ private slots:
     void on_btnReportsSet_clicked();
     void on_btnOnlineInvoice_clicked();
     void on_btnStatistic_clicked();
+    void on_btnWakupCalls_clicked();
+    void on_btnDailyTransactions_clicked();
+    void on_btnHotelHierarchy_clicked();
 };
 
 #endif // WWELCOME_H

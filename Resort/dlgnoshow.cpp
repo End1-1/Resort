@@ -31,6 +31,7 @@ DlgNoShow::DlgNoShow(QWidget *parent) :
     ui->lePaymentMode->fCodeFilter
             << QString::number(PAYMENT_CASH)
             << QString::number(PAYMENT_CARD)
+            << QString::number(PAYMENT_ADVANCE)
             << QString::number(PAYMENT_CL);
 }
 
@@ -157,7 +158,7 @@ void DlgNoShow::on_btnSave_clicked()
     if (ui->leCode->isEmpty()) {
         ui->leCode->setText(uuid("CH"));
         DoubleDatabase did;
-        did.open(true, true);
+        did.open(true, doubleDatabase);
         did.insertId("m_register", ui->leCode->text());
         fDD[":f_source"] = VAUCHER_POSTCHARGE_N;
         fDD[":f_rdate"] = QDate::currentDate();

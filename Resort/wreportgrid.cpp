@@ -786,12 +786,16 @@ void WReportGrid::on_btnConfigGrid_clicked()
     QString fName = s.value("FontName").toString();
     int fSize = s.value("FontSize").toInt();
     bool fBold = s.value("FontBold").toBool();
-    if (!DlgConfigGrid::config(fName, fSize, fBold, this)) {
+    bool reset;
+    if (!DlgConfigGrid::config(fName, fSize, fBold, reset, this)) {
         return;
     }
     s.setValue("FontName", fName);
     s.setValue("FontSize", fSize);
     s.setValue("FontBold", fBold);
+    if (reset) {
+        s.remove("ColumnsWidths");
+    }
 
 }
 

@@ -991,6 +991,17 @@ commission</string>
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="btnWakeup">
+           <property name="text">
+            <string>Wakeup</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/alarm.png</normaloff>:/images/alarm.png</iconset>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -1282,6 +1293,11 @@ commission</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1290,29 +1306,19 @@ commission</string>
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQDateEdit</class>
    <extends>QDateEdit</extends>
    <header location="global">eqdateedit.h</header>
   </customwidget>
   <customwidget>
-   <class>EQTimeEdit</class>
-   <extends>QTimeEdit</extends>
-   <header location="global">eqtimeedit.h</header>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">eqcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>EDateEdit</class>
@@ -1320,9 +1326,14 @@ commission</string>
    <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
-   <class>EQComboBox</class>
-   <extends>QComboBox</extends>
-   <header location="global">eqcombobox.h</header>
+   <class>EQTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">eqtextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQTimeEdit</class>
+   <extends>QTimeEdit</extends>
+   <header location="global">eqtimeedit.h</header>
   </customwidget>
   <customwidget>
    <class>EQSpinBox</class>

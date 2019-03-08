@@ -40,7 +40,7 @@ void PPrintInvoice::previewInvoice()
 
     DoubleDatabase dh(true);
     dh[":f_invoice"] = fId;
-    dh.exec("select concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName) as f_guest, g.f_nation, "
+    dh.exec("select concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName) as f_guest, nat.f_name as f_nation, "
                "cat.f_short, cat.f_description, r.f_room, r.f_startDate, "
                "r.f_checkInDate, r.f_checkinTime, r.f_endDate, r.f_man+r.f_woman+r.f_child as f_pax, "
                "r.f_checkOutTime, r.f_author, ar.f_" + def_lang + " as f_arrName, r.f_cardex, ca.f_name as f_cardexName, "
@@ -52,6 +52,7 @@ void PPrintInvoice::previewInvoice()
                "inner join f_room_classes cat on cat.f_id=rm.f_class "
                "left join f_cardex ca on ca.f_cardex=r.f_cardex "
                "left join f_room_arrangement ar on ar.f_id=r.f_arrangement "
+               "left join f_nationality nat on nat.f_short=g.f_nation "
                "inner join f_vat_mode vm on vm.f_id=r.f_vatMode "
                "left join (select f_inv, count(f_id) as ntotal from m_register where f_canceled=0 and f_source='RM' and f_inv=:f_invoice) nights on nights.f_inv=r.f_invoice "
                "where r.f_invoice=:f_invoice ");
@@ -65,7 +66,7 @@ void PPrintInvoice::previewInvoice()
     drh.exec("select f_state from f_reservation where f_invoice=:f_invoice");
     drh.nextRow();
     numNights = dh.getInt("ntotal");
-    PPrintPreview *pp = new PPrintPreview();
+    PPrintPreview *pp = new PPrintPreview(this);
     PPrintScene *ps = pp->addScene(0, Portrait);
     QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") : tr ("PROFORMA INVOICE");
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, 0, QFont(qApp->font().family(), 50));
@@ -73,15 +74,23 @@ void PPrintInvoice::previewInvoice()
     trHeader->setTextAlignment(Qt::AlignHCenter);
 //    f.setPointSize(30);
 //    trHeader->setFont(f);
-    QString inv = QString("%1 #%2")
+    QString inv;
+    if (fPreferences.getDb(def_invoice_header_mode).toInt() == 0) {
+        inv = QString("%1 #%2")
             .arg(tr("ROOM"))
             .arg(QString("%1").arg(dh.getString("f_room")));
+    } else {
+        inv = QString("%1 #%2")
+                .arg(tr("S/N"))
+                .arg(fId);
+    }
     PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, 0, QFont(qApp->font().family(), 30, 75));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
     trInvoice->setBorders(false, false, false, false);
     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
                                       0, QFont(qApp->font().family(), 25));
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
+    trInfo->setWrapMode(QTextOption::WordWrap);
     trInfo->setBorders(false, false, false, false);
     ps->addItem(trInfo);
     ps->addItem(trInvoice);
@@ -102,6 +111,14 @@ void PPrintInvoice::previewInvoice()
     int rowHeight = 60;
     r = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dh.getString("f_guest"), &th, f));
     top += r->textHeight();
+    DoubleDatabase dguest(true);
+    dguest[":f_invoice"] = fId;
+    dguest.exec("select g.guest from f_reservation_guests rg \
+                 left join guests g on g.f_id=rg.f_guest \
+                where rg.f_first=0 and rg.f_reservation in (select f_id from f_reservation where f_invoice=:f_invoice) ");
+    while (dguest.nextRow()) {
+        top += ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f))->textHeight();
+    }
     if (!dh.getString("f_address").isEmpty()) {
         top += ps->addTextRect(20, top, 2100, rowHeight, tr("Address: ") + dh.getString("f_address"), &th)->textHeight();
     }
@@ -112,14 +129,14 @@ void PPrintInvoice::previewInvoice()
     ps->addLine(20, top, 2100, top, boldPen);
     //row 1
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Nationality"), &th, f));
-    ps->addTextRect(new PTextRect(300, top, 300, rowHeight, dh.getString("f_nation"), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("Arrival date"), &th, f));
+    ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getString("f_nation"), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("Arrival date"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getDate("f_startDate").toString(def_date_format), &th, f));
     top += r->textHeight();
     //row 2
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Room category"), &th, f));
-    ps->addTextRect(new PTextRect(300, top, 600, rowHeight, dh.getString("f_nation") + " " + dh.getString("f_description"), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("Departure date"), &th, f));
+    ps->addTextRect(new PTextRect(400, top, 700, rowHeight, dh.getString("f_description"), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("Departure date"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getDate("f_endDate").toString(def_date_format), &th, f));
     top += r->textHeight();
     //row 3
@@ -127,35 +144,40 @@ void PPrintInvoice::previewInvoice()
     if (dh.getInt("f_upgradeFrom") > 0) {
         room += "           " + dh.getString("f_upgradeFrom");
     }
-    ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("S/N "), &th, f));
-    ps->addTextRect(new PTextRect(300, top, 300, rowHeight, fId, &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("Number of nights"), &th, f));
+    if (fPreferences.getDb(def_invoice_header_mode).toInt()) {
+        ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Room "), &th, f));
+        ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getString("f_room"), &th, f));
+    } else {
+        ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("S/N "), &th, f));
+        ps->addTextRect(new PTextRect(400, top, 500, rowHeight, fId, &th, f));
+    }
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("Number of nights"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, QString::number(numNights), &th, f));
     top += r->textHeight();
     //row 4
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("CheckIn"), &th, f));
-    ps->addTextRect(new PTextRect(300, top, 300, rowHeight, dh.getDate("f_checkInDate").toString(def_date_format), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("Number of guests"), &th, f));
+    ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getDate("f_checkInDate").toString(def_date_format), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("Number of guests"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getString("f_pax"), &th, f));
     top += r->textHeight();
     //row 5
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("CheckIn time"), &th, f));
-    ps->addTextRect(new PTextRect(300, top, 300, rowHeight, dh.getTime("f_checkInTime").toString(def_time_format), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("CheckOut date"), &th, f));
+    ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getTime("f_checkInTime").toString(def_time_format), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut date"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getDate("f_endDate").toString(def_date_format), &th, f));
     top += r->textHeight();
     //row 6
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Operator in"), &th, f));
     CacheUsers cu;
     cu.get(dh.getString("f_checkInUser"));
-    ps->addTextRect(new PTextRect(300, top, 600, rowHeight, cu.fFull(), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("CheckOut time"), &th, f));
+    ps->addTextRect(new PTextRect(400, top, 700, rowHeight, cu.fFull(), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut time"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getTime("f_checkOutTime").toString(def_time_format), &th,f));
     top += r->textHeight();
     //row 7
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Arrangement"), &th, f));
-    r = ps->addTextRect(new PTextRect(300, top, 300, rowHeight, dh.getString("f_arrName"), &th, f));
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, tr("CheckOut Op."), &th, f));
+    r = ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getString("f_arrName"), &th, f));
+    ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut Op."), &th, f));
 
     if (cu.get(dh.getString("f_checkOutUser"))) {
         r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, cu.fFull(), &th,f));
@@ -165,7 +187,7 @@ void PPrintInvoice::previewInvoice()
     top += r->textHeight();
     //row 8
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Cardex"), &th, f));
-    r = ps->addTextRect(new PTextRect(300, top, 2000, rowHeight, dh.getString("f_cardex") + " / " + dh.getString("f_cardexName"), &th, f));
+    r = ps->addTextRect(new PTextRect(400, top, 2000, rowHeight, dh.getString("f_cardex") + " / " + dh.getString("f_cardexName"), &th, f));
     top += r->textHeight();
     top += r->textHeight();
     //table header
@@ -332,6 +354,7 @@ void PPrintInvoice::previewInvoice()
     }
     f.setPointSize(f.pointSize() - 6);
     th.setFont(f);
+    th.setWrapMode(QTextOption::WordWrap);
     ps->addTextRect(new PTextRect(20, top, 2000, rowHeight * 3, fPreferences.getDb(def_vouchers_invoice_footer).toString(), &th, f));
     pp->exec();
     delete pp;

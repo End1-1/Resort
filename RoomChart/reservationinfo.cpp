@@ -7,8 +7,6 @@
 #include "chardefaults.h"
 #include <QPainter>
 #include <QApplication>
-#include <QDebug>
-#include <QElapsedTimer>
 
 Preferences ReservationInfo::fPref;
 

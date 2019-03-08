@@ -30,6 +30,7 @@
 #define def_minibar_default_dish "default dish for minibar"
 #define def_passport_required "default passport required"
 #define def_rooming_list "rooming_list"
+#define def_invoice_header_mode "invoice header mode"
 
 #define def_no_tracking_changes "No tracking changes"
 #define def_working_day "Working date"
@@ -68,6 +69,7 @@
 #define def_daily_movement_total_side "Daily movement total side"
 #define def_daily_movement_order "Daily movement order"
 #define def_show_logs "show_logs"
+#define def_checkin_voucher_id "Checkin voucher item code"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

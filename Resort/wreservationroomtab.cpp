@@ -6,6 +6,7 @@
 #include "epushbutton.h"
 #include "cacherights.h"
 #include "dlgadvanceentry.h"
+#include "dlgwakepcalls.h"
 #include "dlgcheckadvancebeforecancel.h"
 #include "cacheusers.h"
 #include "paymentmode.h"
@@ -44,7 +45,8 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
     ui->leCityLedgerCode->setSelector(this, cache(cid_city_ledger), ui->leCityLedgerName, HINT_CITYLEDGER);
     ui->leStatusCode->setSelector(this, cache(cid_reserve_status), ui->leStatusName);
     ui->leStatusCode->setInitialValue(CONFIRM_CONFIRM);
-    ui->leSearchGuest->setSelector(this, cache(cid_guest), ui->leSearchGuest, HINT_SEARCH_GUEST);    
+    ui->leSearchGuest->setSelector(this, cache(cid_guest), ui->leSearchGuest, HINT_SEARCH_GUEST);
+    ui->btnWakeup->setVisible(r__(cr__wakeupcall));
     connect(ui->leRoomCode, SIGNAL(customButtonClicked(bool)), this, SLOT(roomSearch(bool)));
     connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomCacheUpdated(int, QString)));
     QList<int> fWidths;
@@ -361,16 +363,18 @@ bool WReservationRoomTab::save()
     if (result) {
         if (ui->leReservId->isEmpty()) {
             DoubleDatabase did;
-            did.open(true, true);
+            did.open(true, doubleDatabase);
             QString rsId = uuid(VAUCHER_RESERVATION_N);
             result = did.insertId("f_reservation", rsId);
             fDD[":f_author"] = WORKING_USERID;
-            ui->leReservId->setText(rsId);
-            QString invId = uuid("IN");
-            ui->leInvoice->setText(invId);
-            fDD[":f_invoice"] = invId;
-            fTrackControl->fReservation = rsId;
-            fTrackControl->fInvoice = invId;
+            if (result) {
+                ui->leReservId->setText(rsId);
+                QString invId = uuid("IN");
+                ui->leInvoice->setText(invId);
+                fDD[":f_invoice"] = invId;
+                fTrackControl->fReservation = rsId;
+                fTrackControl->fInvoice = invId;
+            }
         }
     }
     if (fTrackControl->hasChanges()) {
@@ -441,7 +445,7 @@ bool WReservationRoomTab::save()
         fDD.rollback();
     }
     fDD.close();
-    fDD.open(true, true);
+    fDD.open(true, doubleDatabase);
     return result;
 }
 
@@ -654,8 +658,11 @@ void WReservationRoomTab::loadReservation(const QString &id)
     ui->tblGuest->setRowCount(0);
     for (QList<QList<QVariant> >::const_iterator it = fDD.fDbRows.begin(); it != fDD.fDbRows.end(); it++) {
         CacheGuest g;
-        g.get(it->at(0).toString());
-        addGuest(g, false);
+        if (g.get(it->at(0).toString())) {
+            addGuest(g, false);
+        } else {
+            message_error(tr("The guest not exists") + "<br>" + it->at(0).toString());
+        }
     }
     getAdvance();
     ui->btnAppendAdvance->setEnabled(ui->leReserveCode->asInt() == RESERVE_RESERVE);
@@ -1039,6 +1046,42 @@ bool WReservationRoomTab::checkIn(QString &errorString)
             }
         }
     }
+    if (result) {
+        QString checkinid = uuid(VOUCHER_CHECKIN);
+        fDD[":f_id"] = checkinid;
+        fDD[":f_source"] = VOUCHER_CHECKIN;
+        fDD[":f_res"] = ui->leReservId->text();
+        fDD[":f_wdate"] = WORKING_DATE;
+        fDD[":f_rdate"] = QDate::currentDate();
+        fDD[":f_time"] = QTime::currentTime();
+        fDD[":f_user"] = WORKING_USERID;
+        fDD[":f_room"] = ui->leRoomCode->text();
+        fDD[":f_guest"] = ui->tblGuest->item(0, 1)->text() + " " + ui->tblGuest->item(0, 2)->text();
+        fDD[":f_itemCode"] = fPreferences.getDb(def_checkin_voucher_id).toInt();
+        fDD[":f_finalName"] = tr("CHECKIN #") + checkinid;
+        fDD[":f_amountAmd"] = 0;
+        fDD[":f_usedPrepaid"] = 0;
+        fDD[":f_amountVat"] = 0;
+        fDD[":f_amountUsd"] = 0;
+        fDD[":f_fiscal"] = 0;
+        fDD[":f_paymentMode"] = ui->cbPaymentType->currentData();
+        fDD[":f_creditCard"] = 0;
+        fDD[":f_cityLedger"] = 0;
+        fDD[":f_paymentComment"] = "";
+        fDD[":f_dc"] = "CREDIT";
+        fDD[":f_sign"] = 0;
+        fDD[":f_doc"] = "";
+        fDD[":f_rec"] = "";
+        fDD[":f_inv"] = ui->leInvoice->text();
+        fDD[":f_finance"] = 0;
+        fDD[":f_remarks"] = "";
+        fDD[":f_canceled"] = 0;
+        fDD[":f_cancelReason"] = "";
+        fDD[":f_cancelDate"] = 0;
+        fDD[":f_cancelUser"] = 0;
+        fDD[":f_side"] = 0;
+        result = result && fDD.insert("m_register", false);
+    }
     /*------------------------ END AIRPORT PICKUP -------------------------*/
     if (result) {
         fDD.commit();
@@ -1241,7 +1284,8 @@ void WReservationRoomTab::startTrackControl()
             .addWidget(ui->leGrandTotal, "Grand total")
             .addWidget(ui->cbPaymentType, "Payment mode")
             .addWidget(ui->teRoomRemarks, "Remarks")
-            .addWidget(ui->chPickup, "Need pickup");
+            .addWidget(ui->chPickup, "Need pickup")
+            .addWidget(ui->leAdvance, "Advance");
     ui->leStatusCode->setFocus();
 }
 
@@ -1461,6 +1505,11 @@ void WReservationRoomTab::saveVaucher()
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
     QString rid = ui->leReservId->text();
+    fDD[":f_id"] = rid;
+    fDD.exec("select * from m_register where f_id=:f_id");
+    bool next = fDD.nextRow();
+    fDD[":f_id"] = ui->leReservId->text();
+    fDD[":f_res"] = ui->leReservId->text();
     fDD[":f_source"] = VAUCHER_RESERVATION_N;
     fDD[":f_wdate"] = WORKING_DATE;
     fDD[":f_rdate"] = QDate::currentDate();
@@ -1488,7 +1537,11 @@ void WReservationRoomTab::saveVaucher()
     fDD[":f_canceled"] = 0;
     fDD[":f_cancelReason"] = "";
     fDD[":f_side"] = 0;
-    fDD.update("m_register", where_id(ap(rid)));
+    if (next) {
+        fDD.update("m_register", where_id(ap(rid)));
+    } else {
+        fDD.insert("m_register", false);
+    }
     fDD.commit();
 }
 
@@ -2045,7 +2098,7 @@ void WReservationRoomTab::on_leSearchGuest_returnPressed()
                 fDD[":f_lastName"] = "";
             }
             DoubleDatabase did;
-            did.open(true, true);
+            did.open(true, doubleDatabase);
             did[":f_id"] = 0;
             int gid = did.insert("f_guests");
             fDD.update("f_guests", where_id(gid));
@@ -2144,4 +2197,13 @@ void WReservationRoomTab::on_btnAllNation_clicked()
         fDD[":f_nation"] = nation;
         fDD.update("f_guests", where_id(ui->tblGuest->toString(i, 0)));
     }
+}
+
+void WReservationRoomTab::on_btnWakeup_clicked()
+{
+    if (ui->leInvoice->isEmpty()) {
+        message_info(tr("Save first"));
+        return;
+    }
+    DlgWakepCalls::openWakeupCallsByInvoice(ui->leInvoice->text());
 }

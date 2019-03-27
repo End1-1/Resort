@@ -2,6 +2,7 @@
 #include "ui_faccmonthlyreport.h"
 #include "wreportgrid.h"
 #include "paymentmode.h"
+#include <QHeaderView>
 
 FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
     WFilterBase(parent),

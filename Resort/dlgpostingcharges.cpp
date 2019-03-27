@@ -296,7 +296,7 @@ void DlgPostingCharges::on_btnOk_clicked()
     fDD.startTransaction();
     if (ui->leVaucherId->isEmpty()) {
         isNew = true;
-        QString rid = uuid(ui->leVaucher->text());
+        QString rid = uuidx(ui->leVaucher->text());
         fDD.insertId("m_register", rid);
         if (ui->leVaucher->text() == VAUCHER_ROOMING_N) {
             switch (message_yesnocancel(tr("The date will append to the name.<br>Click YES to use current working date<br>Click NO - to use previouse working date"))) {

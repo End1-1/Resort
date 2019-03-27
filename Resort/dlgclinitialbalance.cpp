@@ -75,7 +75,7 @@ void DlgCLInitialBalance::on_btnOk_clicked()
     CacheCityLedger ccl;
     ccl.get(fCLCode);
     if (ui->leVaucher->isEmpty()) {
-        QString rid = uuid("CR");
+        QString rid = uuidx("CR");
         fDD.insertId("m_register", rid);
         ui->leVaucher->setText(rid);
         fDD[":f_source"] = source;

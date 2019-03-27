@@ -31,6 +31,7 @@
 #define def_passport_required "default passport required"
 #define def_rooming_list "rooming_list"
 #define def_invoice_header_mode "invoice header mode"
+#define def_external_rest_db "external restaurant db"
 
 #define def_no_tracking_changes "No tracking changes"
 #define def_working_day "Working date"

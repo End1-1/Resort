@@ -10,7 +10,7 @@
 #include "cachevatmode.h"
 #include "dlgprinttaxsideoption.h"
 #include "dlgsearchinvoice.h"
-#include "printtax.h"
+#include "printtaxd.h"
 #include "cachetaxmap.h"
 #include "dlgtaxback.h"
 #include "dlgviewinvoicecorrections.h"
@@ -101,8 +101,8 @@ void WAccInvoice::callback(int sel, const QString &code)
             fTrackControl->insert(TRACK_RESERVATION, "Cardex", oldCardex, ui->leCardex->text());
             //fTrackControl->saveChanges(ui->leReservationId->text());
         }
-        break;
     }
+        break;
     }
     case sel_vat_mode: {
             CacheVatMode c;
@@ -347,7 +347,7 @@ void WAccInvoice::correctCOCL()
     }
     if (f_id.isEmpty()) {
         if (cl > 0) {
-            QString cid = uuid(VAUCHER_CHECKOUT_N);
+            QString cid = uuidx(VAUCHER_CHECKOUT_N);
             fDD.insertId("m_register", cid);
             fDD[":f_source"] = VAUCHER_CHECKOUT_N;
             fDD[":f_wdate"] = WORKING_DATE;
@@ -393,7 +393,7 @@ void WAccInvoice::handleValues(const QList<QVariant> &values)
     if (values.count() == 0) {
         return;
     }
-    WAccInvoice *ai = 0;
+    WAccInvoice *ai = nullptr;
     for (int i = 0, count = fMainWindow->fTab->count(); i < count; i++) {
         ai = dynamic_cast<WAccInvoice*>(fMainWindow->fTab->widget(i));
         if (ai) {
@@ -471,7 +471,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
     if (fPreferences.getDb(def_tax_port).toInt() == 0) {
         message_error(tr("Setup tax printer first"));
     }
-    PrintTax *pt =  new PrintTax(this);
+    PrintTaxD *pt =  new PrintTaxD(this);
     pt->fInvoice = ui->leInvoice->text();
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (!isTaxPay(ui->tblData->toString(i, 10))) {

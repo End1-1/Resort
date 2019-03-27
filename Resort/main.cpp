@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     p.initFromConfig();
 
     a.setStyle(QStyleFactory::create("fusion"));
+    a.setFont(QFont("Arial", 10));
 
     QFile styleFile("./style.css");
     if (styleFile.exists()) {
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
         logEnabled = true;
         writelog("Logging enabled");
         QDir d;
-        QMessageBox::information(0, "Logging", "Logging is enabled into " + d.homePath() + "/" + _APPLICATION_ + "/log.txt");
+        QMessageBox::information(nullptr, "Logging", "Logging is enabled into " + d.homePath() + "/" + _APPLICATION_ + "/log.txt");
     }
 #ifdef QT_DEBUG
     logEnabled = true;

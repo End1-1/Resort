@@ -2,7 +2,7 @@
 #include "ui_dlggposorderinfo.h"
 #include "cacherights.h"
 #include "pprintreceipt.h"
-#include "printtax.h"
+#include "printtaxd.h"
 #include "dlgdishhistory.h"
 #include "cachepaymentmode.h"
 #include "cacheinvoiceitem.h"
@@ -180,7 +180,7 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
         message_error(tr("Setup tax printer first"));
         return;
     }
-    PrintTax *pt = new PrintTax(this);
+    PrintTaxD *pt = new PrintTaxD(this);
     double total = 0;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (ui->tblData->toInt(i, 8) == 1) {

@@ -227,10 +227,10 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             FAIL:
             fDoNotUse2 = true;
             QSqlDatabase d = QSqlDatabase::addDatabase(_DBDRIVER_, getDbNumber("l"));
-            d.setHostName(BaseUID::fAirHost);
-            d.setDatabaseName(BaseUID::fAirDbName);
-            d.setUserName(BaseUID::fAirUser);
-            d.setPassword(BaseUID::fAirPass);
+            d.setHostName(BaseUIDX::fAirHost);
+            d.setDatabaseName(BaseUIDX::fAirDbName);
+            d.setUserName(BaseUIDX::fAirUser);
+            d.setPassword(BaseUIDX::fAirPass);
             if (d.open()) {
                 QSqlQuery q(d);
                 QString query = lastQuery(q1).trimmed().simplified();
@@ -336,10 +336,10 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QMap<QString, QList<QVariant>
         } else if (fRecordFails) {
             FAIL:
             QSqlDatabase d = QSqlDatabase::addDatabase(_DBDRIVER_, getDbNumber("l"));
-            d.setHostName(BaseUID::fAirHost);
-            d.setDatabaseName(BaseUID::fAirDbName);
-            d.setUserName(BaseUID::fAirUser);
-            d.setPassword(BaseUID::fAirPass);
+            d.setHostName(BaseUIDX::fAirHost);
+            d.setDatabaseName(BaseUIDX::fAirDbName);
+            d.setUserName(BaseUIDX::fAirUser);
+            d.setPassword(BaseUIDX::fAirPass);
             if (d.open()) {
                 QSqlQuery q(d);
                 QString query = lastQuery(q1).trimmed();

@@ -38,8 +38,9 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
                "left join f_guests g on g.f_id=r.f_guest "
                "where r.f_startDate=:f_startDate and r.f_state=:f_state");
     ui->tblArrivals->setColumnCount(4);
-    Utils::tableSetHeaderCaptions(ui->tblArrivals, ui->tblArrivals->columnCount(),
-                                  QString("Room"), QString("Guest"), QString("Pax"), QString("Depature"));
+    QStringList ht;
+    ht << QString("Room") << QString("Guest") << QString("Pax") << QString("Depature");
+    ui->tblArrivals->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblArrivals, ui->tblArrivals->columnCount(),
                                 80, 150, 50, 100);
     Utils::fillTableWithData(ui->tblArrivals, fDD.fDbRows);
@@ -54,8 +55,9 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
                "left join f_guests g on g.f_id=r.f_guest "
                "where r.f_startDate=:f_startDate and r.f_state=:f_state");
     ui->tblAlreadyArrived->setColumnCount(4);
-    Utils::tableSetHeaderCaptions(ui->tblAlreadyArrived, ui->tblAlreadyArrived->columnCount(),
-                                  QString("Room"), QString("Guest"), QString("Pax"), QString("Depature"));
+    ht.clear();
+    ht << QString("Room") << QString("Guest") << QString("Pax") << QString("Depature");
+    ui->tblAlreadyArrived->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblAlreadyArrived, ui->tblAlreadyArrived->columnCount(),
                                 80, 150, 50, 100);
     Utils::fillTableWithData(ui->tblAlreadyArrived, fDD.fDbRows);
@@ -69,8 +71,9 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
                "left join f_guests g on g.f_id=r.f_guest "
                "where r.f_endDate=:f_endDate and r.f_state=:f_state");
     ui->tblDepartures->setColumnCount(4);
-    Utils::tableSetHeaderCaptions(ui->tblDepartures, ui->tblDepartures->columnCount(),
-                                  QString("Room"), QString("Guest"), QString("Pax"), QString("Depature"));
+    ht.clear();
+    ht << QString("Room") << QString("Guest") << QString("Pax") << QString("Depature");
+    ui->tblDepartures->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblDepartures, ui->tblDepartures->columnCount(),
                                 80, 150, 50, 100);
     Utils::fillTableWithData(ui->tblDepartures, fDD.fDbRows);
@@ -85,8 +88,9 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
                "left join f_guests g on g.f_id=r.f_guest "
                "where r.f_endDate=:f_endDate and r.f_state=:f_state");
     ui->tblAlreadyCheckout->setColumnCount(4);
-    Utils::tableSetHeaderCaptions(ui->tblAlreadyCheckout, ui->tblAlreadyCheckout->columnCount(),
-                                  QString("Room"), QString("Guest"), QString("Pax"), QString("Depature"));
+    ht.clear();
+    ht << QString("Room") << QString("Guest") << QString("Pax") << QString("Depature");
+    ui->tblAlreadyCheckout->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblAlreadyCheckout, ui->tblAlreadyCheckout->columnCount(),
                                 80, 150, 50, 100);
     Utils::fillTableWithData(ui->tblAlreadyCheckout, fDD.fDbRows);
@@ -99,8 +103,9 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
                "left join f_guests g on g.f_id=r.f_guest "
                "where r.f_state=:f_state order by r.f_room ");
     ui->tblGuestInHouse->setColumnCount(5);
-    Utils::tableSetHeaderCaptions(ui->tblGuestInHouse, ui->tblGuestInHouse->columnCount(),
-                                  QString("Room"), QString("Guest"), QString("Arrival"), QString("Departure"), QString("Pax"));
+    ht.clear();
+    ht << QString("Room") << QString("Guest") << QString("Arrival") << QString("Departure") << QString("Pax");
+    ui->tblGuestInHouse->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblGuestInHouse, ui->tblGuestInHouse->columnCount(),
                                 80, 150, 100, 100, 0);
     Utils::fillTableWithData(ui->tblGuestInHouse, fDD.fDbRows);

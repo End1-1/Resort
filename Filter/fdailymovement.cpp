@@ -5,6 +5,7 @@
 #include "cachepaymentmode.h"
 #include "paymentmode.h"
 #include "vauchers.h"
+#include <QHeaderView>
 
 FDailyMovement::FDailyMovement(QWidget *parent) :
     WFilterBase(parent),

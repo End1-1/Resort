@@ -106,6 +106,7 @@
     <addaction name="actionCancelation_No_show_fees"/>
     <addaction name="actionAvaiable_rooms"/>
     <addaction name="actionLenght_of_stay"/>
+    <addaction name="actionNew_room_chart"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -145,6 +146,7 @@
     <addaction name="actionType_of_bed"/>
     <addaction name="actionRoom_view"/>
     <addaction name="actionRoom_list"/>
+    <addaction name="actionCall_rates"/>
     <addaction name="actionModels_of_cars"/>
     <addaction name="actionCostumers_cars"/>
     <addaction name="actionAccounts_2"/>
@@ -1402,6 +1404,20 @@
    </property>
    <property name="text">
     <string>Hotel hierarchy</string>
+   </property>
+  </action>
+  <action name="actionNew_room_chart">
+   <property name="text">
+    <string>New room chart</string>
+   </property>
+  </action>
+  <action name="actionCall_rates">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/phone.png</normaloff>:/images/phone.png</iconset>
+   </property>
+   <property name="text">
+    <string>Call rates</string>
    </property>
   </action>
  </widget>

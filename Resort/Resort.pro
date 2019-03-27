@@ -140,7 +140,6 @@ SOURCES += main.cpp\
     wglobaldbconfig.cpp \
     ../Controls/eqspinbox.cpp \
     dlggposorderinfo.cpp \
-    taxprint.cpp \
     ../RowEditor/rerestdishcomplex.cpp \
     ../RowEditor/reroomcategory.cpp \
     ../RowEditor/reroombed.cpp \
@@ -176,7 +175,6 @@ SOURCES += main.cpp\
     ../Base/logging.cpp \
     ../Print/pprintheader.cpp \
     dlgtaxprintsetup.cpp \
-    ../Print/printtax.cpp \
     dlginvoiceprintoption.cpp \
     ../RowEditor/reinvoiceitem.cpp \
     ../Cache/cacheinvoiceitemgroup.cpp \
@@ -383,7 +381,14 @@ SOURCES += main.cpp\
     ../Filter/fwakeupcall.cpp \
     dlgwakepcalls.cpp \
     ../Filter/fdailytransaction.cpp \
-    ../Filter/fhotelhierarchy.cpp
+    ../Filter/fhotelhierarchy.cpp \
+    wroomchart.cpp \
+    ../Filter/fcallrates.cpp \
+    ../RowEditor/recallrate.cpp \
+    wroomchartclasses.cpp \
+    ../Print/printtaxd.cpp \
+    wroomcharttime.cpp \
+    wroomchartdock.cpp
 
 HEADERS  += mainwindow.h \
     login.h \
@@ -509,7 +514,6 @@ HEADERS  += mainwindow.h \
     wglobaldbconfig.h \
     ../Controls/eqspinbox.h \
     dlggposorderinfo.h \
-    taxprint.h \
     ../RowEditor/rerestdishcomplex.h \
     ../RowEditor/reroomcategory.h \
     ../RowEditor/reroombed.h \
@@ -546,7 +550,6 @@ HEADERS  += mainwindow.h \
     ../Base/logging.h \
     ../Print/pprintheader.h \
     dlgtaxprintsetup.h \
-    ../Print/printtax.h \
     dlginvoiceprintoption.h \
     ../RowEditor/reinvoiceitem.h \
     ../Cache/cacheinvoiceitemgroup.h \
@@ -755,7 +758,14 @@ HEADERS  += mainwindow.h \
     ../Filter/fwakeupcall.h \
     dlgwakepcalls.h \
     ../Filter/fdailytransaction.h \
-    ../Filter/fhotelhierarchy.h
+    ../Filter/fhotelhierarchy.h \
+    wroomchart.h \
+    ../Filter/fcallrates.h \
+    ../RowEditor/recallrate.h \
+    wroomchartclasses.h \
+    ../Print/printtaxd.h \
+    wroomcharttime.h \
+    wroomchartdock.h
 
 FORMS    += mainwindow.ui \
     login.ui \
@@ -830,7 +840,6 @@ FORMS    += mainwindow.ui \
     dlgtransferinvoiceamount.ui \
     ../Print/dlgprintreservation.ui \
     dlgtaxprintsetup.ui \
-    ../Print/printtax.ui \
     dlginvoiceprintoption.ui \
     ../RowEditor/reinvoiceitem.ui \
     ../Filter/finhouseguest.ui \
@@ -980,7 +989,12 @@ FORMS    += mainwindow.ui \
     ../Filter/fwakeupcall.ui \
     dlgwakepcalls.ui \
     ../Filter/fdailytransaction.ui \
-    ../Filter/fhotelhierarchy.ui
+    ../Filter/fhotelhierarchy.ui \
+    wroomchart.ui \
+    ../Filter/fcallrates.ui \
+    ../RowEditor/recallrate.ui \
+    ../Print/printtaxd.ui \
+    wroomchartdock.ui
 
 RESOURCES += \
     res.qrc
@@ -1007,10 +1021,9 @@ INCLUDEPATH += $$PWD/../Widgets
 INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
-INCLUDEPATH += /OpenSSL-Win32.0/include
-INCLUDEPATH += /OpenSSL-Win32.0/include/openssl
-INCLUDEPATH += /Qt/projects/NewTax
-QMAKE_CXXFLAGS += -Werror
+INCLUDEPATH += C:/OpenSSL-Win32/include
+INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
+INCLUDEPATH += C:/projects/NewTax
 
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"

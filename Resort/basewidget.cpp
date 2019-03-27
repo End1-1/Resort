@@ -88,6 +88,9 @@ void BaseWidget::finalPrint(PPrintScene *ps, int top)
 
 void BaseWidget::setupTabTextAndIcon(const QString &text, const QString &iconName)
 {
+    if (!fTabWidget) {
+        return;
+    }
     fTabWidget->setTabIcon(fTabIndex, QIcon(iconName));
     fTabWidget->setTabText(fTabIndex, text);
 }

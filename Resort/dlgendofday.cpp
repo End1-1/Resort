@@ -73,7 +73,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         }
 
         QString invoice = ui->tblCharges->item(i, 0)->data(Qt::EditRole).toString();
-        QString rid = uuid(VAUCHER_ROOMING_N);
+        QString rid = uuidx(VAUCHER_ROOMING_N);
         result = fDD.insertId("m_register", rid);
         if (!result) {
             break;
@@ -323,6 +323,13 @@ void DlgEndOfDay::on_btnOk_clicked()
     if (result) {
         fDD.commit();
         fPreferences.setLocalDate(def_working_day, WORKING_DATE.addDays(1));
+        if (!fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
+            DoubleDatabase de(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
+            if (de.open(true, false)) {
+                de[":f_datecash"] = WORKING_DATE;
+                de.exec("update s_station_conf set f_datecash=:f_datecash");
+            }
+        }
         BroadcastThread::cmdCommand(cmd_end_of_day, QMap<QString, QString>());
         accept();
     } else {

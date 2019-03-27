@@ -29,27 +29,6 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="1" column="7">
-       <widget class="QPushButton" name="btnTransferAmountCL">
-        <property name="maximumSize">
-         <size>
-          <width>2222</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-amount to C/L</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QToolButton" name="btnPostingCharges">
         <property name="sizePolicy">
@@ -89,89 +68,6 @@ Charges</string>
         </property>
         <property name="toolButtonStyle">
          <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QToolButton" name="btnPostBreakfast">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>55555</width>
-          <height>222222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Breakfast</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/dinner2.png</normaloff>:/images/dinner2.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QPushButton" name="btnTransfer">
-        <property name="maximumSize">
-         <size>
-          <width>5555</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-entries</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="6">
-       <widget class="QPushButton" name="btnTransferAmount">
-        <property name="maximumSize">
-         <size>
-          <width>2222</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-amount</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
         </property>
        </widget>
       </item>
@@ -269,114 +165,6 @@ room</string>
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="1" column="11">
-       <widget class="QToolButton" name="btnCancel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>55555</width>
-          <height>222222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Correction</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="8">
-       <widget class="QPushButton" name="btnDiscount">
-        <property name="maximumSize">
-         <size>
-          <width>2222</width>
-          <height>2222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Discount</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/discount.png</normaloff>:/images/discount.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QToolButton" name="btnPostMinibar">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>55555</width>
-          <height>222222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Minibar</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/minibar.png</normaloff>:/images/minibar.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
       </item>
       <item row="0" column="2">
        <widget class="QToolButton" name="btnPaymentsDetails">
@@ -553,7 +341,137 @@ back</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="12">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btnTransfer">
+        <property name="maximumSize">
+         <size>
+          <width>5555</width>
+          <height>22222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Transfer
+entries</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btnTransferAmount">
+        <property name="maximumSize">
+         <size>
+          <width>2222</width>
+          <height>22222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Transfer
+amount</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="btnTransferAmountCL">
+        <property name="maximumSize">
+         <size>
+          <width>2222</width>
+          <height>22222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Transfer
+amount to C/L</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="btnDiscount">
+        <property name="maximumSize">
+         <size>
+          <width>2222</width>
+          <height>2222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Discount</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/discount.png</normaloff>:/images/discount.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QToolButton" name="btnCancel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>55555</width>
+          <height>222222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Correction</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
        <widget class="QToolButton" name="btnWakeup">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1887,14 +1805,14 @@ color:red;</string>
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQDateEdit</class>
-   <extends>QDateEdit</extends>
-   <header location="global">eqdateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQDateEdit</class>
+   <extends>QDateEdit</extends>
+   <header location="global">eqdateedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

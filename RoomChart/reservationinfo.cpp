@@ -56,7 +56,7 @@ ReservationInfo::ReservationInfo(const QString &reserveCode, QGraphicsItem *pare
     fBtnRect = QRect(0, 0, 25, 25);
     //fPixmap.load(":/images/info.png");
     fTimer =  new TimerBlya(this);
-    QString tp = QString("%1 %2\r\n%3-%4\r\n\%5")
+    QString tp = QString("%1 %2\r\n%3-%4\r\n%5")
             .arg(fReservation.fCardexName())
             .arg(fReservation.fGuest())
             .arg(fReservation.fDateStart().toString(def_date_format))

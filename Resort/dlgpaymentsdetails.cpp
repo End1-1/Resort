@@ -540,7 +540,7 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                 finalName = "STL. #" + ui->leInvoice->text() + " " + modeName;
             }
 
-            QString rid = uuid(t->item(i, 10)->text());
+            QString rid = uuidx(t->item(i, 10)->text());
             DoubleDatabase fDD(true, doubleDatabase);
             fDD.insertId("m_register", rid);
             fDD[":f_source"] = t->item(i, 10)->text();
@@ -577,7 +577,8 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             t->item(i, 0)->setText(rid);
             lineEdit(t, i, 0)->setText(rid);
 
-            fTrackControl->insert("Payment", t->item(i, 0)->text(), lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
+            fTrackControl->fRecord = rid;
+            fTrackControl->insert("Payment" + QString(fCheckoutFlag ? " before checkout" : ""), t->item(i, 0)->text(), lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
 
             if (t->item(i, 10)->text() == "AV") {
                 if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i, 5)->text() + " AMD") == QDialog::Accepted) {
@@ -619,6 +620,8 @@ void DlgPaymentsDetails::on_btnBank_clicked()
 
 void DlgPaymentsDetails::on_btnSave_clicked()
 {
+    fTrackControl->fInvoice = ui->leInvoice->text();
+    fTrackControl->fReservation = ui->leReservation->text();
     if (fPreferences.getDb(def_invoice_default_refund_id).toInt() == 0) {
         message_error(tr("Refund id is not defined. Contact to administrator."));
         return;
@@ -665,7 +668,7 @@ void DlgPaymentsDetails::on_btnSave_clicked()
         if (ui->tblRefund->toString(i, 0).isEmpty()) {
             printRefundRow << i;
             fDD.startTransaction();
-            QString rid = uuid(VAUCHER_REFUND_N);
+            QString rid = uuidx(VAUCHER_REFUND_N);
             fDD.insertId("m_register", rid);
             fDD[":f_source"] = VAUCHER_REFUND_N;
             fDD[":f_wdate"] = WORKING_DATE;

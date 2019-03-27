@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabApp">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -697,8 +697,18 @@
        </item>
        <item>
         <widget class="QWidget" name="widget_10" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_11">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="leExternalRestaurantDb"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_44">
+            <property name="text">
+             <string>External restaurant database</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
            <spacer name="verticalSpacer_4">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -710,6 +720,13 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="btnInitExtRestData">
+            <property name="text">
+             <string>Init</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -861,29 +878,12 @@
              </size>
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="0" column="2">
-              <widget class="QLineEdit" name="leHost">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_20">
                <property name="text">
                 <string>Host name</string>
                </property>
               </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_29">
-               <property name="text">
-                <string>Code for discount 20%</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1" colspan="2">
-              <widget class="EQLineEdit" name="leDisc20"/>
              </item>
              <item row="5" column="0">
               <widget class="QLabel" name="label_30">
@@ -892,13 +892,20 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="1" colspan="2">
-              <widget class="EQLineEdit" name="leDisc50"/>
+             <item row="4" column="1" colspan="2">
+              <widget class="EQLineEdit" name="leDisc20"/>
              </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_27">
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_29">
                <property name="text">
-                <string>First receipt check printer</string>
+                <string>Code for discount 20%</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="leHost">
+               <property name="readOnly">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -909,15 +916,15 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="EQLineEdit" name="leHallCode">
-               <property name="maximumSize">
-                <size>
-                 <width>30</width>
-                 <height>16777215</height>
-                </size>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>First receipt check printer</string>
                </property>
               </widget>
+             </item>
+             <item row="5" column="1" colspan="2">
+              <widget class="EQLineEdit" name="leDisc50"/>
              </item>
              <item row="8" column="2">
               <spacer name="verticalSpacer_3">
@@ -932,15 +939,15 @@
                </property>
               </spacer>
              </item>
-             <item row="6" column="1">
-              <widget class="QCheckBox" name="chOpenTableAfterRun">
-               <property name="text">
-                <string/>
+             <item row="1" column="1">
+              <widget class="EQLineEdit" name="leHallCode">
+               <property name="maximumSize">
+                <size>
+                 <width>30</width>
+                 <height>16777215</height>
+                </size>
                </property>
               </widget>
-             </item>
-             <item row="2" column="1" colspan="2">
-              <widget class="QLineEdit" name="leFirstReceiptPrinter"/>
              </item>
              <item row="1" column="2">
               <widget class="EQLineEdit" name="leHallName">
@@ -949,8 +956,18 @@
                </property>
               </widget>
              </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QLineEdit" name="leFirstReceiptPrinter"/>
+             </item>
              <item row="3" column="1" colspan="2">
               <widget class="QLineEdit" name="leSecondReceiptPrinter"/>
+             </item>
+             <item row="6" column="1">
+              <widget class="QCheckBox" name="chOpenTableAfterRun">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
              </item>
              <item row="6" column="0">
               <widget class="QLabel" name="label_24">
@@ -1538,9 +1555,12 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
+   <class>EQLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">eqlineedit.h</header>
+   <slots>
+    <signal>customButtonClicked(bool)</signal>
+   </slots>
   </customwidget>
   <customwidget>
    <class>EQTableWidget</class>
@@ -1548,12 +1568,9 @@
    <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>EQLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">eqlineedit.h</header>
-   <slots>
-    <signal>customButtonClicked(bool)</signal>
-   </slots>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
    <class>EQDateEdit</class>

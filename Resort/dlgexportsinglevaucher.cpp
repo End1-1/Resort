@@ -50,7 +50,7 @@ int DlgExportSingleVaucher::exportSingleVaucher(const QString &id)
 void DlgExportSingleVaucher::showInvoices(bool v)
 {
     Q_UNUSED(v)
-    DlgRemotInvoices *d = new DlgRemotInvoices(this);
+    DlgRemotInvoices *d = new DlgRemotInvoices(true, this);
     if (d->exec() == QDialog::Accepted) {
         ui->leInvoice->setText(d->fResult);
         on_leInvoice_returnPressed();

@@ -103,7 +103,7 @@ void DlgTransferInvoiceAmount::on_btnSave_clicked()
     int sign = (itemGroup == IG_NEGATIVE_BALANCE ? 1 : -1);
     bool result = true;
 
-    QString rid1 = uuid(VAUCHER_TRANSFER_AMOUNT_N);
+    QString rid1 = uuidx(VAUCHER_TRANSFER_AMOUNT_N);
     fDD.insertId("m_register", rid1);
     fDD[":f_source"] = VAUCHER_TRANSFER_AMOUNT_N;
     fDD[":f_wdate"] = WORKING_DATE;
@@ -135,7 +135,7 @@ void DlgTransferInvoiceAmount::on_btnSave_clicked()
     fDD.update("m_register", where_id(ap(rid1)));
 
     sign *= -1;
-    QString rid2 = uuid(VAUCHER_TRANSFER_AMOUNT_N);
+    QString rid2 = uuidx(VAUCHER_TRANSFER_AMOUNT_N);
     fDD.insertId("m_register", rid2);
     fDD[":f_source"] = VAUCHER_TRANSFER_AMOUNT_N;
     fDD[":f_wdate"] = WORKING_DATE;

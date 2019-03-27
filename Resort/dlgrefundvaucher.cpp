@@ -47,7 +47,7 @@ void DlgRefundVaucher::on_btnSave_clicked()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     if (ui->leVaucher->isEmpty()) {
-        ui->leVaucher->setText(uuid("RF"));
+        ui->leVaucher->setText(uuidx("RF"));
         fDD[":f_id"] = ui->leVaucher->text();
         fDD[":f_source"] = VAUCHER_REFUND_N;
         fDD.insert("m_register");

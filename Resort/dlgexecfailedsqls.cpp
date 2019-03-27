@@ -8,7 +8,7 @@ DlgExecFailedSqls::DlgExecFailedSqls(QWidget *parent) :
 {
     ui->setupUi(this);
     DoubleDatabase dd;
-    dd.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    dd.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     dd.open(true, false);
     dd[":f_src"] = __dd1Database;
     dd.exec("select count(f_id) from f_fail where f_src<>:f_src and f_norec=0 ");
@@ -43,7 +43,7 @@ void DlgExecFailedSqls::on_btnStart_clicked()
     did.open(true, false);
 
     DoubleDatabase dsql; //remote
-    dsql.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1); //resort
+    dsql.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1); //resort
     dsql.open(true, false);
     dsql[":f_src"] = __dd1Database;
     dsql.exec("select * from airwick.f_fail where f_src<>:f_src and f_norec=0");
@@ -56,7 +56,7 @@ void DlgExecFailedSqls::on_btnStart_clicked()
 #ifdef QT_DEBUG
     db = "resort";
 #endif
-    dsrc.setDatabase(BaseUID::fAirHost, db, BaseUID::fAirUser, BaseUID::fAirPass, 1); //resort
+    dsrc.setDatabase(BaseUIDX::fAirHost, db, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1); //resort
     dsrc.open(true, false);
 
     while (dsql.nextRow()) {

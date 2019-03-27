@@ -101,11 +101,11 @@ void Login::readDatagram()
                 if (!__s.value("db_direct_connection").toBool()) {
                     AppConfig::fServerAddress =  jObj.value("host").toString();
                     AppConfig::fServerPort = jObj.value("port").toInt();
-                    BaseUID::fAirHost = jObj.value("host").toString();
-                    BaseUID::fAirDbName = jObj.value("database").toString();
-                    BaseUID::fAirUser = jObj.value("username").toString();
-                    BaseUID::fAirPass = jObj.value("password").toString();
-                    DoubleDatabase::logEvent("Base::fAirHost" + BaseUID::fAirHost);
+                    BaseUIDX::fAirHost = jObj.value("host").toString();
+                    BaseUIDX::fAirDbName = jObj.value("database").toString();
+                    BaseUIDX::fAirUser = jObj.value("username").toString();
+                    BaseUIDX::fAirPass = jObj.value("password").toString();
+                    DoubleDatabase::logEvent("Base::fAirHost" + BaseUIDX::fAirHost);
 
                 }
                 TrackControl::fDbHost = jObj["loghost"].toString();
@@ -244,10 +244,10 @@ void Login::on_btnLogin_clicked()
         TrackControl::fDbDb = __dd1Database;
         TrackControl::fDbUser = __dd1Username;
         TrackControl::fDbPass = __dd1Password;
-        BaseUID::fAirHost = __dd1Host;
-        BaseUID::fAirDbName = "airwick";
-        BaseUID::fAirUser = __dd1Username;
-        BaseUID::fAirPass = __dd1Password;
+        BaseUIDX::fAirHost = __dd1Host;
+        BaseUIDX::fAirDbName = "airwick";
+        BaseUIDX::fAirUser = __dd1Username;
+        BaseUIDX::fAirPass = __dd1Password;
     }
 
     bool secondDb = !r__(cr__do_no_write_second_db);
@@ -324,7 +324,7 @@ void Login::on_btnLogin_clicked()
         fDD.insert("serv_tax", false);
     }   
 
-    BaseUID::fUserId = WORKING_USERID;
+    BaseUIDX::fUserId = WORKING_USERID;
     EDateEditFirstDate = WORKING_DATE;
     CacheRights::fGroup = WORKING_USERGROUP;
     CacheUsersGroups ug;

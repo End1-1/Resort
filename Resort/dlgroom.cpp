@@ -28,7 +28,8 @@ DlgRoom::DlgRoom(QList<QVariant> &values, QWidget *parent) :
              << ui->leBedName
              << ui->leQty
              << ui->leQueue
-             << ui->chSmoking;
+             << ui->chSmoking
+             << ui->lePhone;
 }
 
 DlgRoom::~DlgRoom()
@@ -52,6 +53,7 @@ void DlgRoom::setValues()
     ui->leQty->clear();
     ui->leQueue->clear();
     ui->chSmoking->setChecked(false);
+    ui->lePhone->clear();
     if (fValues.count() > 0) {
         ui->leCode->setReadOnly(true);
         valuesToWidgets();
@@ -78,6 +80,7 @@ void DlgRoom::on_btnOK_clicked()
     fDD[":f_bedQty"] = ui->leQty->text();
     fDD[":f_queue"] = ui->leQueue->text();
     fDD[":f_smoke"] = (int) ui->chSmoking->isChecked();
+    fDD[":f_phone"] = ui->lePhone->text();
     if (isNew) {
         QMap<QString, QVariant> e;
         fDD.exec("select f_id from f_room where f_id=" + ui->leCode->text());

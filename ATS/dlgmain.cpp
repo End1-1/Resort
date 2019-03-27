@@ -7,13 +7,11 @@
 #include <QSerialPortInfo>
 #include <QDebug>
 #include <QSettings>
+#include <QCloseEvent>
 #include <QMessageBox>
 #include <QFile>
 #include <QProcess>
 #include <QInputDialog>
-
-const static QString locCall = "2";
-const static QString intCall = "3";
 
 #define def_user_id "user_id"
 #define def_host "host"
@@ -24,6 +22,7 @@ const static QString intCall = "3";
 #define def_com_port "com port"
 #define def_com_data "com data bits"
 #define def_com_parity "com parity"
+#define def_com_flowcontrol "com flow control"
 #define def_ats_model "ats model"
 #define def_smarthotel "SmartHotel"
 #define def_smarthotel_ats "SmartHotel\\ATS"
@@ -35,6 +34,8 @@ const static QString intCall = "3";
 #define def_air_db "air_db"
 #define def_air_user "air_user"
 #define def_air_pass "air_pass"
+#define def_loc_call_item_code "local call item code"
+#define def_int_call_item_code "internation call item code"
 
 DlgMain::DlgMain(QWidget *parent) :
     QDialog(parent),
@@ -72,6 +73,7 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->cbATS->setCurrentIndex(s.value(def_ats_model).toInt());
     ui->cbComData->setCurrentIndex(s.value(def_com_data).toInt());
     ui->cbComParity->setCurrentIndex(s.value(def_com_parity).toInt());
+    ui->cbComFlowControl->setCurrentIndex(s.value(def_com_flowcontrol).toInt());
     ui->leLine->setText(s.value(def_r_line).toString());
     ui->leIncomingNumber->setText(s.value(def_r_incoming_number).toString());
     ui->lePathToExecutable->setText(s.value(def_r_executable).toString());
@@ -81,6 +83,8 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->leAirUser->setText(s.value(def_air_user).toString());
     ui->leAirPass->setText(s.value(def_air_pass).toString());
     ui->leRawData->setText(s.value("test").toString());
+    ui->leIntCallItemCode->setText(s.value(def_loc_call_item_code).toString());
+    ui->leOutCallItemCode->setText(s.value(def_int_call_item_code).toString());
 
     fPref.appendDatabase("MainDb", ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), "", "", "", "");
     fPref.initFromDb("MainDb", "", 0);
@@ -94,10 +98,10 @@ DlgMain::DlgMain(QWidget *parent) :
     __dd1Password = ui->lePassword->text();
     DoubleDatabase fDb;
     fDb.setDatabase(ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), 1);
-    BaseUID::fAirHost = ui->leHost->text();
-    BaseUID::fAirDbName = "airwick";
-    BaseUID::fAirUser = ui->leUsername->text();
-    BaseUID::fAirPass = ui->lePassword->text();
+    BaseUIDX::fAirHost = ui->leHost->text();
+    BaseUIDX::fAirDbName = "airwick";
+    BaseUIDX::fAirUser = ui->leUsername->text();
+    BaseUIDX::fAirPass = ui->lePassword->text();
     fDb.open(true, false);
     fDb.exec("select f_code, f_rate, f_local from f_call_rate");
     while (fDb.nextRow()) {
@@ -105,39 +109,9 @@ DlgMain::DlgMain(QWidget *parent) :
         fCallType[fDb.getString(0)] = fDb.getInt(2);
     }
     fDb.close();
-
-    fPort.setPortName(ui->leATSPort->text());
-    switch (ui->cbComData->currentIndex()) {
-    case 0:
-        fPort.setDataBits(QSerialPort::Data5);
-        break;
-    case 1:
-        fPort.setDataBits(QSerialPort::Data6);
-        break;
-    case 2:
-        fPort.setDataBits(QSerialPort::Data7);
-        break;
-    case 3:
-        fPort.setDataBits(QSerialPort::Data8);
-        break;
-    }
-    fPort.setBaudRate(QSerialPort::Baud9600);
-    fPort.setFlowControl(QSerialPort::NoFlowControl);
-    fPort.setStopBits(QSerialPort::OneStop);
-    switch (ui->cbComParity->currentIndex()) {
-    case 0:
-        fPort.setParity(QSerialPort::NoParity);
-        break;
-    case 1:
-        fPort.setParity(QSerialPort::EvenParity);
-        break;
-    case 2:
-        fPort.setParity(QSerialPort::OddParity);
-        break;
-    }
     connect(&fPort, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(&fPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(portError(QSerialPort::SerialPortError)));
-    fPort.open(QSerialPort::ReadOnly);
+    configureComPort();
     writeToFile(fPort.readAll());
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, [this](int index) {
@@ -282,7 +256,7 @@ void DlgMain::processLine(const QString &line)
         QString invoice= fDb.getString(0);
         QString room = fDb.getString(2);
 
-        QString rid = uuid("CM");
+        QString rid = uuidx("CM");
         fDb.insertId("m_register", rid);
         fDb[":f_source"] = "CM";
         fDb[":f_wdate"] = QDate::fromString(fPref.getDb(def_working_day).toString(), def_date_format);
@@ -291,7 +265,7 @@ void DlgMain::processLine(const QString &line)
         fDb[":f_user"] = ui->leUserId->text().toInt();
         fDb[":f_room"] = room;
         fDb[":f_guest"] = lines[9];
-        fDb[":f_itemCode"] = (isLocal == 1 ? locCall : intCall);
+        fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
         fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
         fDb[":f_amountAmd"] = trunc(price);
         fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
@@ -361,14 +335,190 @@ void DlgMain::processLine(const QString &line)
         exe = exe && t2 > t1;
     }
     if (exe) {
-        QProcess *p = new QProcess(0);
+        QProcess *p = new QProcess(nullptr);
         p->start(ui->lePathToExecutable->text());
     }
 }
 
-void DlgMain::processLine1(const QString &line)
+void DlgMain::processLine1(QString line)
 {
     writeToFile(line);
+    line.remove(0, 3);
+    QString dateTime = line.mid(0, 8);
+    QString date = dateTime.mid(2, 2) + "/" + dateTime.mid(0, 2) + "/" + QString::number(QDate::currentDate().year());
+    QString time = dateTime.mid(4, 2) + ":" + dateTime.mid(6, 2);
+    line.remove(0, 9);
+    QString durationStr = line.mid(0, 4).trimmed();
+    if (durationStr.isEmpty()) {
+        durationStr = "0000";
+    }
+    durationStr = "00:" + durationStr.mid(0, 2) + ":" + durationStr.mid(2, 2);
+    line.remove(0, 5);
+    QString someZero = line.mid(0, 4);
+    line.remove(0, 5);
+    QString direction = line.mid(0, 1).trimmed();
+    if (direction.isEmpty()) {
+        direction = "O";
+    } else if (direction == "I") {
+        direction = "G";
+    }
+    line.remove(0, 2);
+    QString intLine = line.mid(0, 10).trimmed();
+    line.remove(0, 11);
+    QString num1 = line.mid(0, 20).trimmed();
+    line.remove(0, 21);
+    QString num2 = line.mid(0, 26).trimmed();
+    line.remove(0, 27);
+    QString twoZero = line.mid(0, 2);
+    int row = ui->tblData->rowCount();
+    ui->tblData->setRowCount(row + 1);
+    ui->tblData->setItem(row, 1, new QTableWidgetItem(num1));
+    ui->tblData->setItem(row, 2, new QTableWidgetItem(intLine));
+    ui->tblData->setItem(row, 3, new QTableWidgetItem(durationStr));
+    ui->tblData->setItem(row, 4, new QTableWidgetItem(date));
+    ui->tblData->setItem(row, 5, new QTableWidgetItem(time));
+    ui->tblData->setItem(row, 6, new QTableWidgetItem(direction));
+    ui->tblData->setItem(row, 7, new QTableWidgetItem(num2));
+
+    DoubleDatabase fDb;
+    fDb.setDatabase(ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), 1);
+    bool secondDb = true;
+    QStringList dbParams = fPref.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    if (dbParams.count() == 4) {
+        __dd2Host = dbParams[0];
+        __dd2Database = dbParams[1];
+        __dd2Username = dbParams[2];
+        __dd2Password = dbParams[3];
+
+        fDb.logEvent("ATS, Set second db");
+        fDb.setDatabase(__dd2Host, __dd2Database, __dd2Username, __dd2Password, 2);
+    } else {
+        secondDb = false;
+    }
+    fDb.resetDoNotUse();
+    if (!fDb.open(true, secondDb)) {
+        callLog("DB connection error");
+        return;
+    }
+
+    QString guest;
+    int isLocal = 1;
+    QString area = "***";
+    QString amount;
+    double price =  rates["***"];
+    if (num1.length() > 6) {
+        area = num1.mid(0, 7);
+        bool found = false;
+        while (!found) {
+            area = area.remove(area.length() - 1, 1);
+            if (area.isEmpty()) {
+                break;
+            }
+            for (QMap<QString, double>::const_iterator it = rates.begin(); it != rates.end(); it++) {
+                if (it.key() == area) {
+                    found = true;
+                    price = rates[area];
+                    isLocal = fCallType[area];
+                    goto mark;
+                }
+            }
+        }
+    }
+
+    mark:
+    callLog(area);
+    int duration = QTime(0, 0, 0).secsTo(QTime::fromString(durationStr, "HH:mm:ss"));
+    callLog(QString::number(duration));
+    callLog(float_str(price, 2));
+    if (duration < 16) {
+        price = 0;
+    }
+    int mins = duration / 60;
+    if (duration % 60 > 0) {
+        mins++;
+    }
+    price = price * mins;
+    amount = float_str(price, 2);
+    if (direction != "O" && direction != "T") {
+        price = 0;
+        amount = "0";
+    }
+    // try to get guest
+
+    if (price > 0.1) {
+        fDb[":f_phone"] = num2;
+        fDb.exec("select f_id from f_room where f_phone=:f_phone");
+        if (fDb.nextRow()) {
+            fDb[":f_room"] = fDb.getInt(0);
+            fDb[":f_state"] = RESERVE_CHECKIN;
+            fDb.exec("select r.f_invoice, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
+                       "r.f_room "
+                       "from f_reservation r "
+                       "inner join f_guests g on g.f_id=r.f_guest "
+                       "where r.f_room=:f_room and r.f_state=:f_state");
+        }
+    }
+    if (fDb.nextRow()) {
+        callLog("Have invoice");
+        guest = fDb.getString(1);
+        QString invoice= fDb.getString(0);
+        QString room = fDb.getString(2);
+
+        QString rid = uuidx("CM");
+        fDb.insertId("m_register", rid);
+        fDb[":f_source"] = "CM";
+        fDb[":f_wdate"] = QDate::fromString(fPref.getDb(def_working_day).toString(), def_date_format);
+        fDb[":f_rdate"] = QDate::currentDate();
+        fDb[":f_time"] = QTime::currentTime();
+        fDb[":f_user"] = ui->leUserId->text().toInt();
+        fDb[":f_room"] = room;
+        fDb[":f_guest"] = guest;
+        fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
+        fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
+        fDb[":f_amountAmd"] = trunc(price);
+        fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
+        fDb[":f_amountUsd"] = def_usd;
+        fDb[":f_fiscal"] = 0;
+        fDb[":f_paymentMode"] = PAYMENT_CREDIT;
+        fDb[":f_creditCard"] = 0;
+        fDb[":f_cityLedger"] = 0;
+        fDb[":f_paymentComment"] = "";
+        fDb[":f_dc"] = "CREDIT";
+        fDb[":f_sign"] = 1;
+        fDb[":f_doc"] = "";
+        fDb[":f_rec"] = "";
+        fDb[":f_inv"] = invoice;
+        fDb[":f_finance"] = 1;
+        fDb[":f_remarks"] = "";
+        fDb[":f_canceled"] = 0;
+        fDb[":f_cancelReason"] = "";
+        fDb[":f_side"] = 0;
+        fDb.update("m_register", where_id(ap(rid)));
+
+    } else {
+        //No price for another case
+        callLog("No invoice");
+        amount = "0";
+    }
+
+    fDb[":f_ats_id"] = 0;
+    fDb[":f_local"] = num1;
+    fDb[":f_u1"] = "-";
+    fDb[":f_duration"] = QTime::fromString(durationStr, "HH:mm:ss");
+    QDate d = QDate::fromString(date, "dd/MM/yyyy");
+    fDb[":f_date"] = d;
+    fDb[":f_time"] = QTime::fromString(time, "HH:mm");
+    fDb[":f_ident"] = fCallMap[direction];
+    fDb[":f_remote"] = num2;
+    fDb[":f_cost"] = amount;
+    fDb[":f_acc"] = "";
+    fDb[":f_doc"] = 0;
+    int id = fDb.insert("f_call_log", true);
+    if (id < 0) {
+        callLog(fDb.fLastError);
+    }
+
+    fDb.close();
 }
 
 void DlgMain::callLog(const QString &txt)
@@ -385,7 +535,50 @@ void DlgMain::writeToFile(const QString &line)
         f.write("\r\n");
         f.close();
     }
+}
 
+void DlgMain::configureComPort()
+{
+    if (fPort.isOpen()) {
+        fPort.close();
+    }
+    fPort.setPortName(ui->leATSPort->text());
+    switch (ui->cbComData->currentIndex()) {
+    case 0:
+        fPort.setDataBits(QSerialPort::Data5);
+        break;
+    case 1:
+        fPort.setDataBits(QSerialPort::Data6);
+        break;
+    case 2:
+        fPort.setDataBits(QSerialPort::Data7);
+        break;
+    case 3:
+        fPort.setDataBits(QSerialPort::Data8);
+        break;
+    }
+    fPort.setBaudRate(QSerialPort::Baud9600);
+    switch (ui->cbComFlowControl->currentIndex()) {
+    case 0:
+        fPort.setFlowControl(QSerialPort::NoFlowControl);
+        break;
+    case 1:
+        fPort.setFlowControl(QSerialPort::HardwareControl);
+        break;
+    }
+    fPort.setStopBits(QSerialPort::OneStop);
+    switch (ui->cbComParity->currentIndex()) {
+    case 0:
+        fPort.setParity(QSerialPort::NoParity);
+        break;
+    case 1:
+        fPort.setParity(QSerialPort::EvenParity);
+        break;
+    case 2:
+        fPort.setParity(QSerialPort::OddParity);
+        break;
+    }
+    fPort.open(QSerialPort::ReadOnly);
 }
 
 void DlgMain::readyRead()
@@ -465,6 +658,7 @@ void DlgMain::on_lePassword_textChanged(const QString &arg1)
 
 void DlgMain::on_btnReconnect_clicked()
 {
+    configureComPort();
     DoubleDatabase fDb;
     fDb.setDatabase(ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), 1);
     if (!fDb.open(true, false)) {
@@ -554,11 +748,36 @@ void DlgMain::on_leAirPass_textChanged(const QString &arg1)
 
 void DlgMain::on_btnTest_clicked()
 {
-    processLine(ui->leRawData->text());
+    switch (ui->cbATS->currentIndex()) {
+    case 0:
+        processLine(ui->leRawData->text());
+        break;
+    case 1:
+        processLine1(ui->leRawData->text());
+        break;
+    }
 }
 
 void DlgMain::on_leRawData_textChanged(const QString &arg1)
 {
     QSettings s(def_smarthotel, def_smarthotel_ats);
     s.setValue("test", arg1);
+}
+
+void DlgMain::on_cbComFlowControl_currentIndexChanged(int index)
+{
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue(def_com_flowcontrol, index);
+}
+
+void DlgMain::on_leIntCallItemCode_textChanged(const QString &arg1)
+{
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue(def_loc_call_item_code, arg1);
+}
+
+void DlgMain::on_leOutCallItemCode_textChanged(const QString &arg1)
+{
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue(def_int_call_item_code, arg1);
 }

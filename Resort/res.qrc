@@ -135,5 +135,6 @@
         <file>images/storehouse.png</file>
         <file>images/alarm.png</file>
         <file>images/hierarchy.png</file>
+        <file>images/traffic.png</file>
     </qresource>
 </RCC>

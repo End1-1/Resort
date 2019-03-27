@@ -37,6 +37,14 @@ QString FCanceledReservations::reportTitle()
 
 void FCanceledReservations::apply(WReportGrid *rg)
 {
+    QString date;
+    if (ui->rbCancel->isChecked()) {
+        date = "r.f_canceldate";
+    } else if (ui->rbEntry->isChecked()) {
+        date = "f.f_startdate";
+    } else if (ui->rbDeparture->isChecked()) {
+        date = "f.f_enddate";
+    }
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "", tr("Code"))
             .setColumn(120, "", tr("Arrival"))
@@ -46,13 +54,14 @@ void FCanceledReservations::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Room"))
             .setColumn(250, "", tr("OP"))
             .setColumn(250, "", tr("Cancel by"));
-    QString query = "select r.f_id, r.f_startDate, r.f_cancelDate, r.f_endDate, g.guest, "
+    QString query = QString("select r.f_id, r.f_startDate, r.f_cancelDate, r.f_endDate, g.guest, "
             "r.f_room, concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName) "
             "from f_reservation r   "
             "left join guests g on g.f_id=r.f_guest "
             "left join users u1 on u1.f_id=r.f_author "
             "left join users u2 on u2.f_id=r.f_cancelUser "
-            "where r.f_cancelDate between :date1 and :date2 and r.f_state=:f_state";
+            "where %1 between :date1 and :date2 and r.f_state=:f_state")
+            .arg(date);
     query.replace(":date1", ui->deStart->dateMySql());
     query.replace(":date2", ui->deEnd->dateMySql());
     query.replace(":f_state", QString::number(RESERVE_REMOVED));

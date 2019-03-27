@@ -133,6 +133,16 @@ void WGlobalDbConfig::getTax()
     }
 }
 
+void WGlobalDbConfig::getApp()
+{
+    DoubleDatabase fDD(true, false);
+    fDD[":f_key"] = def_external_rest_db;
+    fDD.exec("select f_value from f_global_settings where f_settings=1 and f_key=:f_key");
+    if (fDD.nextRow()) {
+        ui->leExternalRestaurantDb->setText(fDD.getString(0));
+    }
+}
+
 WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     BaseWidget(parent),
     ui(new Ui::WGlobalDbConfig)
@@ -218,6 +228,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->chPasswordRequired, "Passport required")
             .addWidget(ui->chShowLogs, "Show logs")
             .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
+            .addWidget(ui->leExternalRestaurantDb, "External restaurant db")
             ;
 
     getCompSettings();
@@ -225,6 +236,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     getDatabases();
     getMonthly();
     getTax();
+    getApp();
 
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
 }
@@ -376,7 +388,7 @@ void WGlobalDbConfig::on_btnRefresh_clicked()
 
 void WGlobalDbConfig::on_btnSaveAccess_clicked()
 {
-    DoubleDatabase db(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass);
+    DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
     if (!db.open(true, false)) {
         return;
     }
@@ -396,7 +408,7 @@ void WGlobalDbConfig::on_btnSaveAccess_clicked()
 
 void WGlobalDbConfig::on_btnSaveDatabases_clicked()
 {
-    DoubleDatabase db(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass);
+    DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
     if (!db.open(true, false)) {
         return;
     }
@@ -527,7 +539,35 @@ void WGlobalDbConfig::on_tblTax_cellDoubleClicked(int row, int column)
 
 void WGlobalDbConfig::on_btnSaveApplication_clicked()
 {
-
+    QMap<QString, QString> values;
+    values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
+    QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
+    bool first = true;
+    QMapIterator<QString, QString> it(values);
+    while (it.hasNext()) {
+        it.next();
+        if (first) {
+            first = false;
+        } else {
+            query += ",";
+        }
+        query += QString("(1, '%1', '%2')")
+                .arg(it.key())
+                .arg(it.value());
+    }
+    DoubleDatabase fDD(true, doubleDatabase);
+    fDD.startTransaction();
+    fDD[":f_key"] = def_external_rest_db;
+    fDD.exec("delete from f_global_settings where f_settings=1 and f_key=:f_key");
+    bool result = fDD.exec(query);
+    fTrackControl->saveChanges();
+    if (result) {
+        fDD.commit();
+        on_btnSaveReports_clicked();
+    } else {
+        fDD.rollback();
+        message_error(tr("New values not saved"));
+    }
 }
 
 
@@ -545,7 +585,7 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
     if (message_confirm(tr("Confirm to remove database")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase db(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass);
+    DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
     db.open(true, false);
     db[":f_id"] = ui->tblDatabases->lineEdit(rows.at(0).row(), 0)->asInt();
     db.exec("delete from airwick.f_db where f_id=:f_id");
@@ -553,4 +593,52 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
     db.exec("delete from airwick.f_access where f_db=:f_id");
     ui->tblDatabases->removeRow(rows.at(0).row());
     message_info(tr("Database removed"));
+}
+
+void WGlobalDbConfig::on_btnInitExtRestData_clicked()
+{
+    DoubleDatabase dd(true, true);
+    dd.exec("delete from r_dish");
+    dd.exec("delete from r_dish_type");
+
+    DoubleDatabase dr(__dd1Host, ui->leExternalRestaurantDb->text(), __dd1Username, __dd1Password);
+    if (!dr.open(true, false)) {
+        message_error(dr.fLastError);
+        return;
+    }
+    QMap<int, QString> adg;
+    dr.exec("select f_id, f_name, f_adgcode from d_part2");
+    while (dr.nextRow()) {
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_part"] = 1;
+        dd[":f_en"] = dr.getString(1);
+        dd[":f_am"] = dr.getString(1);
+        dd[":f_ru"] = dr.getString(1);
+        adg[dr.getInt(0)] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_active"] = 1;
+        dd.insert("r_dish_type", false);
+    }
+    dr.exec("select f_id, f_part, f_name from d_dish");
+    while (dr.nextRow()) {
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_type"] = dr.getInt(1);
+        dd[":f_en"] = dr.getString(2);
+        dd[":f_am"] = dr.getString(2);
+        dd[":f_ru"] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_unit"] = 1;
+        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd.insert("r_dish", false);
+    }
+    message_info(tr("Done"));
+}
+
+void WGlobalDbConfig::on_leExternalRestaurantDb_textChanged(const QString &arg1)
+{
+    ui->btnInitExtRestData->setEnabled(!arg1.isEmpty());
 }

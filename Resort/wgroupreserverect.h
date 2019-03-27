@@ -12,7 +12,7 @@ class WGroupReserveRect : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WGroupReserveRect(QWidget *parent = 0);
+    explicit WGroupReserveRect(QWidget *parent = nullptr);
     ~WGroupReserveRect();
     void setRoomName(const QString &code, const QString &name);
     bool checked();
@@ -26,7 +26,7 @@ private:
     Ui::WGroupReserveRect *ui;
     QString fCode;
 signals:
-    checkClicked(bool v);
+    void checkClicked(bool v);
 };
 
 #endif // WGROUPRESERVERECT_H

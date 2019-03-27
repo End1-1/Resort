@@ -254,6 +254,10 @@ private slots:
 
     void on_actionRoom_arrangement_triggered();
 
+    void on_actionNew_room_chart_triggered();
+
+    void on_actionCall_rates_triggered();
+
 private:
     Ui::MainWindow *ui;
     QTimer fTimer;

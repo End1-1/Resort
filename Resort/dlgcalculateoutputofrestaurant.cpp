@@ -114,7 +114,7 @@ void DlgCalculateOutputOfRestaurant::calculateForStore(int store, const QDate &d
         return;
     }
 
-    QString docId = uuid("ST");
+    QString docId = uuidx("ST");
     fDD[":f_id"] = docId;
     fDD.insert("r_docs");
     fDD[":f_date"] = date;

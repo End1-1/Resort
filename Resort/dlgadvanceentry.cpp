@@ -169,6 +169,10 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     QString finalName;
     switch (ui->lePaymentCode->asInt()) {
     case PAYMENT_CARD:
+        if (ui->leCardCode->asInt() == 0) {
+            message_error(tr("Card type is not selected"));
+            return;
+        }
         finalName = "CC/" + ui->leCardName->text();
         break;
     case PAYMENT_CASH:
@@ -197,7 +201,7 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     fDD.startTransaction();
     if (ui->leVaucher->isEmpty()) {
         isNew = true;
-        ui->leVaucher->setText(uuid(VAUCHER_ADVANCE_N));
+        ui->leVaucher->setText(uuidx(VAUCHER_ADVANCE_N));
         fDD.insertId("m_register", ui->leVaucher->text());
     }
     fDD[":f_source"] = VAUCHER_ADVANCE_N;

@@ -5,12 +5,12 @@
 
 extern int _IDGENMODE_;
 
-#define uuid(x) BaseUID::genID(x)
+#define uuidx(x) BaseUIDX::genID(x)
 
-class BaseUID
+class BaseUIDX
 {
 public:
-    BaseUID();
+    BaseUIDX();
     static QString genID(const QString &prefix);
     static QString ID(const QString &vaucher);
     static QString INTID(const QString &prefix);

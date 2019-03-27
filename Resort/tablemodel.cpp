@@ -186,8 +186,9 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 #endif
-    if (!index.isValid())
+    if (!index.isValid()) {
         return QVariant();
+    }
     const QVariant &v = fDD.fDbRows.at(fRows.at(index.row())).at(index.column());
     switch (role) {
     case Qt::DisplayRole: {
@@ -211,15 +212,16 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
             return fBackgroundColors[index.row()][index.column()];
         }
         return QVariant(QColor(Qt::white));
-        break;
     case Qt::CheckStateRole: {
         if (fCheckBoxColumns.contains(index.column())) {
             return v.toInt() == 0 ? Qt::Unchecked : Qt::Checked;
         }
+        break;
     }
     default:
         return QVariant();
     }
+    return QVariant();
 }
 
 QVariant TableModel::data(int row, int column, int role) const
@@ -489,9 +491,9 @@ void TableModel::sumOfColumns(const QList<int> columns, QList<double> &out)
 {
     out.clear();
     int count = columns.count();
-    double values[count];
+    QList<double> values;
     for (int i = 0; i < count; i++) {
-        values[i] = 0.000;
+        values << 0.000;
     }
     foreach (int r, fRows) {
         for (int i = 0; i < count; i++) {
@@ -514,9 +516,9 @@ void TableModel::insertSubTotals(int colName, const QList<int> &totalCols)
     for (int i = 0; i < columnCount(); i++) {
         emptyRow << QVariant();
     }
-    double totals[totalCols.count()];
+    QList<double> totals;
     for (int i = 0; i < totalCols.count(); i++) {
-        totals[i] = 0.000;
+        totals << 0.000;
     }
     QString currName;
     int r = 0;

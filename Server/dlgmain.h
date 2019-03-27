@@ -49,6 +49,7 @@ private slots:
     void on_btnSave_clicked();
     void on_btnClear_clicked();
     void on_btnClearDisconnected_clicked();
+    void on_tabWidget_currentChanged(int index);
 };
 
 #endif // DLGMAIN_H

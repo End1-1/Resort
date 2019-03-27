@@ -1,31 +1,31 @@
-#include "printtax.h"
-#include "ui_printtax.h"
+#include "printtaxd.h"
+#include "ui_printtaxd.h"
 #include <QFile>
 #include <QDir>
 #include <QProcess>
 #include "paymentmode.h"
 #include "dlgprinttaxsm.h"
 
-PrintTax::PrintTax(QWidget *parent) :
+PrintTaxD::PrintTaxD(QWidget *parent) :
     BaseExtendedDialog(parent),
-    ui(new Ui::PrintTax)
+    ui(new Ui::PrintTaxD)
 {
     ui->setupUi(this);
     ui->chCheckUncheckAll->setChecked(true);
     fTaxCode = 0;
 }
 
-PrintTax::~PrintTax()
+PrintTaxD::~PrintTaxD()
 {
     delete ui;
 }
 
-void PrintTax::setPrepaid(const QString &amount)
+void PrintTaxD::setPrepaid(const QString &amount)
 {
     ui->leAvailablePrepaid->setText(amount);
 }
 
-void PrintTax::build()
+void PrintTaxD::build()
 {
     QSet<QString> depts;
     ui->tblData->clearContents();
@@ -51,12 +51,12 @@ void PrintTax::build()
     }
 }
 
-void PrintTax::on_btnCancel_clicked()
+void PrintTaxD::on_btnCancel_clicked()
 {
     reject();
 }
 
-bool PrintTax::print()
+bool PrintTaxD::print()
 {
     QSet<QString> depts;
     for (int i = 0; i <  ui->tblData->rowCount(); i++) {
@@ -93,7 +93,7 @@ bool PrintTax::print()
     return false;
 }
 
-void PrintTax::countAmount()
+void PrintTaxD::countAmount()
 {
     double total = 0;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
@@ -117,7 +117,7 @@ void PrintTax::countAmount()
     }
 }
 
-void PrintTax::filter()
+void PrintTaxD::filter()
 {
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         ui->tblData->setRowHidden(i, false);
@@ -132,7 +132,7 @@ void PrintTax::filter()
     countAmount();
 }
 
-void PrintTax::on_btnPrint_clicked()
+void PrintTaxD::on_btnPrint_clicked()
 {
     if (!print()) {
         return;
@@ -172,7 +172,7 @@ void PrintTax::on_btnPrint_clicked()
     accept();
 }
 
-void PrintTax::on_tblData_clicked(const QModelIndex &index)
+void PrintTaxD::on_tblData_clicked(const QModelIndex &index)
 {
     if (!index.isValid()) {
         return;
@@ -182,25 +182,25 @@ void PrintTax::on_tblData_clicked(const QModelIndex &index)
     }
 }
 
-void PrintTax::on_leCard_textEdited(const QString &arg1)
+void PrintTaxD::on_leCard_textEdited(const QString &arg1)
 {
     Q_UNUSED(arg1)
     correctAmounts(ui->leCard, ui->leCash, ui->lePre);
 }
 
-void PrintTax::on_leCash_textEdited(const QString &arg1)
+void PrintTaxD::on_leCash_textEdited(const QString &arg1)
 {
     Q_UNUSED(arg1)
     correctAmounts(ui->leCash, ui->leCard, ui->lePre);
 }
 
-void PrintTax::on_lePre_textEdited(const QString &arg1)
+void PrintTaxD::on_lePre_textEdited(const QString &arg1)
 {
     Q_UNUSED(arg1)
     correctAmounts(ui->lePre, ui->leCash, ui->leCard);
 }
 
-void PrintTax::correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3)
+void PrintTaxD::correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3)
 {
     double total = ui->leTotal->asDouble();
     if (l1->asDouble() > total) {
@@ -218,7 +218,7 @@ void PrintTax::correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3)
     fAmountPre = ui->lePre->text();
 }
 
-void PrintTax::on_chCheckUncheckAll_clicked(bool checked)
+void PrintTaxD::on_chCheckUncheckAll_clicked(bool checked)
 {
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (ui->tblData->isRowHidden(i)) {
@@ -229,7 +229,7 @@ void PrintTax::on_chCheckUncheckAll_clicked(bool checked)
     countAmount();
 }
 
-void PrintTax::on_tblFilter_clicked(const QModelIndex &index)
+void PrintTaxD::on_tblFilter_clicked(const QModelIndex &index)
 {
     if (!index.isValid()) {
         return;
@@ -238,7 +238,7 @@ void PrintTax::on_tblFilter_clicked(const QModelIndex &index)
     filter();
 }
 
-void PrintTax::on_btnClearFilter_clicked()
+void PrintTaxD::on_btnClearFilter_clicked()
 {
     fFilter = "";
     filter();

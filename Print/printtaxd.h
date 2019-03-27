@@ -1,19 +1,19 @@
-#ifndef PRINTTAX_H
-#define PRINTTAX_H
+#ifndef PRINTTAX_HD
+#define PRINTTAX_HD
 
 #include "baseextendeddialog.h"
 
 namespace Ui {
-class PrintTax;
+class PrintTaxD;
 }
 
-class PrintTax : public BaseExtendedDialog
+class PrintTaxD : public BaseExtendedDialog
 {
     Q_OBJECT
 
 public:
-    explicit PrintTax(QWidget *parent = 0);
-    ~PrintTax();
+    explicit PrintTaxD(QWidget *parent = nullptr);
+    ~PrintTaxD();
     QString fAmountPre;
     QString fAmountCash;
     QString fAmountCard;
@@ -49,7 +49,7 @@ private slots:
     void on_btnClearFilter_clicked();
 
 private:
-    Ui::PrintTax *ui;
+    Ui::PrintTaxD *ui;
     QString fFilter;
     void correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3);
     void countAmount();

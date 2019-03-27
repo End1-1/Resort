@@ -260,7 +260,7 @@ void StoreDoc::saveDoc(int docState)
     }
     bool isNew = false;
     if (ui->leDocNumber->isEmpty()) {
-        ui->leDocNumber->setText(uuid("ST"));
+        ui->leDocNumber->setText(uuidx("ST"));
         isNew = true;
     }
     DoubleDatabase fDD(true, doubleDatabase);

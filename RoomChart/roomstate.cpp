@@ -87,7 +87,7 @@ void RoomState::on_btnOk_clicked()
     QString add = ui->leRoomCode->text();
     if (ui->leNewState->asInt() == ROOM_STATE_OUTOF) {
         QString fId;
-        QString invId = uuid(VAUCHER_INVOICE_N);
+        QString invId = uuidx(VAUCHER_INVOICE_N);
         add += QString(" %1 - %2")
                 .arg(ui->deStart->text(), ui->deEnd->text());
         fDD[":f_state"] = RESERVE_OUTOFROOM;
@@ -104,7 +104,7 @@ void RoomState::on_btnOk_clicked()
         fDD[":f_author"] = WORKING_USERID;
         fDD[":f_invoice"] = invId;
         fDD[":f_remarks"] = ui->teRemarks->toPlainText();
-        fId = uuid("RS");
+        fId = uuidx("RS");
         fDD.insertId("f_reservation", fId);
         fDD[":f_id"] = fId;
         fDD.update("f_reservation", where_id(ap(fId)));

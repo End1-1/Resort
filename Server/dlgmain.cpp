@@ -8,9 +8,11 @@
 #include <QHostAddress>
 #include <QTcpSocket>
 #include <QDateTime>
+#include <QInputDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QMessageBox>
 #include <QSettings>
 #include <QUuid>
 #include <QNetworkProxy>
@@ -62,6 +64,8 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->tblConn->setColumnWidth(3, 120);
     ui->tblConn->setColumnWidth(7, 40);
     ui->tblConn->setColumnWidth(10, 0);
+
+    ui->wSettings->setVisible(false);
 }
 
 DlgMain::~DlgMain()
@@ -389,5 +393,23 @@ void DlgMain::on_btnClearDisconnected_clicked()
         if (ui->tblConn->item(i, 0)->data(Qt::UserRole + 1).toInt() == 1) {
             ui->tblConn->removeRow(i);
         }
+    }
+}
+
+void DlgMain::on_tabWidget_currentChanged(int index)
+{
+    if (index == 2) {
+        bool ok;
+        QString pwd = QInputDialog::getText(this, tr("Settings password"), tr("Password"), QLineEdit::Password, "", &ok);
+        if (!ok || ui->lePassword->text() != pwd) {
+            ui->tabWidget->setCurrentIndex(0);
+            if (ok) {
+                QMessageBox::critical(this, tr("Error"), tr("Access denied"));
+            }
+        } else {
+            ui->wSettings->setVisible(true);
+        }
+    } else {
+        ui->wSettings->setVisible(false);
     }
 }

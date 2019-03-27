@@ -310,7 +310,7 @@ void WVaucherEditor::on_btnSave_clicked()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     if (fFlagNew) {
-        ui->leCode->setText(uuid(ui->leSourceCode->text()));
+        ui->leCode->setText(uuidx(ui->leSourceCode->text()));
         fDD[":f_id"] = ui->leCode->text();
         fDD.insert("m_register", false);
     }

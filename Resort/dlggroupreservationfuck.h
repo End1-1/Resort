@@ -13,8 +13,9 @@ class DlgGroupReservationFuck : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit DlgGroupReservationFuck(QWidget *parent = 0);
+    explicit DlgGroupReservationFuck(QWidget *parent = nullptr);
     ~DlgGroupReservationFuck();
+    static void openGroup(int id);
     void loadGroup(int id);
     virtual void setup();
 private slots:

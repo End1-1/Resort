@@ -60,8 +60,8 @@ void ReserveWidget::createService()
         return;
     }
     DoubleDatabase fDD(true, doubleDatabase);
-    QString invId = uuid(VAUCHER_INVOICE_N);
-    fId = uuid("RS");
+    QString invId = uuidx(VAUCHER_INVOICE_N);
+    fId = uuidx("RS");
     fDD.insertId("f_reservation", fId);
     fDD[":f_id"] = fId;
     fDD[":f_state"] = RESERVE_SERVICE;
@@ -100,7 +100,9 @@ void ReserveWidget::removeService()
     fDD.update("f_reservation", where_id(ap(fReservation.fId())));
 
     TrackControl tc(TRACK_RESERVATION);
-    tc.fReservation = fId;
+    tc.fRecord = fReservation.fId();
+    tc.fReservation = fReservation.fId();
+    tc.fInvoice = fReservation.fInvoice();
     tc.insert("-=REMOVE DRAFT=-", QString("%1, %2 - %3, room #%4")
                               .arg(fReservation.fId() + "/" + fReservation.fInvoice())
                               .arg(fDateStart.toString(def_date_format))

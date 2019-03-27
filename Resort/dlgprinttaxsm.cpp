@@ -86,7 +86,7 @@ void DlgPrintTaxSM::load()
     int result = fPrintTax.makeJsonAndPrint(fCardAmount, fPrepaid, inJson, outJson, err);
 
     DoubleDatabase v;
-    v.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     v.open(true, false);
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
@@ -129,7 +129,7 @@ void DlgPrintTaxSM::loadAdvance()
     int result = fPrintTax.printAdvanceJson(fCashAmount, fCardAmount, inJson, outJson, err);
 
     DoubleDatabase v;
-    v.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     v.open(true, false);
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
@@ -173,7 +173,7 @@ void DlgPrintTaxSM::loadTaxback()
     QString err;
 
     DoubleDatabase v;
-    v.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     v.open(true, false);
     v[":f_replyTaxCode"] = fTaxback;
     v.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");

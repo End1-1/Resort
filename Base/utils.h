@@ -26,9 +26,8 @@ namespace Utils {
     void tableRowUp(QTableWidget *tw);
     void tableRowDown(QTableWidget *tw);
     void tableSetColumnWidths(QTableWidget *tw, int count, ...);
-    void tableSetHeaderCaptions(QTableWidget *tw, int count, ...);
     void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data, int role);
-    void tableAppendRowData(QTableWidget *tw, int count, ...);
+    void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data);
     void tableSetRowDataWithOffcet(QTableWidget *tw, int row, const QList<QVariant> &data, bool createItem, int role, int colOffcet);
     inline void tableSetRowData(QTableWidget *tw, int row, const QList<QVariant> &data, bool createItem, int role) {tableSetRowDataWithOffcet(tw, row, data, createItem, role, 0);}
     int tableGetCurrentRowData(QTableWidget *tw, QList<QVariant> &data);

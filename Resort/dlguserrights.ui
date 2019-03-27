@@ -1237,6 +1237,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chRoomEditor_2">
+         <property name="text">
+          <string>Call rates</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <string>126</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="EQCheckBox" name="chSetupTax">
          <property name="text">
           <string>Setup tax printer</string>

@@ -25,6 +25,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->leOpcode->setSelector(this, cache(cid_users), ui->leOpName);
     ui->leOpcode->setInitialValue(WORKING_USERID);
     ui->leRoom->setVisible(false);
+    ui->leReservation->setVisible(false);
     ui->leName->setReadOnly(!r__(cr__super_correction));
     ui->deDate->setDate(WORKING_DATE);
 
@@ -120,6 +121,7 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
         CacheActiveRoom c;
         if (c.get(code)) {
         ui->leInvoice->setText(c.fInvoice());
+        ui->leReservation->setText(c.fCode());
         ui->lePartnerCode->setText(c.fRoomCode());
         ui->lePartnerName->setText(c.fGuestName());
         ui->leRoom->setText(c.fRoomCode());
@@ -288,7 +290,7 @@ void DlgReceiptVaucher::saveRoom()
     fDD.startTransaction();
     if (ui->leVaucher->isEmpty()) {
         isNew = true;
-        ui->leVaucher->setText(uuid(VAUCHER_RECEIPT_N));
+        ui->leVaucher->setText(uuidx(VAUCHER_RECEIPT_N));
         fDD.insertId("m_register", ui->leVaucher->text());
     }
     fDD[":f_source"] = VAUCHER_RECEIPT_N;
@@ -332,6 +334,9 @@ void DlgReceiptVaucher::saveRoom()
     QString value = ui->deDate->text() + "/" + ui->leRoom->text()
             + "/" + ui->lePartnerName->text() + "/" + ui->lePaymentName->text()
             + "/" + ui->leCardName->text() + "/" + ui->leName->text() + "/" + ui->leAmountAMD->text();
+    fTrackControl->fInvoice = ui->leInvoice->text();
+    fTrackControl->fRecord = ui->leVaucher->text();
+    fTrackControl->fReservation = ui->leReservation->text();
     fTrackControl->insert(msg, value, "");
 
     ui->btnPrint->setEnabled(true);

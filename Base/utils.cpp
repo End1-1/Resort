@@ -44,7 +44,7 @@ QString getVersionString(QString fName)
     }
 
     // VerQueryValue
-    VS_FIXEDFILEINFO *lpBuffer = NULL;
+    VS_FIXEDFILEINFO *lpBuffer = nullptr;
     UINT uLen;
     if(VerQueryValue(lpData, QString("\\").toStdWString().c_str(), (LPVOID*)&lpBuffer, &uLen)) {
         return
@@ -82,11 +82,10 @@ void setupTableFullColumnWidth(QTableWidget *tw, int colWidth, int elements)
 
 QString hostName()
 {
-    wchar_t userName[100];
-    DWORD userNameSize = sizeof(userName);
-    memset(&userName[0], 0, userNameSize);
-    GetUserName(userName, &userNameSize);
-    return QString::fromWCharArray(userName);
+    QString name = qgetenv("USER");
+    if (name.isEmpty())
+        name = qgetenv("USERNAME");
+    return name;
 }
 
 void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool append)
@@ -154,18 +153,6 @@ void tableSetColumnWidths(QTableWidget *tw, int count, ...)
     va_end(vl);
 }
 
-void tableSetHeaderCaptions(QTableWidget *tw, int count, ...)
-{
-    QStringList header;
-    va_list vl;
-    va_start(vl, count);
-    for (int i = 0; i < count; i++) {
-        header << QString(va_arg(vl, QString));
-    }
-    va_end(vl);
-    tw->setHorizontalHeaderLabels(header);
-}
-
 double countVATAmount(double amount, int mode)
 {
     double vat = 0;
@@ -184,14 +171,12 @@ double countVATAmount(double amount, int mode)
     return vat;
 }
 
-void tableAppendRowData(QTableWidget *tw, int count, ...)
+void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data)
 {
-    va_list vl;
-    va_start(vl, count);
     int row = tw->rowCount();
     tw->setRowCount(row + 1);
-    for (int i = 0; i < count; i++) {
-        tw->setItem(row, i, new QTableWidgetItem(QString(va_arg(vl, QString))));
+    for (int i = 0; i < data.count(); i++) {
+        tw->setItem(row, i, new QTableWidgetItem(data[i].toString()));
     }
 }
 

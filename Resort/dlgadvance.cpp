@@ -147,7 +147,7 @@ void DlgAdvance::on_btnSave_clicked()
     bool isNew = false;
     if (ui->leVaucher->isEmpty()) {
         isNew = true;
-        ui->leVaucher->setText(uuid(VAUCHER_ADVANCE_N));
+        ui->leVaucher->setText(uuidx(VAUCHER_ADVANCE_N));
         fDD.insertId("m_register", ui->leVaucher->text());
     }
     fDD[":f_source"] = VAUCHER_ADVANCE_N;

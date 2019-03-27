@@ -21,7 +21,7 @@ void DlgUtils::on_btnGenNumbers_clicked()
     f.open(QIODevice::WriteOnly);
     f.reset();
     for (int i = 0; i < ui->leCount->text().toInt(); i++) {
-        QString uid = uuid(ui->lePrefix->text());
+        QString uid = uuidx(ui->lePrefix->text());
         f.write(uid.toLatin1());
         f.write("\r\n");
     }

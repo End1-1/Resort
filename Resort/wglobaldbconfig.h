@@ -47,6 +47,10 @@ private slots:
 
     void on_btnRemoveDatabase_clicked();
 
+    void on_btnInitExtRestData_clicked();
+
+    void on_leExternalRestaurantDb_textChanged(const QString &arg1);
+
 private:
     Ui::WGlobalDbConfig *ui;
     void getCompSettings();
@@ -54,6 +58,7 @@ private:
     void getDatabases();
     void getMonthly();
     void getTax();
+    void getApp();
 };
 
 #endif // WGLOBALDBCONFIG_H

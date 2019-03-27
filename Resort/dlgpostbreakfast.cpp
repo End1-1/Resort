@@ -195,7 +195,7 @@ void DlgPostBreakfast::on_btnSave_clicked()
     fDD.startTransaction();
     if (ui->leVoucher->isEmpty()) {
         isNew = true;
-        QString rid = uuid(VAUCHER_POINT_SALE_N);
+        QString rid = uuidx(VAUCHER_POINT_SALE_N);
         fDD.insertId("m_register", rid);
         ui->leVoucher->setText(rid);
     }
@@ -257,7 +257,7 @@ void DlgPostBreakfast::on_btnSave_clicked()
 
     CacheRestFullMenu rf;
     rf.get(ui->leDish->text());
-    QString dishId = uuid("DR");
+    QString dishId = uuidx("DR");
     fDD[":f_id"] = dishId;
     fDD.insert("o_dish");
     fDD[":f_header"] = headerId;
@@ -285,7 +285,7 @@ void DlgPostBreakfast::on_btnSave_clicked()
     fDD.update("o_dish", where_id(ap(dishId)));
 
     if (ui->lePMCode->asInt() == PAYMENT_CASH || ui->lePMCode->asInt() == PAYMENT_CARD) {
-        QString voucherPay = uuid(VAUCHER_RECEIPT_N);
+        QString voucherPay = uuidx(VAUCHER_RECEIPT_N);
         fDD.insertId("m_register", voucherPay);
         if (isNew) {
             fDD[":f_wdate"] = ui->deDate->date();

@@ -76,7 +76,6 @@ RERestDish::RERestDish(QList<QVariant> &values, QWidget *parent) :
                 l->setSelector(this, cache(cid_rest_store), l);
                 fTrackControl->addWidget(l, "Store for " + fDD.getString(1));
                 break;
-                break;
             }
         }
         EQCheckBox *checkComplex = new EQCheckBox(this);
@@ -102,8 +101,9 @@ RERestDish::~RERestDish()
 
 void RERestDish::selector(int number, const QVariant &value)
 {
-    Q_UNUSED(value)
-    switch (number) {
+    Q_UNUSED(value);
+    Q_UNUSED(number);
+//    switch (number) {
 //    case SEL_DISH: {
 //        CI_Dish *c = value.value<CI_Dish*>();
 //        if (!c) {
@@ -112,7 +112,7 @@ void RERestDish::selector(int number, const QVariant &value)
 //        addDishRow(c.fCode(), c.fName(), 0);
 //        break;
 //    }
-    }
+//    }
 }
 
 bool RERestDish::isDataCorrect()
@@ -245,7 +245,6 @@ void RERestDish::clearWidgets()
             case 2:
             case 3:
                 continue;
-                break;
             default:
                 setCellValue(i, j, "");
                 break;

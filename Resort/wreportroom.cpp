@@ -17,9 +17,10 @@ WReportRoom::WReportRoom(QWidget *parent) :
             .setColumn(80, "f_bed_name", tr("Bed"))
             .setColumn(80, "f_bedQty", tr("Qty"))
             .setColumn(50, "f_queue", tr("Queue"))
-            .setColumn(80, "f_smoke", tr("Smoke"));
+            .setColumn(80, "f_smoke", tr("Smoke"))
+            .setColumn(80, "f_phone", tr("Phone"));
     fModel->setSqlQuery("select r.f_id, r.f_class, c.f_short, r.f_view, v.f_short as f_view_short, r.f_floor, r.f_short, r.f_description, "
-                        "r.f_rate, r.f_bed, b.f_name as f_bed_name, r.f_bedQty, r.f_queue, r.f_smoke "
+                        "r.f_rate, r.f_bed, b.f_name as f_bed_name, r.f_bedQty, r.f_queue, r.f_smoke, r.f_phone "
                         "from f_room r  "
                         "left join f_room_classes c on r.f_class=c.f_id "
                         "left join f_room_bed b on r.f_bed=b.f_id "

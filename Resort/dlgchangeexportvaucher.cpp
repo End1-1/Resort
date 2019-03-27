@@ -49,7 +49,7 @@ void DlgChangeExportVaucher::on_btnCancel_clicked()
 
 void DlgChangeExportVaucher::on_btnOK_clicked()
 {
-    QString newId = uuid(ui->leSource->text());
+    QString newId = uuidx(ui->leSource->text());
     fVauchers.setValue(fIndex, "f_id", newId);
     fVauchers.setValue(fIndex, "f_wdate", ui->deDate->date());
     fVauchers.setValue(fIndex, "f_rdate", ui->deDate->date());

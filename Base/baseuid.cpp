@@ -14,25 +14,25 @@
 #define high 35
 #define maxtries 200
 
-QString BaseUID::fAirDbName;
-QString BaseUID::fAirHost;
-QString BaseUID::fAirUser;
-QString BaseUID::fAirPass;
+QString BaseUIDX::fAirDbName;
+QString BaseUIDX::fAirHost;
+QString BaseUIDX::fAirUser;
+QString BaseUIDX::fAirPass;
 
-int BaseUID::fUserId = 0;
+int BaseUIDX::fUserId = 0;
 int _IDGENMODE_ = 0;
 
-BaseUID::BaseUID()
+BaseUIDX::BaseUIDX()
 {
 
 }
 
-QString BaseUID::genID(const QString &prefix)
+QString BaseUIDX::genID(const QString &prefix)
 {
     return (_IDGENMODE_ == 0 ? INTID(prefix) : ID(prefix));
 }
 
-QString BaseUID::ID(const QString &vaucher)
+QString BaseUIDX::ID(const QString &vaucher)
 {
 
     DoubleDatabase d;
@@ -111,16 +111,15 @@ QString BaseUID::ID(const QString &vaucher)
     }
     DONE:
     if (!find) {
-        QMessageBox::critical(0, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL </font></h1>")
+        QMessageBox::critical(nullptr, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL </font></h1>")
                               + "<br>" + errstr);
         exit(0);
-        return "";
     }
     d.close();
     return vaucher.toUpper() + "-" + result;
 }
 
-QString BaseUID::INTID(const QString &prefix)
+QString BaseUIDX::INTID(const QString &prefix)
 {
     DoubleDatabase db;
     db.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass, 1);
@@ -135,7 +134,7 @@ QString BaseUID::INTID(const QString &prefix)
     do {
         QString query = QString ("select f_max, f_zero from serv_id_counter where f_id='%1' for update").arg(prefix);
         if (!db.exec(query)) {
-            QMessageBox::critical(0, "ID ERROR", "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL</font></h1><br>" + db.fLastError);
+            QMessageBox::critical(nullptr, "ID ERROR", "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL</font></h1><br>" + db.fLastError);
             exit(0);
         }
         if (db.nextRow()) {
@@ -165,7 +164,7 @@ QString BaseUID::INTID(const QString &prefix)
             done = true;
         }
         if (totaltrynum > 20) {
-            QMessageBox::critical(0, "ID ERROR", "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL, GIVE UP</font></h1>");
+            QMessageBox::critical(nullptr, "ID ERROR", "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL, GIVE UP</font></h1>");
             exit(0);
         }
     } while (!done);

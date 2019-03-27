@@ -14,6 +14,7 @@ DlgDiscount::DlgDiscount(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->leInvoice->setVisible(false);
+    ui->leReservation->setVisible(false);
     ui->leValue->setValidator(new QDoubleValidator(0, 999999999, 2));
 
     ui->leTypeCode->setSelector(this, cache(cid_invoice_item), ui->leType);
@@ -48,6 +49,7 @@ void DlgDiscount::callback(int sel, const QString &code)
             DoubleDatabase fDD(true, doubleDatabase);
             fDD[":invoice"] = c.fInvoice();
             ui->leInvoice->setText(c.fInvoice());
+            ui->leReservation->setText(c.fCode());
             fDD.exec("select l.f_amount, r.f_amount "
                        "from m_register i "
                        "left join (select f_inv, sum(f_amountAmd*f_sign)as f_amount from m_register where f_inv=:invoice and f_side=0 and f_finance=1 and f_canceled=0 group by 1) l on l.f_inv=i.f_inv "
@@ -191,7 +193,7 @@ void DlgDiscount::on_btnOk_clicked()
     bool isNew = true;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
-    QString rid = uuid(VAUCHER_DISCOUNT_N);
+    QString rid = uuidx(VAUCHER_DISCOUNT_N);
     fDD.insertId("m_register", rid);
     ui->leVaucher->setText(rid);
     fDD[":f_source"] = VAUCHER_DISCOUNT_N;
@@ -237,6 +239,9 @@ void DlgDiscount::on_btnOk_clicked()
     QString value = ui->deDate->text() + "/" + ui->leRoomCode->text()
             + "/" + ui->leGuest->text() + "/" + ui->leAmount->text()
             + "/" + ui->leCLName->text() + "/" + ui->leType->text();
+    fTrackControl->fInvoice = ui->leInvoice->text();
+    fTrackControl->fReservation = ui->leReservation->text();
+    fTrackControl->fRecord = ui->leVaucher->text();
     fTrackControl->insert(msg, value, "");
 
     if (ui->rbAmount->isChecked()) {

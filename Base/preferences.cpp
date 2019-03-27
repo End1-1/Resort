@@ -270,12 +270,8 @@ void Preferences::setUser(const QString &connName, const QString &key, const QSt
 
 QString Preferences::hostUsername()
 {
-#ifdef WIN32
-    wchar_t userName[100];
-    DWORD userNameSize = sizeof(userName);
-    memset(&userName[0], 0, userNameSize);
-    GetUserName(userName, &userNameSize);
-    return QString::fromWCharArray(userName);
-#endif
-    return "Unknown";
+    QString name = qgetenv("USER");
+    if (name.isEmpty())
+        name = qgetenv("USERNAME");
+    return name;
 }

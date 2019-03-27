@@ -278,9 +278,10 @@ bool WReservationRoomTab::save()
             /* ------------------- BEGIN CHANGE ROOM RATE -----------------*/
 
             QString vid = ui->leReservId->text();
-            QString rid = uuid(VAUCHER_ROOM_RATE_N);
+            QString rid = uuidx(VAUCHER_ROOM_RATE_N);
             fDD.insertId("m_register", rid);
             fDD[":f_source"] = VAUCHER_ROOM_RATE_N;
+            fDD[":f_inv"] = ui->leInvoice->text();
             fDD[":f_res"] = vid;
             fDD[":f_wdate"] = WORKING_DATE;
             fDD[":f_rdate"] = QDate::currentDate();
@@ -364,12 +365,12 @@ bool WReservationRoomTab::save()
         if (ui->leReservId->isEmpty()) {
             DoubleDatabase did;
             did.open(true, doubleDatabase);
-            QString rsId = uuid(VAUCHER_RESERVATION_N);
+            QString rsId = uuidx(VAUCHER_RESERVATION_N);
             result = did.insertId("f_reservation", rsId);
             fDD[":f_author"] = WORKING_USERID;
             if (result) {
                 ui->leReservId->setText(rsId);
-                QString invId = uuid("IN");
+                QString invId = uuidx("IN");
                 ui->leInvoice->setText(invId);
                 fDD[":f_invoice"] = invId;
                 fTrackControl->fReservation = rsId;
@@ -1047,7 +1048,7 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         }
     }
     if (result) {
-        QString checkinid = uuid(VOUCHER_CHECKIN);
+        QString checkinid = uuidx(VOUCHER_CHECKIN);
         fDD[":f_id"] = checkinid;
         fDD[":f_source"] = VOUCHER_CHECKIN;
         fDD[":f_res"] = ui->leReservId->text();
@@ -2196,6 +2197,7 @@ void WReservationRoomTab::on_btnAllNation_clicked()
         }
         fDD[":f_nation"] = nation;
         fDD.update("f_guests", where_id(ui->tblGuest->toString(i, 0)));
+        BroadcastThread::cmdRefreshCache(cid_guest, ui->tblGuest->toString(i, 0));
     }
 }
 

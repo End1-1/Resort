@@ -16,7 +16,7 @@ class Base
 {
 public:
     Base();
-    ~Base();
+    virtual ~Base();
     static QString fDbName;
     static Preferences fPreferences;
 

@@ -47,6 +47,37 @@
      </property>
     </spacer>
    </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Search by date of</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbCancel">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbEntry">
+     <property name="text">
+      <string>Entry</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbDeparture">
+     <property name="text">
+      <string>Departure</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

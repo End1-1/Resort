@@ -31,9 +31,10 @@ private:
     QSystemTrayIcon fTrayIcon;
     bool fCanClose;
     void processLine(const QString &line);
-    void processLine1(const QString &line);
+    void processLine1(QString line);
     void callLog(const QString &txt);
     void writeToFile(const QString &line);
+    void configureComPort();
 private slots:
     void readyRead();
     void portError(QSerialPort::SerialPortError serialPortError);
@@ -60,6 +61,9 @@ private slots:
     void on_leAirPass_textChanged(const QString &arg1);
     void on_btnTest_clicked();
     void on_leRawData_textChanged(const QString &arg1);
+    void on_cbComFlowControl_currentIndexChanged(int index);
+    void on_leIntCallItemCode_textChanged(const QString &arg1);
+    void on_leOutCallItemCode_textChanged(const QString &arg1);
 };
 
 #endif // DLGMAIN_H

@@ -29,13 +29,14 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
                                 30, 30, 30, 40, 40, 70, 30);
     ui->tblCat->setMaximumWidth(350);
     ui->tblCat->setMinimumWidth(350);
-    Utils::tableSetHeaderCaptions(ui->tblRoom, ui->tblRoom->columnCount(),
-                                  QString("RS"), QString("Room"), QString("Cat"), QString("Bed"),
-                                  QString("Arrival"), QString("Departure"), QString("Price"),
-                                  QString("Nights"), QString("Total"),
-                                  QString("Arr."), QString("Guest"), QString("Remarks"),
-                                  QString("Male"), QString("Female"), QString("Child"), QString("GuestCode"),
-                                  QString("X"), QString("O"), QString("R"), QString("I"), QString("State"), QString("State id"));
+    QStringList ht;
+    ht << QString("RS") << QString("Room") << QString("Cat") << QString("Bed") <<
+            QString("Arrival") << QString("Departure") << QString("Price") <<
+            QString("Nights") << QString("Total") <<
+            QString("Arr.") << QString("Guest") << QString("Remarks") <<
+            QString("Male") << QString("Female") << QString("Child") << QString("GuestCode") <<
+            QString("X") << QString("O") << QString("R") << QString("I") << QString("State") << QString("State id");
+    ui->tblRoom->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblRoom, ui->tblRoom->columnCount(),
                                 100, 40, 40, 40, 100, 100, 50, 80, 80, 55, 200, 0, 50, 50, 50, 0, 30, 30, 30, 30, 80, 0);
     DoubleDatabase fDD(true, doubleDatabase);
@@ -110,6 +111,12 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
 DlgGroupReservationFuck::~DlgGroupReservationFuck()
 {
     delete ui;
+}
+
+void DlgGroupReservationFuck::openGroup(int id)
+{
+    DlgGroupReservationFuck *d = addTab<DlgGroupReservationFuck>();
+    d->loadGroup(id);
 }
 
 void DlgGroupReservationFuck::loadGroup(int id)
@@ -660,7 +667,7 @@ void DlgGroupReservationFuck::save()
             fDD[":f_author"] = WORKING_USERID;
             fDD[":f_createTime"] = QDateTime::currentDateTime();
             fDD[":f_created"] = QDate::currentDate();
-            invId = uuid("IN");
+            invId = uuidx("IN");
             fDD[":f_invoice"] = invId;
         }
         fDD[":f_state"] = RESERVE_RESERVE;
@@ -715,7 +722,7 @@ void DlgGroupReservationFuck::save()
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             DoubleDatabase did;
             did.open(true, doubleDatabase);
-            QString rsId = uuid(VAUCHER_RESERVATION_N);
+            QString rsId = uuidx(VAUCHER_RESERVATION_N);
             did.insertId("f_reservation", rsId);
             ui->tblRoom->setItemWithValue(i, 0, rsId);
             fTrackControl->resetChanges();
@@ -872,6 +879,9 @@ void DlgGroupReservationFuck::openRoomSelectDialog(bool v)
 {
     QStringList exclude;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+        if (ui->tblRoom->itemValue(i, 21, Qt::DisplayRole).toInt() != RESERVE_RESERVE) {
+            continue;
+        }
         if (ui->tblRoom->lineEdit(i, 1)->text().length() > 0) {
             exclude.append(ui->tblRoom->lineEdit(i, 1)->text());
         }
@@ -900,6 +910,9 @@ void DlgGroupReservationFuck::createMultiRoom(int tag)
 {
     QStringList exclude;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+        if (ui->tblRoom->itemValue(i, 21, Qt::DisplayRole).toInt() != RESERVE_RESERVE) {
+            continue;
+        }
         if (ui->tblRoom->lineEdit(i, 1)->text().length() > 0) {
             exclude.append(ui->tblRoom->lineEdit(i, 1)->text());
         }

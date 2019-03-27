@@ -12,7 +12,7 @@
 #include "dlgdiscount.h"
 #include "pprintinvoice.h"
 #include "dlgtransferinvoiceamount.h"
-#include "printtax.h"
+#include "printtaxd.h"
 #include "dlginvoiceprintoption.h"
 #include "wreservation.h"
 #include "dlgtaxback2.h"
@@ -200,7 +200,7 @@ void WInvoice::loadInvoice(const QString &id)
     f.setBold(true);
     QList<QVariant> row1;
     while (fDD.nextRow(row1)) {
-        QTableWidget *side = 0;
+        QTableWidget *side = nullptr;
         if (row1.at(10).toInt() == 0) {
             side = ui->tblInvLeft;
         } else {
@@ -286,7 +286,7 @@ void WInvoice::loadReservation(const QString &id)
 
 void WInvoice::startTracking()
 {
-    if (fTrackControl == 0) {
+    if (fTrackControl == nullptr) {
         fTrackControl = new TrackControl(TRACK_RESERVATION);
         fTrackControl->fRecord = "-";
         fTrackControl->fInvoice = ui->leInvoice->text();
@@ -308,7 +308,7 @@ bool WInvoice::activeDoc(const QString &invoice)
 
 void WInvoice::openInvoiceWindow(const QString &invoice)
 {
-    WInvoice *w = 0;
+    WInvoice *w = nullptr;
     for (int i = 0; i < fMainWindow->fTab->count(); i++) {
         w = dynamic_cast<WInvoice*>(fMainWindow->fTab->widget(i));
         if (w) {
@@ -453,7 +453,7 @@ double WInvoice::countTotal(QTableWidget *t)
     double result = 0.00;
     for (int i = 0; i < t->rowCount(); i++) {
         double amount = t->item(i, 4)->data(Qt::DisplayRole).toDouble();
-        int sign = t->item(i, 1)->data(Qt::DisplayRole).toDouble();
+        int sign = t->item(i, 1)->data(Qt::DisplayRole).toInt();
         result += amount * sign;
     }
     return result;
@@ -595,7 +595,7 @@ void WInvoice::on_btnCheckout_clicked()
         cityCode = fDD.getInt(0);
         cityAmount = fDD.getDouble(1);
     }
-    QString cid = uuid(VAUCHER_CHECKOUT_N);
+    QString cid = uuidx(VAUCHER_CHECKOUT_N);
     fDD.insertId("m_register", cid);
     fDD[":f_source"] = VAUCHER_CHECKOUT_N;
     fDD[":f_wdate"] = WORKING_DATE;
@@ -626,7 +626,7 @@ void WInvoice::on_btnCheckout_clicked()
     fDD[":f_side"] = 0;
     fDD.update("m_register", where_id(ap(cid)));
     if (cityAmount > 0.1 || cityAmount < -0.1) {
-        cid = uuid(VAUCHER_CHECKOUT_N);
+        cid = uuidx(VAUCHER_CHECKOUT_N);
         fDD.insertId("m_register", cid);
         fDD[":f_source"] = VAUCHER_CHECKOUT_N;
         fDD[":f_wdate"] = WORKING_DATE;
@@ -732,7 +732,7 @@ void WInvoice::on_btnPaymentsDetails_clicked()
 void WInvoice::on_btnTaxPrint_clicked()
 {
     DoubleDatabase fDD(true, doubleDatabase);
-    EQTableWidget *t = 0;
+    EQTableWidget *t = nullptr;
     int result = DlgPrintTaxSideOption::printTaxSide();
     switch (result) {
     case pts_none:
@@ -748,7 +748,7 @@ void WInvoice::on_btnTaxPrint_clicked()
     if (fPreferences.getDb(def_tax_port).toInt() == 0) {
         message_error(tr("Setup tax printer first"));
     }
-    PrintTax *pt =  new PrintTax(this);
+    PrintTaxD *pt = new PrintTaxD(this);
     pt->fInvoice = ui->leInvoice->text();
     for (int i = 0; i < t->rowCount(); i++) {
         if (!isTaxPay(t->toString(i, 12))) {

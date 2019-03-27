@@ -747,7 +747,7 @@ void DlgExport::on_btnStart_clicked()
             replacePtLastLine(QString("%1 of %2 entries").arg(scount++).arg(ids.count()));
         }
         DoubleDatabase dair;
-        dair.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+        dair.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
         dair.open(true, false);
         dair.exec("update f_id set f_id=f_id*-1, f_comp=null,f_date=null, f_time=null where f_id>0");
         ui->chFinal->setChecked(true);

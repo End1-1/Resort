@@ -156,7 +156,7 @@ void DlgNoShow::on_btnSave_clicked()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     if (ui->leCode->isEmpty()) {
-        ui->leCode->setText(uuid("CH"));
+        ui->leCode->setText(uuidx("CH"));
         DoubleDatabase did;
         did.open(true, doubleDatabase);
         did.insertId("m_register", ui->leCode->text());

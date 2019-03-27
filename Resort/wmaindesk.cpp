@@ -546,9 +546,9 @@ void WMainDesk::on_btnScrollLeft_clicked()
 
 void WMainDesk::on_btnCheckIn_clicked()
 {
-    WReservation *w = 0;
+    WReservation *w = nullptr;
     QList<CacheRoom*> rooms;
-    rooms.append(0);
+    rooms.append(nullptr);
     w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }
@@ -621,9 +621,10 @@ void WMainDesk::loadReservationList()
     t->setRowCount(fReservationHint.count());
     Utils::tableSetColumnWidths(t, 12,
                                 30, 0, 60, 250, 120, 120, 70, 70, 30, 0, 200, 0);
-    Utils::tableSetHeaderCaptions(t, 12,
-        QString(), QString(), tr("Room"), tr("Guest"), tr("Arrival"), tr("Departure"), tr("Cardex"), tr("Nat."),
-        QString(), QString(), tr("Author"), tr("Booking"));
+    QStringList ht;
+    ht << QString() << QString() << tr("Room") << tr("Guest") << tr("Arrival") << tr("Departure") << tr("Cardex") << tr("Nat.")
+       << QString() << QString() << tr("Author") << tr("Booking");
+    t->setHorizontalHeaderLabels(ht);
     int row = 0;
     for (QList<QList<QVariant> >::const_iterator it = fReservationHint.begin(); it != fReservationHint.end(); it++) {
         for (int i = 0; i < it->count(); i++) {

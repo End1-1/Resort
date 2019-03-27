@@ -7,6 +7,7 @@
 #include "wfilterbase.h"
 #include "pprintpreview.h"
 #include "rgdoubleclickdelegate.h"
+#include <QHeaderView>
 
 #define tr_col(lang, width) (def_lang == lang ? width : 0)
 

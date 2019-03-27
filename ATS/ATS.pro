@@ -22,6 +22,7 @@ SOURCES += main.cpp\
     ../Base/preferences.cpp \
     ../Base/baseuid.cpp \
     ../Base/doubledatabase.cpp \
+    ../Base/logging.cpp \
     ../Controls/edateedit.cpp
 
 HEADERS  += dlgmain.h \
@@ -32,9 +33,11 @@ HEADERS  += dlgmain.h \
     res.rc \
     ../Base/baseuid.h \
     ../Base/doubledatabase.h \
+    ../Base/logging.h \
     ../Controls/edateedit.h
 
-FORMS    += dlgmain.ui
+FORMS    += dlgmain.ui \
+    ../Resort/dlgselector.ui
 
 LIBS += -lVersion
 

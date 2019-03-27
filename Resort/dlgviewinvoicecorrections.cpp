@@ -14,10 +14,11 @@ DlgViewInvoiceCorrections::DlgViewInvoiceCorrections(const QString &invoice, QWi
                "left join users u2 on u2.f_id=f_cancelUser "
                "where m.f_inv=:f_inv and f_canceled=1");
     ui->tblData->setColumnCount(8);
-    Utils::tableSetHeaderCaptions(ui->tblData, ui->tblData->columnCount(),
-                                  QString("Voucher"), QString("Date"),  QString("Operator"),
-                                  QString("Description"), QString("Amount"), QString("Cancel by"),
-                                  QString("Cancel date"), QString("Reason"));
+    QStringList ht;
+    ht << QString("Voucher") << QString("Date") <<  QString("Operator") <<
+            QString("Description") << QString("Amount") << QString("Cancel by") <<
+            QString("Cancel date") << QString("Reason");
+    ui->tblData->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 80, 100, 150, 200, 80, 150, 140, 200);
     Utils::fillTableWithData(ui->tblData, fDD.fDbRows);

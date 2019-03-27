@@ -148,9 +148,9 @@ void DlgSelector::on_tblData_doubleClicked(const QModelIndex &index)
             ui->tblData->setItemChecked(i, 0, false);
         }
     }
-    ui->tblData->setItemChecked(index.row(), 0, ui->tblData->itemChecked(index.row(), 0)  ? Qt::Unchecked : Qt::Checked);
+    ui->tblData->setItemChecked(index.row(), 0, ui->tblData->itemChecked(index.row(), 0));
     if (!fMultiCheck) {
-        ui->tblData->setItemChecked(index.row(), 0, Qt::Checked);
+        ui->tblData->setItemChecked(index.row(), 0, true);
         accept();
     }
 }

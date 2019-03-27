@@ -392,6 +392,9 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="4">
+      <widget class="QLineEdit" name="leReservation"/>
+     </item>
     </layout>
    </item>
   </layout>

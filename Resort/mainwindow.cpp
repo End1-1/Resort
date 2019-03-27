@@ -11,6 +11,7 @@
 #include "message.h"
 #include "wmaindesk.h"
 #include "wreportgrid.h"
+#include "fcallrates.h"
 #include "fcanceledreservations.h"
 #include "recoupon.h"
 #include "freportbypayment.h"
@@ -29,6 +30,7 @@
 #include "fmonthlyoccperc.h"
 #include "reroominventory.h"
 #include "reroominventorystate.h"
+#include "wroomchart.h"
 #include "fsalesbycar.h"
 #include "froomarrangement.h"
 #include "fcash.h"
@@ -565,6 +567,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCategory_to_sell->setVisible(r__(cr__reservation_category_to_sell));
     ui->actionForecast_Occupancy_Category->setVisible(r__(cr__reservation_forecast_occupation));
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
+    ui->actionNew_room_chart->setVisible(false);
+    ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
 
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
@@ -635,7 +639,11 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
     ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
 
-    ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
+    if (fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
+        ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
+    } else {
+        ui->menuBar->actions().at(9)->setVisible(false);
+    }
 
     ui->menuBar->actions().at(10)->setVisible(r__(cr__menu_direcotory)); //Directory hotel
     ui->actionContacts->setVisible(r__(cr__contacts));
@@ -655,6 +663,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionRoom_inventory->setVisible(r__(cr__directory_hotel_room_inventory));
     ui->actionRoom_inventory_states->setVisible(r__(cr__directory_hotel_room_inventory_state));
     ui->actionNationality_file->setVisible(r__(cr__nationality));
+    ui->actionCall_rates->setVisible(r__(cr__call_rate));
 #ifdef _HOTEL_
     ui->actionCostumers_cars->setVisible(false);
     ui->actionModels_of_cars->setVisible(false);
@@ -2255,4 +2264,14 @@ void MainWindow::on_actionDaily_transactions_triggered()
 void MainWindow::on_actionHotel_hierarchy_triggered()
 {
     FHotelHierarchy::openFilterReport<FHotelHierarchy, WReportGrid>();
+}
+
+void MainWindow::on_actionNew_room_chart_triggered()
+{
+    addTab<WRoomChart>();
+}
+
+void MainWindow::on_actionCall_rates_triggered()
+{
+    FCallRates::openFilterReport<FCallRates, WReportGrid>();
 }

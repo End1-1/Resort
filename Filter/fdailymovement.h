@@ -15,18 +15,21 @@ class FDailyMovement : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FDailyMovement(QWidget *parent = 0);
+    explicit FDailyMovement(QWidget *parent = nullptr);
     ~FDailyMovement();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual GOWidget *gridOptionWidget();
     static void open();
+
 private:
     Ui::FDailyMovement *ui;
     void setupTab();
     void processPayments(QList<QVariant> &emptyRow);
     void processItems(QString items);
+
 private slots:
     void openInvoice();
     void on_btnPrevDate_clicked();

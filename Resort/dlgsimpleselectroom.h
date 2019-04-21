@@ -13,7 +13,7 @@ class DlgSimpleSelectRoom : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgSimpleSelectRoom(QWidget *parent = 0);
+    explicit DlgSimpleSelectRoom(QWidget *parent = nullptr);
     ~DlgSimpleSelectRoom();
     int getRoom(const QString &cat, const QDate &d1, const QDate &d2, QStringList exclude, const QString &bed, bool v);
     double price();

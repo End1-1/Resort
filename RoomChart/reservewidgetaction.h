@@ -13,7 +13,7 @@ class ReserveWidgetAction : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit ReserveWidgetAction(QWidget *parent = 0);
+    explicit ReserveWidgetAction(QWidget *parent = nullptr);
     ~ReserveWidgetAction();
     int fResult;
     void setAuthor(const QString &text);

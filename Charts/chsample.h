@@ -12,7 +12,7 @@ class ChSample : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit ChSample(QWidget *parent = 0);
+    explicit ChSample(QWidget *parent = nullptr);
     ~ChSample();
 
 private:

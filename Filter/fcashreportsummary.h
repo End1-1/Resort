@@ -12,14 +12,15 @@ class FCashReportSummary : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCashReportSummary(QWidget *parent = 0);
+    explicit FCashReportSummary(QWidget *parent = nullptr);
     ~FCashReportSummary();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private slots:
     void on_btnBack_clicked();
-
     void on_btnForward_clicked();
 
 private:

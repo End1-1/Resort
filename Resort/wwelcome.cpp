@@ -8,9 +8,9 @@
 #include "dlgadvanceentry.h"
 #include "dlgpostingcharges.h"
 #include "dlgdiscount.h"
-#include "dlgtransferinvoiceamount.h"
 #include "wreservation.h"
 #include "dlgreceiptvaucher.h"
+#include "dlgtransferanyamount.h"
 #include "dlgwelcomebuttonconfig.h"
 #include "dlggroupreservationfuck.h"
 #include "winvoice.h"
@@ -59,6 +59,8 @@ WWelcome::WWelcome(QWidget *parent) :
     configureLabels();
 
     ui->btnRoomChart->setVisible(r__(cr__room_chart));
+    //ui->btnNewRoomChart->setVisible(r__(cr__room_chart));
+    ui->btnNewRoomChart->setVisible(false);
     ui->btnNewReservation->setVisible(r__(cr__edit_reservation));
     ui->btnNewGroupResevation->setVisible(r__(cr__reservation_group_reservation));
     ui->btnReservations->setVisible(r__(cr__reservations));
@@ -70,7 +72,7 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnAdvance->setVisible(r__(cr__advance_vaucher));
     ui->btnPostCharge->setVisible(r__(cr__postchage_vaucher));
     ui->btnReceipt->setVisible(r__(cr__receipt_vaucher));
-    ui->btnTransfer->setVisible(r__(cr__transfer_vaucher));
+    ui->btnTransferAmount->setVisible(r__(cr__transfer_vaucher));
     ui->btnDiscount->setVisible(r__(cr__discount_vaucher));
     ui->btnCityLedgerDetailedBalance->setVisible(r__(cr__cityledger_balance));
     ui->btnCheckoutInvoices->setVisible(r__(cr__report_checkout_invoices));
@@ -225,18 +227,11 @@ void WWelcome::on_btnDiscount_clicked()
     delete d;
 }
 
-void WWelcome::on_btnTransfer_clicked()
-{
-    DlgTransferInvoiceAmount *d = new DlgTransferInvoiceAmount(this);
-    d->exec();
-    delete d;
-}
-
 void WWelcome::on_btnNewReservation_clicked()
 {
-    WReservation *w = 0;
+    WReservation *w = nullptr;
     QList<CacheRoom*> rooms;
-    rooms.append(0);
+    rooms.append(nullptr);
     w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }
@@ -381,4 +376,14 @@ void WWelcome::on_btnDailyTransactions_clicked()
 void WWelcome::on_btnHotelHierarchy_clicked()
 {
     fMainWindow->on_actionHotel_hierarchy_triggered();
+}
+
+void WWelcome::on_btnNewRoomChart_clicked()
+{
+    fMainWindow->on_actionNew_room_chart_triggered();
+}
+
+void WWelcome::on_btnTransferAmount_clicked()
+{
+    fMainWindow->on_actionTransfer_amount_triggered();
 }

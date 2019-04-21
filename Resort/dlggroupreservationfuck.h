@@ -29,50 +29,30 @@ private slots:
     void createMultiRoom(int tag);
     void roomPriceChanged(const QString &arg1);
     void on_deArrival_textChanged(const QString &arg1);
-
     void on_deDeparture_textChanged(const QString &arg1);
-
     void on_tblRoom_clicked(const QModelIndex &index);
-
     void on_btnAddGuest_clicked();
-
     void on_leGuest_returnPressed();
-
     void on_teIndRemarks_textChanged();
-
     void on_btnCreateGroup_clicked();
-
     void on_btnSave_clicked();
-
     void on_btnRemarksToAll_clicked();
-
     void on_btnRemarksToAll_2_clicked();
-
     void on_btnArrangeToAll_clicked();
-
     void on_btnPriceToAll_clicked();
-
     void on_btnClear_clicked();
-
     void on_btnDateAll_clicked();
-
     void on_btnArrangeToAll_2_clicked();
-
     void on_btnAllPayments_clicked();
-
     void on_cbModeOfPayment_currentIndexChanged(int index);
-
     void on_btnAllCL_clicked();
-
     void on_btnAllCard_clicked();
-
     void on_tblCat_cellDoubleClicked(int row, int column);
-
     void on_btnClearFilter_clicked();
-
     void on_btnPrint_clicked();
-
     void on_btnCancelGroup_clicked();
+
+    void on_btnReviveReservations_clicked();
 
 private:
     Ui::DlgGroupReservationFuck *ui;

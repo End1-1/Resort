@@ -12,14 +12,15 @@ class FInHouseGuest : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FInHouseGuest(QWidget *parent = 0);
+    explicit FInHouseGuest(QWidget *parent = nullptr);
     ~FInHouseGuest();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private slots:
     void on_chDate_clicked(bool checked);
-
     void on_chTime_clicked(bool checked);
 
 private:

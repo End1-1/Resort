@@ -7,7 +7,7 @@ class WGuests : public WReportGrid
 {
     Q_OBJECT
 public:
-    WGuests(QWidget *parent = 0);
+    WGuests(QWidget *parent = nullptr);
 protected:
     virtual void setupTab();
 };

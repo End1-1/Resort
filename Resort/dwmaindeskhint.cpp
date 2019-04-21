@@ -36,11 +36,14 @@ void DWMainDeskHint::commonFilter(const QString &filter, int col)
         columns << col;
     }
     for (int i = 0, rowCount = t->rowCount(); i < rowCount; i++) {
-        if (filter.length() == 0 && t->toInt(i, 0) != -1) {
+        t->setRowHidden(i, true);
+        if (t->toInt(i, 0) == -1) {
+            continue;
+        }
+        if (filter.length() == 0) {
             t->setRowHidden(i, false);
             continue;
         }
-        t->setRowHidden(i, true);
         for (int j = 0, colCount = columns.count(); j < colCount; j++) {
             if (t->item(i, columns.at(j))->text().contains(filter, Qt::CaseInsensitive) && t->toInt(i, 0) != -1) {
                 t->setRowHidden(i, false);
@@ -147,6 +150,17 @@ QTableWidget *DWMainDeskHint::tableWidget()
     return ui->tblDockHint;
 }
 
+void DWMainDeskHint::show()
+{
+    EQTableWidget *t = ui->tblDockHint;
+    for (int i = 0, rowCount = t->rowCount(); i < rowCount; i++) {
+        if (t->toInt(i, 0) == -1) {
+             t->setRowHidden(i, true);
+        }
+    }
+    QWidget::show();
+}
+
 void DWMainDeskHint::tblHeaderSectionClicked(int logicalIndex)
 {
     if (fCheckInFilter) {
@@ -188,7 +202,7 @@ void DWMainDeskHint::on_btnCheckIn_clicked()
 {
     hide();
     QList<CacheRoom*> rooms;
-    rooms.append(0);
+    rooms.append(nullptr);
     WReservation *w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }

@@ -13,7 +13,7 @@
 class BaseExtendedDialog : public BaseDialog
 {
 public:
-    BaseExtendedDialog(QWidget *parent = 0);
+    BaseExtendedDialog(QWidget *parent = nullptr);
     ~BaseExtendedDialog();
 protected:
     virtual bool event(QEvent *event);

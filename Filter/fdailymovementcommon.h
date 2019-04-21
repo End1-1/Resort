@@ -12,12 +12,14 @@ class FDailyMovementCommon : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FDailyMovementCommon(QWidget *parent = 0);
+    explicit FDailyMovementCommon(QWidget *parent = nullptr);
     ~FDailyMovementCommon();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void open();
+
 private:
     Ui::FDailyMovementCommon *ui;
 

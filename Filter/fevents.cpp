@@ -42,6 +42,11 @@ QString FEvents::reportTitle()
     return "Events";
 }
 
+QWidget *FEvents::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FEvents::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

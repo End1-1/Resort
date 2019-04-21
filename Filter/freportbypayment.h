@@ -12,11 +12,13 @@ class FReportByPayment : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FReportByPayment(QWidget *parent = 0);
+    explicit FReportByPayment(QWidget *parent = nullptr);
     ~FReportByPayment();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
+
 private:
     Ui::FReportByPayment *ui;
 };

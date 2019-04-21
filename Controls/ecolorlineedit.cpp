@@ -25,6 +25,21 @@ QColor EColorLineEdit::color()
     return QColor::fromRgb(text().toInt());
 }
 
+void EColorLineEdit::setColor(int c)
+{
+    fColor = c;
+    QPalette palette;
+    QColor color = QColor::fromRgb(c);
+    palette.setColor(QPalette::Base, color);
+    palette.setColor(QPalette::Text, color);
+    setPalette(palette);
+}
+
+void EColorLineEdit::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    emit doubleClicked();
+}
+
 void EColorLineEdit::colorChanged(const QString &arg)
 {
     if (arg.length() == 0) {

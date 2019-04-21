@@ -50,6 +50,11 @@ QWidget *WDate2::fw()
     return ui->deStart;
 }
 
+QWidget *WDate2::lw()
+{
+    return ui->deEnd;
+}
+
 void WDate2::changeDate(int day)
 {
     ui->deStart->setDate(ui->deStart->date().addDays(day));

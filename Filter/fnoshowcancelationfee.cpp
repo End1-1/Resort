@@ -28,6 +28,11 @@ QWidget *FNoShowCancelationFee::firstElement()
     return ui->deStart;
 }
 
+QWidget *FNoShowCancelationFee::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FNoShowCancelationFee::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

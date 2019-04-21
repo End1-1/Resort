@@ -12,7 +12,7 @@ class DlgReservationRemarks : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReservationRemarks(QWidget *parent = 0);
+    explicit DlgReservationRemarks(QWidget *parent = nullptr);
     ~DlgReservationRemarks();
     static bool Remarks(QString &remark);
 private slots:

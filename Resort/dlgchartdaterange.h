@@ -12,7 +12,7 @@ class DlgChartDateRange : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgChartDateRange(QWidget *parent = 0);
+    explicit DlgChartDateRange(QWidget *parent = nullptr);
     ~DlgChartDateRange();
     void getResult(QDate &date);
     static bool getDate(QDate &date);

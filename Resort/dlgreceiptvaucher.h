@@ -12,7 +12,7 @@ class DlgReceiptVaucher : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReceiptVaucher(QWidget *parent = 0);
+    explicit DlgReceiptVaucher(QWidget *parent = nullptr);
     ~DlgReceiptVaucher();
     void setVaucher(const QString &id);
     virtual void callback(int sel, const QString &code);

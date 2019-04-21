@@ -12,7 +12,7 @@ class WReportBuilder : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WReportBuilder(QWidget *parent = 0);
+    explicit WReportBuilder(QWidget *parent = nullptr);
     ~WReportBuilder();
     virtual void setup();
 private slots:

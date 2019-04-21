@@ -17,7 +17,7 @@ private slots:
     void on_chOld_clicked(bool checked);
 
 private:
-    explicit DlgTracking(QWidget *parent = 0);
+    explicit DlgTracking(QWidget *parent = nullptr);
     ~DlgTracking();
     Ui::DlgTracking *ui;
     void loadTrack(const QString &query, int trackId, const QString &windowId);

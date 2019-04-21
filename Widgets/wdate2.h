@@ -12,7 +12,7 @@ class WDate2 : public QWidget
     Q_OBJECT
 
 public:
-    explicit WDate2(QWidget *parent = 0);
+    explicit WDate2(QWidget *parent = nullptr);
     ~WDate2();
     QDate d1();
     QDate d2();
@@ -21,6 +21,7 @@ public:
     QString dss1();
     QString dss2();
     QWidget *fw();
+    QWidget *lw();
 private:
     Ui::WDate2 *ui;
     void changeDate(int day);

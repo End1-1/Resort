@@ -64,6 +64,8 @@ DoubleDatabase::DoubleDatabase(bool openFirst, bool openSecond) :
     configureDatabase(fDb1, __dd1Host, __dd1Database, __dd1Username, __dd1Password);
     if (openSecond) {
         configureDatabase(fDb2, __dd2Host, __dd2Database, __dd2Username, __dd2Password);
+    } else {
+        //fDoNotUse2 = true;
     }
     open(openFirst, openSecond);
 }

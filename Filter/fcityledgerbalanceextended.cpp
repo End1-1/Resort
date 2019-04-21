@@ -2,6 +2,7 @@
 #include "ui_fcityledgerbalanceextended.h"
 #include "wreportgrid.h"
 #include "ptextrect.h"
+#include "fcityledgerdetailedbalance.h"
 #include "pimage.h"
 
 FCityLedgerBalanceExtended::FCityLedgerBalanceExtended(QWidget *parent) :
@@ -20,6 +21,7 @@ FCityLedgerBalanceExtended::FCityLedgerBalanceExtended(QWidget *parent) :
     left join (select f_cityLedger, sum(f_amountAmd) as amount from m_register where f_finance=1 and f_canceled=0 and f_sign=1 and (f_source in ('RV', 'DS', 'AV', 'RF'))  and f_wdate between :f_wdate1 and :f_wdate2 group by 1) c on c.f_cityLedger=cl.f_id \
     where coalesce(o.amount, 0) <> 0 or coalesce(d.amount, 0) <> 0 or coalesce(c.amount, 0) <> 0 \
     order by 1 ";
+    connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRowSlot(QList<QVariant>)));
 }
 
 FCityLedgerBalanceExtended::~FCityLedgerBalanceExtended()
@@ -30,6 +32,11 @@ FCityLedgerBalanceExtended::~FCityLedgerBalanceExtended()
 QWidget *FCityLedgerBalanceExtended::firstElement()
 {
     return ui->deStart;
+}
+
+QWidget *FCityLedgerBalanceExtended::lastElement()
+{
+    return ui->deEnd;
 }
 
 void FCityLedgerBalanceExtended::apply(WReportGrid *rg)
@@ -74,6 +81,17 @@ void FCityLedgerBalanceExtended::open()
     FCityLedgerBalanceExtended *be = new FCityLedgerBalanceExtended(rg);
     rg->addFilterWidget(be);
     be->apply(rg);
+}
+
+void FCityLedgerBalanceExtended::doubleClickOnRowSlot(const QList<QVariant> &values)
+{
+    if (values.count() == 0) {
+        return;
+    }
+    WReportGrid *rg = addTab<WReportGrid>();
+    FCityLedgerDetailedBalance *clb = new FCityLedgerDetailedBalance(rg);
+    clb->setData(ui->deStart->date(), ui->deEnd->date(), values.at(0).toString());
+    clb->apply(rg);
 }
 
 void FCityLedgerBalanceExtended::on_btnPrevDate_clicked()

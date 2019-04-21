@@ -19,6 +19,14 @@ namespace Ui {
 class WReportGrid;
 }
 
+typedef struct {
+    QString fFontName;
+    int fFontSize;
+    bool fPrintOnly;
+    bool fFontBold;
+    bool fValid;
+} Report;
+
 class WReportGrid : public BaseWidget
 {
     Q_OBJECT
@@ -27,13 +35,14 @@ public:
     friend class FTrackChanges;
     friend class FCityLedgerBalance;
     friend class FCategoryToSell;
-    explicit WReportGrid(QWidget *parent = 0);
+    explicit WReportGrid(QWidget *parent = nullptr);
     ~WReportGrid();
-    QToolButton *addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver = 0);
+    QToolButton *addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver = nullptr);
     int fillRowValuesOut(QList<QVariant> &out);
     void setTblTotalData(const QList<int> &columns, const QList<double> &values);
     void setTblNoTotalData();
     void countToTotal(int col);
+    virtual void setup();
     virtual void setupTabTextAndIcon(const QString &name, const QString &image);
     void addFilterWidget(WFilterBase *f);
 
@@ -112,16 +121,20 @@ public:
     QStringList fJoinConds;
     BaseWidget *fTitleWidget;
     QMap<QString,bool> fIncludes;
+    QString fGridClassName;
+    static QMap<QString, Report> fReportOptions;
     void dontResizeSave(bool v);
     void setBtnNewVisible(bool value = true);
     virtual QWidget *gridOptionWidget();
+
 protected:
-    QString fGridClassName;
     QString fHelp;
     virtual void processValues(int row, bool isNew);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual bool event(QEvent *event);
+
 private slots:
+    void registerInReportBuilder(bool msg = true);
     void newSum(const QList<int> &columns, const QList<double> &values);
     void tblMainHeaderClicked(int index);
     void tblMainHeaderResized(int index, int oldSize, int newSize);
@@ -137,17 +150,20 @@ private slots:
     void on_tblMain_doubleClicked(const QModelIndex &index);
     void on_btnNew_clicked();
     virtual void on_btnRefresh_clicked();
-    void on_btnFilter_clicked();
     void on_tblMain_clicked(const QModelIndex &index);
-    void on_btnHideFilter_clicked();
-    void on_btnApplyFilter_clicked();
     void on_btnClearQuickSearch_clicked();
     void on_btnPrint_clicked();
-
-    void on_btnHelp_clicked();
-
     void on_btnConfigGrid_clicked();
     void endApply();
+    void on_btnHelp_clicked();
+    void on_btnFirst_clicked();
+    void on_btnBack_clicked();
+    void on_btnNext_clicked();
+    void on_btnLast_clicked();
+    void on_btnZoomOut_clicked();
+    void on_btnZoopIn_clicked();
+    void on_cbZoom_currentIndexChanged(int index);
+    void on_btnPrint2_clicked();
 
 private:
     Ui::WReportGrid *ui;
@@ -155,6 +171,15 @@ private:
     QMenu *fGridMenu;
     bool fSaveResizedColumn;
     void fillRowValues(int row);
+    int fPageNumber;
+    float fScaleFactor;
+    QList<PPrintScene*> fPrintScene;
+    void setPage();
+    PPrintScene *addScene(int tmpl, PrintOrientation po);
+    void setPrintOrientation(PrintOrientation po);
+    void printOnPaper();
+    bool fPrintOut;
+    bool fPrintOutReady;
 
 signals:
     void doubleClickOnRow(const QList<QVariant> &values);

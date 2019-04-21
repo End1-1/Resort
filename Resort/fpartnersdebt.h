@@ -12,13 +12,16 @@ class FPartnersDebt : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FPartnersDebt(QWidget *parent = 0);
+    explicit FPartnersDebt(QWidget *parent = nullptr);
     ~FPartnersDebt();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FPartnersDebt *ui;
+
 private slots:
     void btnNew();
 };

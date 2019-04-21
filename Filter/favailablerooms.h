@@ -12,11 +12,13 @@ class FAvailableRooms : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FAvailableRooms(QWidget *parent = 0);
+    explicit FAvailableRooms(QWidget *parent = nullptr);
     ~FAvailableRooms();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FAvailableRooms *ui;
 };

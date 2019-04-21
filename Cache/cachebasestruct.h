@@ -14,6 +14,7 @@ class CacheBaseStruct
 {
 public:
     CacheBaseStruct();
+    virtual ~CacheBaseStruct();
     bool fValid;
     bool fFlagUpdated;
     int fCacheId;
@@ -26,6 +27,7 @@ public:
     QString fSelectorTitle;
     CacheInstance *fInstance;
     QDate fWorkingDate;
+    void reInit();
     inline QVariant getVariant(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]]; }
     inline QString getString(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toString(); }
     inline QString getString(int column) { return fData[column].toString(); }

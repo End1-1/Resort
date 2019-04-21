@@ -12,10 +12,11 @@ class FDailyTransaction : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FDailyTransaction(QWidget *parent = 0);
+    explicit FDailyTransaction(QWidget *parent = nullptr);
     ~FDailyTransaction();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
 
 private:

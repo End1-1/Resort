@@ -6,7 +6,7 @@
 class EComboMonth : public EComboBoxCompleter
 {
 public:
-    EComboMonth(QWidget *parent = 0);
+    EComboMonth(QWidget *parent = nullptr);
     virtual void setData();
 };
 

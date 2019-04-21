@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_payment_mode 11
+static const int cid_payment_mode = 11;
 
 class CachePaymentMode : public CacheBaseStruct
 {

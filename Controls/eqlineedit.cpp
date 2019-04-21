@@ -23,9 +23,9 @@ EQLineEdit::EQLineEdit(QWidget *parent) :
     fMax = 0.000;
     fAlwaysUpper = true;
     fClickBool = false;
-    fBase = 0;
-    fCacheInstance = 0;
-    fNameEdit = 0;
+    fBase = nullptr;
+    fCacheInstance = nullptr;
+    fNameEdit = nullptr;
     fSelectorMultiCheck = false;
 }
 
@@ -203,6 +203,11 @@ void EQLineEdit::setHiddenTextValidator(const QString &v)
 int EQLineEdit::asInt()
 {
     return text().toInt();
+}
+
+quint32 EQLineEdit::asUInt()
+{
+    return text().toUInt();
 }
 
 double EQLineEdit::asDouble()

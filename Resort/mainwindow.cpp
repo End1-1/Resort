@@ -4,7 +4,6 @@
 #include "dlghouseitem.h"
 #include "preferences.h"
 #include "login.h"
-#include "fdebtholders.h"
 #include "appconfig.h"
 #include "loginsettings.h"
 #include "databasesconnections.h"
@@ -13,45 +12,37 @@
 #include "wreportgrid.h"
 #include "fcallrates.h"
 #include "fcanceledreservations.h"
-#include "recoupon.h"
 #include "freportbypayment.h"
+#include "wquickroomassignment.h"
 #include "fhotelhierarchy.h"
 #include "guestcheckin.h"
+#include "dlgquickroomassignment.h"
 #include "wreportroom.h"
-#include "fdiscountreport.h"
 #include "fexportreservation.h"
-#include "recouponseria.h"
 #include "wwelcome.h"
-#include "fdiscounttotal.h"
 #include "fhouseitems.h"
 #include "fwakeupcall.h"
+#include "dlgtransferanyamount.h"
 #include "favailablerooms.h"
 #include "fbreakfast.h"
 #include "fmonthlyoccperc.h"
 #include "reroominventory.h"
 #include "reroominventorystate.h"
 #include "wroomchart.h"
-#include "fsalesbycar.h"
 #include "froomarrangement.h"
-#include "fcash.h"
+#include "dlgquickadvance.h"
 #include "fdailytransaction.h"
 #include "dlgexecfailedsqls.h"
-#include "ftstorereport.h"
 #include "renationalityfile.h"
 #include "fdishes.h"
-#include "fstoreentry.h"
 #include "dlgexport.h"
 #include "froomstate.h"
 #include "fcladvance.h"
-#include "dlgcityadvance.h"
 #include "dlgnotes.h"
 #include "dlgexitbyversion.h"
-#include "wwelcomerest.h"
 #include "fpartnersdebt.h"
-#include "fcouponsales.h"
 #include "flengthofstay.h"
 #include "wstoreentry.h"
-#include "fdebtofcostumers.h"
 #include "finhousedetailbalance.h"
 #include "dlgnoshow.h"
 #include "dlgrefundvaucher.h"
@@ -60,7 +51,6 @@
 #include "baseuid.h"
 #include "remodelofcars.h"
 #include "frestsalebystore.h"
-#include "recashdesk.h"
 #include "wweb.h"
 #include "dlgcalculateoutputofrestaurant.h"
 #include "wguests.h"
@@ -71,7 +61,6 @@
 #include "fnoshowcancelationfee.h"
 #include "fnatbyperiod.h"
 #include "wreservations.h"
-#include "fstoredocs.h"
 #include "dlgutils.h"
 #include "freservebycreate.h"
 #include "wnotes.h"
@@ -80,9 +69,7 @@
 #include "wcustomreports.h"
 #include "wcontacts.h"
 #include "wusers.h"
-#include "fmaterialsinstore.h"
 #include "recardexgroup.h"
-#include "fstoremovement.h"
 #include "wusersgroups.h"
 #include "rebanquetcomment.h"
 #include "freservegroups.h"
@@ -145,7 +132,6 @@
 #include "dlgpostingcharges.h"
 #include "dlgdiscount.h"
 #include "wrecheckin.h"
-#include "dlgtransferinvoiceamount.h"
 #include "fcashreportsummary.h"
 #include "dlgreceiptvaucher.h"
 #include "fdailymovement.h"
@@ -166,7 +152,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    fCommand(0)
+    fCommand(nullptr)
 {
     ui->setupUi(this);
 
@@ -312,14 +298,9 @@ void MainWindow::login()
     }
 
     enableMainMenu(true);
-    if (fPreferences.getDb(def_welcome_rest_mode).toInt() == 1) {
-        wwelcomerest *ww = addTab<wwelcomerest>();
-        Q_UNUSED(ww)
-    } else {
-        WWelcome *ww = addTab<WWelcome>();
-        ww->setSlogan(fPreferences.getLocalString("Slogan"));
-        showMaximized();
-    }
+    WWelcome *ww = addTab<WWelcome>();
+    ww->setSlogan(fPreferences.getLocalString("Slogan"));
+    showMaximized();
     ui->tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
     fTimer.start(60000);
     ui->actionChange_password->setVisible(true);
@@ -367,13 +348,15 @@ void MainWindow::configureLabels()
             .arg(tr("Welcome"))
             .arg(WORKING_USERNAME)
             .arg(str);
-    QString textRight = QString("%1: %2; %3: %4; %5: %6")
+    QString textRight = QString("%1: %2; %3: %4; %5: %6; %7 %8")
             .arg(tr("Current date"))
             .arg(QDate::currentDate().toString(def_date_format))
             .arg(tr("Working date"))
             .arg(fPreferences.getLocalString(def_working_day))
             .arg(tr("Last charge date"))
-            .arg(WORKING_DATE.addDays(-1).toString(def_date_format));
+            .arg(WORKING_DATE.addDays(-1).toString(def_date_format))
+            .arg(tr("Last run night"))
+            .arg(fPreferences.getDb("eod").toString());
     fStatusLabelLeft->setText(text);
     fStatusLabelRight->setText(textRight);
 }
@@ -528,6 +511,7 @@ void MainWindow::logout()
         delete a;
     }
     fCustomReports.clear();
+    WReportGrid::fReportOptions.clear();
 }
 
 void MainWindow::lock()
@@ -598,11 +582,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCash_repoort_detailed->setVisible(r__(cr__report_cash));
     ui->actionAdvance_report->setVisible(r__(cr__cashier_advance_report));
     ui->actionCancelation_No_show_fee->setVisible(r__(cr__reservation_cancelation_no_show));
-    ui->actionTransfer_CL_amount->setVisible(r__(cr__cashier_transfer_any_direction));
     ui->actionRefund_voucher->setVisible(r__(cr__cashier_refund));
-#ifdef _HOTEL_
-    ui->actionAccounts->setVisible(false);
-#endif
+    ui->actionTemporary_receipts->setVisible(r__(cr__temporary_receipts));
 
     ui->menuBar->actions().at(4)->setVisible(r__(cr__menu_cityledger)); //Cityledger
     ui->actionCity_Ledger_detailed_balance->setVisible(r__(cr__cityledger_balance));
@@ -1171,7 +1152,7 @@ void MainWindow::on_actionRoomChart_triggered()
 void MainWindow::on_actionNew_reservation_triggered()
 {
     QList<CacheRoom*> rooms;
-    rooms.append(0);
+    rooms.append(nullptr);
     WReservation *w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }
@@ -1716,7 +1697,7 @@ void MainWindow::on_actionRe_checkin_triggered()
 void MainWindow::on_actionTransfer_amount_triggered()
 {
 
-    DlgTransferInvoiceAmount *d = new DlgTransferInvoiceAmount(this);
+    DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);
     d->exec();
     delete d;
 }
@@ -2003,26 +1984,6 @@ void MainWindow::on_actionPartners_2_triggered()
     REStorePartner::openStorePartners();
 }
 
-void MainWindow::on_actionDocuments_list_triggered()
-{
-    FStoreDocs::openReport();
-}
-
-void MainWindow::on_actionMaterials_in_the_store_triggered()
-{
-    FMaterialsInStore::openFilterReport<FMaterialsInStore, WReportGrid>();
-}
-
-void MainWindow::on_actionStore_movement_triggered()
-{
-    FStoreMovement::openFilterReport<FStoreMovement, WReportGrid>();
-}
-
-void MainWindow::on_actionCoupons_triggered()
-{
-    RECoupon::openReport();
-}
-
 void MainWindow::on_actionCalculate_output_of_restaurant_triggered()
 {
     DlgCalculateOutputOfRestaurant::openDialog();
@@ -2085,74 +2046,9 @@ void MainWindow::on_actionPartners_debts_triggered()
     FPartnersDebt::openFilterReport<FPartnersDebt, WReportGrid>();
 }
 
-void MainWindow::on_actionCoupons_sales_triggered()
-{
-    FCouponSales::openFilterReport<FCouponSales, WReportGrid>();
-}
-
-void MainWindow::on_actionCoupons_seria_triggered()
-{
-    RECouponSeria::openReport();
-}
-
-void MainWindow::on_actionAccounts_triggered()
-{
-    FCash::openFilterReport<FCash, WReportGrid>();
-}
-
-void MainWindow::on_actionAccounts_2_triggered()
-{
-    RECashDesk::openReport();
-}
-
-void MainWindow::on_actionStore_entries_triggered()
-{
-    FStoreEntry::openFilterReport<FStoreEntry, WReportGrid>();
-}
-
-void MainWindow::on_actionNew_store_checkpoint_triggered()
-{
-    WStoreEntry::openDoc(0);
-}
-
-void MainWindow::on_actionPartner_payments_triggered()
-{
-    //FPartnerPayments::openFilterReport<FPartnerPayments, WReportGrid>();
-}
-
-void MainWindow::on_actionCoupons_statistics_triggered()
-{
-    FCouponStatistics::openFilterReport<FCouponStatistics, WReportGrid>();
-}
-
-void MainWindow::on_actionDebts_triggered()
-{
-    FDebtOfCostumers::openFilterReport<FDebtOfCostumers, WReportGrid>();
-}
-
 void MainWindow::on_actionBreakfast_report_triggered()
 {
     FBreakfast::openFilterReport<FBreakfast, WReportGrid>();
-}
-
-void MainWindow::on_actionDiscount_report_triggered()
-{
-    FDiscountReport::openFilterReport<FDiscountReport, WReportGrid>();
-}
-
-void MainWindow::on_actionSales_report_by_cars_triggered()
-{
-    FSalesByCar::openFilterReport<FSalesByCar, WReportGrid>();
-}
-
-void MainWindow::on_actionDiscount_total_triggered()
-{
-    FDiscountTotal::openFilterReport<FDiscountTotal, WReportGrid>();
-}
-
-void MainWindow::on_actionCostumers_triggered()
-{
-    FDebtHolders::openFilterReport<FDebtHolders, WReportGrid>();
 }
 
 void MainWindow::on_actionRefund_voucher_triggered()
@@ -2163,11 +2059,6 @@ void MainWindow::on_actionRefund_voucher_triggered()
 void MainWindow::on_actionRoom_inventory_triggered()
 {
     RERoomInventory::openRoomInventoryReport();
-}
-
-void MainWindow::on_actionTransfer_CL_amount_triggered()
-{
-    DlgCityAdvance::cityAdvance("", "", 0);
 }
 
 void MainWindow::on_actionAvailable_amounts_triggered()
@@ -2220,11 +2111,6 @@ void MainWindow::on_actionExecute_failed_sql_triggered()
     DlgExecFailedSqls::openDialog();
 }
 
-void MainWindow::on_actionT_report_triggered()
-{
-    FTStoreReport::openFilterReport<FTStoreReport, WReportGrid>();
-}
-
 void MainWindow::on_actionDisable_second_database_triggered()
 {
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
@@ -2274,4 +2160,14 @@ void MainWindow::on_actionNew_room_chart_triggered()
 void MainWindow::on_actionCall_rates_triggered()
 {
     FCallRates::openFilterReport<FCallRates, WReportGrid>();
+}
+
+void MainWindow::on_actionRoom_assignment_triggered()
+{
+    addTab<WQuickRoomAssignment>();
+}
+
+void MainWindow::on_actionTemporary_receipts_triggered()
+{
+    addTab<DlgQuickAdvance>();
 }

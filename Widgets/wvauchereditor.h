@@ -12,7 +12,7 @@ class WVaucherEditor : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit WVaucherEditor(QWidget *parent = 0);
+    explicit WVaucherEditor(QWidget *parent = nullptr);
     ~WVaucherEditor();
     virtual void callback(int sel, const QString &code);
     static void load(const QString &id);

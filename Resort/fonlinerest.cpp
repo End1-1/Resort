@@ -37,6 +37,11 @@ QWidget *FOnlineRest::firstElement()
     return ui->tblFilter;
 }
 
+QWidget *FOnlineRest::lastElement()
+{
+    return ui->tblFilter;
+}
+
 QString FOnlineRest::reportTitle()
 {
     return QString("%1 %2").arg(tr("Restaurant online")).arg(QDateTime::currentDateTime().toString(def_date_time_format));

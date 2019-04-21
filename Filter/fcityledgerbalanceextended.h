@@ -12,16 +12,18 @@ class FCityLedgerBalanceExtended : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCityLedgerBalanceExtended(QWidget *parent = 0);
+    explicit FCityLedgerBalanceExtended(QWidget *parent = nullptr);
     ~FCityLedgerBalanceExtended();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
     virtual QString reportTitle();
     virtual bool officialTitle();
     static void open();
-private slots:
-    void on_btnPrevDate_clicked();
 
+private slots:
+    void doubleClickOnRowSlot(const QList<QVariant> &values);
+    void on_btnPrevDate_clicked();
     void on_btnNextDate_clicked();
 
 private:

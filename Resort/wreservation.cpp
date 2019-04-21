@@ -18,6 +18,7 @@ WReservation::WReservation(QWidget *parent) :
     ui->setupUi(this);
     ui->lbGroup->setVisible(false);
     ui->leGroup->setVisible(false);
+    ui->leGroupName->setVisible(false);
     ui->btnRecheckin->setVisible(r__(cr__re_checkin));
     ui->btnCancelation->setVisible(r__(cr__reserve_cancelation));
     ui->btnAddRemoveGroup->setVisible(r__(cr__reservation_group_reservation));
@@ -118,14 +119,26 @@ int WReservation::groupId()
     return ui->leGroup->asInt();
 }
 
+QString WReservation::groupName()
+{
+    return ui->leGroupName->text();
+}
+
 void WReservation::setGroup(int group)
 {
     bool visible = group > 0;
     ui->lbGroup->setVisible(visible);
     ui->leGroup->setVisible(visible);
+    ui->leGroupName->setVisible(visible);
     ui->btnCancelGroup->setVisible(r__(cr__reserve_cancelation) && visible);
     ui->btnSetGroupParams->setVisible(r__(cr__edit_reservation) && visible);
     ui->leGroup->setInt(group);
+    DoubleDatabase dd(true, false);
+    dd[":f_id"] = group;
+    dd.exec("select f_name from f_reservation_group where f_id=:f_id");
+    if (dd.nextRow()) {
+        ui->leGroupName->setText(dd.getString(0));
+    }
 }
 
 void WReservation::openReserveWindows(const QString &code )
@@ -137,7 +150,7 @@ void WReservation::openReserveWindows(const QString &code )
         message_error(tr("Could not load reservation"));
         return;
     }
-    WReservation *w = 0;
+    WReservation *w = nullptr;
     for (int i = 0; i < fMainWindow->fTab->count(); i++) {
         w = dynamic_cast<WReservation*>(fMainWindow->fTab->widget(i));
         if (w) {

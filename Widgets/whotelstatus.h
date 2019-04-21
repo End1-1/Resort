@@ -12,7 +12,7 @@ class WHotelStatus : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WHotelStatus(QWidget *parent = 0);
+    explicit WHotelStatus(QWidget *parent = nullptr);
     ~WHotelStatus();
     virtual void setup();
 private:

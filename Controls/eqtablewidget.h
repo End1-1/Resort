@@ -16,7 +16,7 @@ class EQTableWidget : public QTableWidget
 {
     Q_OBJECT
 public:
-    EQTableWidget(QWidget *parent = 0);
+    EQTableWidget(QWidget *parent = nullptr);
     void setValue(int row, int column, const QVariant &data, int role = Qt::DisplayRole);
     inline QVariant itemValue(int row, int column, int role = Qt::DisplayRole) { return item(row, column)->data(role);}
     double sumOfColumn(int column);
@@ -26,7 +26,7 @@ public:
     void setItem(int row, int column, QTableWidgetItem *i);
     inline int toInt(int row, int column) {return item(row, column)->data(Qt::EditRole).toInt();}
     void setItemWithValue(int row, int column, const QVariant &display, const QVariant &user = QVariant());
-    void addButton(int row, int column, const char *slot, QObject *receiver, const QIcon &icon);
+    QPushButton *addButton(int row, int column, const char *slot, QObject *receiver, const QIcon &icon);
     EPushButton *button(int row, int column);
     EQCheckBox *addCheckBox(int row, int column);
     EQCheckBox *checkBox(int row, int column);

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1057</width>
+    <width>1177</width>
     <height>607</height>
    </rect>
   </property>
@@ -296,9 +296,19 @@
        <widget class="EQLineEdit" name="leGroup">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>70</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="leGroupName">
+        <property name="enabled">
+         <bool>true</bool>
         </property>
         <property name="readOnly">
          <bool>true</bool>

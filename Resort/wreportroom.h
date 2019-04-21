@@ -7,7 +7,7 @@ class WReportRoom : public WReportGrid
 {
     Q_OBJECT
 public:
-    explicit WReportRoom(QWidget *parent = 0);
+    explicit WReportRoom(QWidget *parent = nullptr);
     ~WReportRoom();
 protected:
     virtual void setupTab();

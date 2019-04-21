@@ -282,8 +282,8 @@ void DlgPostingCharges::on_btnOk_clicked()
         rb = 1;
     }
     if (ui->rbCity->isChecked()) {
-        dc = "CREDIT";
-        sign = -1;
+        dc = "DEBIT";
+        sign = 1;
         rb = 2;
     }
     if (ui->leVaucher->text().isEmpty()) {

@@ -12,6 +12,7 @@
 #include "paymentmode.h"
 #include "dlgemail.h"
 #include "cacheactiveroom.h"
+#include "cacheroom.h"
 #include "cacheredreservation.h"
 #include "wreservation.h"
 #include "cachecardex.h"
@@ -19,6 +20,7 @@
 #include "dlgcreategroupreservation.h"
 #include "dlgadvanceentry.h"
 #include "dlgnoshow.h"
+#include "dbmregister.h"
 #include "cachereservationcardex.h"
 #include "cachereservestatus.h"
 #include "dlgprintreservation.h"
@@ -111,56 +113,35 @@ bool WReservationRoomTab::check(int room, const QDate &start, const QDate &end, 
     fDD[":f_s2"] = 2;
     fDD[":f_s3"] = 9;
     fDD[":f_s4"] = 4;
-    fDD.exec("select * from f_reservation where (f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s3 or f_state=:f_s4) and f_room=:f_room order by f_id ");
+    fDD.exec("select f_id, f_startdate, f_enddate, f_state "
+             "from f_reservation where (f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s3 or f_state=:f_s4) "
+             " and f_room=:f_room order by f_startdate ");
     if (fDD.rowCount() == 0) {
         return true;
     }
-    for (int i = 0; i < fDD.rowCount(); i++) {
+    while (fDD.nextRow()) {
         if (!rid.isEmpty()) {
-            if (rid == fDD.getString(i, "f_id")) {
+            if (rid == fDD.getString("f_id")) {
                 continue;
             }
         }
-        if (fDD.getInt(i, "f_state") == RESERVE_OUTOFINVENTORY || fDD.getInt(i, "f_state") == RESERVE_OUTOFROOM) {
-            if (start == fDD.getDate(i, "f_endDate") || end == fDD.getDate(i, "f_startDate")) {
-                errorMsg = tr("Conflict reservation id") + ": " + fDD.getString(i, "f_id");
+        QDate ds = fDD.getDate("f_startdate");
+        QDate de = fDD.getDate("f_enddate");
+        if (fDD.getInt("f_state") == RESERVE_OUTOFINVENTORY || fDD.getInt("f_state") == RESERVE_OUTOFROOM) {
+            if (start == de || end == ds) {
+                errorMsg = tr("Conflict reservation id") + ": " + fDD.getString("f_id");
                 return false;
             }
         }
-        if (start == end) {
-            if (fDD.getValue(i, "f_startDate").toDate() == fDD.getValue(i, "f_endDate").toDate()) {
-                if (fDD.getValue(i, "f_startDate").toDate() == start) {
-                    errorMsg = tr("Conflict reservation id") + ": " + fDD.getValue(i, "f_id").toString();
-                    return false;
-                }
-            }
-            if (start == fDD.getValue(i, "f_endDate").toDate()) {
-
-            }
+        if (end <= ds) {
+            continue;
         }
-        if ((start <= fDD.getValue(i, "f_startDate").toDate())
-                && (end >= fDD.getValue(i, "f_endDate").toDate())
-                && (fDD.getValue(i, "f_startDate").toDate() != fDD.getValue(i, "f_endDate").toDate())) {
-            errorMsg = tr("Conflict reservation id") + ": " + fDD.getValue(i, "f_id").toString();
+        if (start >= de) {
+            continue;
+        }
+        if (start < de) {
+            errorMsg = tr("Conflict reservation id") + ": " + fDD.getString("f_id");
             return false;
-        }
-        if (start > fDD.getValue(i, "f_startDate").toDate() && end < fDD.getValue(i, "f_endDate").toDate()) {
-            errorMsg = tr("Conflict reservation id") + ": " + fDD.getValue(i, "f_id").toString();
-            return false;
-        }
-        if (start <= fDD.getValue(i, "f_startDate").toDate()) {
-            if (end > fDD.getValue(i, "f_startDate").toDate()) {
-                if (fDD.getValue(i, "f_startDate").toDate() != fDD.getValue(i, "f_endDate").toDate()) {
-                    errorMsg = tr("Conflict reservation id") + ": " + fDD.getValue(i, "f_id").toString();
-                    return false;
-                }
-            }
-        }
-        if (end > fDD.getValue(i, "f_endDate").toDate()) {
-            if (start < fDD.getValue(i, "f_endDate").toDate()) {
-                errorMsg = tr("Conflict reservation id") + ": " + fDD.getValue(i, "f_id").toString();
-                return false;
-            }
         }
     }
     return true;
@@ -221,6 +202,10 @@ void WReservationRoomTab::setRemarks(const QString &remarks)
 
 bool WReservationRoomTab::save()
 {
+    if (ui->cbPaymentType->asInt() == 0) {
+        message_error(tr("The payment type is incorrect"));
+        return false;
+    }
     DoubleDatabase fDD(true, doubleDatabase);
     if (ui->leRoomCode->asInt() == 0) {
         if (ui->leReserveCode->asInt() == ROOM_STATE_CHECKIN) {
@@ -298,7 +283,7 @@ bool WReservationRoomTab::save()
             fDD[":f_paymentMode"] = ui->cbPaymentType->currentData();
             fDD[":f_creditCard"] = 0;
             fDD[":f_cityLedger"] = ui->leCityLedgerCode->asInt();
-            fDD[":f_paymentComment"] = vaucherPaymentName(ui->cbPaymentType->currentData().toInt(), 0, ui->leCityLedgerCode->text());
+            fDD[":f_paymentComment"] = vaucherPaymentName(ui->cbPaymentType->currentData().toInt(), "0", ui->leCityLedgerCode->text());
             fDD[":f_dc"] = "";
             fDD[":f_sign"] = 0;
             fDD[":f_doc"] = vid;
@@ -322,7 +307,7 @@ bool WReservationRoomTab::save()
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD[":f_room"] = ui->leRoomCode->asInt();
     fDD[":f_arrangement"] = ui->cbArrangment->currentData();
-    fDD[":f_mealIncluded"] = (int) ui->chMealIncluded->isChecked();
+    fDD[":f_mealIncluded"] = ui->chMealIncluded->isChecked() ? 1 : 0;
     fDD[":f_guest"] = firstGuestId();
     fDD[":f_man"] = ui->sbMan->value();
     fDD[":f_woman"] = ui->sbWoman->value();
@@ -335,10 +320,10 @@ bool WReservationRoomTab::save()
     fDD[":f_arrivalTime"] = ui->teArrivalTime->time();
     fDD[":f_arrivalFee"] = ui->leArrivalFee->asDouble();
     fDD[":f_departureTime"] = ui->teDepartureTime->time();
-    fDD[":f_earlyCheckIn"] = (int) ui->chEarlyCheckIn->isChecked();
+    fDD[":f_earlyCheckIn"] = ui->chEarlyCheckIn->isChecked() ? 1 : 0;
     fDD[":f_earlyCheckInTime"] = ui->teEarlyCheckIn->time();
     fDD[":f_earlyCheckInFee"] = ui->leEarlyCheckInFee->asDouble();
-    fDD[":f_lateCheckOut"] = (int) ui->chLateCheckout->isChecked();
+    fDD[":f_lateCheckOut"] = ui->chLateCheckout->isChecked() ? 1 : 0;
     fDD[":f_lateCheckOutTime"] = ui->teLateChecout->time();
     fDD[":f_lateCheckOutFee"] = ui->leLateCheckoutFee->asDouble();
     fDD[":f_paymentType"] = ui->cbPaymentType->asInt();
@@ -359,7 +344,7 @@ bool WReservationRoomTab::save()
     fDD[":f_commission"] = ui->leCommission->asDouble();
     fDD[":f_group"] = fReservation->groupId();
     fDD[":f_booking"] = ui->leBooking->text();
-    fDD[":f_pickup"] = (int) ui->chPickup->isChecked();
+    fDD[":f_pickup"] = ui->chPickup->isChecked() ? 1 : 0;
     fDD[":f_lastEdit"] = WORKING_USERID;
     if (result) {
         if (ui->leReservId->isEmpty()) {
@@ -425,6 +410,59 @@ bool WReservationRoomTab::save()
     if (result && !oldRoom.isEmpty()) {
         fDD[":f_room"] = ui->leRoomCode->text();
         result = result && fDD.exec("update m_register set f_room=:f_room where f_inv=" + ap(ui->leInvoice->text()));
+    }
+    if (result) {
+        QString allGuest = ui->tblGuest->item(0, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(0, 2)->data(Qt::DisplayRole).toString();
+        for (int i = 1; i < ui->tblGuest->rowCount(); i++) {
+            allGuest += ", " + ui->tblGuest->item(i, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(i, 2)->data(Qt::DisplayRole).toString();
+        }
+        CacheRoom room;
+        DoubleDatabase dd2(true, true);
+        dd2[":f_id"] = ui->leReservId->text();
+        dd2.exec("delete from f_reservation_chart where f_id=:f_id");
+        dd2[":f_reservation"] = ui->leReservId->text();
+        dd2.exec("delete from f_reservation_map where f_reservation=:f_reservation");
+        if (room.get(ui->leRoomCode->text())) {
+            dd2[":f_id"] = ui->leReservId->text();
+            dd2[":f_invoice"] = ui->leInvoice->text();
+            dd2[":f_state"] = ui->leReserveCode->text();
+            dd2[":f_statename"] = ui->leReserveName->text();
+            dd2[":f_reservestate"] = ui->leStatusCode->text();
+            dd2[":f_reservestatename"] = ui->leStatusName->text();
+            dd2[":f_room"] = ui->leRoomCode->text();
+            dd2[":f_roomshort"] = ui->leRoomName->text();
+            dd2[":f_roomstate"] = room.fState();
+            dd2[":f_roomfloor"] = room.fFloor();
+            dd2[":f_roombuilding"] = room.fBuilding();
+            dd2[":f_startdate"] = ui->deEntry->date();
+            dd2[":f_enddate"] = ui->deDeparture->date();
+            dd2[":f_days"] = ui->deEntry->date().daysTo(ui->deDeparture->date());
+            dd2[":f_guest"] = ui->tblGuest->item(0, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(0, 2)->data(Qt::DisplayRole).toString();
+            dd2[":f_allguest"] = allGuest;
+            dd2[":f_cardex"] = ui->leCardexCode->text();
+            dd2[":f_cardexname"] = ui->leCardexname->text();
+            dd2[":f_groupcode"] = fReservation->groupId();
+            dd2[":f_groupname"] = fReservation->groupName();
+            dd2.insert("f_reservation_chart", false);
+            if (ui->deEntry->date().daysTo(ui->deDeparture->date()) == 0) {
+                dd2[":f_reservation"] = ui->leReservId->text();
+                dd2[":f_room"] = ui->leRoomCode->text();
+                dd2[":f_date"] = ui->deEntry->date();
+                dd2[":f_entry"] = 1;
+                dd2[":f_departure"] = 1;
+                dd2.insert("f_reservation_map", false);
+            } else {
+                for (qint64 i = 0, count = ui->deEntry->date().daysTo(ui->deDeparture->date()); i < count; i++) {
+                    dd2[":f_reservation"] = ui->leReservId->text();
+                    dd2[":f_room"] = ui->leRoomCode->text();
+                    dd2[":f_date"] = ui->deEntry->date().addDays(i);
+                    dd2[":f_entry"] = (i == 0 ? 1 : 0);
+                    dd2[":f_departure"] = (i == count - 1 ? 1 : 0);
+                    dd2.insert("f_reservation_map", false);
+                }
+            }
+        } else {
+        }        
     }
     if (result) {
         ui->btnAppendAdvance->setEnabled(true);
@@ -566,7 +604,7 @@ void WReservationRoomTab::loadReservation(const QString &id)
         ui->leInvoice->setText(row.at(c++).toString());
         ui->leRoomCode->setText(row.at(c++).toString());
         ui->cbArrangment->setIndexForData(row.at(c++));
-        ui->chMealIncluded->setChecked((bool) row.at(c++).toInt());
+        ui->chMealIncluded->setChecked(row.at(c++).toInt() == 0 ? false : true);
         c++; //Skip invoice
         c++; //Skip main guest
         ui->sbMan->setValue(row.at(c++).toInt());
@@ -770,6 +808,12 @@ void WReservationRoomTab::reCheckin()
     fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
     fDD[":f_state"] = ROOM_STATE_CHECKIN;
     fDD.update("f_room", where_id(ui->leRoomCode->asInt()));
+    fDD[":f_source"] = VAUCHER_CHECKOUT_N;
+    fDD[":f_inv"] = ui->leInvoice->text();
+    fDD[":f_canceluser"] = WORKING_USERID;
+    fDD[":f_canceldate"] = QDateTime::currentDateTime();
+    fDD.exec("update m_register set f_canceluser=:f_canceluser, f_canceldate=:canceldate "
+             "where f_source=:f_source and f_canceluser is null or f_canceluser=0 and f_inv=:f_inv");
     fTrackControl->insert("Recheckin", "", "");
     setGroupBoxesEnabled(true);
     save();
@@ -938,10 +982,10 @@ bool WReservationRoomTab::checkIn(QString &errorString)
     /*------------------------ BEGIN ADVANCE -------------------*/
     if (result) {
             fDD[":f_source"] = VAUCHER_ADVANCE_N;
-            fDD[":f_res"] = ui->leReservId->text();
-            fDD.exec("select f_id, f_fiscal, f_amountAmd "
+            fDD[":f_inv"] = ui->leInvoice->text();
+            fDD.exec("select f_id, f_fiscal, f_amountAmd, f_wdate, f_paymentmode "
                        "from m_register where f_canceled=0 and f_source=:f_source "
-                       "and f_rec=:f_rec");
+                       "and f_inv=:f_inv ");
             while (fDD.nextRow()) {
                 int fiscal = fDD.getInt(1);
                 fDD[":f_inv"] = ui->leInvoice->text();
@@ -952,6 +996,22 @@ bool WReservationRoomTab::checkIn(QString &errorString)
                     db[":f_prepaid"] = fDD.getDouble(2);
                     db[":f_id"] = ui->leInvoice->text();
                     db.exec("update m_v_invoice set f_prepaid=f_prepaid+:f_prepaid where f_id=:f_id");
+                }
+                DBMRegister dbmr;
+                dbmr.fSource = VOUCHER_ADVANCE_TRANSFER_N;
+                dbmr.fReserve = ui->leReservId->text();
+                dbmr.fInvoice = ui->leInvoice->text();
+                dbmr.fRoom = ui->leRoomCode->asUInt();
+                dbmr.fGuest = ui->tblGuest->toString(0, 1) + " " + ui->tblGuest->toString(0, 2);
+                dbmr.fItemCode = fPreferences.getDb(def_advance_transfer_voucher_id).toUInt();
+                dbmr.fFinalName = tr("TRANSFER FROM ") + fDD.getString("f_id") + ", " + fDD.getDate("f_wdate").toString(def_date_format);
+                dbmr.fDC = PAY_DEBIT;
+                dbmr.fSign = -1;
+                dbmr.fPaymentMode = fDD.getInt("f_paymentMode");
+                dbmr.fAmountAMD = fDD.getDouble("f_amountamd");
+                dbmr.fDoc = fDD.getString("f_id");
+                if (!dbmr.save(fDD)) {
+                    result = false;
                 }
             }
     }
@@ -1048,9 +1108,9 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         }
     }
     if (result) {
-        QString checkinid = uuidx(VOUCHER_CHECKIN);
+        QString checkinid = uuidx(VOUCHER_CHECKIN_N);
         fDD[":f_id"] = checkinid;
-        fDD[":f_source"] = VOUCHER_CHECKIN;
+        fDD[":f_source"] = VOUCHER_CHECKIN_N;
         fDD[":f_res"] = ui->leReservId->text();
         fDD[":f_wdate"] = WORKING_DATE;
         fDD[":f_rdate"] = QDate::currentDate();
@@ -1713,7 +1773,6 @@ void WReservationRoomTab::roomSearch(bool v)
 {
 
     Q_UNUSED(v);
-
     DlgCreateGroupReservation *d = new DlgCreateGroupReservation(this);
     d->setSingleMode(true);
     d->setReservationTab(this);
@@ -2119,7 +2178,7 @@ void WReservationRoomTab::on_chMealIncluded_clicked(bool checked)
 {
     ui->leMealPrice->setEnabled(!checked);
     if (checked) {
-        ui->leMealPrice->setText(0);
+        ui->leMealPrice->setText("0");
     }
     countTotal();
 }

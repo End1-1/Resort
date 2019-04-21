@@ -12,7 +12,7 @@ class DatabasePasswordChange : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DatabasePasswordChange(QWidget *parent = 0);
+    explicit DatabasePasswordChange(QWidget *parent = nullptr);
     ~DatabasePasswordChange();
 
 private slots:

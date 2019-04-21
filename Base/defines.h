@@ -66,11 +66,13 @@
 #define def_reservation_voucher_id "Reservation voucher id"
 #define def_room_rate_change_id "Room rate change voucher id"
 #define def_advance_voucher_id "Advance voucher id"
+#define def_advance_transfer_voucher_id "Advance transfer voucher id"
 #define def_daily_movement_items "Daily movement items"
 #define def_daily_movement_total_side "Daily movement total side"
 #define def_daily_movement_order "Daily movement order"
 #define def_show_logs "show_logs"
 #define def_checkin_voucher_id "Checkin voucher item code"
+#define def_transfer_amount_id "Transfer amount voucher id"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

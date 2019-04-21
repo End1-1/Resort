@@ -22,6 +22,11 @@ QWidget *FReserveByCreate::firstElement()
     return ui->deStart;
 }
 
+QWidget *FReserveByCreate::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FReserveByCreate::reportTitle()
 {
     return QString("%1\r\n%2 - %3")

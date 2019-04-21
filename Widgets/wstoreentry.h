@@ -13,7 +13,7 @@ class WStoreEntry : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WStoreEntry(QWidget *parent = 0);
+    explicit WStoreEntry(QWidget *parent = nullptr);
     ~WStoreEntry();
     virtual void callback(int sel, const QString &code);
     virtual void setup();

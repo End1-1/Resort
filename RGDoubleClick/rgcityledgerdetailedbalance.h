@@ -6,7 +6,7 @@
 class RGCityLedgerDetailedBalance : public RGDoubleClickDelegate
 {
 public:
-    RGCityLedgerDetailedBalance(QObject *parent = 0);
+    RGCityLedgerDetailedBalance(QObject *parent = nullptr);
     virtual void doubleClick(TableModel *t, int row);
 };
 

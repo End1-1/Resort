@@ -12,7 +12,7 @@ class DlgAdvance : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgAdvance(const QString &reserve, QWidget *parent = 0);
+    explicit DlgAdvance(const QString &reserve, QWidget *parent = nullptr);
     ~DlgAdvance();
 
     virtual void callback(int sel, const QString &code);

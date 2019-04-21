@@ -25,6 +25,11 @@ QWidget *FReserveGroups::firstElement()
     return ui->deStart;
 }
 
+QWidget *FReserveGroups::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FReserveGroups::reportTitle()
 {
     return QString("%1 %2 - %3")
@@ -35,6 +40,10 @@ QString FReserveGroups::reportTitle()
 
 void FReserveGroups::apply(WReportGrid *rg)
 {
+    QString dr = QString(" and :entrydeparture between %1 and %2 ")
+            .arg(ui->deStart->dateMySql())
+            .arg(ui->deEnd->dateMySql());
+    dr.replace(":entrydeparture", ui->rbEntry->isChecked() ? "g.f_entry" : "g.f_departure");
     QString query = "select g.f_id, g.f_name, g.f_entry, g.f_departure, c.f_name, t.total, r.total, ch.total, ci.total, cc.total "
             "from f_reservation_group g "
             "left join f_cardex c on c.f_cardex=g.f_cardex "
@@ -43,7 +52,13 @@ void FReserveGroups::apply(WReportGrid *rg)
             "left join (select rr.f_group, count(rr.f_id) as total from f_reservation rr where rr.f_state=3 group by 1) ch on ch.f_group=g.f_id "
             "left join (select rr.f_group, count(rr.f_id) as total from f_reservation rr where rr.f_state=1 group by 1) ci on ci.f_group=g.f_id "
             "left join (select rr.f_group, count(rr.f_id) as total from f_reservation rr where rr.f_state=6 group by 1) cc on cc.f_group=g.f_id "
-            "where g.f_canceled=0 ";
+            "where g.f_canceled=:canceled :dr ";
+    query.replace(":canceled", ui->chCanceled->isChecked() ? "1" : "0");
+    if (ui->rbShowAll->isChecked()) {
+        query.replace(":dr", "");
+    } else {
+        query.replace(":dr", dr);
+    }
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "f_id", tr("Code"))
             .setColumn(200, "f_name", tr("Group name"))

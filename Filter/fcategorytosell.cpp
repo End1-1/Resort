@@ -28,11 +28,11 @@ void FCategoryToSell::apply(WReportGrid *rg)
     rg->fModel->clearData();
     rg->fModel->setColumn(80, "", tr("Cat."))
             .setColumn(200, "", tr("Description"));
-    if (ui->chGroupByBed->isChecked()) {
-        rg->fModel->setColumn(80, "", tr("Bed"));
-    }
     if (ui->chGroupByView->isChecked()) {
         rg->fModel->setColumn(80, "", tr("View"));
+    }
+    if (ui->chGroupByBed->isChecked()) {
+        rg->fModel->setColumn(80, "", tr("Bed"));
     }
     rg->fModel->setColumn(80, "", tr("Total"))
             .setColumn(80, "", tr("Confirmed"))
@@ -99,7 +99,10 @@ void FCategoryToSell::apply(WReportGrid *rg)
             "left join f_room rm on rm.f_id=r.f_room "
             "left join f_room_classes rc on rc.f_id=rm.f_class "
             "left join f_room_view rv on rv.f_id=rm.f_view "
-            "where  r.f_state in (1,2) and ((:date1 > r.f_startdate or :date2 > r.f_startDate) and (:date1 < r.f_enddate or :date2 < r.f_enddate)) ";
+            "where  r.f_state in (1,2) and "
+            "((r.f_startdate <=:date1 and  r.f_enddate > :date1) "
+            "or (r.f_startdate >= :date1 and r.f_enddate < :date2)  "
+            "or (r.f_startdate <:date2 and r.f_enddate>:date2)) ";
     query.replace(":date1", ui->deStart->dateMySql()).replace(":date2", ui->deEnd->dateMySql());
     if (ui->chGroupByBed->isChecked()) {
         query.replace(":view", "rv.f_short,");
@@ -155,4 +158,9 @@ void FCategoryToSell::apply(WReportGrid *rg)
 QWidget *FCategoryToSell::firstElement()
 {
     return ui->deStart;
+}
+
+QWidget *FCategoryToSell::lastElement()
+{
+    return ui->deEnd;
 }

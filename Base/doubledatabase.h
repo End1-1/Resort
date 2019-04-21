@@ -83,6 +83,9 @@ public:
     inline QDate getDate(int column) { return fDbRows.at(fCursorPos).at(column).toDate(); }
     inline QTime getTime(int column) { return fDbRows.at(fCursorPos).at(column).toTime(); }
     inline QTime getTime(const QString &columnName) { return fDbRows.at(fCursorPos).at(fNameColumnMap[columnName.toLower()]).toTime(); }
+    inline QDateTime getDateTime(int row, int column) {return fDbRows.at(row).at(column).toDateTime();}
+    inline QDateTime getDateTime(int column) {return fDbRows.at(fCursorPos).at(column).toDateTime(); }
+    inline QDateTime getDateTime(const QString &columnName) {return fDbRows.at(fCursorPos).at(fNameColumnMap[columnName.toLower()]).toDateTime();}
     inline QList<QVariant> &row() {return fDbRows[fCursorPos]; }
     void getBindValues(QMap<QString, QVariant> &b);
     void getBindValues(int row, QMap<QString, QVariant> &b);

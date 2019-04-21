@@ -71,6 +71,92 @@ Charges</string>
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="btnModifyRoom">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Modify
+room</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/room-key.png</normaloff>:/images/room-key.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="18">
+       <widget class="QPushButton" name="btnTrack">
+        <property name="maximumSize">
+         <size>
+          <width>222</width>
+          <height>222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9">
+       <widget class="QPushButton" name="btnManualTax">
+        <property name="text">
+         <string>Manual
+Tax</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btnTransfer">
+        <property name="maximumSize">
+         <size>
+          <width>5555</width>
+          <height>22222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Transfer
+entries</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="12">
+       <widget class="QPushButton" name="btnTaxBack">
+        <property name="text">
+         <string>Tax
+back</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QToolButton" name="btnRefresh">
         <property name="sizePolicy">
@@ -112,48 +198,7 @@ Charges</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="btnModifyRoom">
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Modify
-room</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/room-key.png</normaloff>:/images/room-key.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="17">
-       <widget class="QPushButton" name="btnTrack">
-        <property name="maximumSize">
-         <size>
-          <width>222</width>
-          <height>222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="16">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -166,7 +211,7 @@ room</string>
         </property>
        </spacer>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="3">
        <widget class="QToolButton" name="btnPaymentsDetails">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -207,7 +252,69 @@ room</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
+      <item row="0" column="2">
+       <widget class="QToolButton" name="btnAdvance">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>55555</width>
+          <height>222222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Advance</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/credit-card.png</normaloff>:/images/credit-card.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btnTransferAmount">
+        <property name="maximumSize">
+         <size>
+          <width>2222</width>
+          <height>22222</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Transfer
+amount</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
        <widget class="QToolButton" name="btnCheckout">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -317,94 +424,7 @@ tax</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="8">
-       <widget class="QPushButton" name="btnManualTax">
-        <property name="text">
-         <string>Manual
-Tax</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="11">
-       <widget class="QPushButton" name="btnTaxBack">
-        <property name="text">
-         <string>Tax
-back</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="btnTransfer">
-        <property name="maximumSize">
-         <size>
-          <width>5555</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-entries</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="btnTransferAmount">
-        <property name="maximumSize">
-         <size>
-          <width>2222</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-amount</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QPushButton" name="btnTransferAmountCL">
-        <property name="maximumSize">
-         <size>
-          <width>2222</width>
-          <height>22222</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Transfer
-amount to C/L</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="6">
+      <item row="1" column="3">
        <widget class="QPushButton" name="btnDiscount">
         <property name="maximumSize">
          <size>
@@ -430,7 +450,7 @@ amount to C/L</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="1" column="4">
        <widget class="QToolButton" name="btnCancel">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -471,7 +491,7 @@ amount to C/L</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="8">
+      <item row="1" column="6">
        <widget class="QToolButton" name="btnWakeup">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

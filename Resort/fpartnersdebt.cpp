@@ -32,6 +32,11 @@ QWidget *FPartnersDebt::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FPartnersDebt::lastElement()
+{
+    return ui->deTo;
+}
+
 void FPartnersDebt::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

@@ -12,7 +12,7 @@ class DlgCalculateOutputOfRestaurant : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgCalculateOutputOfRestaurant(QWidget *parent = 0);
+    explicit DlgCalculateOutputOfRestaurant(QWidget *parent = nullptr);
     ~DlgCalculateOutputOfRestaurant();
     static void openDialog();
 private slots:

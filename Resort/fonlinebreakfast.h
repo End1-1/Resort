@@ -13,11 +13,13 @@ class FOnlineBreakfast : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FOnlineBreakfast(QWidget *parent = 0);
+    explicit FOnlineBreakfast(QWidget *parent = nullptr);
     ~FOnlineBreakfast();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FOnlineBreakfast *ui;
 };

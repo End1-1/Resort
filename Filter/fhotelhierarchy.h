@@ -12,10 +12,11 @@ class FHotelHierarchy : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FHotelHierarchy(QWidget *parent = 0);
+    explicit FHotelHierarchy(QWidget *parent = nullptr);
     ~FHotelHierarchy();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
 
 private:

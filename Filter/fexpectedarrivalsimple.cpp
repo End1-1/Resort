@@ -38,7 +38,12 @@ void FExpectedArrivalSimple::apply(WReportGrid *rg)
 
 QWidget *FExpectedArrivalSimple::firstElement()
 {
-    return 0;
+    return nullptr;
+}
+
+QWidget *FExpectedArrivalSimple::lastElement()
+{
+    return nullptr;
 }
 
 QString FExpectedArrivalSimple::reportTitle()

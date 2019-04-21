@@ -11,7 +11,7 @@ class DlgPaymentsDetails : public BaseExtendedDialog
 {
     Q_OBJECT
 public:
-    explicit DlgPaymentsDetails(QWidget *parent = 0);
+    explicit DlgPaymentsDetails(QWidget *parent = nullptr);
     ~DlgPaymentsDetails();
     void callback(int sel, const QString &code);
     void setInvoice(const QString &id);

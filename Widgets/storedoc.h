@@ -12,7 +12,7 @@ class StoreDoc : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit StoreDoc(QWidget *parent = 0);
+    explicit StoreDoc(QWidget *parent = nullptr);
     ~StoreDoc();
     virtual void callback(int sel, const QString &code);
     void loadDoc(const QString &id);

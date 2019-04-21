@@ -204,6 +204,12 @@ void Preferences::initFromDb(const QString &dbName, const QString &additionalSet
         db[":f_comp"] = QHostInfo::localHostName().toUpper();
         db.insert("s_tax_print", false);
     }
+    db.exec("select max(f_date) from f_eod");
+    if (db.nextRow()) {
+        fDbPreferences["eod"] = db.getDateTime(0).toString(def_date_time_format);
+    } else {
+        fDbPreferences["eod"] = "--";
+    }
     db.close();
     def_date = getLocalDate(def_working_day);
 }

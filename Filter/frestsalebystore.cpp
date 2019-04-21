@@ -20,6 +20,11 @@ QWidget *FRestSaleByStore::firstElement()
     return ui->leDateStart;
 }
 
+QWidget *FRestSaleByStore::lastElement()
+{
+    return ui->leDateEnd;
+}
+
 QString FRestSaleByStore::reportTitle()
 {
     return QString("%1 %2-%3")

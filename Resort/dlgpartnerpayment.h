@@ -12,7 +12,7 @@ class DlgPartnerPayment : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPartnerPayment(QWidget *parent = 0);
+    explicit DlgPartnerPayment(QWidget *parent = nullptr);
     ~DlgPartnerPayment();
 
 private:

@@ -27,6 +27,11 @@ QWidget *FCanceledReservations::firstElement()
     return ui->deStart;
 }
 
+QWidget *FCanceledReservations::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FCanceledReservations::reportTitle()
 {
     return QString("%1 %2-%3")
@@ -41,9 +46,9 @@ void FCanceledReservations::apply(WReportGrid *rg)
     if (ui->rbCancel->isChecked()) {
         date = "r.f_canceldate";
     } else if (ui->rbEntry->isChecked()) {
-        date = "f.f_startdate";
+        date = "r.f_startdate";
     } else if (ui->rbDeparture->isChecked()) {
-        date = "f.f_enddate";
+        date = "r.f_enddate";
     }
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "", tr("Code"))
@@ -60,7 +65,7 @@ void FCanceledReservations::apply(WReportGrid *rg)
             "left join guests g on g.f_id=r.f_guest "
             "left join users u1 on u1.f_id=r.f_author "
             "left join users u2 on u2.f_id=r.f_cancelUser "
-            "where %1 between :date1 and :date2 and r.f_state=:f_state")
+            "where cast(%1 as date) between :date1 and :date2 and r.f_state=:f_state")
             .arg(date);
     query.replace(":date1", ui->deStart->dateMySql());
     query.replace(":date2", ui->deEnd->dateMySql());

@@ -7,7 +7,7 @@ class PPrintInvoice : BaseWidget
 {
     Q_OBJECT
 public:
-    PPrintInvoice(const QString &id, int side, QWidget *parent = 0);
+    PPrintInvoice(const QString &id, int side, QWidget *parent = nullptr);
 private:
     QString fId;
     int fSide;

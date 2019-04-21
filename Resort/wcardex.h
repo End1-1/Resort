@@ -7,7 +7,7 @@ class WCardex : public WReportGrid
 {
     Q_OBJECT
 public:
-    WCardex(QWidget *parent = 0);
+    WCardex(QWidget *parent = nullptr);
     virtual void setupTab();
 };
 

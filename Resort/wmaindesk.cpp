@@ -4,7 +4,6 @@
 #include "winvoice.h"
 #include "dlgchartdaterange.h"
 #include "wreservations.h"
-#include "dlgtransferroom.h"
 #include "dlgendofday.h"
 #include "epushbutton.h"
 #include "dayitemdelegate.h"
@@ -16,12 +15,13 @@
 #include "cachereservationcardex.h"
 #include "roomstate.h"
 #include "dlgpostingcharges.h"
+#include "dlgtransferanyamount.h"
 #include "dlgpaymentsdetails.h"
 #include "eqtablewidget.h"
-#include "dlgtransferinvoiceamount.h"
 #include "dlgreserveconfirmstatus.h"
 #include "dlgreceiptvaucher.h"
 #include "dlggroupreservationfuck.h"
+#include "dlgchartcolor.h"
 #include "cacheone.h"
 #include <QScrollBar>
 #include <QDesktopWidget>
@@ -58,8 +58,8 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fDockHint = new DWMainDeskHint(this);
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
-    fDateStart = QDate::fromString("01/01/2018", def_date_format);
-    fDateEnd = QDate::fromString("31/12/2020", def_date_format);
+    fDateStart = QDate::fromString("01/01/2019", def_date_format);
+    fDateEnd = QDate::fromString("31/12/2021", def_date_format);
     ChartStartDate = fDateStart;
     int dayCount = fDateStart.daysTo(fDateEnd) + 1;
     ui->tblDay->setColumnCount(dayCount);
@@ -104,6 +104,9 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fTimer.start(30000);
     ui->btnEndOfDay->setVisible(r__(cr__eod));
     ui->btnGroupReservation->setVisible(r__(cr__reservation_group_reservation));
+    ui->tblDay->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->tblDay->horizontalHeader()->setDefaultSectionSize(COLUMN_WIDTH);
+    qDebug() << ui->tblDay->horizontalHeader()->defaultSectionSize();
 }
 
 WMainDesk::~WMainDesk()
@@ -208,14 +211,15 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
             writelog("found old reservation id in reservationchachgeupdated");
             fReservationHint[i][0] = -1;
             fReservationHint[i][1] = -1;
-            break;
+            //break;
         }
     }
     EQTableWidget *t = static_cast<EQTableWidget*>(fDockHint->tableWidget());
     for (int i = 0; i < t->rowCount(); i++) {
         if (t->toString(i, 1) == id) {
             t->setValue(i, 0, -1);
-            break;
+            t->setRowHidden(i, true);
+            //break;
         }
     }
     DoubleDatabase fDD(true, doubleDatabase);
@@ -410,11 +414,20 @@ void WMainDesk::filterRoom()
         it++;
     }
 
+    DoubleDatabase ddr(true, false);
+    ddr.exec("select f_id from f_room order by f_building, f_id");
+    QStringList tmpRoom = fRoomList;
+    fRoomList.clear();
+    while (ddr.nextRow()) {
+        if (tmpRoom.contains(ddr.getString(0))) {
+            fRoomList << ddr.getString(0);
+        }
+    }
+
     fScene->initBackgroung(fDateStart.daysTo(fDateEnd) + 1, fRoomList);
     ui->tblRoom->clear();
     ui->tblRoom->setRowCount(fRoomList.count());
     ui->tblRoom->setColumnCount(1);
-    std::sort(fRoomList.begin(), fRoomList.end(), CI_Romm_compare);
     for (int i = 0, count = fRoomList.count(); i < count; i++) {
         QTableWidgetItem *item = new QTableWidgetItem();
         item->setData(Qt::UserRole, fRoomList.at(i));
@@ -627,6 +640,9 @@ void WMainDesk::loadReservationList()
     t->setHorizontalHeaderLabels(ht);
     int row = 0;
     for (QList<QList<QVariant> >::const_iterator it = fReservationHint.begin(); it != fReservationHint.end(); it++) {
+        if (it->at(0).toInt() == -1) {
+            continue;
+        }
         for (int i = 0; i < it->count(); i++) {
            t->setItem(row, i, new QTableWidgetItem(Utils::variantToString(it->at(i))));
         }
@@ -656,6 +672,7 @@ void WMainDesk::loadReservationList()
         t->setCellWidget(row, 8, b);
         row++;
     }
+    t->setRowCount(row);
     ui->tblRoom->viewport()->update();
 }
 
@@ -753,7 +770,7 @@ void WMainDesk::on_btnReceipt_clicked()
 
 void WMainDesk::on_btnTransferRoom_clicked()
 {
-    DlgTransferInvoiceAmount *d = new DlgTransferInvoiceAmount(this);
+    DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);
     d->exec();
     delete d;
 }
@@ -810,4 +827,11 @@ void WMainDesk::on_btnFilterCardex_clicked()
 {
     fFilterCardex = cache(cid_reservation_cardex)->get("");
     filterRoom();
+}
+
+void WMainDesk::on_btnColors_clicked()
+{
+    DlgChartColor *d = new DlgChartColor(this);
+    d->exec();
+    delete d;
 }

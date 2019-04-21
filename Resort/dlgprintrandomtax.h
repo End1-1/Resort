@@ -12,7 +12,7 @@ class DlgPrintRandomTax : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPrintRandomTax(QWidget *parent = 0);
+    explicit DlgPrintRandomTax(QWidget *parent = nullptr);
     ~DlgPrintRandomTax();
     void setHeader(const QString &room, const QString &guest, const QString &invoice);
 private:

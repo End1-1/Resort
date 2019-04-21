@@ -73,6 +73,22 @@ WAccInvoice::~WAccInvoice()
     fDb.close();
 }
 
+void WAccInvoice::openInvoice(const QString &invoice)
+{
+    WAccInvoice *w = nullptr;
+    for (int i = 0; i < fMainWindow->fTab->count(); i++) {
+        w = dynamic_cast<WAccInvoice*>(fMainWindow->fTab->widget(i));
+        if (w) {
+            if (w->invoice() == invoice) {
+                fMainWindow->fTab->setCurrentIndex(i);
+                return;
+            }
+        }
+    }
+    w = addTab<WAccInvoice>();
+    w->load(invoice);
+}
+
 void WAccInvoice::setupTab()
 {
     setupTabTextAndIcon(tr("Invoice"), ":/images/invoice.png");
@@ -204,7 +220,7 @@ void WAccInvoice::load(const QString &id)
     }
 
     query = "select m.f_id, m.f_sign, m.f_wdate, m.f_itemcode, m.f_finalName, "
-            "m.f_amountAmd, m.f_amountVat, m.f_fiscal, if(m.f_side=0,'G', 'C'), m.f_source, m.f_doc "
+            "m.f_amountAmd, m.f_amountVat, m.f_fiscal, if(m.f_side=0,'G', 'C'), m.f_source, m.f_id "
             "from m_register m "
             "where m.f_inv=" + ap(ui->leInvoice->text()) + " " +
             "and m.f_canceled=0 and m.f_finance in (:fin) "
@@ -222,6 +238,11 @@ void WAccInvoice::load(const QString &id)
     fTrackControl->resetChanges();
     connect(ui->deEntry, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deEntry_userDateChanged(QDate)));
     connect(ui->deDeparture, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deDeparture_userDateChanged(QDate)));
+}
+
+QString WAccInvoice::invoice()
+{
+    return ui->leInvoice->text();
 }
 
 void WAccInvoice::viewEntries()

@@ -13,7 +13,7 @@ class DlgReserveShortInfo : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgReserveShortInfo(QWidget *parent = 0);
+    explicit DlgReserveShortInfo(QWidget *parent = nullptr);
     ~DlgReserveShortInfo();
     static void loadShortInfo(const QString &id);
 private slots:

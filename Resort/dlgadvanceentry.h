@@ -13,9 +13,7 @@ class DlgAdvanceEntry : public RowEditorDialog
 
 public:
     static void advance(const QString &code = "");
-
     ~DlgAdvanceEntry();
-
     virtual void callback(int sel, const QString &code);
 
 protected:
@@ -23,20 +21,18 @@ protected:
 
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnSave_clicked();
-
     void on_leAmount_textChanged(const QString &arg1);
-
     void on_btnPrint_clicked();
-
     void on_btnNew_clicked();
-
     void on_btnPrintTax_clicked();
+    void on_rbAdvance_clicked(bool checked);
+    void on_btnService_clicked(bool checked);
 
 private:
-    explicit DlgAdvanceEntry(QList<QVariant> &values, QWidget *parent = 0);
+    explicit DlgAdvanceEntry(QList<QVariant> &values, QWidget *parent = nullptr);
     Ui::DlgAdvanceEntry *ui;
+    void changeTaxMode(bool mode);
 };
 
 #endif // DLGADVANCEENTRY_H

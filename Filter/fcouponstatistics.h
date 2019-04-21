@@ -12,7 +12,7 @@ class FCouponStatistics : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCouponStatistics(QWidget *parent = 0);
+    explicit FCouponStatistics(QWidget *parent = nullptr);
     ~FCouponStatistics();
     virtual QString reportTitle();
     virtual QWidget *firstElement();

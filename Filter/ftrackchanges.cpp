@@ -50,6 +50,11 @@ QWidget *FTrackChanges::firstElement()
     return ui->deStart;
 }
 
+QWidget *FTrackChanges::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FTrackChanges::on_btnClearLog_clicked()
 {
     DlgClearLog *d = new DlgClearLog(this);

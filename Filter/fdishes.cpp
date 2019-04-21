@@ -14,6 +14,7 @@ FDishes::FDishes(QWidget *parent) :
     connect(fReportGrid, SIGNAL(newBtn()), this, SLOT(newBtn()));
     ui->leTypeCode->setSelector(this, cache(cid_rest_dish_type), ui->leTypeCode);
     fReportGrid->setBtnNewVisible(true);
+    //ui->btnGetFromCafe->setVisible(!fPreferences.getDb(def_external_rest_db).toString().isEmpty());
     //fReportGrid->fRowEditorDialog = new RERestDish(fReportGrid->fRowValues, this);
 }
 
@@ -28,6 +29,11 @@ QString FDishes::reportTitle()
 }
 
 QWidget *FDishes::firstElement()
+{
+    return ui->leTypeCode;
+}
+
+QWidget *FDishes::lastElement()
 {
     return ui->leTypeCode;
 }
@@ -112,4 +118,31 @@ void FDishes::newBtn()
     d->setValues();
     d->exec();
     delete d;
+}
+
+void FDishes::on_btnGetFromCafe_clicked()
+{
+    DoubleDatabase db1(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
+    db1.open(true, false);
+    DoubleDatabase db2(true, true);
+    db1.exec("select f_id, f_name from d_part2");
+    if (db1.nextRow()) {
+        db2.exec("delete from r_dish");
+        db2.exec("delete from r_dish_type");
+        do {
+            db2[":f_id"] = db1.getInt(0);
+            db2[":f_en"] = db1.getString(1);
+            db2[":f_am"] = db1.getString(1);
+            db2[":f_ru"] = db1.getString(1);
+            db2[":f_bgcolor"] = -1;
+            db2[":f_textcolor"] = -16777216;
+            db2[":f_active"] = 1;
+            db2[":f_queue"] = db1.getInt(0);
+            db2.insert("r_dish_type", false);
+        } while (db1.nextRow());
+    }
+    db1.exec("select d.f_id, d.f_name, t.f_adgcode from d_dish");
+    while (db1.nextRow()) {
+
+    }
 }

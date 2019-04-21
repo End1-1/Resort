@@ -136,5 +136,9 @@
         <file>images/alarm.png</file>
         <file>images/hierarchy.png</file>
         <file>images/traffic.png</file>
+        <file>images/color.png</file>
+        <file>images/plus.png</file>
+        <file>images/hourglass.png</file>
+        <file>images/bedroom.png</file>
     </qresource>
 </RCC>

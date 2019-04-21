@@ -30,6 +30,11 @@ QWidget *FAllGuestInDateRange::firstElement()
     return ui->deStart;
 }
 
+QWidget *FAllGuestInDateRange::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FAllGuestInDateRange::apply(WReportGrid *rg)
 {
     QString sql = "Select r.f_startdate, r.f_enddate, r.f_room, r.f_invoice, c.f_name, n.f_name, concat(g.f_firstName, ' ', g.f_lastName) \

@@ -18,7 +18,7 @@ class DlgInvoicePrintOption : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgInvoicePrintOption(QWidget *parent = 0);
+    explicit DlgInvoicePrintOption(QWidget *parent = nullptr);
     ~DlgInvoicePrintOption();
     static int getOption();
 private slots:

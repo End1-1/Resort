@@ -7,7 +7,7 @@ class WRemarks : public WReportGrid
 {
     Q_OBJECT
 public:
-    WRemarks(QWidget *parent = 0);
+    WRemarks(QWidget *parent = nullptr);
     virtual void setup();
 };
 

@@ -47,6 +47,11 @@ QWidget *FInvoices::firstElement()
     return ui->deStart;
 }
 
+QWidget *FInvoices::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FInvoices::reportTitle()
 {
     return QString("%1 From %2 To %3")

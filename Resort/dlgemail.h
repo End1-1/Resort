@@ -12,7 +12,7 @@ class DlgEmail : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgEmail(QWidget *parent = 0);
+    explicit DlgEmail(QWidget *parent = nullptr);
     ~DlgEmail();
     static void sendDialog();
 private slots:

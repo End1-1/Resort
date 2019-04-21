@@ -22,7 +22,7 @@ class EQLineEdit : public QLineEdit
     Q_PROPERTY (bool EnableHiddenText READ getHiddenTextEnabled WRITE setHiddenTextEnabled)
     Q_PROPERTY (QString HiddenTextValidator READ getHiddenTextValidator WRITE setHiddenTextValidator)
 public:
-    EQLineEdit(QWidget *parent = 0);
+    EQLineEdit(QWidget *parent = nullptr);
     ~EQLineEdit();
     void setText(const QString &text);
     QString text();
@@ -47,6 +47,7 @@ public:
     QString getHiddenTextValidator();
     void setHiddenTextValidator(const QString &v);
     int asInt();
+    quint32 asUInt();
     double asDouble();
     QString fHiddenText;
     QString fShowText;

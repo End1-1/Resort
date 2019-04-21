@@ -7,7 +7,7 @@ class EPushButton : public QPushButton
 {
     Q_OBJECT
 public:
-    EPushButton(QWidget *parent = 0);
+    EPushButton(QWidget *parent = nullptr);
     void setTag(int tag);
     int fRow;
     int fColumn;

@@ -41,6 +41,11 @@ QWidget *FListSourceReserve::firstElement()
     return ui->deStart;
 }
 
+QWidget *FListSourceReserve::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FListSourceReserve::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

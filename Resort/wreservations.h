@@ -7,7 +7,7 @@ class WReservations : public WReportGrid
 {
     Q_OBJECT
 public:
-    WReservations(QWidget *parent = 0);
+    WReservations(QWidget *parent = nullptr);
     virtual void processValues(int row, bool isNew);
 protected:
     virtual void setupTab();

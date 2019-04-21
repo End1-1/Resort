@@ -8,7 +8,7 @@ class PPrintStoreDoc : public BaseWidget
     Q_OBJECT
 
 public:
-    PPrintStoreDoc(QWidget *parent = 0);
+    PPrintStoreDoc(QWidget *parent = nullptr);
     static void print(const QString &id);
 
 private:

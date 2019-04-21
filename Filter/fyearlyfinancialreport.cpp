@@ -21,6 +21,11 @@ QWidget *FYearlyFinancialReport::firstElement()
     return ui->cbYear;
 }
 
+QWidget *FYearlyFinancialReport::lastElement()
+{
+    return ui->cbYear;
+}
+
 QString FYearlyFinancialReport::reportTitle()
 {
     return QString("%1 - %2")

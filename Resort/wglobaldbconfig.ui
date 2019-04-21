@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>818</width>
+    <width>863</width>
     <height>695</height>
    </rect>
   </property>
@@ -15,75 +15,75 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="btnSave">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>546</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabApp">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Hotel</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QWidget" name="widget" native="true">
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="btnSave">
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="res.qrc">
-              <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>546</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="1">
@@ -499,114 +499,48 @@
        <string>Vouchers</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="11" column="0">
-        <widget class="QLabel" name="lbNeg_4">
-         <property name="text">
-          <string>Checkin voucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="EQLineEdit" name="leAdvanceVoucherId"/>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="lbNeg_3">
-         <property name="text">
-          <string>Advance voucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_15">
-         <property name="text">
-          <string>Breakfast charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="EQLineEdit" name="leRoomChargeId"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="leBrekfastChargeId"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Room charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_34">
-         <property name="text">
-          <string>Reservation voucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="EQLineEdit" name="leDiscountId"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_33">
-         <property name="text">
-          <string>Receipt vaucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string>Dicount charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="EQLineEdit" name="leReceiptVaucherId"/>
-       </item>
-       <item row="6" column="1">
-        <widget class="EQLineEdit" name="lePosTransferId"/>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_18">
-         <property name="text">
-          <string>Refund id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="EQLineEdit" name="leReservationVoucherId"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="EQLineEdit" name="leRefundId"/>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>Positive transfer charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="EQLineEdit" name="leNegTransferId"/>
-       </item>
-       <item row="8" column="0">
+       <item row="8" column="1">
         <widget class="QLabel" name="lbNeg_2">
          <property name="text">
           <string>Room rate change voucher id</string>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lbNeg">
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_34">
          <property name="text">
-          <string>Negative transfer charge id</string>
+          <string>Reservation voucher id</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="EQLineEdit" name="leRoomRateChangeId"/>
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>Refund id</string>
+         </property>
+        </widget>
        </item>
-       <item row="12" column="0">
+       <item row="9" column="4">
+        <widget class="EQLineEdit" name="leAdvanceVoucherId"/>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>Positive transfer charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="EQLineEdit" name="leRefundId"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Room charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
         <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -619,8 +553,94 @@
          </property>
         </spacer>
        </item>
-       <item row="11" column="1">
+       <item row="6" column="4">
+        <widget class="EQLineEdit" name="lePosTransferId"/>
+       </item>
+       <item row="7" column="4">
+        <widget class="EQLineEdit" name="leNegTransferId"/>
+       </item>
+       <item row="4" column="4">
+        <widget class="EQLineEdit" name="leReservationVoucherId"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>Breakfast charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLabel" name="lbNeg_5">
+         <property name="text">
+          <string>Advance transfer voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="4">
         <widget class="EQLineEdit" name="leCheckinVoucherId"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>Receipt vaucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="EQLineEdit" name="leReceiptVaucherId"/>
+       </item>
+       <item row="8" column="4">
+        <widget class="EQLineEdit" name="leRoomRateChangeId"/>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLabel" name="lbNeg_3">
+         <property name="text">
+          <string>Advance voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="EQLineEdit" name="leRoomChargeId"/>
+       </item>
+       <item row="2" column="4">
+        <widget class="EQLineEdit" name="leDiscountId"/>
+       </item>
+       <item row="10" column="4">
+        <widget class="EQLineEdit" name="leAdvanceVoucherIdTransfer"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Dicount charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="leBrekfastChargeId"/>
+       </item>
+       <item row="11" column="1">
+        <widget class="QLabel" name="lbNeg_4">
+         <property name="text">
+          <string>Checkin voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLabel" name="lbNeg">
+         <property name="text">
+          <string>Negative transfer charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="4">
+        <widget class="EQLineEdit" name="leTransferAmountVoucherId"/>
+       </item>
+       <item row="12" column="1">
+        <widget class="QLabel" name="lbNeg_6">
+         <property name="text">
+          <string>Transfer amouint voucher id</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -629,72 +649,6 @@
        <string>Application</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_10">
-       <item>
-        <widget class="QWidget" name="widget_9" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="btnSaveApplication">
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="res.qrc">
-              <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>546</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item>
         <widget class="QWidget" name="widget_10" native="true">
          <layout class="QGridLayout" name="gridLayout_6">
@@ -725,6 +679,13 @@
            <widget class="QPushButton" name="btnInitExtRestData">
             <property name="text">
              <string>Init</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QPushButton" name="btnCorrectRoomChart">
+            <property name="text">
+             <string>Reinitialize room chart</string>
             </property>
            </widget>
           </item>
@@ -1240,71 +1201,250 @@
        <string>Reports</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
-       <item>
-        <widget class="QWidget" name="widget_7" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>30</height>
-          </size>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QPushButton" name="btnSaveReports">
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>30</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="res.qrc">
-              <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>580</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
+         <widget class="QWidget" name="tab_12">
+          <attribute name="title">
+           <string>Print</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QWidget" name="widget_12" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="EQLineEdit" name="lerpGroup">
+                <property name="maximumSize">
+                 <size>
+                  <width>35</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="lerpGroupName">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="btnAddrpGroup">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="res.qrc">
+                  <normaloff>:/images/plus.png</normaloff>:/images/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>56</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QListWidget" name="lwrpReports">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QWidget" name="widget_13" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <property name="spacing">
+               <number>2</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>253</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QListWidget" name="lwrpGroups">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QWidget" name="widget_14" native="true"/>
+           </item>
+           <item row="1" column="2">
+            <widget class="QWidget" name="widget_11" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>2</horstretch>
+               <verstretch>2</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>0</height>
+              </size>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_8">
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="sbrpFontSize"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_46">
+                <property name="text">
+                 <string>Font size</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_47">
+                <property name="text">
+                 <string>Readonly</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QFontComboBox" name="fbrpFontName"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_45">
+                <property name="text">
+                 <string>Font name</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="chrpReadyOnly">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <spacer name="horizontalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="4" column="1">
+               <widget class="QCheckBox" name="chrpFontBold">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_48">
+                <property name="text">
+                 <string>Font bold</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="tab_6">
           <attribute name="title">
            <string>Monthly</string>
@@ -1563,6 +1703,11 @@
    </slots>
   </customwidget>
   <customwidget>
+   <class>EQTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">eqtextedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
@@ -1576,11 +1721,6 @@
    <class>EQDateEdit</class>
    <extends>QDateEdit</extends>
    <header location="global">eqdateedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header location="global">eqtextedit.h</header>
   </customwidget>
   <customwidget>
    <class>EQTimeEdit</class>
@@ -1641,7 +1781,6 @@
   <tabstop>tblAccess</tabstop>
   <tabstop>btnSaveDatabases</tabstop>
   <tabstop>tblDatabases</tabstop>
-  <tabstop>btnSaveReports</tabstop>
   <tabstop>tabWidget_2</tabstop>
   <tabstop>tblMonthly</tabstop>
   <tabstop>tblCardexAnalysis</tabstop>
@@ -1654,7 +1793,6 @@
   <tabstop>btnSave</tabstop>
   <tabstop>chNoTrackControl</tabstop>
   <tabstop>btnRefreshReset</tabstop>
-  <tabstop>btnSaveApplication</tabstop>
   <tabstop>btnSaveRestaurant</tabstop>
  </tabstops>
  <resources>

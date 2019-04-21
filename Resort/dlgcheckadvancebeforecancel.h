@@ -15,19 +15,15 @@ class DlgCheckAdvanceBeforeCancel : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgCheckAdvanceBeforeCancel(const QString &inv, QWidget *parent = 0);
+    explicit DlgCheckAdvanceBeforeCancel(const QString &inv, QWidget *parent = nullptr);
     ~DlgCheckAdvanceBeforeCancel();
     static int checkAdvance(const QString &inv);
+
 private slots:
-
     void on_btnCancel_clicked();
-
     void on_btnNoShow_clicked();
-
     void on_btnRefund_clicked();
-
     void on_btnCancelreservation_clicked();
-
     void on_btnTransferToCL_clicked();
 
 private:

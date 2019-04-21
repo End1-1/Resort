@@ -11,17 +11,18 @@
 #include "dlgtracking.h"
 #include "dlgdiscount.h"
 #include "pprintinvoice.h"
-#include "dlgtransferinvoiceamount.h"
 #include "printtaxd.h"
 #include "dlginvoiceprintoption.h"
 #include "wreservation.h"
 #include "dlgtaxback2.h"
 #include "cachetaxmap.h"
 #include "cacheinvoiceitem.h"
+#include "cacheactiveroom.h"
 #include "dlgpretax.h"
 #include "dlgreserveshortinfo.h"
 #include "vauchers.h"
-#include "dlgcityadvance.h"
+#include "dlgtransferanyamount.h"
+#include "dlgadvanceentry.h"
 #include "dlgtaxback.h"
 #include "dlgwakepcalls.h"
 #include "dlgadvance.h"
@@ -64,6 +65,7 @@ WInvoice::WInvoice(QWidget *parent) :
     ui->btnTransfer->setEnabled(r__(cr__transfer_vaucher));
     ui->btnTransferAmount->setEnabled(r__(cr__transfer_vaucher));
     ui->btnWakeup->setVisible(r__(cr__wakeupcall));
+    ui->btnAdvance->setVisible(r__(cr__advance_voucher_invoice));
     connect(cache(cid_active_room), SIGNAL(updated(int,QString)), this, SLOT(cacheUpdated(int, QString)));
     connect(ui->leCheckInTime, &EQLineEdit::customButtonClicked, [this](bool v) {
         Q_UNUSED(v);
@@ -73,6 +75,13 @@ WInvoice::WInvoice(QWidget *parent) :
         DlgReserveShortInfo::loadShortInfo(ui->leReserveID->text());
         loadInvoice(ui->leInvoice->text());
     });
+    QFont font(qApp->font());
+    font.setPointSize(font.pointSize() + 2);
+    font.setBold(true);
+    ui->leTotalLeft->setFont(font);
+    ui->leTotalRight->setFont(font);
+    font.setPointSize(font.pointSize() + 1);
+    ui->leGranTotal->setFont(font);
 }
 
 WInvoice::~WInvoice()
@@ -703,16 +712,17 @@ void WInvoice::on_btnCheckout_clicked()
         if (ui->tblInvRight->rowCount() > 0) {
             PPrintInvoice(ui->leInvoice->text(), 1, this);
         }
+        CacheReservation r;
+        if (r.get(ui->leReserveID->text())) {
+            CacheReservation n;
+            if (r.hasNext(n)) {
+                BroadcastThread::cmdRefreshCache(cid_reservation, n.fId());
+                BroadcastThread::cmdRefreshCache(cid_red_reservation, n.fId());
+            }
+        }
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReserveID->text());
         BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
         BroadcastThread::cmdRefreshCache(cid_active_room, ui->leRoomCode->text());
-        CacheReservation r;
-        r.get(ui->leReserveID->text());
-        CacheReservation n;
-        if (r.hasNext(n)) {
-            BroadcastThread::cmdRefreshCache(cid_reservation, n.fId());
-            BroadcastThread::cmdRefreshCache(cid_red_reservation, n.fId());
-        }
         clearInvoice();
         removeFromTabWidget();
     } else {
@@ -1008,11 +1018,21 @@ void WInvoice::on_btnDiscount_clicked()
 
 void WInvoice::on_btnTransferAmount_clicked()
 {
+    DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);
+    d->setHint(hint_from_room);
+    d->setRoom(ui->leRoomCode->asInt());
+    d->exec();
+    d->deleteLater();
+    if (!ui->leInvoice->isEmpty()) {
+        loadInvoice(ui->leInvoice->text());
+    }
+    /*
     DlgTransferInvoiceAmount *d = new DlgTransferInvoiceAmount(this);
     d->setRoomFrom(ui->leRoomCode->text());
     d->exec();
     delete d;
     loadInvoice(ui->leInvoice->text());
+    */
 }
 
 void WInvoice::on_btnPrintInvoice_clicked()
@@ -1286,12 +1306,6 @@ void WInvoice::on_btnTaxBack_2_clicked()
 void WInvoice::on_btnPostBreakfast_clicked()
 {
     DlgPostBreakfast::postBreakfast(ui->leInvoice->text(), DlgPostBreakfast::ptBreakfast);
-    loadInvoice(ui->leInvoice->text());
-}
-
-void WInvoice::on_btnTransferAmountCL_clicked()
-{
-    DlgCityAdvance::cityAdvance("", ui->leInvoice->text(), 1);
     loadInvoice(ui->leInvoice->text());
 }
 

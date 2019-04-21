@@ -12,13 +12,16 @@ class FLengthOfStay : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FLengthOfStay(QWidget *parent = 0);
+    explicit FLengthOfStay(QWidget *parent = nullptr);
     ~FLengthOfStay();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FLengthOfStay *ui;
+
 private slots:
     void openReservation();
     void openInvoice();

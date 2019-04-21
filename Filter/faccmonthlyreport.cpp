@@ -228,6 +228,11 @@ QWidget *FAccMonthlyReport::firstElement()
     return ui->deStart;
 }
 
+QWidget *FAccMonthlyReport::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FAccMonthlyReport::reportTitle()
 {
     QString text;

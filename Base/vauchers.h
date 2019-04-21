@@ -12,7 +12,6 @@
 #define VAUCHER_ROOM_RATE 3
 #define VAUCHER_DISCOUNT 11
 #define VAUCHER_CHECKOUT 7
-#define VAUCHER_TRANSFER_AMOUNT 5
 #define VAUCHER_POSTCHARGE 10
 #define VAUCHER_POINT_SALE 4
 #define VAUCHER_EVENT 14
@@ -38,7 +37,8 @@
 #define VAUCHER_INVOICE_N "IN"
 #define VAUCHER_TRANSFER_CL_N "TC"
 #define VAUCHER_CL_INIT_N "CR"
-#define VOUCHER_CHECKIN "CI"
+#define VOUCHER_CHECKIN_N "CI"
+#define VOUCHER_ADVANCE_TRANSFER_N "AT"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode);
 QString vaucherCode(int code, const QString &prefix);

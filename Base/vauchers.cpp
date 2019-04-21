@@ -10,7 +10,6 @@
 #include "dlgadvance.h"
 #include "dlgclinitialbalance.h"
 #include "dlgdiscount.h"
-#include "dlgcityadvance.h"
 #include "paymentmode.h"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode) {
@@ -103,8 +102,6 @@ void openVaucher(const QString &vaucher, const QString &id)
         DlgCLInitialBalance::openVaucher(id);
     } else if (vaucher == "DS") {
         DlgDiscount::openVaucher(id);
-    } else if (vaucher == "TC") {
-        DlgCityAdvance::cityAdvance(id, "", 0);
     }
 }
 

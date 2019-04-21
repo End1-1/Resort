@@ -12,13 +12,15 @@ class FListSourceReserve : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FListSourceReserve(QWidget *parent = 0);
+    explicit FListSourceReserve(QWidget *parent = nullptr);
     ~FListSourceReserve();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
     virtual void setup();
     static void openReport();
+
 private:
     Ui::FListSourceReserve *ui;
 };

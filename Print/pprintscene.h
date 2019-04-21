@@ -16,8 +16,8 @@ class PImage;
 class PPrintScene : public QGraphicsScene
 {
 public:
-    PPrintScene(PrintOrientation po, QObject *parent = 0);
-    PPrintScene(QObject *parent = 0);
+    PPrintScene(PrintOrientation po, QObject *parent = nullptr);
+    PPrintScene(QObject *parent = nullptr);
     PTextRect *addTextRect(PTextRect *t);
     PTextRect *addTextRect(qreal x, qreal y, qreal w, qreal h, const QString &text, PTextRect *tmpl);
     PrintOrientation fPrintOrientation;

@@ -33,6 +33,7 @@ DlgNoShow::DlgNoShow(QWidget *parent) :
             << QString::number(PAYMENT_CARD)
             << QString::number(PAYMENT_ADVANCE)
             << QString::number(PAYMENT_CL);
+    ui->deDate->setDate(WORKING_DATE);
 }
 
 DlgNoShow::~DlgNoShow()
@@ -65,7 +66,7 @@ void DlgNoShow::callback(int sel, const QString &code)
         if (ci.get(code)) {
             ui->leReserve->setText(ci.fCode());
             ui->leInvoice->setText(ci.fInvoice());
-            ui->leGuest->setText(ci.fName());
+            ui->leGuest->setText(ci.fGuest());
             ui->leRoom->setText(ci.fRoom());
         }
         break;
@@ -79,7 +80,7 @@ void DlgNoShow::setReservation(const QString &reserv)
     if (ci.get(reserv)) {
         ui->leReserve->setText(ci.fCode());
         ui->leInvoice->setText(ci.fInvoice());
-        ui->leGuest->setText(ci.fName());
+        ui->leGuest->setText(ci.fGuest());
         ui->leRoom->setText(ci.fRoom());
     }
     getBalance();
@@ -91,7 +92,7 @@ void DlgNoShow::load(const QString &id)
     fDD[":f_id"] = id;
     ui->leCode->setText(id);
     fDD.exec("select * from m_register where f_id=:f_id");
-    if (fDD.rowCount() == 0) {
+    if (!fDD.nextRow()) {
         message_error(tr("Invalid voucher id"));
         return;
     }
@@ -109,7 +110,7 @@ void DlgNoShow::load(const QString &id)
     fDD[":f_id"] = ui->leReserve->text();
     fDD.exec("select * from f_reservation where f_id=:f_id");
     ui->rbCancelation->setChecked(fPreferences.getDb(def_cancelfee_code).toInt());
-    if (fDD.rowCount() == 0) {
+    if (!fDD.nextRow()) {
         message_error(tr("Invalid reservation number"));
         return;
     }
@@ -117,11 +118,6 @@ void DlgNoShow::load(const QString &id)
     ui->deDeparture->setDate(fDD.getValue("f_endDate").toDate());
     ui->leTaxCode->setInt(fDD.getValue("f_fiscal").toInt());
     getBalance();
-}
-
-void DlgNoShow::timeout()
-{
-    exit(0);
 }
 
 void DlgNoShow::on_btnClose_clicked()

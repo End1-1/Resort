@@ -10,7 +10,7 @@ class EQCheckBox : public QCheckBox
     Q_PROPERTY(int Tag READ getTag WRITE setTag)
     Q_PROPERTY(bool RequireLang READ getRequireLang WRITE setRequireLang)
 public:
-    EQCheckBox(QWidget *parent = 0);
+    EQCheckBox(QWidget *parent = nullptr);
     QString getField();
     void setField(const QString &name);
     int getTag();

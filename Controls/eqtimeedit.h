@@ -8,7 +8,7 @@ class EQTimeEdit : public QTimeEdit
     Q_OBJECT
     Q_PROPERTY (QString Field READ getField WRITE setField)
 public:
-    EQTimeEdit(QWidget *parent = 0);
+    EQTimeEdit(QWidget *parent = nullptr);
     QString getField();
     void setField(const QString &field);
     void setBgColor(const QColor &color);

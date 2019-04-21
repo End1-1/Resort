@@ -39,6 +39,11 @@ QWidget *FCommonFilterByDate::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FCommonFilterByDate::lastElement()
+{
+    return ui->deTo;
+}
+
 QString FCommonFilterByDate::reportTitle()
 {
     return QString("%1 %2-%3").arg(fTitle).arg(ui->deFrom->text()).arg(ui->deTo->text());

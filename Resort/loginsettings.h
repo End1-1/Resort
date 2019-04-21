@@ -12,7 +12,7 @@ class LoginSettings : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit LoginSettings(QWidget *parent = 0);
+    explicit LoginSettings(QWidget *parent = nullptr);
     ~LoginSettings();
 
 private slots:

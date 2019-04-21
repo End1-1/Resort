@@ -12,11 +12,13 @@ class FWakeupCall : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FWakeupCall(QWidget *parent = 0);
+    explicit FWakeupCall(QWidget *parent = nullptr);
     ~FWakeupCall();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FWakeupCall *ui;
 

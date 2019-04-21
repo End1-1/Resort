@@ -18,20 +18,24 @@ class FCardexSales : public WFilterBase
     } Field;
 
 public:
-    explicit FCardexSales(QWidget *parent = 0);
+    explicit FCardexSales(QWidget *parent = nullptr);
     ~FCardexSales();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void open();
+
 protected:
     virtual void finalPrint(PPrintScene *ps, int top);
+
 private:
     Ui::FCardexSales *ui;
     QString fQuery;
     QMap<int, Field> fItems;
     void guestReport(WReportGrid *rg);
     void cardexReport(WReportGrid *rg);
+
 private slots:
     void openInvoice();
     void on_toolButton_clicked();

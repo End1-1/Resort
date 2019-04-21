@@ -25,6 +25,11 @@ QWidget *FCLAdvance::firstElement()
     return this;
 }
 
+QWidget *FCLAdvance::lastElement()
+{
+    return this;
+}
+
 void FCLAdvance::apply(WReportGrid *rg)
 {
     QString query = "select m.f_cityLedger, c.f_name, sum(m.f_amountAmd*f_sign) as amount from m_register m "

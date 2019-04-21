@@ -2,6 +2,8 @@
 #include "ui_wroomchart.h"
 #include "wroomchartclasses.h"
 #include "wroomchartdock.h"
+#include "wreservation.h"
+#include "winvoice.h"
 #include <QGraphicsItem>
 #include <QScrollBar>
 #include <QElapsedTimer>
@@ -12,6 +14,7 @@ WRoomChart::WRoomChart(QWidget *parent) :
     ui(new Ui::WRoomChart)
 {
     ui->setupUi(this);
+    fVisibleDays = static_cast<int>(fFirstDate.daysTo(fLastDate));
     FONT = qApp->font();
     if (DAYS_OF_WEEK.count() == 0) {
         DAYS_OF_WEEK[1] = "Mo";
@@ -25,8 +28,11 @@ WRoomChart::WRoomChart(QWidget *parent) :
     fMainScene = nullptr;
     fRoomScene = nullptr;
     fDateScene = nullptr;
-    connect(ui->mainView->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(mainViewVerticalScrollBarValueChanged(int)));
-    connect(ui->mainView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(mainViewHorizontalScrollBarValueChanged(int)));
+    ui->mainView->verticalScrollBar()->blockSignals(true);
+    ui->mainView->horizontalScrollBar()->blockSignals(true);
+    ui->mainView->setMinimumWidth(fVisibleDays * RECT_SIDE);
+    connect(ui->scrollArea->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(mainViewVerticalScrollBarValueChanged(int)));
+    connect(ui->scrollArea->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(mainViewHorizontalScrollBarValueChanged(int)));
     connect(ui->roomView->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(roomViewVerticalScrollBarValueChanged(int)));
     connect(ui->dateView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(dateViewHorizontalScrollBarValueChanged(int)));
     installEventFilter(this);
@@ -69,48 +75,36 @@ void WRoomChart::loadReservations()
 
     DoubleDatabase dd(true, false);    
     int rows = 0;
-    dd.exec("select r.f_id, r.f_state, r.f_reservestate, r.f_room, r.f_startdate, r.f_enddate, "
-            "g.guest, c.f_name, rm.f_short, rm.f_state as f_roomstate, sn.f_en as f_statename, rsn.f_en as f_statusname,  "
-            "r.f_invoice, r.f_group, rg.f_name as f_groupname "
-            "from f_reservation r "
-            "left join guests g on g.f_id=r.f_guest "
-            "left join f_cardex c on c.f_cardex=r.f_cardex "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_reservation_state sn on sn.f_id=r.f_state "
-            "left join f_reservation_status rsn on rsn.f_id=r.f_reservestate "
-            "left join f_reservation_group rg on rg.f_id=r.f_group "
-            "where r.f_state in (1,2,4,7,9) and r.f_room>0 "
-            "order by rm.f_building, rm.f_floor, rm.f_id ");
-
+    dd.exec("select * from f_reservation_chart order by f_roombuilding, f_room ");
     qDebug() << "Reservation query" << t.elapsed();
     t.restart();
 
     if (dd.nextRow()) {        
         do {
-            QDate dateStart = dd.getDate(4);
-            int room = dd.getInt(3);
+            int room = dd.getInt("f_room");
+            QString id = dd.getString("f_id");
             if (!fRoomRows.contains(room)) {
                 fRoomRows[room] = rows++;
-                fRoomShort[room] = dd.getString(8);
+                fRoomShort[room] = dd.getString("f_roomshort");
                 fRoomState[room] = dd.getInt("f_roomstate");
             }
-            QString id = dd.getString(0);
-            fReserveDateStart[id] = dateStart;
-            fReserveDateEnd[id] = dd.getDate(5);
-            fReserveCardex[id] = dd.getString(7);
-            fReserveGuest[id] = dd.getString(6);
-            fReserveState[id] = dd.getInt(1);
-            fReserveRoomName[id] = dd.getString(8);
-            fReserveStatus[id] = dd.getInt(2);
+            fReserveDateStart[id] = dd.getDate("f_startdate");
+            fReserveDateEnd[id] = dd.getDate("f_enddate");
+            fReserveCardex[id] = dd.getString("f_cardex");
+            fReserveGuest[id] = dd.getString("f_guest");
+            fReserveState[id] = dd.getInt("f_state");
+            fReserveRoomName[id] = dd.getString("f_roomshort");
+            fReserveStatus[id] = dd.getInt("f_reservestate");
             fReserveStateName[id] = dd.getString("f_statename");
-            fReserveStatusName[id] = dd.getString("f_statusname");
+            fReserveStatusName[id] = dd.getString("f_reservestatname");
             fReserveInvoice[id] = dd.getString("f_invoice");
             fReserveGroup[id] = dd.getInt("f_group");
             fReserveGroupName[id] = dd.getString("f_groupname");
             Reserve *r = new Reserve(id, this);
-            r->setWidth(dateStart.daysTo(dd.getDate(5)));
-            int left = fFirstDate.daysTo(dateStart) + 1;
-            r->setPos((left * RECT_SIDE) + 2, (fRoomRows[dd.getInt(3)] * RECT_SIDE) + 2);
+            r->setWidth(dd.getInt("f_days"));
+            int left = ((static_cast<int>(fFirstDate.daysTo(dd.getDate("f_startdate"))) + 1) * RECT_SIDE) + 2;
+            int top = (fRoomRows[dd.getInt("f_room")] * RECT_SIDE) + 2;
+            r->setPos(left + 2, top);
             fMainScene->addItem(r);
         } while (dd.nextRow());
     }
@@ -118,8 +112,9 @@ void WRoomChart::loadReservations()
     qDebug() << dd.rowCount() << t.elapsed();
     t.restart();
 
-    qreal lineHeight = fMainScene->height();
-    for (qint64 i = 0, count = fFirstDate.daysTo(fLastDate); i < count; i++) {
+    qreal lineHeight = fRoomRows.count() * RECT_SIDE;
+    qreal lineWidth = fVisibleDays * RECT_SIDE;
+    for (qint32 i = 0; i < fVisibleDays; i++) {
         QGraphicsItem *item = new QGraphicsLineItem(RECT_SIDE * i, 0, RECT_SIDE * i, lineHeight);
         item->setZValue(Z_VALUE_GRID_LINE);
         fMainScene->addItem(item);
@@ -128,10 +123,11 @@ void WRoomChart::loadReservations()
     qDebug() << "Col lines" << fFirstDate.daysTo(fLastDate) << t.elapsed();
     t.restart();
 
-    qreal lineWidth = fMainScene->width();
+    ui->roomView->setMinimumHeight(rows * RECT_SIDE);
+    ui->mainView->setMinimumHeight(rows * RECT_SIDE);
     for (int i = 0; i < rows; i++) {
         QGraphicsItem *item = new QGraphicsLineItem(0, RECT_SIDE * i,  lineWidth, RECT_SIDE * i);
-        item->setZValue(Z_VALUE_GRID_LINE + 1);
+        item->setZValue(Z_VALUE_GRID_LINE);
         fMainScene->addItem(item);
     }
 
@@ -146,14 +142,14 @@ void WRoomChart::loadReservations()
 
     int x = 0;
     QDate prev;
-    for (int i = 0, count = fFirstDate.daysTo(fLastDate); i < count; i++) {
+    for (int i = 0; i < fVisibleDays; i++) {
         QDate d = fFirstDate.addDays(i);
         if (!prev.isValid()) {
             prev = d;
             x = i;
         }
         if (d.month() != prev.month()) {
-            QGraphicsItem *month = new MonthRect(prev, prev.daysTo(d));
+            QGraphicsItem *month = new MonthRect(prev, static_cast<int>(prev.daysTo(d)));
             month->setPos(x * RECT_SIDE, 0);
             fDateScene->addItem(month);
             prev = d;
@@ -163,13 +159,14 @@ void WRoomChart::loadReservations()
         fDateScene->addItem(item);
     }
 
-    qDebug() << "Room scene" << t.elapsed();
+    qDebug() << "Room and date scene" << t.elapsed();
     t.restart();
 
-    ui->mainView->verticalScrollBar()->setValue(0);
-    ui->mainView->horizontalScrollBar()->setValue(fFirstDate.daysTo(WORKING_DATE) * RECT_SIDE);
-    ui->dateView->horizontalScrollBar()->setMaximum(fDateScene->width());
-    ui->dateView->horizontalScrollBar()->setValue(fFirstDate.daysTo(WORKING_DATE) * RECT_SIDE);
+    ui->scrollArea->verticalScrollBar()->setValue(0);
+    int mainScrollPos = static_cast<int>(fFirstDate.daysTo(WORKING_DATE) * RECT_SIDE);
+    ui->scrollArea->horizontalScrollBar()->setValue(mainScrollPos);
+    ui->dateView->horizontalScrollBar()->setMaximum(static_cast<int>(fDateScene->width()));
+    ui->dateView->horizontalScrollBar()->setValue(static_cast<int>(fFirstDate.daysTo(WORKING_DATE)) * RECT_SIDE);
     ui->roomView->verticalScrollBar()->setValue(0);
 
     qDebug() << "Total" << t2.elapsed();
@@ -208,7 +205,14 @@ void WRoomChart::singleClick(const QString &id)
 
 void WRoomChart::doubleClick(const QString &id)
 {
-
+    switch (fReserveState[id]) {
+    case RESERVE_CHECKIN:
+        WInvoice::openInvoiceWindow(id);
+        break;
+    case RESERVE_RESERVE:
+        WReservation::openReserveWindows(id);
+        break;
+    }
 }
 
 bool WRoomChart::event(QEvent *event)
@@ -234,12 +238,12 @@ void WRoomChart::mainViewHorizontalScrollBarValueChanged(int value)
 
 void WRoomChart::roomViewVerticalScrollBarValueChanged(int value)
 {
-    ui->mainView->verticalScrollBar()->setValue(value);
+    ui->scrollArea->verticalScrollBar()->setValue(value);
 }
 
 void WRoomChart::dateViewHorizontalScrollBarValueChanged(int value)
 {
-    ui->mainView->horizontalScrollBar()->setValue(value);
+    ui->scrollArea->horizontalScrollBar()->setValue(value);
 }
 
 void WRoomChart::on_btnReset_clicked()

@@ -13,10 +13,11 @@ class PPrintPreview : public QDialog
     Q_OBJECT
 
 public:
-    explicit PPrintPreview(QWidget *parent = 0);
+    explicit PPrintPreview(QWidget *parent = nullptr);
     ~PPrintPreview();
     PPrintScene *addScene(int tmpl, PrintOrientation po);
     virtual int exec();
+    QList<PPrintScene*> fPrintScene;
 
 protected:
     virtual void showEvent(QShowEvent *e);
@@ -30,17 +31,14 @@ private slots:
     void on_btnNext_clicked();
     void on_btnFirst_clicked();
     void on_btnLast_clicked();
-
     void on_cbPrintSelection_currentIndexChanged(int index);
 
 private:
     Ui::PPrintPreview *ui;
     int fPageNumber;
     float fScaleFactor;
-    void resizePrintArea();
     void setPage();
     void setPrintOrientation(PrintOrientation po);
-    QList<PPrintScene*> fPrintScene;
 };
 
 #endif // PPRINTPREVIEW_H

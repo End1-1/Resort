@@ -10,6 +10,7 @@
 #include "cachecardex.h"
 #include "paymentmode.h"
 #include "cachegroupreservations.h"
+#include "dlggrouprevive.h"
 #include "winvoice.h"
 #include "cacheredreservation.h"
 #include "wreservation.h"
@@ -104,6 +105,7 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     on_cbModeOfPayment_currentIndexChanged(0);
 
     ui->cbArr->setIndexForData(fPreferences.getDb(def_room_arrangement));
+    //ui->btnReviveReservations->setVisible(r__(cr__rev))
 
     fTrackControl = new TrackControl(TRACK_RESERVATION);
 }
@@ -1281,7 +1283,10 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
         fDD[":f_cancelDate"] = QDateTime::currentDateTime();
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(i, 0));
-        TrackControl::insert(TRACK_RESERVATION, "Canceled in group", "", "", "", "", ui->tblRoom->toString(i, 0));
+        BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tblRoom->toString(i, 0));
+        TrackControl tc(TRACK_RESERVATION);
+        tc.fReservation = ui->tblRoom->toString(i, 0);
+        tc.insert("Canceled in group", "", "");
     }
     if (!cannotCancel.isEmpty()) {
         message_info(tr("Next reservations was not canceled, because have an advance") + "<br>" + cannotCancel);
@@ -1289,4 +1294,22 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
         message_info(tr("Reservation group was successfully canceled"));
     }
     loadGroup(ui->leGroupCode->asInt());
+}
+
+void DlgGroupReservationFuck::on_btnReviveReservations_clicked()
+{
+    DlgGroupRevive *d = new DlgGroupRevive(this);
+    for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+        if (ui->tblRoom->itemValue(i, 21).toInt() == RESERVE_REMOVED) {
+            d->addRow(ui->tblRoom->itemValue(i, 0).toString(),
+                      ui->tblRoom->lineEdit(i, 1)->asInt(),
+                      ui->tblRoom->dateEdit(i, 4)->date(),
+                      ui->tblRoom->dateEdit(i, 5)->date(),
+                      ui->tblRoom->toString(i, 10));
+        }
+    }
+    if (d->exec() == QDialog::Accepted) {
+        loadGroup(ui->leGroupCode->asInt());
+    }
+    delete d;
 }

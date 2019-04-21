@@ -12,17 +12,20 @@ class FVauchers : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FVauchers(QWidget *parent = 0);
+    explicit FVauchers(QWidget *parent = nullptr);
     ~FVauchers();
     static void open();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private:
     QToolButton *fBtnRevive;
     QToolButton *fBtnRemove;
     Ui::FVauchers *ui;
     QString fQuery;
+
 private slots:
     void clickOnRow(int row);
     void eliminateVoucher();

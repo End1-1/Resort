@@ -12,7 +12,7 @@ class DlgReserveConfirmStatus : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReserveConfirmStatus(QWidget *parent = 0);
+    explicit DlgReserveConfirmStatus(QWidget *parent = nullptr);
     ~DlgReserveConfirmStatus();
 
 private slots:

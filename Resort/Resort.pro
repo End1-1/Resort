@@ -33,7 +33,6 @@ SOURCES += main.cpp\
     wcontacts.cpp \
     tablemodel.cpp \
     wreportroom.cpp \
-    excel.cpp \
     dlgcontact.cpp \
     wnotes.cpp \
     roweditordialog.cpp \
@@ -52,7 +51,6 @@ SOURCES += main.cpp\
     ../Base/defines.cpp \
     ../Base/preferences.cpp \
     ../Base/utils.cpp \
-    dlgtransferroom.cpp \
     wusers.cpp \
     wusersgroups.cpp \
     dlgusergroup.cpp \
@@ -165,7 +163,6 @@ SOURCES += main.cpp\
     ../RowEditor/recurrency.cpp \
     ../Filter/fforecastoccupancycategory.cpp \
     ../Filter/faccmonthlyreport.cpp \
-    dlgtransferinvoiceamount.cpp \
     timerblya.cpp \
     ../Print/dlgprintreservation.cpp \
     ../Cache/cachenation.cpp \
@@ -267,13 +264,8 @@ SOURCES += main.cpp\
     ../Cache/cachestorepartners.cpp \
     ../Cache/cachestoredoc.cpp \
     ../Cache/cachestoredocstate.cpp \
-    ../Filter/fstoredocs.cpp \
-    ../Filter/fmaterialsinstore.cpp \
-    ../Filter/fstoremovement.cpp \
-    ../RowEditor/recoupon.cpp \
     ../Cache/cachecoupontype.cpp \
     dlgcalculateoutputofrestaurant.cpp \
-    wwelcomerest.cpp \
     ../Base/defrest.cpp \
     fonlinebreakfast.cpp \
     ../Filter/fmonthlyoccperc.cpp \
@@ -299,37 +291,26 @@ SOURCES += main.cpp\
     ../Cache/cachedocpayment.cpp \
     fpartnersdebt.cpp \
     dlgcouponsales.cpp \
-    fcouponsales.cpp \
-    ../RowEditor/recouponseria.cpp \
     ../Cache/cachecouponseria.cpp \
     ../Cache/cachecashdesk.cpp \
     ../Widgets/wcashentry.cpp \
     ../Cache/cachecashdoc.cpp \
-    ../Filter/fcash.cpp \
-    ../RowEditor/recashdesk.cpp \
-    ../Filter/fstoreentry.cpp \
     ../Widgets/wstoreentry.cpp \
     dlgpartnerpayment.cpp \
     dlgcashop.cpp \
     ../Filter/fcouponstatistics.cpp \
-    ../Filter/fdebtofcostumers.cpp \
     ../Cache/cachedebtcostumer.cpp \
     ../Filter/fbreakfast.cpp \
     ../Filter/fsalary.cpp \
-    ../Filter/fdiscountreport.cpp \
-    ../Filter/fsalesbycar.cpp \
     ../../NewTax/printtaxn.cpp \
     dlgprinttaxsm.cpp \
-    ../Filter/fdiscounttotal.cpp \
     dlgtaxback2.cpp \
-    ../Filter/fdebtholders.cpp \
     dlgpostbreakfast.cpp \
     ../Controls/eqdoubleedit.cpp \
     ../Cache/cacherestfullmenu.cpp \
     dlghouseitem.cpp \
     ../Filter/fhouseitems.cpp \
     dlgdebtpay.cpp \
-    dlgcityadvance.cpp \
     ../Vouchers/basevoucher.cpp \
     ../Vouchers/voucher_tc.cpp \
     ../Cache/cachecladvance.cpp \
@@ -375,7 +356,6 @@ SOURCES += main.cpp\
     dlgexitbyversion.cpp \
     dlgexecfailedsqls.cpp \
     ../Filter/fdishes.cpp \
-    ../Filter/ftstorereport.cpp \
     ../Filter/froomarrangement.cpp \
     dlgclearlog.cpp \
     ../Filter/fwakeupcall.cpp \
@@ -388,7 +368,30 @@ SOURCES += main.cpp\
     wroomchartclasses.cpp \
     ../Print/printtaxd.cpp \
     wroomcharttime.cpp \
-    wroomchartdock.cpp
+    wroomchartdock.cpp \
+    dlgchartcolor.cpp \
+    ../Cache/cachetransferfromcl.cpp \
+    dbmregister.cpp \
+    dlgquickroomassignment.cpp \
+    dlgquickadvance.cpp \
+    wquickroomassignment.cpp \
+    dlgquickadvanceapply.cpp \
+    dlggrouprevive.cpp \
+    ../../XLSX/src/xlsx.cpp \
+    ../../XLSX/src/xlsxcell.cpp \
+    ../../XLSX/src/xlsxcontenttype.cpp \
+    ../../XLSX/src/xlsxdocpropsapp.cpp \
+    ../../XLSX/src/xlsxdocpropscore.cpp \
+    ../../XLSX/src/xlsxdocument.cpp \
+    ../../XLSX/src/xlsxrels.cpp \
+    ../../XLSX/src/xlsxsharedstring.cpp \
+    ../../XLSX/src/xlsxsheet.cpp \
+    ../../XLSX/src/xlsxstyles.cpp \
+    ../../XLSX/src/xlsxtheme.cpp \
+    ../../XLSX/src/xlsxworkbook.cpp \
+    ../../XLSX/src/xlsxwriter.cpp \
+    dlgtransferanyamount.cpp \
+    ../Controls/radiogroupwidget.cpp
 
 HEADERS  += mainwindow.h \
     login.h \
@@ -406,7 +409,6 @@ HEADERS  += mainwindow.h \
     wcontacts.h \
     tablemodel.h \
     wreportroom.h \
-    excel.h \
     dlgcontact.h \
     wnotes.h \
     roweditordialog.h \
@@ -540,7 +542,6 @@ HEADERS  += mainwindow.h \
     ../RowEditor/recurrency.h \
     ../Filter/fforecastoccupancycategory.h \
     ../Filter/faccmonthlyreport.h \
-    dlgtransferinvoiceamount.h \
     timerblya.h \
     ../Print/dlgprintreservation.h \
     ../Cache/cachenation.h \
@@ -568,7 +569,6 @@ HEADERS  += mainwindow.h \
     ../RowEditor/recityledger.h \
     ../Base/vauchers.h \
     ../Filter/fvauchers.h \
-    dlgtransferroom.h \
     dlguserrights.h \
     ../Cache/cachevaucher.h \
     ../Print/pprintvaucher.h \
@@ -644,13 +644,8 @@ HEADERS  += mainwindow.h \
     ../Cache/cachestoredoc.h \
     ../Cache/cachestoredocstate.h \
     ../Base/defstore.h \
-    ../Filter/fstoredocs.h \
-    ../Filter/fmaterialsinstore.h \
-    ../Filter/fstoremovement.h \
-    ../RowEditor/recoupon.h \
     ../Cache/cachecoupontype.h \
     dlgcalculateoutputofrestaurant.h \
-    wwelcomerest.h \
     ../Base/defrest.h \
     fonlinebreakfast.h \
     ../Filter/fmonthlyoccperc.h \
@@ -676,37 +671,26 @@ HEADERS  += mainwindow.h \
     ../Cache/cachedocpayment.h \
     fpartnersdebt.h \
     dlgcouponsales.h \
-    fcouponsales.h \
-    ../RowEditor/recouponseria.h \
     ../Cache/cachecouponseria.h \
     ../Cache/cachecashdesk.h \
     ../Widgets/wcashentry.h \
     ../Cache/cachecashdoc.h \
-    ../Filter/fcash.h \
-    ../RowEditor/recashdesk.h \
-    ../Filter/fstoreentry.h \
     ../Widgets/wstoreentry.h \
     dlgpartnerpayment.h \
     dlgcashop.h \
     ../Filter/fcouponstatistics.h \
-    ../Filter/fdebtofcostumers.h \
     ../Cache/cachedebtcostumer.h \
     ../Filter/fbreakfast.h \
     ../Filter/fsalary.h \
-    ../Filter/fdiscountreport.h \
-    ../Filter/fsalesbycar.h \
     ../../NewTax/printtaxn.h \
     dlgprinttaxsm.h \
-    ../Filter/fdiscounttotal.h \
     dlgtaxback2.h \
-    ../Filter/fdebtholders.h \
     dlgpostbreakfast.h \
     ../Controls/eqdoubleedit.h \
     ../Cache/cacherestfullmenu.h \
     dlghouseitem.h \
     ../Filter/fhouseitems.h \
     dlgdebtpay.h \
-    dlgcityadvance.h \
     ../Vouchers/basevoucher.h \
     ../Vouchers/voucher_tc.h \
     ../Cache/cachecladvance.h \
@@ -752,7 +736,6 @@ HEADERS  += mainwindow.h \
     dlgexitbyversion.h \
     dlgexecfailedsqls.h \
     ../Filter/fdishes.h \
-    ../Filter/ftstorereport.h \
     ../Filter/froomarrangement.h \
     dlgclearlog.h \
     ../Filter/fwakeupcall.h \
@@ -765,7 +748,33 @@ HEADERS  += mainwindow.h \
     wroomchartclasses.h \
     ../Print/printtaxd.h \
     wroomcharttime.h \
-    wroomchartdock.h
+    wroomchartdock.h \
+    dlgchartcolor.h \
+    ../Cache/cachetransferfromcl.h \
+    dbmregister.h \
+    dlgquickroomassignment.h \
+    dlgquickadvance.h \
+    wquickroomassignment.h \
+    dlgquickadvanceapply.h \
+    dlggrouprevive.h \
+    ../../XLSX/src/crs32.h \
+    ../../XLSX/src/xlsx.h \
+    ../../XLSX/src/xlsxall.h \
+    ../../XLSX/src/xlsxcell.h \
+    ../../XLSX/src/xlsxcontenttype.h \
+    ../../XLSX/src/xlsxdocpropsapp.h \
+    ../../XLSX/src/xlsxdocpropscore.h \
+    ../../XLSX/src/xlsxdocument.h \
+    ../../XLSX/src/xlsxrels.h \
+    ../../XLSX/src/xlsxsharedstring.h \
+    ../../XLSX/src/xlsxsheet.h \
+    ../../XLSX/src/xlsxstyles.h \
+    ../../XLSX/src/xlsxtheme.h \
+    ../../XLSX/src/xlsxworkbook.h \
+    ../../XLSX/src/xlsxwriter.h \
+    ../../XLSX/src/zip.h \
+    dlgtransferanyamount.h \
+    ../Controls/radiogroupwidget.h
 
 FORMS    += mainwindow.ui \
     login.ui \
@@ -837,7 +846,6 @@ FORMS    += mainwindow.ui \
     ../RowEditor/recurrency.ui \
     ../Filter/fforecastoccupancycategory.ui \
     ../Filter/faccmonthlyreport.ui \
-    dlgtransferinvoiceamount.ui \
     ../Print/dlgprintreservation.ui \
     dlgtaxprintsetup.ui \
     dlginvoiceprintoption.ui \
@@ -852,7 +860,6 @@ FORMS    += mainwindow.ui \
     ../Filter/fcashreport.ui \
     ../RowEditor/recityledger.ui \
     ../Filter/fvauchers.ui \
-    dlgtransferroom.ui \
     dlguserrights.ui \
     dlgreservationremarks.ui \
     ../Filter/fevents.ui \
@@ -911,12 +918,8 @@ FORMS    += mainwindow.ui \
     ../Filter/freservebycreate.ui \
     ../Widgets/storedoc.ui \
     ../RowEditor/restorepartner.ui \
-    ../Filter/fstoredocs.ui \
-    ../Filter/fmaterialsinstore.ui \
     ../Filter/fstoremovement.ui \
-    ../RowEditor/recoupon.ui \
     dlgcalculateoutputofrestaurant.ui \
-    wwelcomerest.ui \
     fonlinebreakfast.ui \
     ../Filter/fmonthlyoccperc.ui \
     fnatbyperiod.ui \
@@ -937,30 +940,21 @@ FORMS    += mainwindow.ui \
     ../Filter/freportbypayment.ui \
     fpartnersdebt.ui \
     dlgcouponsales.ui \
-    fcouponsales.ui \
-    ../RowEditor/recouponseria.ui \
     ../Widgets/wcashentry.ui \
-    ../Filter/fcash.ui \
-    ../RowEditor/recashdesk.ui \
-    ../Filter/fstoreentry.ui \
     ../Widgets/wstoreentry.ui \
     dlgpartnerpayment.ui \
     dlgcashop.ui \
     ../Filter/fcouponstatistics.ui \
-    ../Filter/fdebtofcostumers.ui \
     ../Filter/fbreakfast.ui \
     ../Filter/fsalary.ui \
-    ../Filter/fdiscountreport.ui \
     ../Filter/fsalesbycar.ui \
     dlgprinttaxsm.ui \
     ../Filter/fdiscounttotal.ui \
     dlgtaxback2.ui \
-    ../Filter/fdebtholders.ui \
     dlgpostbreakfast.ui \
     dlghouseitem.ui \
     ../Filter/fhouseitems.ui \
     dlgdebtpay.ui \
-    dlgcityadvance.ui \
     ../Filter/fcladvance.ui \
     ../Filter/fcitytrayledger.ui \
     ../Filter/finhousedetailbalance.ui \
@@ -983,7 +977,6 @@ FORMS    += mainwindow.ui \
     dlgexitbyversion.ui \
     dlgexecfailedsqls.ui \
     ../Filter/fdishes.ui \
-    ../Filter/ftstorereport.ui \
     ../Filter/froomarrangement.ui \
     dlgclearlog.ui \
     ../Filter/fwakeupcall.ui \
@@ -994,7 +987,14 @@ FORMS    += mainwindow.ui \
     ../Filter/fcallrates.ui \
     ../RowEditor/recallrate.ui \
     ../Print/printtaxd.ui \
-    wroomchartdock.ui
+    wroomchartdock.ui \
+    dlgchartcolor.ui \
+    dlgquickroomassignment.ui \
+    dlgquickadvance.ui \
+    wquickroomassignment.ui \
+    dlgquickadvanceapply.ui \
+    dlggrouprevive.ui \
+    dlgtransferanyamount.ui
 
 RESOURCES += \
     res.qrc
@@ -1024,6 +1024,7 @@ INCLUDEPATH += $$PWD/../Vouchers
 INCLUDEPATH += C:/OpenSSL-Win32/include
 INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax
+INCLUDEPATH += c:/projects/XLSX/src
 
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"

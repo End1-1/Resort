@@ -7,7 +7,7 @@
 #include <QFont>
 #include <QTimer>
 
-static const quint32 RECT_SIDE = 22;
+static const qint32 RECT_SIDE = 22;
 static const qreal Z_VALUE_RESERVE = 5;
 static const qreal Z_VALUE_GRID_LINE = 4;
 static const qreal Z_MAX = 10;
@@ -56,7 +56,7 @@ private:
 
 class MonthRect : public QGraphicsItem {
 public:
-    MonthRect(const QDate &date, quint32 width);
+    MonthRect(const QDate &date, qint32 width);
 
 protected:
     QRectF boundingRect() const override;
@@ -66,7 +66,7 @@ protected:
 private:
     QDate fDate;
 
-    quint32 fWidth;
+    qint32 fWidth;
 };
 
 class DateRect : public QGraphicsItem {

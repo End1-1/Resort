@@ -12,7 +12,7 @@ class DlgClearLog : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgClearLog(QWidget *parent = 0);
+    explicit DlgClearLog(QWidget *parent = nullptr);
     ~DlgClearLog();
 
 private slots:

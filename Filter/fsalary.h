@@ -12,7 +12,7 @@ class FSalary : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FSalary(QWidget *parent = 0);
+    explicit FSalary(QWidget *parent = nullptr);
     ~FSalary();
     virtual QString reportTitle();
     virtual QWidget *firstElement();

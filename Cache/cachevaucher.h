@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_vaucher 59
+static const int cid_vaucher = 59;
 
 class CacheVaucher : public CacheBaseStruct
 {

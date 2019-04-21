@@ -1,5 +1,5 @@
 #include "pexportinvoicetoexcel.h"
-#include "excel.h"
+#include "xlsxall.h"
 #include "message.h"
 #include "cacheusers.h"
 #include "paymentmode.h"
@@ -19,14 +19,15 @@ void PExportInvoiceToExcel::exportInvoice(const QString &invoice, int side)
 
 void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
 {
-    Excel e;
-    e.setColumnWidth(1, 2);
-    e.setColumnWidth(2, 12);
-    e.setColumnWidth(3, 40);
-    e.setColumnWidth(4, 6);
-    e.setColumnWidth(5, 10);
-    e.setColumnWidth(6, 10);
-    e.setColumnWidth(7, 10);
+    XlsxDocument d;
+    XlsxSheet *s = d.workbook()->addSheet(invoice);
+    s->setColumnWidth(1, 2);
+    s->setColumnWidth(2, 12);
+    s->setColumnWidth(3, 40);
+    s->setColumnWidth(4, 6);
+    s->setColumnWidth(5, 10);
+    s->setColumnWidth(6, 10);
+    s->setColumnWidth(7, 10);
     int numNights = 0;
     DoubleDatabase drvoucher(true);
     drvoucher[":f_invoice"] = invoice;
@@ -78,7 +79,7 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
     drh.nextRow();
     numNights = drheader.getValue("ntotal").toInt();
 
-
+    /*
     QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") : tr ("PROFORMA INVOICE");
     e.setValue(invHeader, 1, 1);
     e.mergeCells("A1", "E1", true);
@@ -91,11 +92,6 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
     e.setValue(inv, 2, 1);
     e.mergeCells("A2", "G2", true);
     e.setHorizontalAlignment("A2", "G2", Excel::hCenter);
-    /*
-    PImage *logo = new PImage("logo_print.png");
-    ps->addItem(logo);
-    logo->setRect(QRectF(20, 10, 500, 300));
-    */
 
     e.setValue(drheader.getValue("guest").toString(), 3, 1);
     e.mergeCells("A3", "G3", true);
@@ -291,4 +287,5 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
     e.setValue(fPreferences.getDb(def_vouchers_invoice_footer).toString(), row, 1);
     e.mergeCells("A" + QString::number(row), "G" + QString::number(row), true);
     e.show();
+    */
 }

@@ -14,13 +14,16 @@ class FReservationsCommon : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FReservationsCommon(QWidget *parent = 0);
+    explicit FReservationsCommon(QWidget *parent = nullptr);
     ~FReservationsCommon();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private:
     Ui::FReservationsCommon *ui;
+
 private slots:
     void openInvoice();
 };

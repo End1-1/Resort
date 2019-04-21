@@ -25,6 +25,11 @@ QWidget *FHotelHierarchy::firstElement()
     return this;
 }
 
+QWidget *FHotelHierarchy::lastElement()
+{
+    return this;
+}
+
 void FHotelHierarchy::apply(WReportGrid *rg)
 {
     rg->fModel->clearData();

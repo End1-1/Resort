@@ -11,8 +11,8 @@ class ReserveRect : public QGraphicsItem
 {
 public:
     friend class ReserveWidget;
-    ReserveRect(QGraphicsItem *parent = 0);
-    ReserveRect(const QPointF &p, QGraphicsItem *parent = 0);
+    ReserveRect(QGraphicsItem *parent = nullptr);
+    ReserveRect(const QPointF &p, QGraphicsItem *parent = nullptr);
     ~ReserveRect();
     void changeRect(const QPointF &p);
     void setRoom(const QString &code);

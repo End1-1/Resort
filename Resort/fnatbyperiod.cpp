@@ -24,6 +24,11 @@ QWidget *FNatByPeriod::firstElement()
     return ui->cbYear1;
 }
 
+QWidget *FNatByPeriod::lastElement()
+{
+    return ui->cbMonth2;
+}
+
 QString FNatByPeriod::reportTitle()
 {
     return QString("%1 from %2 %3 to %4 %5")

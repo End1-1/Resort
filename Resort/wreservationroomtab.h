@@ -30,7 +30,7 @@ class WReservationRoomTab : public BaseWidget
 {
     Q_OBJECT
 public:
-    explicit WReservationRoomTab(QWidget *parent = 0);
+    explicit WReservationRoomTab(QWidget *parent = nullptr);
     ~WReservationRoomTab();
     static bool check(int room, const QDate &start, const QDate &end, const QString &rid, QString &errorMsg);
     void setBaseData(const QDate &date1, const QDate &date2, const QString &rcode);
@@ -75,9 +75,11 @@ public:
     void addRemoveFromGroup();
     void sendConfirmation();
     void callback(int sel, const QString &code);
+
 protected:
     virtual void setupTab();
     virtual bool event(QEvent *event);
+
 private slots:
     void roomCacheUpdated(int cacheId, const QString &id);
     void roomSearch(bool v);

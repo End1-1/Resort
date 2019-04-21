@@ -17,7 +17,7 @@ class WCashEntry : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WCashEntry(QWidget *parent = 0);
+    explicit WCashEntry(QWidget *parent = nullptr);
     ~WCashEntry();
     void save();
     void load(int doc);

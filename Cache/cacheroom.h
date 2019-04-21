@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_room 33
+static const int cid_room = 33;
 
 
 class CacheRoom : public CacheBaseStruct
@@ -20,6 +20,7 @@ public:
     inline int fFloor() { return getInt("f_floor"); }
     inline int fSmoke() {return getInt("f_smoke"); }
     inline QString fPrice() {return getString("f_rate"); }
+    inline int fBuilding() {return getInt("f_building"); }
 };
 
 bool CI_Romm_compare(QString &left, QString &right);

@@ -12,14 +12,15 @@ class FRestSaleByStore : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FRestSaleByStore(QWidget *parent = 0);
+    explicit FRestSaleByStore(QWidget *parent = nullptr);
     ~FRestSaleByStore();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
+
 private slots:
     void on_btnNext_clicked();
-
     void on_btnBack_clicked();
 
 private:

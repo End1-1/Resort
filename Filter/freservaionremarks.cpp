@@ -38,6 +38,11 @@ QWidget *FReservaionRemarks::firstElement()
     return ui->rbCheckin;
 }
 
+QWidget *FReservaionRemarks::lastElement()
+{
+    return ui->rbCheckin;
+}
+
 QString FReservaionRemarks::reportTitle()
 {
     return QString("%1, %2")

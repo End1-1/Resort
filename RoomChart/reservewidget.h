@@ -19,14 +19,16 @@ class ReserveWidget : public QWidget
     Q_OBJECT
 public:
     friend class WMainDesk;
-    explicit ReserveWidget(ReserveRect *rr, QWidget *parent = 0);
-    explicit ReserveWidget(const QString &code, QWidget *parent = 0);
+    explicit ReserveWidget(ReserveRect *rr, QWidget *parent = nullptr);
+    explicit ReserveWidget(const QString &code, QWidget *parent = nullptr);
     ~ReserveWidget();
     void createService();
     void removeService();
     CacheReservation fReservation;
+
 protected:
     void resizeEvent(QResizeEvent *e);
+
 private slots:
     void on_btnCancel_clicked();
 

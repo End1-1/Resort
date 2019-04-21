@@ -16,7 +16,7 @@ class DlgPrintTaxSideOption : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPrintTaxSideOption(QWidget *parent = 0);
+    explicit DlgPrintTaxSideOption(QWidget *parent = nullptr);
     ~DlgPrintTaxSideOption();
     static int printTaxSide();
 private slots:

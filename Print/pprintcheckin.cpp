@@ -60,8 +60,14 @@ void PPrintCheckin::print(const QString &id)
     ps->addTableRow(top, 80, col, val, &trData);
     CacheRoomArrangment cra;
     CachePaymentMode cpm;
-    cra.get(fDD.getValue("f_arrangement").toString());
-    cpm.get(fDD.getValue("f_paymentType").toString());
+    if (!cra.get(fDD.getValue("f_arrangement").toString())) {
+        message_error(tr("Invalid arrangement code") + "<br>" + fDD.getValue("f_arrangement").toString());
+        return;
+    }
+    if (!cpm.get(fDD.getValue("f_paymentType").toString())) {
+        message_error(tr("Invalid payment code") + "<br>" + fDD.getValue("f_paymentType").toString());
+        return;
+    }
     val << fDD.getValue("f_startDate").toDate().toString(def_date_format)
         << fDD.getValue("f_endDate").toDate().toString(def_date_format)
         << fDD.getValue("f_room").toString()

@@ -12,7 +12,7 @@ class DlgCL : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgCL(QWidget *parent = 0);
+    explicit DlgCL(QWidget *parent = nullptr);
     ~DlgCL();
     static bool getCL(QString &code, QString &name);
 private slots:

@@ -11,6 +11,7 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui->chDate->setVisible(r__(cr__inhouse_anytime));
     ui->teTime->setVisible(r__(cr__inhouse_anytime));
     ui->chTime->setVisible(r__(cr__inhouse_anytime));
+    ui->chDisplayName->click();
 }
 
 FInHouseGuest::~FInHouseGuest()
@@ -105,6 +106,11 @@ void FInHouseGuest::apply(WReportGrid *rg)
 }
 
 QWidget *FInHouseGuest::firstElement()
+{
+    return ui->deDate;
+}
+
+QWidget *FInHouseGuest::lastElement()
 {
     return ui->deDate;
 }

@@ -3,14 +3,16 @@
 
 #include <QColor>
 #include <QDate>
+#include <QSettings>
 
-#define COLUMN_WIDTH 25
-#define ROW_HEIGHT 22
+static QSettings  __ss("SmartHotel", "SmartHotel");;
 
+static const int COLUMN_WIDTH = 25;
+static const int ROW_HEIGHT = 22;
 
-static const QColor ROOM_RECT_BACKGROUND[][2] = {
+static QColor ROOM_RECT_BACKGROUND[][2] = {
     {Qt::white, Qt::white},
-    {QColor::fromRgb(70, 170, 255), QColor::fromRgb(120, 190, 255)},
+    {static_cast<QColor>(__ss.value("checkincolor", -16733441).toInt()), QColor::fromRgb(70, 170, 255)},
     {QColor::fromRgb(255, 255, 0), QColor::fromRgb(255, 255, 150)},
     {QColor::fromRgb(88, 88, 88), QColor::fromRgb(170, 170, 170)}, // o/o
     {Qt::white, Qt::white},

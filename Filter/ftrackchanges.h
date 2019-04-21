@@ -11,10 +11,12 @@ class FTrackChanges : public WFilterBase
 {
     Q_OBJECT
 public:
-    explicit FTrackChanges(QWidget *parent = 0);
+    explicit FTrackChanges(QWidget *parent = nullptr);
     ~FTrackChanges();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
+
 private slots:
     void on_btnClearLog_clicked();
 

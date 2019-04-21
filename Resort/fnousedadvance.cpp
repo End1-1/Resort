@@ -25,6 +25,11 @@ QWidget *FNoUsedAdvance::firstElement()
     return this;
 }
 
+QWidget *FNoUsedAdvance::lastElement()
+{
+    return this;
+}
+
 void FNoUsedAdvance::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

@@ -8,7 +8,7 @@ class WContacts : public WReportGrid
     Q_OBJECT
 
 public:
-    explicit WContacts(QWidget *parent = 0);
+    explicit WContacts(QWidget *parent = nullptr);
     ~WContacts();
 protected:
     virtual void setupTab();

@@ -12,7 +12,7 @@ class DlgCouponSales : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgCouponSales(QWidget *parent = 0);
+    explicit DlgCouponSales(QWidget *parent = nullptr);
     ~DlgCouponSales();
     static void sale();
 private slots:

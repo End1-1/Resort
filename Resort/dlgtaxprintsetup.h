@@ -12,7 +12,7 @@ class DlgTaxPrintSetup : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgTaxPrintSetup(QWidget *parent = 0);
+    explicit DlgTaxPrintSetup(QWidget *parent = nullptr);
     ~DlgTaxPrintSetup();
 
 private slots:

@@ -8,7 +8,7 @@ class EToolbarButton : public QToolButton
     Q_OBJECT
     Q_PROPERTY(QString fTag READ getTag WRITE setTag)
 public:
-    EToolbarButton(QWidget *parent = 0);
+    EToolbarButton(QWidget *parent = nullptr);
     QString getTag();
     void setTag(const QString &tag);
 private:

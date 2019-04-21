@@ -12,16 +12,17 @@ class FReserveByCreate : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FReserveByCreate(QWidget *parent = 0);
+    explicit FReserveByCreate(QWidget *parent = nullptr);
     ~FReserveByCreate();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void openReport();
+
 private slots:
     void doubleClick(const QList<QVariant> &row);
     void on_toolButton_clicked();
-
     void on_toolButton_2_clicked();
 
 private:

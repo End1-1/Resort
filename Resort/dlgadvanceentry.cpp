@@ -7,6 +7,7 @@
 #include "cacheredreservation.h"
 #include "vauchers.h"
 #include "pprintscene.h"
+#include "cacheinvoiceitem.h"
 #include "paymentmode.h"
 #include "dlgprinttaxsm.h"
 #include "pprintvaucher.h"
@@ -62,7 +63,13 @@ DlgAdvanceEntry::DlgAdvanceEntry(QList<QVariant> &values, QWidget *parent) :
     fCacheId = cid_red_reservation;
     ui->lbState->setVisible(false);
     ui->leState->setVisible(false);
+    ui->leService->setSelector(this, cache(cid_invoice_item), ui->leServiceName);
     adjustSize();
+}
+
+void DlgAdvanceEntry::changeTaxMode(bool mode)
+{
+    ui->leService->setEnabled(mode);
 }
 
 DlgAdvanceEntry::~DlgAdvanceEntry()
@@ -166,6 +173,10 @@ void DlgAdvanceEntry::on_btnCancel_clicked()
 
 void DlgAdvanceEntry::on_btnSave_clicked()
 {
+    if (ui->leReserveId->isEmpty()) {
+        message_error(tr("Reservation must be defined"));
+        return;
+    }
     QString finalName;
     switch (ui->lePaymentCode->asInt()) {
     case PAYMENT_CARD:
@@ -337,9 +348,35 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
 
     double cash = ui->lePaymentCode->asInt() == PAYMENT_CASH ? ui->leAmount->asDouble() : 0;
     double card = ui->lePaymentCode->asInt() == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
-    int taxCode;
-    if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVaucher->text(), taxCode)) {
-        return;
+    int taxCode = 0;
+    if (ui->rbAdvance->isChecked()) {
+        if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVaucher->text(), taxCode)) {
+            return;
+        }
+    } else {
+        if (ui->leService->asInt() == 0) {
+            message_error(tr("Service name cannot be empty"));
+            return;
+        }
+        DlgPrintTaxSM dpt(this);
+        CacheInvoiceItem inv;
+        if (!inv.get(ui->leService->text())) {
+            message_error(tr("Invalid service item code"));
+            return;
+        }
+        dpt.addGoods(inv.fVatDept(), inv.fAdgt(), inv.fCode(), inv.fTaxName(), ui->leAmount->asDouble(), 1);
+        dpt.fOrder = ui->leInvoice->text();
+        if (ui->lePaymentCode->asInt() == PAYMENT_CARD) {
+            dpt.fCardAmount = ui->leAmount->asDouble();
+        } else {
+            dpt.fCardAmount = 0;
+        }
+        dpt.fPrepaid = 0;
+
+        int result = dpt.exec();
+        if (result == TAX_OK) {
+            taxCode = dpt.fTaxCode;
+        }
     }
     //PrintTax::printAdvance(ui->leAmount->asDouble(), ui->lePaymentCode->asInt(), QString("AV%1").arg(ui->leVaucher->text()));
     ui->leTax->setInt(taxCode);
@@ -357,4 +394,14 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     fDD.insert("m_tax_history");
 
     fTrackControl->insert("Tax printed", ui->leVaucher->text(), ui->leAmount->text());
+}
+
+void DlgAdvanceEntry::on_rbAdvance_clicked(bool checked)
+{
+    changeTaxMode(!checked);
+}
+
+void DlgAdvanceEntry::on_btnService_clicked(bool checked)
+{
+    changeTaxMode(checked);
 }

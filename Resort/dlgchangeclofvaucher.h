@@ -12,7 +12,7 @@ class DlgChangeCLOfVaucher : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgChangeCLOfVaucher(QWidget *parent = 0);
+    explicit DlgChangeCLOfVaucher(QWidget *parent = nullptr);
     ~DlgChangeCLOfVaucher();
     static bool changeCL(const QString &vaucher, const QString &oldCL, const QString &name, const QString &amount);
 private slots:

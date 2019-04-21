@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>757</width>
-    <height>51</height>
+    <height>38</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,6 +33,40 @@
    </item>
    <item>
     <widget class="EDateEdit" name="deEnd"/>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbShowAll">
+     <property name="text">
+      <string>Show all</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbEntry">
+     <property name="text">
+      <string>Search by entry date</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QRadioButton" name="rbDeparture">
+     <property name="text">
+      <string>Search by departure date</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="chCanceled">
+     <property name="text">
+      <string>Show only canceled</string>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="horizontalSpacer">

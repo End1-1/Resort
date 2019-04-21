@@ -30,17 +30,19 @@ DlgConfigGrid::~DlgConfigGrid()
     delete ui;
 }
 
-bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, bool &reset, QWidget *parent)
+bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, bool &readOnly, bool &reset, QWidget *parent)
 {
     DlgConfigGrid *d = new DlgConfigGrid(parent);
     d->ui->fcbFontName->setCurrentText(fontName);
     d->ui->spFontSize->setValue(fontSize);
     d->ui->chFontBold->setChecked(fontBold);
+    d->ui->chReadOnly->setChecked(readOnly);
     bool result = d->exec() == QDialog::Accepted;
     if (result) {
         fontName = d->ui->fcbFontName->currentText();
         fontSize = d->ui->spFontSize->value();
         fontBold = d->ui->chFontBold->isChecked();
+        readOnly = d->ui->chReadOnly->isChecked();
         reset = d->fReset;
     }
     delete d;

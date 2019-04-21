@@ -12,7 +12,7 @@ class DlgPaymentMode : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgPaymentMode(QWidget *parent = 0);
+    explicit DlgPaymentMode(QWidget *parent = nullptr);
     ~DlgPaymentMode();
     virtual void callback(int sel, const QString &code);
     static bool getPayment(int &paymentMode, QString &comment, int &cl);

@@ -12,13 +12,13 @@ class DlgNoShow : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgNoShow(QWidget *parent = 0);
+    explicit DlgNoShow(QWidget *parent = nullptr);
     ~DlgNoShow();
     virtual void callback(int sel, const QString &code);
     void setReservation(const QString &reserv);
     void load(const QString &id);
+
 private slots:
-    void timeout();
     void on_btnClose_clicked();
     void on_btnPrint_clicked();
     void on_btnSave_clicked();

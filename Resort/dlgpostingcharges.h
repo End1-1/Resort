@@ -12,7 +12,7 @@ class DlgPostingCharges : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPostingCharges(QWidget *parent = 0);
+    explicit DlgPostingCharges(QWidget *parent = nullptr);
     ~DlgPostingCharges();
     virtual void callback(int sel, const QString &code);
     void loadVaucher(const QString &id);

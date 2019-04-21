@@ -12,18 +12,17 @@ class FAccMonthlyReport : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FAccMonthlyReport(QWidget *parent = 0);
+    explicit FAccMonthlyReport(QWidget *parent = nullptr);
     ~FAccMonthlyReport();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private slots:
     void on_deStart_dateChanged(const QDate &date);
-
     void on_deEnd_dateChanged(const QDate &date);
-
     void on_cbYear_currentIndexChanged(const QString &arg1);
-
     void on_cbMonth_currentIndexChanged(const QString &arg1);
 
 private:

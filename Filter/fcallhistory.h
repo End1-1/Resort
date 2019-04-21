@@ -12,15 +12,16 @@ class FCallHistory : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCallHistory(QWidget *parent = 0);
+    explicit FCallHistory(QWidget *parent = nullptr);
     ~FCallHistory();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void open();
+
 private slots:
     void on_toolButton_2_clicked();
-
     void on_toolButton_clicked();
 
 private:

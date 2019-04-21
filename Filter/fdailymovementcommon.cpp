@@ -22,6 +22,11 @@ QWidget *FDailyMovementCommon::firstElement()
     return ui->deDate;
 }
 
+QWidget *FDailyMovementCommon::lastElement()
+{
+    return ui->leEnd;
+}
+
 QString FDailyMovementCommon::reportTitle()
 {
     return QString("%1 %2 - %3").

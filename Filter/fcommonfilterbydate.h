@@ -12,12 +12,14 @@ class FCommonFilterByDate : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCommonFilterByDate(int sqlId, QWidget *parent = 0);
+    explicit FCommonFilterByDate(int sqlId, QWidget *parent = nullptr);
     ~FCommonFilterByDate();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void open(int id);
+
 private:
     Ui::FCommonFilterByDate *ui;
     QString fTitle;

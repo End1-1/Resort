@@ -28,6 +28,11 @@ QWidget *FRoomArrangement::firstElement()
     return ui->cbYear;
 }
 
+QWidget *FRoomArrangement::lastElement()
+{
+    return ui->cbYear;
+}
+
 void FRoomArrangement::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

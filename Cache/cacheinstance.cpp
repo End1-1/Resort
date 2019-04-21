@@ -5,7 +5,7 @@
 #include <QMutex>
 #include <QElapsedTimer>
 
-QMutex __mutex;
+static QMutex __mutex;
 
 CacheInstance::CacheInstance(CacheBaseStruct *b) :
     QObject()
@@ -13,7 +13,6 @@ CacheInstance::CacheInstance(CacheBaseStruct *b) :
     QMutexLocker m(&__mutex);
     fStruct = b;
     load();
-    m.unlock();
     fStruct->fInstance = this;
     fStruct->initSelector();
 }
@@ -30,10 +29,6 @@ int CacheInstance::count()
 
 void CacheInstance::load()
 {
-#ifdef QT_DEBUG
-    QElapsedTimer e;
-    e.start();
-#endif
     DoubleDatabase fDD(true, false);
     fRows.clear();
     fColumnNameMap.clear();
@@ -56,8 +51,8 @@ void CacheInstance::clear()
 
 void CacheInstance::update(const QString &code)
 {
-    DoubleDatabase fDD(true, false);
     QMutexLocker m(&__mutex);
+    DoubleDatabase fDD(true, false);
     fDD[":f_id"] = code;
     if (fStruct->fReplaceUpdateQuery.isEmpty()) {
         if (fStruct->fUpdateQuery.isEmpty()) {

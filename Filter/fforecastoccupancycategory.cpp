@@ -137,6 +137,11 @@ QWidget *FForecastOccupancyCategory::firstElement()
     return ui->deStart;
 }
 
+QWidget *FForecastOccupancyCategory::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FForecastOccupancyCategory::reportTitle()
 {
     return QString("%1 %2 - %3")

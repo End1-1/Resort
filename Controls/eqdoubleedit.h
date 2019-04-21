@@ -9,7 +9,7 @@ class EQDoubleEdit : public EQLineEdit
     Q_PROPERTY(int UpLimit READ getUpLimit WRITE setUpLimit)
     Q_PROPERTY(int Decimal READ getDecimal WRITE setDecimal)
 public:
-    EQDoubleEdit(QWidget *parent = 0);
+    EQDoubleEdit(QWidget *parent = nullptr);
     int getUpLimit();
     void setUpLimit(int limit);
     int getDecimal();

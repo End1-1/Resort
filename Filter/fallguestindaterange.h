@@ -12,14 +12,15 @@ class FAllGuestInDateRange : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FAllGuestInDateRange(QWidget *parent = 0);
+    explicit FAllGuestInDateRange(QWidget *parent = nullptr);
     ~FAllGuestInDateRange();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private slots:
     void on_btnForward_clicked();
-
     void on_btnBack_clicked();
 
 private:

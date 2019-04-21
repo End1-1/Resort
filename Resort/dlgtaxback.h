@@ -12,7 +12,7 @@ class DlgTaxBack : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgTaxBack(QWidget *parent = 0);
+    explicit DlgTaxBack(QWidget *parent = nullptr);
     ~DlgTaxBack();
     QString fInvoice;
     static void taxBack(const QString &invoice, QList<QList<QVariant> > &rows);

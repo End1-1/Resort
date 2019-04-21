@@ -12,7 +12,7 @@ class WWeb : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WWeb(QWidget *parent = 0);
+    explicit WWeb(QWidget *parent = nullptr);
     ~WWeb();
 
 private slots:

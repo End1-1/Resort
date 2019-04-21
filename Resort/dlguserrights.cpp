@@ -164,6 +164,8 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chCityledgerList, "Cityledgers")
             .addWidget(ui->chCancelPreviousDate, "Voucher cancelation on previous date")
             .addWidget(ui->chCancelCurrentDate, "Voucher cancelation on current date")
+            .addWidget(ui->chAdvanceReceiptInvoice, "Advance voucher in invoice")
+            .addWidget(ui->chTempReceipt, "Temporary receipts")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

@@ -14,7 +14,7 @@ class WCustomReports : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WCustomReports(QWidget *parent = 0);
+    explicit WCustomReports(QWidget *parent = nullptr);
     ~WCustomReports();
     virtual void setup();
 private slots:

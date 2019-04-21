@@ -12,17 +12,18 @@ class FExportReservation : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FExportReservation(QWidget *parent = 0);
+    explicit FExportReservation(QWidget *parent = nullptr);
     ~FExportReservation();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private slots:
     void openInvoice();
     void openReservation();
     void on_btnStartExport_clicked();
     void sortFinished();
-
     void on_chSelectAll_clicked(bool checked);
 
 private:

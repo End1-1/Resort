@@ -32,6 +32,11 @@ QWidget *FAvailableRooms::firstElement()
     return ui->wd->fw();
 }
 
+QWidget *FAvailableRooms::lastElement()
+{
+    return ui->wd->lw();
+}
+
 void FAvailableRooms::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

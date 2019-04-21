@@ -8,8 +8,8 @@ BaseWidget::BaseWidget(QWidget *parent) :
     QWidget(parent),
     Base()
 {
-    fTrackControl = 0;
-    fTabWidget = 0;
+    fTrackControl = nullptr;
+    fTabWidget = nullptr;
     setMinimumSize(100, 100);
     QRect rect = qApp->desktop()->screenGeometry();
     setMaximumSize(rect.size());
@@ -41,7 +41,7 @@ QString BaseWidget::title()
 
 bool BaseWidget::canClose()
 {
-    if (fTrackControl == 0) {
+    if (fTrackControl == nullptr) {
         return true;
     }
     return !fTrackControl->hasChanges();

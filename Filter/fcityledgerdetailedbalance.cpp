@@ -125,6 +125,11 @@ QWidget *FCityLedgerDetailedBalance::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FCityLedgerDetailedBalance::lastElement()
+{
+    return ui->leCLCode;
+}
+
 bool FCityLedgerDetailedBalance::officialTitle()
 {
     return true;
@@ -163,7 +168,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
     QString title = reportTitle();
 
     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                      0, QFont("Arial", 25));
+                                      nullptr, QFont("Arial", 25));
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
     trInfo->setBorders(false, false, false, false);
     ps->addItem(trInfo);
@@ -355,9 +360,10 @@ bool FCityLedgerDetailedBalance::handlePrint()
     return true;
 }
 
-void FCityLedgerDetailedBalance::setData(const QDate &date, const QString &cl)
+void FCityLedgerDetailedBalance::setData(const QDate &date1, const QDate &date2, const QString &cl)
 {
-    ui->deFrom->setDate(date);
+    ui->deFrom->setDate(date1);
+    ui->deTo->setDate(date2);
     CacheCityLedger c;
     if (c.get(cl)) {
         ui->leCL->fHiddenText = cl;
@@ -405,7 +411,7 @@ void FCityLedgerDetailedBalance::on_btnChangeCityLedger_clicked()
     if (out.count() == 0) {
         return;
     }
-    if (out.at(0).toString() == 0) {
+    if (out.at(0).toString() == nullptr) {
         return;
     }
     if (DlgChangeCLOfVaucher::changeCL(out.at(0).toString(),

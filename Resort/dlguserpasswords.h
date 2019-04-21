@@ -12,7 +12,7 @@ class DlgUserPasswords : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgUserPasswords(QWidget *parent = 0);
+    explicit DlgUserPasswords(QWidget *parent = nullptr);
     ~DlgUserPasswords();
     void setSelfMode();
     void setParams(int userId, const QString &name);

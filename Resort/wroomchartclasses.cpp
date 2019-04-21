@@ -42,7 +42,7 @@ void ClearScene::run() {
     }
 }
 
-MonthRect::MonthRect(const QDate &date, quint32 width) {
+MonthRect::MonthRect(const QDate &date, qint32 width) {
     fDate = date;
     fWidth = width;
 }
@@ -156,13 +156,11 @@ Reserve::Reserve(const QString &id, WRoomChart *rc) {
 
 void Reserve::setWidth(int w) {
     fWidth = w;
-    qDebug() << w;
     update();
 }
 
 void Reserve::singleClick()
 {
-    qDebug() << "SINGLE CLICK";
     fRoomChart->singleClick(fReserve);
 }
 
@@ -242,9 +240,6 @@ void Reserve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 }
 
 QRectF Reserve::boundingRect() const {
-    if (RECT_SIDE * fWidth > 1000) {
-        qDebug() << QRectF(0, 0, (RECT_SIDE * fWidth) - 4, RECT_SIDE - 4);
-    }
     return QRectF(0, 0, (RECT_SIDE * fWidth) - 4, RECT_SIDE - 4);
 }
 

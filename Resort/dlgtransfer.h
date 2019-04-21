@@ -12,7 +12,7 @@ class DlgTransfer : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgTransfer(QWidget *parent = 0);
+    explicit DlgTransfer(QWidget *parent = nullptr);
     ~DlgTransfer();
     virtual void callback(int sel, const QString &code);
     void setRoomByCode(const QString &code);

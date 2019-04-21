@@ -12,7 +12,7 @@ class DlgEditServTax : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgEditServTax(QWidget *parent = 0);
+    explicit DlgEditServTax(QWidget *parent = nullptr);
     ~DlgEditServTax();
     void setParams(int id, const QString &comp, int active, const QString &host, const QString &port, const QString &pass);
 private slots:

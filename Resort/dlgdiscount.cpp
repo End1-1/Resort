@@ -205,7 +205,7 @@ void DlgDiscount::on_btnOk_clicked()
     }
     fDD[":f_room"] = ui->rbGuest->isChecked() ?  ui->leRoomCode->text() : ui->leCLCode->text();
     fDD[":f_guest"] = ui->rbGuest->isChecked() ? ui->leGuest->text() : ui->leCLName->text();
-    fDD[":f_itemCode"] = fPreferences.getDb(def_receip_vaucher_id);
+    fDD[":f_itemCode"] = fPreferences.getDb(def_invoice_default_discount_id);
     fDD[":f_finalName"] = tr("DISCOUNT S/N ") + ui->leVaucher->text();
     fDD[":f_amountAmd"] = ui->leDiscountAmount->asDouble();
     fDD[":f_amountVat"] = 0;

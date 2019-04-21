@@ -8,7 +8,7 @@ RoomScene::RoomScene(QObject *parent) :
     QGraphicsScene(parent)
 {
     fStartReserveSelect = false;
-    fReserveRect = 0;
+    fReserveRect = nullptr;
     addItem(&fGridGroup);
     addItem(&fHSelGroup);
     addItem(&fVSelGroup);
@@ -34,13 +34,11 @@ RoomScene::~RoomScene()
 
 void RoomScene::initBackgroung(int columnCount, const QStringList &rooms)
 {
-    writelog("Start RoomScene::initBackground");
     fSelectedRooms.clear();
     qDeleteAll(fVSelGroup.childItems());
     fVSelGroup.childItems().clear();
     qDeleteAll(fGridGroup.childItems());
     fGridGroup.childItems().clear();
-    writelog("Clear fREserveInfoGroup");
     foreach (QGraphicsItem *i, fReserveInfoGroup.childItems()) {
         removeItem(i);
         delete i;

@@ -217,6 +217,15 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
             return v.toInt() == 0 ? Qt::Unchecked : Qt::Checked;
         }
         break;
+    case Qt::FontRole: {
+            if (fFont.contains(index.row())) {
+                if (fFont[index.row()].contains(index.column())) {
+                    QFont f(fFont[index.row()][index.column()]);
+                    return f;
+                }
+            }
+            return QFont("NO", 0);
+        }
     }
     default:
         return QVariant();
@@ -278,6 +287,11 @@ void TableModel::setBackgroundColor(int row, int column, const QColor &color)
     fBackgroundColors[row][column] = color;
 }
 
+void TableModel::setFont(int row, int column, QFont f)
+{
+    fFont[row][column] = f;
+}
+
 void TableModel::clearColumns()
 {
     qDeleteAll(fColumns);
@@ -289,9 +303,13 @@ void TableModel::clearColumns()
 
 void TableModel::clearData()
 {
-    beginRemoveRows(QModelIndex(), 0, rowCount(QModelIndex()));
+    if (fDD.fDbRows.count() == 0) {
+        return;
+    }
+    beginRemoveRows(QModelIndex(), 0, rowCount(QModelIndex()) - 1);
     fRows.clear();
     fDD.fDbRows.clear();
+    fFont.clear();
     endRemoveRows();
 }
 
@@ -307,14 +325,20 @@ void TableModel::setDataFromSource(const QList<QList<QVariant> > &dataSource)
 {
     clearData();
     fDD.fDbRows = dataSource;
-    apply(0);
+    apply(nullptr);
 }
 
 void TableModel::clearProxyRows()
 {
-    beginRemoveRows(QModelIndex(), 0, rowCount(QModelIndex()));
-    fRows.clear();
-    endRemoveRows();
+    if (rowCount() == 0) {
+        return;
+    }
+    if (int c = rowCount() > 0) {
+        beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+        fRows.clear();
+        fFont.clear();
+        endRemoveRows();
+    }
 }
 
 TableModel &TableModel::setColumn(int width, const QString &fieldName, const QString &title)

@@ -8,8 +8,21 @@ CacheBaseStruct::CacheBaseStruct()
     fLoadQuery = "";
     fUpdateQuery = "f_id";
     fValid = true;
-    fInstance = 0;
+    fInstance = nullptr;
     fFlagUpdated = false;
+}
+
+CacheBaseStruct::~CacheBaseStruct()
+{
+
+}
+
+void CacheBaseStruct::reInit()
+{
+    if (fInstance) {
+        fInstance->deleteLater();
+        fInstance = nullptr;
+    }
 }
 
 bool CacheBaseStruct::get(const QString &code)

@@ -12,17 +12,20 @@ class FCityLedgerDetailedBalance : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCityLedgerDetailedBalance(QWidget *parent = 0);
+    explicit FCityLedgerDetailedBalance(QWidget *parent = nullptr);
     ~FCityLedgerDetailedBalance();
     virtual void apply(WReportGrid *rg);
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual bool officialTitle();
     virtual bool handlePrint();
-    void setData(const QDate &date, const QString &cl);
+    void setData(const QDate &date1, const QDate &date2, const QString &cl);
     static void open();
+
 private:
     Ui::FCityLedgerDetailedBalance *ui;
+
 private slots:
     void openInvoice();
     void on_btnNextDate_clicked();

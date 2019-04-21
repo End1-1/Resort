@@ -12,7 +12,7 @@ class DatabasesConnections : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DatabasesConnections(QWidget *parent = 0);
+    explicit DatabasesConnections(QWidget *parent = nullptr);
     ~DatabasesConnections();
 
 private slots:

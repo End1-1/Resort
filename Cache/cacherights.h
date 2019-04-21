@@ -133,8 +133,8 @@
 #define cr__daily_transactions 124
 #define cr__cityledger_list 125
 #define cr__call_rate 126
-#define cr__1
-#define cr__1
+#define cr__advance_voucher_invoice 127
+#define cr__temporary_receipts 128
 #define cr__1
 #define cr__1
 #define cr__1

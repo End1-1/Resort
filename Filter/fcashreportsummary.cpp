@@ -77,6 +77,11 @@ QWidget *FCashReportSummary::firstElement()
     return ui->deStart;
 }
 
+QWidget *FCashReportSummary::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FCashReportSummary::reportTitle()
 {
     QString text;

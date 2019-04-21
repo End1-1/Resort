@@ -7,7 +7,7 @@ class WNotes : public WReportGrid
 {
     Q_OBJECT
 public:
-    explicit WNotes(QWidget *parent = 0);
+    explicit WNotes(QWidget *parent = nullptr);
     virtual void setupTab();
 
 };

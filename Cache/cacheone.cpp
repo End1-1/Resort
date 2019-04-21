@@ -25,6 +25,7 @@
 #include "cachemenudishes.h"
 #include "cachenation.h"
 #include "cacheorderstate.h"
+#include "cachetransferfromcl.h"
 #include "cachepaymentmode.h"
 #include "cacheredreservation.h"
 #include "cachereminderstate.h"
@@ -62,6 +63,7 @@
 #include "cacheusersstate.h"
 #include "cachevatmode.h"
 #include "cachevaucher.h"
+#include "trackcontrol.h"
 
 QMap<int, CacheInstance*> CacheOne::fCacheOne;
 
@@ -96,8 +98,8 @@ CacheInstance *CacheOne::getCache(int id)
         return fCacheOne[id];
     }
 
-    CacheInstance *result = 0;
-    CacheBaseStruct *cbs = 0;
+    CacheInstance *result = nullptr;
+    CacheBaseStruct *cbs = nullptr;
     switch (id) {
     case cid_bed:
         cbs = new CacheBed();
@@ -288,8 +290,12 @@ CacheInstance *CacheOne::getCache(int id)
     case cid_vaucher:
         cbs = new CacheVaucher();
         break;
+    case cid_transfer_fromcl:
+        cbs = new CacheTransferFromCL();
+        break;
     default:
-        exit(0);
+        TrackControl tc(0);
+        tc.insert("UNKNOWN CASH ID", QString::number(id),"");
         break;
     }
 

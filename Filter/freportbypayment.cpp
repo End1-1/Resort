@@ -53,3 +53,8 @@ QWidget *FReportByPayment::firstElement()
 {
     return ui->leDateFrom;
 }
+
+QWidget *FReportByPayment::lastElement()
+{
+    return ui->leDateTo;
+}

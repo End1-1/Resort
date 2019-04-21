@@ -14,11 +14,12 @@ class DlgCreateGroupReservation : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgCreateGroupReservation(QWidget *parent = 0);
+    explicit DlgCreateGroupReservation(QWidget *parent = nullptr);
     ~DlgCreateGroupReservation();
     void loadRooms();
     void setSingleMode(bool mode);
     void setReservationTab(WReservationRoomTab *t);
+
 private slots:
     void singleHandle(bool v);
     void on_btnCreate_clicked();
@@ -27,9 +28,7 @@ private slots:
     void on_tblBed_clicked(const QModelIndex &index);
     void on_tblFloor_clicked(const QModelIndex &index);
     void on_tblSmoke_clicked(const QModelIndex &index);
-
     void on_deArrival_textEdited(const QString &arg1);
-
     void on_deDeparture_textEdited(const QString &arg1);
 
 

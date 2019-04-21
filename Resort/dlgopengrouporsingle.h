@@ -12,7 +12,7 @@ class DlgOpenGroupOrSingle : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgOpenGroupOrSingle(QWidget *parent = 0);
+    explicit DlgOpenGroupOrSingle(QWidget *parent = nullptr);
     ~DlgOpenGroupOrSingle();
     static int choice();
 private slots:

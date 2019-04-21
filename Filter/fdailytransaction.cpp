@@ -28,6 +28,11 @@ QWidget *FDailyTransaction::firstElement()
     return ui->wd->fw();
 }
 
+QWidget *FDailyTransaction::lastElement()
+{
+    return ui->wd->lw();
+}
+
 void FDailyTransaction::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

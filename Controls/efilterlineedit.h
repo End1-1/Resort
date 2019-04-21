@@ -12,7 +12,7 @@ class EFilterLineEdit : public QWidget
     Q_OBJECT
 
 public:
-    explicit EFilterLineEdit(QWidget *parent = 0);
+    explicit EFilterLineEdit(QWidget *parent = nullptr);
     ~EFilterLineEdit();
 
 private:

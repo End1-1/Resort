@@ -12,11 +12,13 @@ class FExpectedArrivalSimple : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FExpectedArrivalSimple(QWidget *parent = 0);
+    explicit FExpectedArrivalSimple(QWidget *parent = nullptr);
     ~FExpectedArrivalSimple();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private:
     Ui::FExpectedArrivalSimple *ui;
 };

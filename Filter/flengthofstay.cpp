@@ -37,6 +37,11 @@ QWidget *FLengthOfStay::firstElement()
     return ui->wd->fw();
 }
 
+QWidget *FLengthOfStay::lastElement()
+{
+    return ui->wd->lw();
+}
+
 void FLengthOfStay::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

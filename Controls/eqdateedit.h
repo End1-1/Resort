@@ -8,7 +8,7 @@ class EQDateEdit : public QDateEdit
     Q_OBJECT
     Q_PROPERTY(QString Field READ getField WRITE setField)
 public:
-    EQDateEdit(QWidget *parent = 0);
+    EQDateEdit(QWidget *parent = nullptr);
     QString getField();
     void setField(const QString &field);
     void setBgColor(const QColor &color);

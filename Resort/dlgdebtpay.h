@@ -12,7 +12,7 @@ class DlgDebtPay : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgDebtPay(QWidget *parent = 0);
+    explicit DlgDebtPay(QWidget *parent = nullptr);
     ~DlgDebtPay();
     static void debtPay(int id);
 private slots:

@@ -32,6 +32,24 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Time</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTimeEdit" name="teTime">
+     <property name="time">
+      <time>
+       <hour>3</hour>
+       <minute>0</minute>
+       <second>0</second>
+      </time>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

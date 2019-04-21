@@ -2,6 +2,7 @@
 #include "ui_finhousedetailbalance.h"
 #include "wreportgrid.h"
 #include "winvoice.h"
+#include "vauchers.h"
 
 FInhouseDetailBalance::FInhouseDetailBalance(QWidget *parent) :
     WFilterBase(parent),
@@ -16,7 +17,7 @@ FInhouseDetailBalance::FInhouseDetailBalance(QWidget *parent) :
         if (val.at(0).toString().isEmpty()) {
             return;
         }
-        WInvoice::openInvoiceWindow(val.at(0).toString());
+        openInvoiceWithId(val.at(0).toString());
     });
 }
 
@@ -38,6 +39,11 @@ QWidget *FInhouseDetailBalance::firstElement()
     return ui->deStart;
 }
 
+QWidget *FInhouseDetailBalance::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FInhouseDetailBalance::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
@@ -49,20 +55,34 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Credit"))
             .setColumn(140, "", tr("Payment"))
             .setColumn(150, "", tr("Comment"));
-    QString query = "select r.f_invoice, r.f_room, g.guest, m.f_finalName, d.f_amountAmd, c.f_amountAmd, pm.f_" + def_lang + ", "
-            "c.f_paymentComment "
-            "from f_reservation r "
-            "left join m_register m on m.f_inv=r.f_invoice "
+    QString query = "select r.f_invoice, r.f_room, g.guest, m.f_finalName, if (m.f_sign=1, m.f_amountAmd, 0), if (m.f_sign=-1, m.f_amountAmd, 0), pm.f_" + def_lang + ", "
+            "m.f_paymentComment "
+            "from m_register m "
+            "inner join f_reservation r on m.f_inv=r.f_invoice "
+            "left join f_room rm on rm.f_id=r.f_room "
             "left join f_payment_type pm on pm.f_id=m.f_paymentMode "
-            "left join guests g on r.f_Guest=g.f_id "
-            "left join (select f_id as did, f_inv, f_amountAmd from m_register where f_finance=1 and f_canceled=0 and f_sign=1 and f_wdate between :date1 and :date2) d on d.f_inv=r.f_invoice and d.did=m.f_id "
-            "left join (select f_id as did, f_inv, f_amountAmd, f_paymentComment from m_register where f_finance=1 and f_canceled=0 and f_sign=-1 and f_wdate between :date1 and :date2) c on c.f_inv=r.f_invoice and c.did=m.f_id "
-            "where (r.f_state=1 or (r.f_state=3 and :date1 between r.f_startDate and r.f_endDate)) and (d.f_amountAmd is not null or c.f_amountAmd is not null)"
-            "order by 1 ";
+            "left join guests g on r.f_guest=g.f_id "
+            "where m.f_wdate between :date1 and :date2 and m.f_canceled=0 and ((f_finance=1 and f_source<>'AV') or (f_finance=0 and f_source='AT')) "
+            "order by rm.f_building, r.f_room, m.f_wdate ";
     query.replace(":date1", ui->deStart->dateMySql());
     query.replace(":date2", ui->deEnd->dateMySql());
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
+    query = "select m.f_inv, m.f_room, m.f_guest, m.f_finalName, 0, m.f_amountAmd, pm.f_" + def_lang + ", "
+            "m.f_paymentComment "
+            "from m_register m "
+            "left join f_payment_type pm on pm.f_id=m.f_paymentMode "
+            "where f_source='AV' and m.f_wdate=:date and m.f_canceled=0 and m.f_finance=1 ";
+    query.replace(":date", ui->deEnd->dateMySql());
+    DoubleDatabase dd(true, false);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        QList<QVariant> row;
+        for (int i = 0; i < dd.columnCount(); i++) {
+            row << dd.getValue(i);
+        }
+        rg->fModel->appendRow(row);
+    }
     QList<int> col;
     col << 4 << 5;
     QList<double> vals;
@@ -72,7 +92,7 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
     QString curr;
     for (int i = 0; i < rg->fModel->rowCount(); i++) {
         if (i == 0) {
-            curr == rg->fModel->data(i, 0).toString();
+            curr = rg->fModel->data(i, 0).toString();
             continue;
         }
         if (rg->fModel->data(i, 0).toString() == curr) {

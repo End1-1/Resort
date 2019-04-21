@@ -8,7 +8,7 @@ class EQTextEdit : public QTextEdit
     Q_OBJECT
     Q_PROPERTY(QString Field READ getField() WRITE setField)
 public:
-    EQTextEdit(QWidget *parent = 0);
+    EQTextEdit(QWidget *parent = nullptr);
     QString getField();
     void setField(const QString &field);
     void setBgColor(const QColor &color);

@@ -12,12 +12,14 @@ class FOnlineRest : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FOnlineRest(QWidget *parent = 0);
+    explicit FOnlineRest(QWidget *parent = nullptr);
     ~FOnlineRest();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
     static void openOnlineRestaurant();
+
 private slots:
     void doubleClickOnRow(const QList<QVariant> &row);
     void on_tblFilter_clicked(const QModelIndex &index);

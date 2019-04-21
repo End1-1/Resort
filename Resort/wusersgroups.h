@@ -7,7 +7,7 @@ class WUsersGroups : public WReportGrid
 {
     Q_OBJECT
 public:
-    WUsersGroups(QWidget *parent = 0);
+    WUsersGroups(QWidget *parent = nullptr);
 protected:
     virtual void setupTab();
     virtual void processValues(int row, bool isNew);

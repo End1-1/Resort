@@ -24,7 +24,7 @@ class message : public QDialog, public Base
     Q_OBJECT
 
 public:
-    explicit message(QWidget *parent = 0);
+    explicit message(QWidget *parent = nullptr);
     ~message();
     static void error(const QString &text);
     static void error(const QStringList &text);

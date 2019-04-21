@@ -12,10 +12,11 @@ class FCallRates : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCallRates(QWidget *parent = 0);
+    explicit FCallRates(QWidget *parent = nullptr);
     ~FCallRates();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
 
 private:

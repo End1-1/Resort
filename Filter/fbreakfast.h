@@ -12,10 +12,11 @@ class FBreakfast : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FBreakfast(QWidget *parent = 0);
+    explicit FBreakfast(QWidget *parent = nullptr);
     ~FBreakfast();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
 
 private:

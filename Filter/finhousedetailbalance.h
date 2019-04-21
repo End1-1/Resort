@@ -12,11 +12,13 @@ class FInhouseDetailBalance : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FInhouseDetailBalance(QWidget *parent = 0);
+    explicit FInhouseDetailBalance(QWidget *parent = nullptr);
     ~FInhouseDetailBalance();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FInhouseDetailBalance *ui;
 };

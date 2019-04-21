@@ -162,7 +162,7 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
     }
     DoubleDatabase db(fDbHost, fDbDb, fDbUser, fDbPass);
     if (!db.open(true, false)) {
-        QMessageBox::critical(0, tr("TrackControl error"), db.fLastError);
+        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
     db[":f_comp"] = QHostInfo::localHostName().toUpper();
@@ -177,7 +177,7 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
     db[":f_value1"] = value1;
     db[":f_value2"] = value2;
     if(!db.exec(QUERY)) {
-        QMessageBox::critical(0, tr("TrackControl error"), db.fLastError);
+        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
 }
@@ -189,13 +189,13 @@ void TrackControl::del()
     }
     DoubleDatabase db(fDbHost, fDbDb, fDbUser, fDbPass);
     if (!db.open(true, false)) {
-        QMessageBox::critical(0, tr("TrackControl error"), db.fLastError);
+        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
     db["f_invoice"] = fInvoice;
     db["f_reservation"] = fReservation;
     if (!db.exec("delete from airlog.log where f_invoice=:f_invoice or f_reservation=:f_reservation")) {
-        QMessageBox::critical(0, tr("TrackControl error"), db.fLastError);
+        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
 }
@@ -364,7 +364,7 @@ void TrackControl::timeEditChanged(const QTime &time)
 
 TrackWidget::TrackWidget()
 {
-    fWidget = 0;
+    fWidget = nullptr;
 }
 
 bool cmpWidgetName(QWidget *w, const QString &with)
@@ -396,7 +396,7 @@ bool isCheckBox(QWidget *w)
 
 bool isTextEdit(QWidget *w)
 {
-    return cmpWidgetName(w, "QTextEdit") || cmpWidgetName(w, "EQTextEdit");
+    return cmpWidgetName(w, "QTextEdit") || cmpWidgetName(w, "EQTextEdit") || cmpWidgetName(w, "QPlainTextEdit");
 }
 
 bool isComboBox(QWidget *w)

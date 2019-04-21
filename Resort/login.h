@@ -14,7 +14,7 @@ class Login : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = 0);
+    explicit Login(QWidget *parent = nullptr);
     ~Login();
     void setLockUser(int id);
 private slots:

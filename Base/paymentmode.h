@@ -1,6 +1,9 @@
 #ifndef PAYMENTMODE_H
 #define PAYMENTMODE_H
 
+static const char *PAY_DEBIT = "DEBIT";
+static const char *PAY_CREDIT = "CREDIT";
+
 enum PAYMENT_MODE {PAYMENT_UNKNOWN = 0,
                    PAYMENT_CASH,
                    PAYMENT_CARD,

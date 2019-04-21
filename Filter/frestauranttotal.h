@@ -17,15 +17,18 @@ class FRestaurantTotal : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FRestaurantTotal(QWidget *parent = 0);
+    explicit FRestaurantTotal(QWidget *parent = nullptr);
     ~FRestaurantTotal();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     QString reportTitle();
     static void open();
+
 private:
     Ui::FRestaurantTotal *ui;
     void printNewPage(int &top, int &left, int &page, PPrintPreview *pp, PPrintScene *&ps, int nextHeight = 0);
+
 private slots:
     void printReceipt();
     void removeOrder();

@@ -13,18 +13,14 @@ class DlgOORoomProp : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgOORoomProp(const QString &code, QWidget *parent = 0);
+    explicit DlgOORoomProp(const QString &code, QWidget *parent = nullptr);
     ~DlgOORoomProp();
 
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnOk_clicked();
-
     void on_deEnd_textChanged(const QString &arg1);
-
     void on_deStart_textChanged(const QString &arg1);
-
     void on_btmRemove_clicked();
 
 private:

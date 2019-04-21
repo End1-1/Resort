@@ -31,7 +31,7 @@ PPrintPreview::~PPrintPreview()
 
 PPrintScene *PPrintPreview::addScene(int tmpl, PrintOrientation po)
 {
-    PPrintScene *ps;
+    PPrintScene *ps = nullptr;
     switch (tmpl) {
     case 0:
         ps = new PPrintScene(po, this);

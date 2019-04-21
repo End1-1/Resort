@@ -40,6 +40,11 @@ QWidget *FCardexSales::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FCardexSales::lastElement()
+{
+    return ui->deTo;
+}
+
 QString FCardexSales::reportTitle()
 {
     QString title = QString("%1 %2 %3 %4 - %5")

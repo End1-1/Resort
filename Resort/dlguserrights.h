@@ -12,7 +12,7 @@ class DlgUserRights : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgUserRights(QWidget *parent = 0);
+    explicit DlgUserRights(QWidget *parent = nullptr);
     ~DlgUserRights();
     void setup(QList<QVariant> &values);
 private slots:

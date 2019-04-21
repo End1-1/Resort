@@ -14,7 +14,7 @@ class DWMainDeskHint : public QDockWidget, public Base
 {
     Q_OBJECT
 public:
-    explicit DWMainDeskHint(QWidget *parent = 0);
+    explicit DWMainDeskHint(QWidget *parent = nullptr);
     ~DWMainDeskHint();
     void commonFilter(const QString &filter, int col = -1);
     void filterEqual(const QStringList &values, int col = -1);
@@ -23,9 +23,12 @@ public:
     void airFilter();
     void hide();
     QTableWidget *tableWidget();
+    void show();
+
 private:
     Ui::DWMainDeskHint *ui;
     bool fCheckInFilter;
+
 private slots:
     void tblHeaderSectionClicked(int logicalIndex);
     void thisVisibilityChanged(bool v);

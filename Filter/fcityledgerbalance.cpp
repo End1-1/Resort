@@ -61,6 +61,11 @@ QWidget *FCityLedgerBalance::firstElement()
     return ui->deStart;
 }
 
+QWidget *FCityLedgerBalance::lastElement()
+{
+    return ui->deStart;
+}
+
 QString FCityLedgerBalance::reportTitle()
 {
     return QString("%1, %2")

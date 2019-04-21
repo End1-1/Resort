@@ -19,6 +19,11 @@ QWidget *FOnlineBreakfast::firstElement()
     return this;
 }
 
+QWidget *FOnlineBreakfast::lastElement()
+{
+    return nullptr;
+}
+
 QString FOnlineBreakfast::reportTitle()
 {
     return QString("%1")

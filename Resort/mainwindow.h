@@ -21,7 +21,7 @@ class MainWindow : public QMainWindow, public Base
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void login();
     void logout();
@@ -32,6 +32,7 @@ public:
     QTabWidget *fTab;
     void hideMenu();
     void secondDbError();
+
 public slots:
     void on_actionExpected_arrivals_triggered();
     void on_actionReservatios_triggered();
@@ -66,25 +67,11 @@ public slots:
     void on_actionTrack_changes_triggered();
     void on_actionRoomChart_triggered();
     void on_actionNew_reservation_triggered();
-
     void on_actionCanceled_reservations_triggered();
-
     void on_actionWeb_triggered();
-
     void on_actionReservations_by_date_created_triggered();
-
     void on_actionNew_store_document_triggered();
-
     void on_actionPartners_2_triggered();
-
-    void on_actionDocuments_list_triggered();
-
-    void on_actionMaterials_in_the_store_triggered();
-
-    void on_actionStore_movement_triggered();
-
-    void on_actionCoupons_triggered();
-
     void on_actionCalculate_output_of_restaurant_triggered();
     void on_actionLogout_triggered();
     void on_actionLock_triggered();
@@ -97,83 +84,46 @@ public slots:
     void on_actionUsers_groups_triggered();
     void on_actionRoom_view_triggered();
     void on_actionPartners_triggered();
-
     void on_actionCredit_card_triggered();
-
     void on_actionCity_Ledger_balance_triggered();
-
     void on_actionChange_password_triggered();
-
     void on_actionNew_advance_entry_triggered();
-
     void on_actionGlobal_config_triggered();
-
     void on_actionComplex_dish_triggered();
-
     void on_actionCategories_triggered();
-
     void on_actionType_of_bed_triggered();
-
     void on_actionCategory_to_sell_triggered();
-
     void on_actionCity_Ledger_triggered();
-
     void on_actionCurrencies_triggered();
-
     void on_actionForecast_Occupancy_Category_triggered();
-
     void on_actionSetup_Tax_Printer_triggered();
-
     void on_actionInvoice_items_triggered();
-
     void on_actionPosting_charge_triggered();
-
     void on_actionDiscount_triggered();
-
     void on_actionRe_checkin_triggered();
-
     void on_actionTransfer_amount_triggered();
-
     void on_actionExpected_arrivals_simple_triggered();
-
     void on_actionReceipt_vaucher_triggered();
-
     void on_actionNotes_triggered();
-
     void on_actionEvent_triggered();
-
     void on_actionDaily_financial_report_triggered();
-
     void on_actionBanquet_comment_triggered();
-
     void on_actionCity_ledger_balance_2_triggered();
-
     void on_actionComplimentary_comment_triggered();
-
     void on_actionReport_buillder_triggered();
-
     void on_actionList_of_source_reservation_triggered();
-
     void on_actionYearly_financial_report_triggered();
-
     void on_actionUtils_triggered();
     void on_actionExport_data_triggered();
     void on_actionAdvance_report_triggered();
     void on_actionRestaurant_online_triggered();
     void on_actionPartners_group_triggered();
-
     void on_actionGuest_titles_triggered();
-
     void on_actionNationality_file_triggered();
-
     void on_actionCheckout_invoices_free_rooming_triggered();
-
     void on_actionNew_group_reservation_triggered();
-
     void on_actionChanges_of_states_of_room_triggered();
-
     void on_actionOpen_breakfast_triggered();
-
     void on_actionMonthly_occupancy_percentages_triggered();
     void on_actionNaitonality_report_by_period_triggered();
     void on_actionCancelation_No_show_fees_triggered();
@@ -186,29 +136,17 @@ public slots:
     void on_actionCostumers_cars_triggered();
     void on_actionReport_by_payment_triggered();
     void on_actionPartners_debts_triggered();
-    void on_actionCoupons_sales_triggered();
-    void on_actionCoupons_seria_triggered();
-    void on_actionAccounts_triggered();
-    void on_actionAccounts_2_triggered();
-    void on_actionStore_entries_triggered();
-    void on_actionNew_store_checkpoint_triggered();
-    void on_actionCoupons_statistics_triggered();
     void on_actionExit_triggered();
     void on_actionLogin_triggered();
-    void on_actionPartner_payments_triggered();
-    void on_actionDebts_triggered();
-    void on_actionDiscount_report_triggered();
-    void on_actionSales_report_by_cars_triggered();
-    void on_actionDiscount_total_triggered();
-    void on_actionCostumers_triggered();
     void on_actionWakeup_calls_triggered();
     void on_actionDaily_transactions_triggered();
     void on_actionHotel_hierarchy_triggered();
-
+    void on_actionNew_room_chart_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
 private slots:
     void shortcutFullScreen();
     void shortcutSlot();
@@ -221,42 +159,24 @@ private slots:
     void socketError(QAbstractSocket::SocketError f_cityLedger);
     void socketDisconnected();
     void on_actionBreakfast_report_triggered();
-
     void on_actionRefund_voucher_triggered();
-
     void on_actionRoom_inventory_triggered();
-
-    void on_actionTransfer_CL_amount_triggered();
-
     void on_actionAvailable_amounts_triggered();
-
     void on_actionGuest_Tray_Ledger_triggered();
-
     void on_actionIn_house_detailed_balance_triggered();
-
     void on_actionAvaiable_rooms_triggered();
-
     void on_actionRoom_inventory_2_triggered();
-
     void on_actionRoom_inventory_states_triggered();
-
     void on_actionList_of_checkin_guests_triggered();
-
     void on_actionLenght_of_stay_triggered();
-
     void on_actionExport_reservations_triggered();
-
     void on_actionExecute_failed_sql_triggered();
-
-    void on_actionT_report_triggered();
-
     void on_actionDisable_second_database_triggered();
-
     void on_actionRoom_arrangement_triggered();
-
-    void on_actionNew_room_chart_triggered();
-
     void on_actionCall_rates_triggered();
+    void on_actionRoom_assignment_triggered();
+
+    void on_actionTemporary_receipts_triggered();
 
 private:
     Ui::MainWindow *ui;

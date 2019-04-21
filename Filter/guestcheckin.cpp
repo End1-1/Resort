@@ -22,7 +22,12 @@ QString GuestCheckin::reportTitle()
 
 QWidget *GuestCheckin::firstElement()
 {
-    return 0;
+    return nullptr;
+}
+
+QWidget *GuestCheckin::lastElement()
+{
+    return nullptr;
 }
 
 void GuestCheckin::apply(WReportGrid *rg)

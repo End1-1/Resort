@@ -51,6 +51,7 @@ public:
     void setData(int row, int col, const QVariant &value);
     void setBackgroundColor(int row, const QColor &color);
     void setBackgroundColor(int row, int column, const QColor &color);
+    void setFont(int row, int column, QFont f);
     void clearColumns();
     void clearData();
     Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -80,6 +81,8 @@ private:
     QList<int> fSumColumns;
     QList<double> fSumValues;
     QMap<int, QMap<int, QColor> > fBackgroundColors;
+    QMap<int, QMap<int, QFont> > fFont;
+
 signals:
     void rowCount(int count);
     void endApply();

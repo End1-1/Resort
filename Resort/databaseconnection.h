@@ -12,7 +12,7 @@ class DatabaseConnection : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DatabaseConnection(QWidget *parent = 0);
+    explicit DatabaseConnection(QWidget *parent = nullptr);
     void setConnection(const QString &name);
     ~DatabaseConnection();
 

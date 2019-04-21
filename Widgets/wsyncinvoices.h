@@ -12,7 +12,7 @@ class WSyncInvoices : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WSyncInvoices(QWidget *parent = 0);
+    explicit WSyncInvoices(QWidget *parent = nullptr);
     ~WSyncInvoices();
     static void open();
 private slots:

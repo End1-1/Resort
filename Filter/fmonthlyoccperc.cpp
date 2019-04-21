@@ -24,6 +24,11 @@ QWidget *FMonthlyOccPerc::firstElement()
     return ui->cbYear;
 }
 
+QWidget *FMonthlyOccPerc::lastElement()
+{
+    return ui->cbYear;
+}
+
 QString FMonthlyOccPerc::reportTitle()
 {
     return QString("%1 - %2")

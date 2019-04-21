@@ -5,7 +5,7 @@
 #include "cacheinvoiceitem.h"
 #include "dlgchartdaterange.h"
 #include "dlgchangeexportvaucher.h"
-#include "excel.h"
+#include "xlsxall.h"
 #include "tablemodel.h"
 #include <QInputDialog>
 
@@ -588,28 +588,20 @@ void WSyncInvoices::on_btnPrevDate_clicked()
 
 void WSyncInvoices::on_btnExcel_clicked()
 {
-    Excel e;
+    XlsxDocument d;
+    XlsxSheet *s = d.workbook()->addSheet("EXPORT");
     int colCount = ui->tblSearch->columnCount();
     int rowCount = ui->tblSearch->rowCount();
-//    for (int i = 0; i < colCount; i++) {
-//        e.setValue(fModel->columnTitle(i), 1, i + 1);
-//        e.setColumnWidth(i + 1, fModel->columnWidth(i) / 7);
-//    }
-//    e.setFontBold(e.address(0, 0), e.address(0, colCount - 1));
-//    e.setHorizontalAlignment(e.address(0, 0), e.address(0, colCount - 1), Excel::hCenter);
-
     for (int j = 0; j < rowCount; j++) {
         for (int i = 0; i < colCount; i++) {
-            e.setValue(ui->tblSearch->toString(j, i), j + 2, i + 1);
+            s->addCell(j + 2, i + 1, ui->tblSearch->toString(j, i));
         }
-        QColor color = ui->tblSearch->item(j, 0)->backgroundColor();
-        e.setBackground(e.address(j, 0), e.address(j, colCount - 1),
-                         color.red(), color.green(), color.blue());
-        QColor fcolor = ui->tblSearch->item(j, 0)->textColor();
-        e.setFontColor(e.address(j, 0), e.address(j, colCount - 1),
-                       fcolor.red(), fcolor.green(), fcolor.blue());
 
     }
-    e.setFontSize(e.address(0, 0), e.address(rowCount - 1, colCount - 1), 10);
-    e.show();
+    QString err;
+    if (!d.save(err, true)) {
+        if (!err.isEmpty()) {
+            message_error(err);
+        }
+    }
 }

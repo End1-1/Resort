@@ -24,8 +24,10 @@ void RoomItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     } else {
     */
     QLinearGradient bgFill(0, 0, 0, option.rect.height());
+    QColor alpha = ROOM_RECT_BACKGROUND[r.fState()][0];
+    alpha = alpha.light();
     bgFill.setColorAt(0, ROOM_RECT_BACKGROUND[r.fState()][0]);
-    bgFill.setColorAt(0.5, ROOM_RECT_BACKGROUND[r.fState()][1]);
+    bgFill.setColorAt(0.5, alpha);
     bgFill.setColorAt(1, ROOM_RECT_BACKGROUND[r.fState()][0]);
     QBrush brush(bgFill);
     painter->fillRect(option.rect, brush);

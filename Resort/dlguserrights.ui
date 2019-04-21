@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -475,6 +475,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chAdvanceReceiptInvoice">
+         <property name="text">
+          <string>Advance voucher in invoice</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>127</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="EQCheckBox" name="chReceiptVaucher">
          <property name="text">
           <string>Receipt voucher</string>
@@ -631,6 +641,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>19</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chTempReceipt">
+         <property name="text">
+          <string>Temporary receipts</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>128</number>
          </property>
         </widget>
        </item>

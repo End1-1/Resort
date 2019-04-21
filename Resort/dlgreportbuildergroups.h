@@ -12,7 +12,7 @@ class DlgReportBuilderGroups : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReportBuilderGroups(QWidget *parent = 0);
+    explicit DlgReportBuilderGroups(QWidget *parent = nullptr);
     ~DlgReportBuilderGroups();
 
 private slots:

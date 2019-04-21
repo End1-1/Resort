@@ -16,7 +16,7 @@ class DlgNewVaucherOption : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgNewVaucherOption(QWidget *parent = 0);
+    explicit DlgNewVaucherOption(QWidget *parent = nullptr);
     ~DlgNewVaucherOption();
     static int vaucherOption();
 private slots:

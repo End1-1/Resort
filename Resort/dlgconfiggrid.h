@@ -14,9 +14,9 @@ class DlgConfigGrid : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgConfigGrid(QWidget *parent = 0);
+    explicit DlgConfigGrid(QWidget *parent = nullptr);
     ~DlgConfigGrid();
-    static bool config(QString &fontName, int &fontSize, bool &fontBold, bool &reset, QWidget *parent);
+    static bool config(QString &fontName, int &fontSize, bool &fontBold, bool &readOnly, bool &reset, QWidget *parent);
 
 private slots:
     void on_btnOK_clicked();

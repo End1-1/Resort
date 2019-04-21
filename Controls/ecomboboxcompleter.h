@@ -8,7 +8,7 @@ class EComboBoxCompleter : public QComboBox
     Q_OBJECT
     Q_PROPERTY (QString SQL READ getSQL WRITE setSQL)
 public:
-    EComboBoxCompleter(QWidget *parent = 0);
+    EComboBoxCompleter(QWidget *parent = nullptr);
     QVariant currentData() const;
     QString getSQL();
     void setSQL(const QString &sql);

@@ -221,7 +221,6 @@
      <string>Cashier</string>
     </property>
     <addaction name="actionNew_advance_entry"/>
-    <addaction name="actionTransfer_CL_amount"/>
     <addaction name="actionReceipt_vaucher"/>
     <addaction name="actionPosting_charge"/>
     <addaction name="actionCancelation_No_show_fee"/>
@@ -232,7 +231,7 @@
     <addaction name="actionCash_repoort_detailed"/>
     <addaction name="actionAdvance_report"/>
     <addaction name="actionCurrencies"/>
-    <addaction name="actionAccounts"/>
+    <addaction name="actionTemporary_receipts"/>
    </widget>
    <widget class="QMenu" name="menuAnalytics">
     <property name="title">
@@ -285,7 +284,6 @@
      <string>Discount system</string>
     </property>
     <addaction name="actionCoupons"/>
-    <addaction name="actionCoupons_sales"/>
     <addaction name="actionCoupons_seria"/>
     <addaction name="actionCoupons_statistics"/>
     <addaction name="actionDebts"/>
@@ -1418,6 +1416,11 @@
    </property>
    <property name="text">
     <string>Call rates</string>
+   </property>
+  </action>
+  <action name="actionTemporary_receipts">
+   <property name="text">
+    <string>Temporary receipts</string>
    </property>
   </action>
  </widget>

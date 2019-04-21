@@ -12,7 +12,7 @@ class WInvoice : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WInvoice(QWidget *parent = 0);
+    explicit WInvoice(QWidget *parent = nullptr);
     ~WInvoice();
     virtual void callback(int sel, const QString &code);
     void loadInvoice(const QString &id);
@@ -59,7 +59,6 @@ private slots:
     void on_btnRefTax_clicked();
     void on_btnTaxBack_2_clicked();
     void on_btnPostBreakfast_clicked();
-    void on_btnTransferAmountCL_clicked();
     void on_btnPostMinibar_clicked();
     void on_btnWakeup_clicked();
 

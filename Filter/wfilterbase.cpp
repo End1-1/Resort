@@ -132,7 +132,7 @@ void WFilterBase::checkTableName(const QString &alias, QString &from, WReportGri
 
 QWidget *WFilterBase::gridOptionWidget()
 {
-    return 0;
+    return nullptr;
 }
 
 void WFilterBase::groupCheckClicked(bool value)
@@ -145,4 +145,9 @@ void WFilterBase::groupCheckClicked(bool value)
         }
         fReportGrid->fIncludes[s] = value;
     }
+}
+
+bool WFilterBase::event(QEvent *e)
+{
+    return QWidget::event(e);
 }

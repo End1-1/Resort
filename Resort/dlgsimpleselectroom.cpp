@@ -138,11 +138,11 @@ void DlgSimpleSelectRoom::filter()
             it++;
             continue;
         }
-        if (croom.fCategoryShort() != ui->lbCat->text()) {
+        if (ui->lbCat->text().length() > 0 && croom.fCategoryShort() != ui->lbCat->text()) {
             it++;
             continue;
         }
-        if (croom.fBed() != fBed) {
+        if (fBed.length() > 0 && croom.fBed() != fBed) {
             it++;
             continue;
         }

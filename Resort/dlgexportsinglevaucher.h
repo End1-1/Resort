@@ -12,7 +12,7 @@ class DlgExportSingleVaucher : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgExportSingleVaucher(QWidget *parent = 0);
+    explicit DlgExportSingleVaucher(QWidget *parent = nullptr);
     ~DlgExportSingleVaucher();
     void setupVaucher(const QString &id);
     static int exportSingleVaucher(const QString &id);

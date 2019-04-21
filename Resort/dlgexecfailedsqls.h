@@ -12,7 +12,7 @@ class DlgExecFailedSqls : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgExecFailedSqls(QWidget *parent = 0);
+    explicit DlgExecFailedSqls(QWidget *parent = nullptr);
     ~DlgExecFailedSqls();
     static void openDialog();
 private slots:

@@ -382,6 +382,11 @@ QWidget *FRestaurantTotal::firstElement()
     return ui->deStart;
 }
 
+QWidget *FRestaurantTotal::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FRestaurantTotal::reportTitle()
 {
     return QString("%1 %2-%3")

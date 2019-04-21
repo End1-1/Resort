@@ -154,6 +154,11 @@ QWidget *FVauchers::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FVauchers::lastElement()
+{
+    return ui->deTo;
+}
+
 QString FVauchers::reportTitle()
 {
     return QString("%1 %2-%2 %3")

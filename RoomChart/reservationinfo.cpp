@@ -10,10 +10,10 @@
 
 Preferences ReservationInfo::fPref;
 
-static const QColor rc[][2] = {
+static QColor rc[][2] = {
     {Qt::white, Qt::white},
-    {QColor::fromRgb(70, 170, 255), QColor::fromRgb(120, 190, 255)},
-    {QColor::fromRgb(255, 80, 80), QColor::fromRgb(255, 135, 135)},
+    {QColor::fromRgb(__ss.value("checkincolor", -16733441).toInt()), QColor::fromRgb(70, 170, 255)},
+    { QColor::fromRgb(__ss.value("reservecolor", -42403).toInt()), QColor::fromRgb(255, 80, 80)},
     {QColor::fromRgb(88, 88, 88), QColor::fromRgb(170, 170, 170)},
     {QColor::fromRgb(88, 88, 88), QColor::fromRgb(170, 170, 170)},
     {QColor::fromRgb(88, 88, 88), QColor::fromRgb(170, 170, 170)},
@@ -101,9 +101,11 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     }
 
     QRect rect = option->rect;
+    QColor alpha =  rc[fReservation.fState()][0];
+    alpha = alpha.light(110);
     QLinearGradient bgFill(0, 0, 0, rect.height());
     bgFill.setColorAt(0, rc[fReservation.fState()][0]);
-    bgFill.setColorAt(0.5, rc[fReservation.fState()][1]);
+    bgFill.setColorAt(0.5, alpha);
     bgFill.setColorAt(1, rc[fReservation.fState()][0]);
     QBrush brush(bgFill);
     painter->fillRect(rect, brush);
@@ -160,9 +162,9 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
                        .daysTo(QDate::fromString(fPref.getDb(def_working_day).toString(), def_date_format)) * COLUMN_WIDTH);
             textRect.adjust(ofr, 0, 0, 0);
         }
-        painter->setPen(rc[fReservation.fState()][1]);
+//        painter->setPen(Qt::black);
         textRect.adjust(leftOffcet, 2, -2, -2);
-        painter->drawText(textRect, fReservation.fGuest(), to);
+//        painter->drawText(textRect, fReservation.fGuest(), to);
         painter->setPen(Qt::black);
         textRect.adjust(-1, -1, 0, 0);
         painter->drawText(textRect, fReservation.fGuest(), to);

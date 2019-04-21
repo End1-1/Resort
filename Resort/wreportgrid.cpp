@@ -1,6 +1,6 @@
 #include "wreportgrid.h"
 #include "ui_wreportgrid.h"
-#include "excel.h"
+#include "xlsxall.h"
 #include "dlgfiltervalues.h"
 #include "wfilterbase.h"
 #include "pprintscene.h"
@@ -8,9 +8,16 @@
 #include "ptextrect.h"
 #include "dlgconfiggrid.h"
 #include "dlghelp.h"
+#include <QFileDialog>
 #include <QScrollBar>
 #include <QMenu>
+#include <QShortcut>
+#include <QPrinter>
+#include <QException>
 #include <QClipboard>
+#include <QPrinterInfo>
+
+QMap<QString, Report> WReportGrid::fReportOptions;
 
 WReportGrid::WReportGrid(QWidget *parent) :
     BaseWidget(parent),
@@ -20,19 +27,16 @@ WReportGrid::WReportGrid(QWidget *parent) :
     ui->tblTotals->setVisible(false);
     ui->tblMain->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->tblMain->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->btnFilter->setVisible(false);
-    ui->btnHelp->setVisible(false);
     fModel = new TableModel(ui->tblMain);
     connect(fModel, SIGNAL(rowCount(int)), this, SLOT(rowCount(int)));
     fModel->fTableView = ui->tblMain;
     fTableView = ui->tblMain;
     fTableTotal = ui->tblTotals;
-    fRowEditorDialog = 0;
+    fRowEditorDialog = nullptr;
     ui->btnNew->setVisible(false);
-    fFilter = 0;
-    fTitleWidget = 0;
-    fRgDoubleClick = 0;
-    ui->wFilter->hide();
+    fFilter = nullptr;
+    fTitleWidget = nullptr;
+    fRgDoubleClick = nullptr;
     ui->tblMain->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     fTableMenu = new QMenu();
     connect(fTableMenu->addAction("Filter on column values"), SIGNAL(triggered(bool)), this, SLOT(actionFilterColumn(bool)));
@@ -47,6 +51,35 @@ WReportGrid::WReportGrid(QWidget *parent) :
     fTrackControl = new TrackControl(TRACK_REPORT);
     connect(fModel, SIGNAL(newSum(QList<int>,QList<double>)), this, SLOT(newSum(QList<int>,QList<double>)));
     connect(fModel, SIGNAL(endApply()), this, SLOT(endApply()));
+    ui->btnHelp->setVisible(false);
+    ui->scrollArea->setVisible(false);
+    fPrintOut = false;
+    fPrintOutReady = false;
+    QShortcut *sregInReports = new QShortcut(QKeySequence("Ctrl+Shift+R"), this);
+    connect(sregInReports, SIGNAL(activated()), this, SLOT(registerInReportBuilder()));
+    if (fReportOptions.count() == 0) {
+        DoubleDatabase dd(true, false);
+        dd[":f_group"] = WORKING_USERGROUP;
+        dd.exec("select * from rp_main where f_group=:f_group");
+        while (dd.nextRow()) {
+            Report r;
+            r.fFontName = dd.getString("f_fontname");
+            r.fFontSize = dd.getInt("f_fontsize");
+            r.fPrintOnly = dd.getInt("f_printonly");
+            r.fFontBold = dd.getInt("f_fontbold");
+            fReportOptions[dd.getString("f_report")] = r;
+        }
+    }
+    ui->gv->horizontalScrollBar()->blockSignals(true);
+    ui->gv->verticalScrollBar()->blockSignals(true);
+    setPrintOrientation(Portrait);
+    ui->cbPrinters->addItems(QPrinterInfo::availablePrinterNames());
+    ui->cbPrinters->setCurrentIndex(ui->cbPrinters->findText(QPrinterInfo::defaultPrinterName()));
+    ui->wPrint->setVisible(false);
+    ui->btnPrint2->setVisible(false);
+    fPageNumber = 0;
+    fScaleFactor = 1.0;
+    ui->tblMain->setWordWrap(false);
 }
 
 WReportGrid::~WReportGrid()
@@ -106,7 +139,7 @@ QWidget *WReportGrid::gridOptionWidget()
     if (fFilter) {
         return fFilter->gridOptionWidget();
     }
-    return 0;
+    return nullptr;
 }
 
 void WReportGrid::totalGridHScroll(int value)
@@ -129,7 +162,7 @@ QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &
         receiver = this;
     }
     connect(b, SIGNAL(clicked()), receiver, slot);
-    ui->hlToolbar->addWidget(b);
+    ui->hlToolbar->insertWidget(6, b);
     return b;
 }
 
@@ -171,10 +204,27 @@ void WReportGrid::countToTotal(int col)
     ui->tblTotals->setItem(0, col, new QTableWidgetItem(QString::number(fModel->rowCount())));
 }
 
+void WReportGrid::setup()
+{
+    BaseWidget::setup();
+}
+
 void WReportGrid::setupTabTextAndIcon(const QString &name, const QString &image)
 {
     fGridClassName = name;
     BaseWidget::setupTabTextAndIcon(name, image);
+    if (fReportOptions.contains(fGridClassName)) {
+        Report r = fReportOptions[fGridClassName];
+        if (r.fPrintOnly) {
+            ui->scrollArea->setVisible(true);
+            ui->wPrint->setVisible(true);
+            ui->tblMain->setVisible(false);
+            ui->tblTotals->setVisible(false);
+            fPrintOut = true;
+            ui->btnPrint->setVisible(false);
+            ui->btnPrint2->setVisible(true);
+        }
+    }
 }
 
 void WReportGrid::on_leQuickSearch_textChanged(const QString &arg1)
@@ -190,28 +240,33 @@ void WReportGrid::on_btnExcel_clicked()
         message_error(tr("Empty report!"));
         return;
     }
-    Excel e;
-    for (int i = 0; i < colCount; i++) {
-        e.setValue(fModel->columnTitle(i), 1, i + 1);
-        e.setColumnWidth(i + 1, fModel->columnWidth(i) / 7);
-    }
+    XlsxDocument d;
+    XlsxSheet *s = d.workbook()->addSheet("Sheet1");
+    /* HEADER */
     QColor color = QColor::fromRgb(200, 200, 250);
-    e.setBackground(e.address(0, 0), e.address(0, colCount - 1),
-                     color.red(), color.green(), color.blue());
-    e.setFontBold(e.address(0, 0), e.address(0, colCount - 1));
-    e.setHorizontalAlignment(e.address(0, 0), e.address(0, colCount - 1), Excel::hCenter);
-
+    QFont headerFont(qApp->font());
+    headerFont.setBold(true);
+    d.style()->addFont("header", headerFont);
+    d.style()->addBackgrounFill("header", color);
+    for (int i = 0; i < colCount; i++) {
+        s->addCell(1, i + 1, fModel->columnTitle(i), d.style()->styleNum("header"));
+        s->setColumnWidth(i + 1, fModel->columnWidth(i) / 7);
+    }
+    //e.setHorizontalAlignment(e.address(0, 0), e.address(0, colCount - 1), Excel::hCenter);
+    /* BODY */
+    QFont bodyFont(qApp->font());
+    d.style()->addFont("body", bodyFont);
     for (int j = 0; j < rowCount; j++) {
         for (int i = 0; i < colCount; i++) {
-            e.setValue(fModel->stringData(j, i), j + 2, i + 1);
+            s->addCell(j + 2, i + 1, fModel->data(j, i, Qt::EditRole), d.style()->styleNum("body"));
         }
-        color = fModel->data(j, 0, Qt::BackgroundColorRole).value<QColor>();
-        e.setBackground(e.address(j + 1, 0), e.address(j + 1, colCount - 1),
-                         color.red(), color.green(), color.blue());
     }
-
-    e.setFontSize(e.address(0, 0), e.address(rowCount , colCount ), 10);
-    e.show();
+    QString err;
+    if (!d.save(err, true)) {
+        if (!err.isEmpty()) {
+            message_error(err);
+        }
+    }
 }
 
 void WReportGrid::on_tblMain_doubleClicked(const QModelIndex &index)
@@ -242,18 +297,8 @@ void WReportGrid::on_btnRefresh_clicked()
     if (!ui->leQuickSearch->text().isEmpty()) {
         on_leQuickSearch_textChanged(ui->leQuickSearch->text());
     }
-}
-
-void WReportGrid::on_btnFilter_clicked()
-{
-    if (fFilter) {
-        ui->wFilter->setVisible(true);
-        if (fFilter->firstElement()) {
-            fFilter->firstElement()->setFocus();
-        } else {
-            ui->wFilter->hide();
-        }
-    }
+    ui->tblMain->horizontalScrollBar()->setValue(0);
+    ui->tblTotals->horizontalScrollBar()->setValue(0);
 }
 
 void WReportGrid::fillRowValues(int row)
@@ -264,17 +309,140 @@ void WReportGrid::fillRowValues(int row)
     }
 }
 
+void WReportGrid::setPage()
+{
+    ui->lbPage->setText(QString("%1 %2 %3 %4")
+                        .arg(tr("Page"))
+                        .arg(fPageNumber)
+                        .arg(tr("of"))
+                        .arg(fPrintScene.count()));
+    ui->gv->setScene(fPrintScene.at(fPageNumber - 1));
+    ui->btnFirst->setEnabled(fPageNumber > 1);
+    ui->btnBack->setEnabled(fPageNumber > 1);
+    ui->btnLast->setEnabled(fPageNumber < fPrintScene.count());
+    ui->btnNext->setEnabled(fPageNumber < fPrintScene.count());
+}
+
+PPrintScene *WReportGrid::addScene(int tmpl, PrintOrientation po)
+{
+    PPrintScene *ps = nullptr;
+    switch (tmpl) {
+    case 0:
+        ps = new PPrintScene(po, this);
+        break;
+    case 1:
+        ps = new PPrintScene(this);
+        break;
+    }
+    QSize s = po == Portrait ? sizePortrait : sizeLandscape;
+    QSize wSize = s;
+    wSize.setWidth(sizePortrait.width() / 3);
+    wSize.setHeight(wSize.width());
+    QPixmap p = QPixmap("./logo_transp.png");
+    QGraphicsPixmapItem *pi = ps->addPixmap(p);
+    pi->setPos((s.width() / 2) - (wSize.width() / 2), (s.height() / 2) - (wSize.height() / 2));
+    fPrintScene.append(ps);
+    return ps;
+}
+
+void WReportGrid::setPrintOrientation(PrintOrientation po)
+{
+    QSize s(po == Portrait ? sizePortrait : sizeLandscape);
+    s.setWidth(s.width() * 1.5);
+    s.setHeight(s.height() * 1.5);
+    ui->gv->setMinimumSize(s);
+    ui->gv->setMaximumSize(s);
+}
+
+void WReportGrid::printOnPaper()
+{
+    QString title = "NO TITLE";
+    bool official = false;
+    if (fFilter) {
+        title = fFilter->reportTitle();
+        official = fFilter->officialTitle();
+    } else if (fTabWidget) {
+        title = fTabWidget->tabText(fTabIndex);
+    }
+    if (fTitleWidget) {
+        official = false;
+        title = fTitleWidget->title();
+    }
+    QList<int> printPages;
+    switch (ui->cbPrintSelection->currentIndex()) {
+    case 0:
+        for (int i = 0; i < fPrintScene.count(); i++) {
+            printPages << i;
+        }
+        break;
+    case 1:
+        printPages << fPageNumber - 1;
+        break;
+    case 2: {
+        QStringList p = ui->lePages->text().replace(" ", "").split(",", QString::SkipEmptyParts);
+        foreach (QString s, p) {
+            int page = s.toInt() - 1;
+            if (page < 0 || page > fPrintScene.count() - 1) {
+                continue;
+            }
+            printPages << page;
+        }
+        break;
+    }
+    }
+
+    QPrinter prn;
+    prn.setPaperSize(QPrinter::A4);
+    prn.setPrinterName(ui->cbPrinters->currentText());
+    prn.setOrientation(fPrintScene.at(printPages.at(0))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
+    QPainter painter(&prn);
+    for (int i = 0; i < printPages.count(); i++) {
+        if (i > 0) {
+            prn.setOrientation(fPrintScene.at(printPages.at(i))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
+            prn.newPage();
+        }
+        fPrintScene.at(printPages.at(i))->render(&painter);
+    }
+    fTrackControl->insert("Print report", title, "");
+}
+
+void WReportGrid::registerInReportBuilder(bool msg)
+{
+    DoubleDatabase dd(true, doubleDatabase);
+    dd[":f_report"] = fGridClassName;
+    dd[":f_group"] = WORKING_USERGROUP;
+    dd.exec("select f_id from rp_main where f_group=:f_group and lower(f_report)=lower(:f_report)");
+    if (!dd.nextRow()) {
+        dd[":f_report"] = fGridClassName;
+        dd[":f_group"] = WORKING_USERGROUP;
+        dd[":f_printonly"] = false;
+        dd[":f_fontname"] = qApp->font().family();
+        dd[":f_fontsize"] = qApp->font().pointSize();
+        dd[":f_fontbold"] = 0;
+        dd.insert("rp_main", false);
+    }
+    fReportOptions.clear();
+    if (msg) {
+        message_info(tr("Registered in report builder"));
+    }
+}
+
 void WReportGrid::addFilterWidget(WFilterBase *f)
 {
+    if (!f) {
+        return;
+    }
+    if (f->layout() != nullptr) {
+        f->layout()->setSizeConstraint(QLayout::SetMinimumSize);
+        f->layout()->setMargin(0);
+    }
     fFilter = f;
-    ui->filterLayout->addWidget(f);
-    ui->btnFilter->setVisible(true);
-    ui->wFilter->setVisible(true);
+    ui->hl->addWidget(f);
     if (fFilter->firstElement()) {
         fFilter->firstElement()->setFocus();
-    } else {
-        ui->wFilter->hide();
     }
+    fFilter->installEventFilter(this);
+    //adjustSize();
 }
 
 void WReportGrid::keyPressEvent(QKeyEvent *event)
@@ -297,8 +465,10 @@ void WReportGrid::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Enter:
     case Qt::Key_Return:
-        if (focusWidget() == ui->btnApplyFilter) {
-            ui->btnApplyFilter->click();
+        if (fFilter) {
+            if (focusWidget() == fFilter->lastElement()) {
+                on_btnRefresh_clicked();
+            }
         }
         break;
     }
@@ -311,11 +481,15 @@ bool WReportGrid::event(QEvent *event)
         QKeyEvent *ke = static_cast<QKeyEvent*>(event);
         switch (ke->key()) {
         case Qt::Key_Enter:
-        case Qt::Key_Return:
-            if (ke->modifiers() & Qt::ControlModifier || ui->btnApplyFilter->hasFocus()) {
-                on_btnApplyFilter_clicked();
+        case Qt::Key_Return: {
+            QWidget *w = focusWidget();
+            focusNextChild();
+            QWidget *l = fFilter->lastElement();
+            if (w == l) {
+                on_btnRefresh_clicked();
             }
             return true;
+        }
         }
     }
     return BaseWidget::event(event);
@@ -443,20 +617,6 @@ void WReportGrid::on_tblMain_clicked(const QModelIndex &index)
     emit clickOnRow(index.row());
 }
 
-void WReportGrid::on_btnHideFilter_clicked()
-{
-    ui->wFilter->hide();
-}
-
-void WReportGrid::on_btnApplyFilter_clicked()
-{
-    if (fFilter) {
-        fFilter->apply(this);
-    }
-    ui->tblMain->horizontalScrollBar()->setValue(0);
-    ui->tblTotals->horizontalScrollBar()->setValue(0);
-}
-
 void WReportGrid::on_btnClearQuickSearch_clicked()
 {
     ui->leQuickSearch->clear();
@@ -471,6 +631,13 @@ void WReportGrid::on_btnPrint_clicked()
             return;
         }
     }
+    if (!ui->tblMain->isVisible()) {
+        ui->tblMain->setVisible(true);
+    }
+    if (fPrintOut) {
+        qDeleteAll(fPrintScene);
+    }
+    fPrintScene.clear();
     int page =  1;
     qreal top = 10;
     int totalWidth = 0;
@@ -481,36 +648,44 @@ void WReportGrid::on_btnPrint_clicked()
         totalWidth += (colw * resize_factor);
         distanceCol << (distanceCol.at(i) + colw);
     }
+    Report rs;
+    rs.fValid = false;
+    if (fReportOptions.contains(fGridClassName)) {
+        rs = fReportOptions[fGridClassName];
+        rs.fValid = true;
+    } else {
+        rs.fValid = true;
+        rs.fFontSize = 8;
+        rs.fFontName = "Arial";
+    }
 
     QBrush b(Qt::white, Qt::SolidPattern);
     PTextRect trFooter;
     trFooter.setBrush(b);
-    QFont f(qApp->font().family(), 20);
+    QFont f(rs.fFontName, 20);
     trFooter.setFont(f);
     trFooter.setBorders(false, false, false, false);
     trFooter.setTextAlignment(Qt::AlignLeft);
 
-    QSettings s("SmartHotel", "SmartHotel\\Grid\\" + fGridClassName);
     PrintOrientation po = (totalWidth > sizePortrait.width() - 50 ? Landscape : Portrait);
     QSize paperSize = (po == Portrait ? sizePortrait : sizeLandscape);
     int footerTop = paperSize.height() - 50;
     PTextRect prTempl;
     prTempl.setWrapMode(QTextOption::NoWrap);
-    prTempl.setFont(QFont(s.value("FontName").toString(), 17 + s.value("FontSize").toInt()));
-    prTempl.setFontBold(s.value("FontBold", false).toBool());
+    prTempl.setFont(QFont(rs.fFontName, 17 + rs.fFontSize));
+    prTempl.setFontBold(rs.fFontBold);
     prTempl.setBorders(true, true, true, true);
     QPen pen;
     pen.setWidth(2);
     prTempl.setRectPen(pen);
     PTextRect prHead(prTempl, "");
-    prHead.setFont(QFont(qApp->font().family(), 20));
+    prHead.setFont(QFont(rs.fFontName, 20));
     prHead.setBrush(QBrush(QColor::fromRgb(215, 215, 215), Qt::SolidPattern));
     prHead.setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
     int rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
     int headerHeight = ui->tblMain->horizontalHeader()->height() * resize_factor * 2;
-    PPrintPreview *pp = new PPrintPreview(this);
-    PPrintScene *ps = pp->addScene(0, po);
+    PPrintScene *ps = addScene(0, po);
     QString title = "NO TITLE";
     bool official = false;
     if (fFilter) {
@@ -526,7 +701,7 @@ void WReportGrid::on_btnPrint_clicked()
     int topOffcet = 0;
     if (official) {
         PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                          0, QFont(qApp->font().family(), 25));
+                                          nullptr, QFont(rs.fFontName, 25));
         trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
         trInfo->setBorders(false, false, false, false);
         ps->addItem(trInfo);
@@ -534,7 +709,7 @@ void WReportGrid::on_btnPrint_clicked()
         ps->addItem(logo);
         logo->setRect(QRectF(20, 10, 500, 300));
         PTextRect th(prTempl, title);
-        QFont f1(qApp->font().family(), 30);
+        QFont f1(rs.fFontName, 30);
         f1.setBold(true);
         th.setFont(f1);
         th.setTextAlignment(Qt::AlignCenter);
@@ -545,7 +720,7 @@ void WReportGrid::on_btnPrint_clicked()
     } else {
         PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                            .arg(title));
-        QFont captionFont(qApp->font().family(), 20);
+        QFont captionFont(rs.fFontName, 20);
         captionFont.setItalic(true);
         caption->setWrapMode(QTextOption::NoWrap);
         captionFont.setBold(true);
@@ -578,6 +753,15 @@ void WReportGrid::on_btnPrint_clicked()
             if (ui->tblMain->columnWidth(j) == 0) {
                 continue;
             }
+            QFont nf = fModel->data(i, j, Qt::FontRole).value<QFont>();
+            if (nf.family() == "NO") {
+                nf.setFamily(rs.fFontName);
+                nf.setPointSize(rs.fFontSize + 17);
+                nf.setBold(rs.fFontBold);
+            } else {
+                nf.setPointSize(nf.pointSize() + 17);
+            }
+            prTempl.setFont(nf);
             QBrush br(fModel->data(i, j, Qt::BackgroundColorRole).value<QColor>());
             if (br.color() == Qt::white) {
                 br.setStyle(Qt::NoBrush);
@@ -599,10 +783,10 @@ void WReportGrid::on_btnPrint_clicked()
                 rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
                 top = 5;
                 page++;
-                ps = pp->addScene(0, po);
+                ps = addScene(0, po);
                 if (official) {
                     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                                      0, QFont(qApp->font().family(), 25));
+                                                      nullptr, QFont(rs.fFontName, 25));
                     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
                     trInfo->setBorders(false, false, false, false);
                     ps->addItem(trInfo);
@@ -610,7 +794,7 @@ void WReportGrid::on_btnPrint_clicked()
                     ps->addItem(logo);
                     logo->setRect(QRectF(20, 10, 500, 300));
                     PTextRect th(prTempl, title);
-                    QFont f1(qApp->font().family(), 30);
+                    QFont f1(rs.fFontName, 30);
                     f1.setBold(true);
                     th.setFont(f1);
                     th.setWrapMode(QTextOption::WordWrap);
@@ -621,7 +805,7 @@ void WReportGrid::on_btnPrint_clicked()
                 } else {
                     PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                                        .arg(title));
-                    QFont captionFont(qApp->font().family(), 20);
+                    QFont captionFont(rs.fFontName, 20);
                     captionFont.setItalic(true);
                     caption->setWrapMode(QTextOption::NoWrap);
                     captionFont.setBold(true);
@@ -664,7 +848,7 @@ void WReportGrid::on_btnPrint_clicked()
     }
     top += rowHeight;
     if (ui->tblTotals->isVisible()) {
-        QFont font(qApp->font().family(), 18);
+        QFont font(rs.fFontName, 18);
         font.setBold(true);
         font.setPointSize(font.pointSize() - 1);
         prTempl.setFont(font);
@@ -687,10 +871,10 @@ void WReportGrid::on_btnPrint_clicked()
                 /*header*/
                 top = 5;
                 page++;
-                ps = pp->addScene(0, po);
+                ps = addScene(0, po);
                 if (official) {
                     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                                      0, QFont(qApp->font().family(), 25));
+                                                      nullptr, QFont(rs.fFontName, 25));
                     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
                     trInfo->setBorders(false, false, false, false);
                     ps->addItem(trInfo);
@@ -698,7 +882,7 @@ void WReportGrid::on_btnPrint_clicked()
                     ps->addItem(logo);
                     logo->setRect(QRectF(20, 10, 500, 300));
                     PTextRect th(prTempl, title);
-                    QFont f1(qApp->font().family(), 30);
+                    QFont f1(rs.fFontName, 30);
                     f1.setBold(true);
                     th.setFont(f1);
                     th.setTextAlignment(Qt::AlignCenter);
@@ -708,7 +892,7 @@ void WReportGrid::on_btnPrint_clicked()
                 } else {
                     PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                                        .arg(title));
-                    QFont captionFont(qApp->font().family(), 20);
+                    QFont captionFont(rs.fFontName, 20);
                     captionFont.setItalic(true);
                     caption->setWrapMode(QTextOption::NoWrap);
                     captionFont.setBold(true);
@@ -767,36 +951,69 @@ void WReportGrid::on_btnPrint_clicked()
                     .arg(__dd1Database.left(2)), &trFooter);
     trFooter.setTextAlignment(Qt::AlignLeft);
 
-    pp->exec();
-    delete pp;
-
-    fTrackControl->insert("Print report", title, "");
-}
-
-void WReportGrid::on_btnHelp_clicked()
-{
-    DlgHelp *d = new DlgHelp(fHelp, this);
-    d->exec();
-    delete d;
+    if (fPrintOut) {
+        ui->tblMain->setVisible(false);
+        ui->cbZoom->setCurrentIndex(4);
+        on_cbZoom_currentIndexChanged(4);
+        bool multiPage = fPrintScene.count() > 1;
+        ui->btnBack->setEnabled(multiPage);
+        ui->btnLast->setEnabled(multiPage);
+        ui->btnFirst->setEnabled(multiPage);
+        ui->btnNext->setEnabled(multiPage);
+        fPageNumber = 1;
+        if (fPrintScene.count() > 0) {
+            setPage();
+        }
+    } else {
+        PPrintPreview *pp = new PPrintPreview(this);
+        pp->fPrintScene = fPrintScene;
+        pp->exec();
+        delete pp;
+        fTrackControl->insert("Print report", title, "");
+    }
 }
 
 void WReportGrid::on_btnConfigGrid_clicked()
 {
-    QSettings s("SmartHotel", "SmartHotel\\Grid\\" + fGridClassName);
-    QString fName = s.value("FontName").toString();
-    int fSize = s.value("FontSize").toInt();
-    bool fBold = s.value("FontBold").toBool();
-    bool reset;
-    if (!DlgConfigGrid::config(fName, fSize, fBold, reset, this)) {
+    QString fName = "Arial";
+    int fSize = 0;
+    bool fBold = false;
+    bool reset = false;
+    bool printOnly = false;
+    registerInReportBuilder(false);
+    DoubleDatabase dd(true, doubleDatabase);
+    dd[":f_report"] = fGridClassName;
+    dd[":f_group"] = WORKING_USERGROUP;
+    dd.exec("select * from rp_main where f_group=:f_group and lower(f_report)=lower(:f_report)");
+    if (dd.nextRow()) {
+        fName = dd.getString("f_fontname");
+        fSize = dd.getInt("f_fontsize");
+        fBold = dd.getInt("f_fontbold") == 0 ? false : true;
+        printOnly = dd.getInt("f_printonly") == 0 ? false : true;
+    }
+    if (!DlgConfigGrid::config(fName, fSize, fBold, printOnly, reset, this)) {
         return;
     }
-    s.setValue("FontName", fName);
-    s.setValue("FontSize", fSize);
-    s.setValue("FontBold", fBold);
     if (reset) {
-        s.remove("ColumnsWidths");
+        fName = "Arial";
+        fSize = 0;
+        fBold = false;
+        printOnly = false;
     }
-
+    dd[":f_report"] = fGridClassName;
+    dd[":f_group"] = WORKING_USERGROUP;
+    dd[":f_printonly"] = printOnly;
+    dd[":f_fontname"] = fName;
+    dd[":f_fontsize"] = fSize;
+    dd[":f_fontbold"] = fBold ? 1 : 0;
+    dd.exec("update rp_main set f_printonly=:f_printonly, f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold where f_group=:f_group and f_report=:f_report");
+    Report r;
+    r.fValid = true;
+    r.fPrintOnly = printOnly;
+    r.fFontName = fName;
+    r.fFontSize = fSize;
+    r.fFontBold = fBold;
+    fReportOptions[fGridClassName] = r;
 }
 
 void WReportGrid::endApply()
@@ -809,4 +1026,79 @@ void WReportGrid::endApply()
     for (int i = 0; i < cols.count(); i++) {
         ui->tblMain->setColumnWidth(i, cols[i].toInt());
     }
+    if (fPrintOut) {
+        fPageNumber = 1;
+        on_btnPrint_clicked();
+        fPrintOutReady = true;
+    }
+}
+
+void WReportGrid::on_btnHelp_clicked()
+{
+    DlgHelp *d = new DlgHelp(fHelp, this);
+    d->exec();
+    delete d;
+}
+
+void WReportGrid::on_btnFirst_clicked()
+{
+    fPageNumber = 1;
+    setPage();
+}
+
+void WReportGrid::on_btnBack_clicked()
+{
+    if (fPageNumber == 1)
+        return;
+    fPageNumber--;
+    setPage();
+}
+
+void WReportGrid::on_btnNext_clicked()
+{
+    if (fPageNumber == fPrintScene.count()) {
+        return;
+    }
+    fPageNumber++;
+    setPage();
+}
+
+void WReportGrid::on_btnLast_clicked()
+{
+    fPageNumber = fPrintScene.count();
+    setPage();
+}
+
+void WReportGrid::on_btnZoomOut_clicked()
+{
+    if (ui->cbZoom->currentIndex() == ui->cbZoom->count() - 1) {
+        return;
+    }
+    ui->cbZoom->setCurrentIndex(ui->cbZoom->currentIndex() + 1);
+}
+
+void WReportGrid::on_btnZoopIn_clicked()
+{
+    if (ui->cbZoom->currentIndex() == 0) {
+        return;
+    }
+    ui->cbZoom->setCurrentIndex(ui->cbZoom->currentIndex() - 1);
+}
+
+void WReportGrid::on_cbZoom_currentIndexChanged(int index)
+{
+    qreal prevScaleFactor = fScaleFactor;
+    fScaleFactor = (index + 1) / 1.5;
+    qreal deltaScaleFactor =  prevScaleFactor / fScaleFactor;
+    QSize size(fPrintScene.at(fPageNumber - 1)->fPrintOrientation == Portrait ? sizePortrait : sizeLandscape);
+    size.setWidth((size.width() / fScaleFactor) * 1.500);
+    size.setHeight((size.height() / fScaleFactor) * 1.500);
+    ui->gv->setMinimumSize(size);
+    ui->gv->setMaximumSize(size);
+    ui->gv->scale(deltaScaleFactor, deltaScaleFactor);
+}
+
+void WReportGrid::on_btnPrint2_clicked()
+{
+    printOnPaper();
 }

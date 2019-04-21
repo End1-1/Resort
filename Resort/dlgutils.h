@@ -12,7 +12,7 @@ class DlgUtils : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgUtils(QWidget *parent = 0);
+    explicit DlgUtils(QWidget *parent = nullptr);
     ~DlgUtils();
 
 private slots:

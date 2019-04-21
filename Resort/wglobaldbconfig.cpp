@@ -4,6 +4,7 @@
 #include "defrest.h"
 #include "cacheresthall.h"
 #include "dlgeditservtax.h"
+#include "cacheusersgroups.h"
 
 void WGlobalDbConfig::getCompSettings()
 {
@@ -111,7 +112,8 @@ void WGlobalDbConfig::getMonthly()
         ui->tblCardexAnalysis->addLineEdit(i, 3, false)->setText(fDD.getValue(i, "f_items").toString());
     }
     ui->teDailyMovement->setPlainText(fPreferences.getDb(def_daily_movement_items).toString());
-    ui->rbDailySubtotalDown->setChecked(fPreferences.getDb(def_daily_movement_total_side).toInt());
+    ui->rbDailySubtotalDown->setChecked(fPreferences.getDb(def_daily_movement_total_side).toInt() == 0);
+    ui->rbDailySubtotalUp->setChecked(fPreferences.getDb(def_daily_movement_total_side).toInt() == 1);
 }
 
 void WGlobalDbConfig::getTax()
@@ -141,6 +143,20 @@ void WGlobalDbConfig::getApp()
     if (fDD.nextRow()) {
         ui->leExternalRestaurantDb->setText(fDD.getString(0));
     }
+}
+
+void WGlobalDbConfig::getReportOptions()
+{
+    DoubleDatabase dd(true, false);
+    dd.exec("select distinct(rp.f_group), g.f_en from rp_main rp "
+            "left join users_groups g on g.f_id=rp.f_group");
+    while (dd.nextRow()) {
+        QListWidgetItem *item = new QListWidgetItem(ui->lwrpGroups);
+        item->setText(dd.getString(1));
+        item->setData(Qt::UserRole, dd.getInt(0));
+        ui->lwrpGroups->addItem(item);
+    }
+
 }
 
 WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
@@ -179,6 +195,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leReservationVoucherId->setText(fPreferences.getDb(def_reservation_voucher_id).toString());
     ui->leRoomRateChangeId->setText(fPreferences.getDb(def_room_rate_change_id).toString());
     ui->leAdvanceVoucherId->setText(fPreferences.getDb(def_advance_voucher_id).toString());
+    ui->leAdvanceVoucherIdTransfer->setText(fPreferences.getDb(def_advance_transfer_voucher_id).toString());
     ui->leBreakfastHallId->setText(fPreferences.getDb(def_breakfast_default_hall).toString());
     ui->leBreakfastTableId->setText(fPreferences.getDb(def_breakfast_default_table).toString());
     ui->leBreakfastDishId->setText(fPreferences.getDb(def_breakfast_default_dish).toString());
@@ -189,6 +206,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->chShowLogs->setChecked(fPreferences.getDb(def_show_logs).toBool());
     ui->leCheckinVoucherId->setText(fPreferences.getDb(def_checkin_voucher_id).toString());
     ui->cbInvoiceHeader->setCurrentIndex(fPreferences.getDb(def_invoice_header_mode).toInt());
+    ui->leTransferAmountVoucherId->setInt(fPreferences.getDb(def_transfer_amount_id).toInt());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -229,6 +247,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->chShowLogs, "Show logs")
             .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
             .addWidget(ui->leExternalRestaurantDb, "External restaurant db")
+            .addWidget(ui->leTransferAmountVoucherId, "Transfer amount voucher id")
             ;
 
     getCompSettings();
@@ -237,8 +256,12 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     getMonthly();
     getTax();
     getApp();
+    getReportOptions();
+    fTrackControl->resetChanges();
 
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
+
+    ui->lerpGroup->setSelector(this, cache(cid_users_group), ui->lerpGroupName);
 }
 
 WGlobalDbConfig::~WGlobalDbConfig()
@@ -273,12 +296,12 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_invoice_default_positive_transfer_id, ui->lePosTransferId->text());
     values.insert(def_invoice_default_negative_transfer_id, ui->leNegTransferId->text());
     values.insert(def_invoice_default_refund_id, ui->leRefundId->text());
-    values.insert(def_no_tracking_changes, QString::number((int)ui->chNoTrackControl->isChecked()));
+    values.insert(def_no_tracking_changes, ui->chNoTrackControl->isChecked() ? "1" : "0");
     values.insert(def_filter_manual_tax, ui->leManualTax->text());
     values.insert(def_cancelfee_code, ui->leCancelCode->text());
     values.insert(def_noshowfee_code, ui->leNoshowCode->text());
     values.insert(def_rooming_list, ui->leRoomingList->text());
-    values.insert(def_welcome_rest_mode, QString("%1").arg((int)ui->chRestMode->isChecked()));
+    values.insert(def_welcome_rest_mode, ui->chRestMode->isChecked() ? "1" : "0");
     values.insert(def_rest_hall_for_reception, ui->leRestHallForReception->text());
     values.insert(def_room_arrangement, ui->leRoomArrangement->text());
     values.insert(def_receip_vaucher_id, ui->leReceiptVaucherId->text());
@@ -286,15 +309,22 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_checkin_voucher_id, ui->leCheckinVoucherId->text());
     values.insert(def_room_rate_change_id, ui->leRoomRateChangeId->text());
     values.insert(def_advance_voucher_id, ui->leAdvanceVoucherId->text());
+    values.insert(def_advance_transfer_voucher_id, ui->leAdvanceVoucherIdTransfer->text());
     values.insert(def_breakfast_default_hall, ui->leBreakfastHallId->text());
     values.insert(def_breakfast_default_table, ui->leBreakfastTableId->text());
     values.insert(def_breakfast_default_dish, ui->leBreakfastDishId->text());
     values.insert(def_minibar_default_hall, ui->leMinibarHallId->text());
     values.insert(def_minibar_default_table, ui->leMinibarTableId->text());
     values.insert(def_minibar_default_dish, ui->leMinibarDishId->text());
-    values.insert(def_passport_required, QString::number((int)ui->chPasswordRequired->isChecked()));
+    values.insert(def_passport_required, ui->chPasswordRequired->isChecked() ? "1" : "0");
     values.insert(def_show_logs, QString::number(ui->chShowLogs->isChecked()));
     values.insert(def_invoice_header_mode, QString::number(ui->cbInvoiceHeader->currentIndex()));
+    values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
+    values.insert(def_daily_movement_items, ui->teDailyMovement->toPlainText());
+    values.insert(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? "0" : "1");
+    values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
+    values.insert(def_transfer_amount_id , ui->leTransferAmountVoucherId->text());
+
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
     QMapIterator<QString, QString> it(values);
@@ -310,18 +340,43 @@ void WGlobalDbConfig::on_btnSave_clicked()
                 .arg(it.value());
     }
     DoubleDatabase fDD(true, doubleDatabase);
-    fDD.startTransaction();
     fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC', 'dd')");
-    bool result = fDD.exec(query);
-    fTrackControl->saveChanges();
-    if (result) {
-        fDD.commit();
-        on_btnSaveReports_clicked();
-        BroadcastThread::cmdCommand(cmd_global_settings, QMap<QString, QString>());
-    } else {
-        fDD.rollback();
-        message_error(tr("New values not saved"));
+    fDD.exec(query);
+
+    //Reports
+    for (int i = 0; i < ui->tblMonthly->rowCount(); i++) {
+        fDD[":f_title"] = ui->tblMonthly->lineEdit(i, 1)->text();
+        fDD[":f_width"] = ui->tblMonthly->lineEdit(i, 2)->text();
+        fDD[":f_items"] = ui->tblMonthly->lineEdit(i, 3)->text();
+        fDD.update("serv_monthly", where_id(ui->tblMonthly->toString(i, 0)));
     }
+    for (int i = 0; i < ui->tblCardexAnalysis->rowCount(); i++) {
+        fDD[":f_title"] = ui->tblCardexAnalysis->lineEdit(i, 1)->text();
+        fDD[":f_width"] = ui->tblCardexAnalysis->lineEdit(i, 2)->text();
+        fDD[":f_items"] = ui->tblCardexAnalysis->lineEdit(i, 3)->text();
+        fDD.update("serv_cardex_analysis", where_id(ui->tblCardexAnalysis->toString(i, 0)));
+    }
+
+    fPreferences.setDb(def_daily_movement_items, ui->teDailyMovement->toPlainText());
+    fPreferences.setDb(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? 0 : 1);
+
+    QListWidgetItem *item = ui->lwrpGroups->currentItem();
+    if (item) {
+        int rpgroup = item->data(Qt::UserRole).toInt();
+        item = ui->lwrpReports->currentItem();
+        if (item) {
+            fDD[":f_group"] = rpgroup;
+            fDD[":f_report"] = item->text();
+            fDD[":f_fontname"] = ui->fbrpFontName->currentText();
+            fDD[":f_fontsize"] = ui->sbrpFontSize->value();
+            fDD[":f_printonly"] = ui->chrpReadyOnly->isChecked();
+            fDD[":f_fontbold"] = ui->chrpFontBold->isChecked();
+            fDD.exec("update rp_main set f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold, f_printonly=:f_printonly where f_group=:f_group and f_report=:f_report");
+        }
+    }
+
+    fTrackControl->saveChanges();
+    message_info(tr("Saved"));
 }
 
 void WGlobalDbConfig::on_lwHost_clicked(const QModelIndex &index)
@@ -358,7 +413,7 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
     fDD.exec("delete from r_config where f_comp=:f_comp");
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_open_table_after_run;
-    fDD[":f_value"] = QString("%1").arg((int)ui->chOpenTableAfterRun->isChecked());
+    fDD[":f_value"] = ui->chOpenTableAfterRun->isChecked() ? "1" : "0";
     fDD.insert("r_config");
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_first_receipt_printer;
@@ -430,45 +485,6 @@ void WGlobalDbConfig::on_btnSaveDatabases_clicked()
     message_info(tr("Saved"));
 }
 
-void WGlobalDbConfig::on_btnSaveReports_clicked()
-{
-    DoubleDatabase fDD(true, doubleDatabase);
-    for (int i = 0; i < ui->tblMonthly->rowCount(); i++) {
-        fDD[":f_title"] = ui->tblMonthly->lineEdit(i, 1)->text();
-        fDD[":f_width"] = ui->tblMonthly->lineEdit(i, 2)->text();
-        fDD[":f_items"] = ui->tblMonthly->lineEdit(i, 3)->text();
-        fDD.update("serv_monthly", where_id(ui->tblMonthly->toString(i, 0)));
-    }
-    for (int i = 0; i < ui->tblCardexAnalysis->rowCount(); i++) {
-        fDD[":f_title"] = ui->tblCardexAnalysis->lineEdit(i, 1)->text();
-        fDD[":f_width"] = ui->tblCardexAnalysis->lineEdit(i, 2)->text();
-        fDD[":f_items"] = ui->tblCardexAnalysis->lineEdit(i, 3)->text();
-        fDD.update("serv_cardex_analysis", where_id(ui->tblCardexAnalysis->toString(i, 0)));
-    }
-    fDD[":f_key"] = def_daily_movement_items;
-    fDD.exec("delete from f_global_settings where f_key=:f_key and f_settings=1");
-
-    fDD[":f_key"] = def_daily_movement_total_side;
-    fDD.exec("delete from f_global_settings where f_key=:f_key and f_settings=1");
-
-    fDD[":f_key"] = def_daily_movement_order;
-    fDD.exec("delete from f_global_settings where f_key=:f_key and f_settings=1");
-
-    fDD[":f_settings"] = 1;
-    fDD[":f_key"] = def_daily_movement_items;
-    fDD[":f_value"] = ui->teDailyMovement->toPlainText();
-    fDD.insert("f_global_settings");
-
-    fDD[":f_settings"] = 1;
-    fDD[":f_key"] = def_daily_movement_total_side;
-    fDD[":f_value"] = (int) ui->rbDailySubtotalDown->isChecked();
-    fDD.insert("f_global_settings");
-
-    fPreferences.setDb(def_daily_movement_items, ui->teDailyMovement->toPlainText());
-    fPreferences.setDb(def_daily_movement_total_side, (int) ui->rbDailySubtotalDown->isChecked());
-    message_info(tr("Saved"));
-}
-
 void WGlobalDbConfig::on_btnRemoveStation_clicked()
 {
     QModelIndexList sel = ui->tblAccess->selectionModel()->selectedRows();
@@ -537,40 +553,6 @@ void WGlobalDbConfig::on_tblTax_cellDoubleClicked(int row, int column)
     delete d;
 }
 
-void WGlobalDbConfig::on_btnSaveApplication_clicked()
-{
-    QMap<QString, QString> values;
-    values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
-    QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
-    bool first = true;
-    QMapIterator<QString, QString> it(values);
-    while (it.hasNext()) {
-        it.next();
-        if (first) {
-            first = false;
-        } else {
-            query += ",";
-        }
-        query += QString("(1, '%1', '%2')")
-                .arg(it.key())
-                .arg(it.value());
-    }
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD.startTransaction();
-    fDD[":f_key"] = def_external_rest_db;
-    fDD.exec("delete from f_global_settings where f_settings=1 and f_key=:f_key");
-    bool result = fDD.exec(query);
-    fTrackControl->saveChanges();
-    if (result) {
-        fDD.commit();
-        on_btnSaveReports_clicked();
-    } else {
-        fDD.rollback();
-        message_error(tr("New values not saved"));
-    }
-}
-
-
 void WGlobalDbConfig::on_chShowLogs_clicked(bool checked)
 {
     fPreferences.setDb(def_show_logs, checked);
@@ -597,7 +579,7 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
 
 void WGlobalDbConfig::on_btnInitExtRestData_clicked()
 {
-    DoubleDatabase dd(true, true);
+    DoubleDatabase dd(true, doubleDatabase);
     dd.exec("delete from r_dish");
     dd.exec("delete from r_dish_type");
 
@@ -641,4 +623,117 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
 void WGlobalDbConfig::on_leExternalRestaurantDb_textChanged(const QString &arg1)
 {
     ui->btnInitExtRestData->setEnabled(!arg1.isEmpty());
+}
+
+void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
+{
+    DoubleDatabase dd1(true, true);
+    dd1.exec("delete from f_reservation_chart");
+    dd1.exec("delete from f_reservation_map");
+    dd1.exec("select r.f_id, r.f_invoice, r.f_state, r.f_reservestate, r.f_room, r.f_startdate, r.f_enddate, "
+            "g.guest as f_guest, r.f_cardex, c.f_name as f_cardexname, rm.f_short as f_roomshort, rm.f_state as f_roomstate, sn.f_en as f_statename, rsn.f_en as f_reservestatename,  "
+            "r.f_invoice, r.f_group, rg.f_name as f_groupname, rm.f_building, rm.f_floor, group_concat(g1.gname separator ', ') as f_allguest "
+            "from f_reservation r "
+            "left join guests g on g.f_id=r.f_guest "
+            "left join f_cardex c on c.f_cardex=r.f_cardex "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_reservation_state sn on sn.f_id=r.f_state "
+            "left join f_reservation_status rsn on rsn.f_id=r.f_reservestate "
+            "left join f_reservation_group rg on rg.f_id=r.f_group "
+            "left join (select f_reservation, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName) as gname "
+                "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
+            "where r.f_state in (1,2,4,7,9) and r.f_room>0 "
+            "group by 1 ");
+    while (dd1.nextRow()) {
+        DoubleDatabase dd2(true, true);
+        dd2[":f_id"] = dd1.getString("f_id");
+        dd2[":f_invoice"] = dd1.getString("f_invoice");
+        dd2[":f_state"] = dd1.getInt("f_state");
+        dd2[":f_statename"] = dd1.getString("f_statename");
+        dd2[":f_reservestate"] = dd1.getInt("f_reservestate");
+        dd2[":f_reservestatename"] = dd1.getString("f_reservestatename");
+        dd2[":f_room"] = dd1.getInt("f_room");
+        dd2[":f_roomshort"] = dd1.getString("f_roomshort");
+        dd2[":f_roomstate"] = dd1.getString("f_roomstate");
+        dd2[":f_roomfloor"] = dd1.getInt("f_floor");
+        dd2[":f_roombuilding"] = dd1.getInt("f_building");
+        dd2[":f_startdate"] = dd1.getDate("f_startdate");
+        dd2[":f_enddate"] = dd1.getDate("f_enddate");
+        dd2[":f_days"] = dd1.getDate("f_startdate").daysTo(dd1.getDate("f_enddate"));
+        dd2[":f_guest"] = dd1.getString("f_guest");
+        dd2[":f_allguest"] = dd1.getString("f_allguest");
+        dd2[":f_cardex"] = dd1.getString("f_cardex");
+        dd2[":f_cardexname"] = dd1.getString("f_cardexname");
+        dd2[":f_groupcode"] = dd1.getInt("f_group");
+        dd2[":f_groupname"] = dd1.getString("f_groupname");
+        dd2.insert("f_reservation_chart", false);
+        if (dd1.getDate("f_startdate").daysTo(dd1.getDate("f_enddate")) == 0) {
+            dd2[":f_reservation"] = dd1.getString("f_id");
+            dd2[":f_room"] = dd1.getInt("f_room");
+            dd2[":f_date"] = dd1.getDate("f_startdate");
+            dd2[":f_entry"] = 1;
+            dd2[":f_departure"] = 1;
+            dd2.insert("f_reservation_map", false);
+        } else {
+            for (qint64 i = 0, count = dd1.getDate("f_startdate").daysTo(dd1.getDate("f_enddate")); i < count; i++) {
+                dd2[":f_reservation"] = dd1.getString("f_id");
+                dd2[":f_room"] = dd1.getInt("f_room");
+                dd2[":f_date"] = dd1.getDate("f_startdate").addDays(i);
+                dd2[":f_entry"] = (i == 0 ? 1 : 0);
+                dd2[":f_departure"] = (i == count - 1 ? 1 : 0);
+                dd2.insert("f_reservation_map", false);
+            }
+        }
+    }
+    message_info(tr("Done"));
+}
+
+void WGlobalDbConfig::on_btnAddrpGroup_clicked()
+{
+    if (ui->lerpGroup->asInt() == 0) {
+        return;
+    }
+    for (int i = 0; i < ui->lwrpGroups->count(); i++) {
+        QListWidgetItem *item = ui->lwrpGroups->item(i);
+        if (item->data(Qt::UserRole).toInt() == ui->lerpGroup->asInt()) {
+            ui->lwrpGroups->setCurrentRow(i);
+            return;
+        }
+    }
+    QListWidgetItem *item = new QListWidgetItem(ui->lwrpGroups);
+    item->setText(ui->lerpGroupName->text());
+    item->setData(Qt::UserRole, ui->lerpGroup->asInt());
+    ui->lwrpGroups->addItem(item);
+    ui->lwrpGroups->setCurrentItem(item);
+    ui->lerpGroup->setInt(0);
+}
+void WGlobalDbConfig::on_lwrpGroups_currentRowChanged(int currentRow)
+{
+    QListWidgetItem *item = ui->lwrpGroups->item(currentRow);
+    int group = item->data(Qt::UserRole).toInt();
+    ui->lwrpReports->clear();
+    DoubleDatabase dd(true, false);
+    dd[":f_group"] = item->data(Qt::UserRole).toInt();
+    dd.exec("select f_report from rp_main where f_group=:f_group");
+    while (dd.nextRow()) {
+        QListWidgetItem *item = new QListWidgetItem(ui->lwrpReports);
+        item->setText(dd.getString(0));
+        item->setData(Qt::UserRole, group);
+        ui->lwrpReports->addItem(item);
+    }
+}
+
+void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
+{
+    QListWidgetItem *item = ui->lwrpReports->item(currentRow);
+    DoubleDatabase dd(true, false);
+    dd[":f_group"] = item->data(Qt::UserRole);
+    dd[":f_report"] = item->text();
+    dd.exec("select * from rp_main where f_group=:f_group and f_report=:f_report");
+    if (dd.nextRow()) {
+        ui->chrpReadyOnly->setChecked(dd.getInt("f_printonly"));
+        ui->fbrpFontName->setCurrentText(dd.getString("f_fontname"));
+        ui->sbrpFontSize->setValue(dd.getInt("f_fontsize"));
+        ui->chrpFontBold->setChecked(dd.getInt("f_fontbold"));
+    }
 }

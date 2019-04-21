@@ -12,7 +12,7 @@ class DlgInvoiceCancelation : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgInvoiceCancelation(QWidget *parent = 0);
+    explicit DlgInvoiceCancelation(QWidget *parent = nullptr);
     ~DlgInvoiceCancelation();
     void setTrackWindowId(const QString &id);
     void addRow(const QList<QVariant> &data);

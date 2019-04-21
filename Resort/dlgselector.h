@@ -15,7 +15,7 @@ class DlgSelector : public QDialog
     Q_OBJECT
 
 public:
-    explicit DlgSelector(QWidget *parent = 0);
+    explicit DlgSelector(QWidget *parent = nullptr);
     ~DlgSelector();
     void configure(const QString &title, const QList<int> &columnsWidths, const QStringList &columnTitles);
     void setData(QMap<QString, QList<QVariant> > &data);

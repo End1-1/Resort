@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_credit_card 44
+static const int cid_credit_card = 44;
 
 class CacheCreditCard : public CacheBaseStruct
 {

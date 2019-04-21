@@ -12,7 +12,7 @@ class DlgReservationGuests : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReservationGuests(QWidget *parent = 0);
+    explicit DlgReservationGuests(QWidget *parent = nullptr);
     ~DlgReservationGuests();
     static void viewGuests(const QString &id);
 private:

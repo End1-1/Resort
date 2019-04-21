@@ -14,9 +14,11 @@ class WAccInvoice : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WAccInvoice(QWidget *parent = 0);
+    explicit WAccInvoice(QWidget *parent = nullptr);
     ~WAccInvoice();
+    static void openInvoice(const QString &invoice);
     void load(const QString &id);
+    QString invoice();
     virtual void setupTab();
     virtual void callback(int sel, const QString &code);
 protected:

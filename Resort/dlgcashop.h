@@ -12,7 +12,7 @@ class DlgCashOp : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgCashOp(QWidget *parent = 0);
+    explicit DlgCashOp(QWidget *parent = nullptr);
     ~DlgCashOp();
     static void cash(int doc);
     static void cashWithParams(int docType, int partner);

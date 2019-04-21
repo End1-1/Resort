@@ -12,7 +12,7 @@ class WReCheckIn : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WReCheckIn(QWidget *parent = 0);
+    explicit WReCheckIn(QWidget *parent = nullptr);
     ~WReCheckIn();
     virtual void setupTab();
 private:

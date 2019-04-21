@@ -12,7 +12,7 @@ class DlgWelcomeButtonConfig : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgWelcomeButtonConfig(QWidget *parent = 0);
+    explicit DlgWelcomeButtonConfig(QWidget *parent = nullptr);
     ~DlgWelcomeButtonConfig();
 
 private slots:

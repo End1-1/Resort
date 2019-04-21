@@ -12,7 +12,7 @@ class DlgGPOSOrderInfo : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgGPOSOrderInfo(QWidget *parent = 0);
+    explicit DlgGPOSOrderInfo(QWidget *parent = nullptr);
     ~DlgGPOSOrderInfo();
     void setOrder(const QString &id);
     void setVaucher(const QString &id);

@@ -40,6 +40,8 @@ private:
 
     WRoomChartDock *fDock;
 
+    int fVisibleDays;
+
     virtual bool event(QEvent *event);
 
 private slots:

@@ -6,14 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>40</height>
+    <width>757</width>
+    <height>24</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -87,7 +108,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::ClickFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
       </widget>
      </item>

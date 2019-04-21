@@ -15,7 +15,7 @@ class WReportsSetOld : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WReportsSetOld(QWidget *parent = 0);
+    explicit WReportsSetOld(QWidget *parent = nullptr);
     ~WReportsSetOld();
     virtual void setup();
     virtual QString title();

@@ -7,7 +7,7 @@ class WRoomView : public WReportGrid
 {
     Q_OBJECT
 public:
-    WRoomView(QWidget *parent = 0);
+    WRoomView(QWidget *parent = nullptr);
     virtual void setupTab();
 };
 

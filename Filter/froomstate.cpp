@@ -20,6 +20,11 @@ QWidget *FRoomState::firstElement()
     return ui->deStart;
 }
 
+QWidget *FRoomState::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FRoomState::reportTitle()
 {
     return QString("%1 %2-%3")

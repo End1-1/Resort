@@ -27,6 +27,11 @@ QWidget *FCallRates::firstElement()
     return this;
 }
 
+QWidget *FCallRates::lastElement()
+{
+    return this;
+}
+
 void FCallRates::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

@@ -12,11 +12,13 @@ class FMonthlyOccPerc : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FMonthlyOccPerc(QWidget *parent = 0);
+    explicit FMonthlyOccPerc(QWidget *parent = nullptr);
     ~FMonthlyOccPerc();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FMonthlyOccPerc *ui;
 };

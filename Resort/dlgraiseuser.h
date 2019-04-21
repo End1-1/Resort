@@ -13,7 +13,7 @@ class DlgRaiseUser : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgRaiseUser(QWidget *parent = 0);
+    explicit DlgRaiseUser(QWidget *parent = nullptr);
     ~DlgRaiseUser();
     static int raiseUser(int role);
 protected:

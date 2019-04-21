@@ -12,11 +12,13 @@ class FCategoryToSell : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCategoryToSell(QWidget *parent = 0);
+    explicit FCategoryToSell(QWidget *parent = nullptr);
     ~FCategoryToSell();
     virtual void setup();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
+
 private:
     Ui::FCategoryToSell *ui;
 };

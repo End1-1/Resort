@@ -12,7 +12,7 @@ class DlgWakepCalls : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgWakepCalls(QWidget *parent = 0);
+    explicit DlgWakepCalls(QWidget *parent = nullptr);
     ~DlgWakepCalls();
     static void openWakeupCalls(const QString &room);
     static void openWakeupCallsByInvoice(const QString &invoice);

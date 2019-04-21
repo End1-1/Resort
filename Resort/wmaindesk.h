@@ -21,15 +21,17 @@ class WMainDesk : public BaseWidget
     Q_OBJECT
 
 public:
-    explicit WMainDesk(QWidget *parent = 0);
+    explicit WMainDesk(QWidget *parent = nullptr);
     ~WMainDesk();
     void loadReservationList();
     void filterRoom();
     virtual void setup();
     virtual void setupTab();
     virtual void handleBroadcast(const QMap<QString, QVariant> &data);
+
 protected:
     virtual bool event(QEvent *e);
+
 private slots:
     void timeout();
     void scDateHScroll(int value);
@@ -63,24 +65,16 @@ private slots:
     void on_tblDay_clicked(const QModelIndex &index);
     void on_btnCheckoutFilter_clicked();
     void on_leJumpToRoom_editingFinished();
-
     void on_tblRoom_doubleClicked(const QModelIndex &index);
-
     void on_btnInvoice_clicked();
-
     void on_btnPostCharge_clicked();
-
     void on_btnReceipt_clicked();
-
     void on_btnTransferRoom_clicked();
-
     void on_btnAirReserve_clicked();
-
     void on_leFilterGuest_textEdited(const QString &arg1);
-
     void on_btnStatus_clicked();
-
     void on_btnFilterCardex_clicked();
+    void on_btnColors_clicked();
 
 private:
     Ui::WMainDesk *ui;

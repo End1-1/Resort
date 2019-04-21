@@ -38,6 +38,11 @@ QWidget *FExportReservation::firstElement()
     return ui->wd->fw();
 }
 
+QWidget *FExportReservation::lastElement()
+{
+    return ui->wd->lw();
+}
+
 void FExportReservation::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

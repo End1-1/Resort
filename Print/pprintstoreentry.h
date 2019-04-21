@@ -7,7 +7,7 @@ class PPrintStoreEntry : public BaseWidget
 {
     Q_OBJECT
 public:
-    PPrintStoreEntry(QWidget *parent = 0);
+    PPrintStoreEntry(QWidget *parent = nullptr);
     static void print(const QString &id);
 private:
     QString fDockId;

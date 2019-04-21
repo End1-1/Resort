@@ -12,7 +12,7 @@ class DlgDiscount : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgDiscount(QWidget *parent = 0);
+    explicit DlgDiscount(QWidget *parent = nullptr);
     ~DlgDiscount();
     virtual void callback(int sel, const QString &code);
     void setParams(const QString &room, double guestAmount, double companyAmount);

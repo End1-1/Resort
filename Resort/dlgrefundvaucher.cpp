@@ -92,7 +92,7 @@ void DlgRefundVaucher::setReservation(const QString &reserv)
     if (ci.get(reserv)) {
         ui->leReserve->setText(reserv);
         ui->leInvoice->setText(ci.fInvoice());
-        ui->leGuest->setText(ci.fName());
+        ui->leGuest->setText(ci.fGuest());
         ui->leRoom->setText(ci.fRoom());
     }
     getBalance();

@@ -60,6 +60,7 @@ void RoomState::setRoom(const QString &code)
     CacheRoomState crs;
     crs.get(fRoom.fState());
     ui->leCurrentStateName->setText(crs.fName());
+    ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_room"] = fRoom.fCode();
     fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
@@ -86,6 +87,10 @@ void RoomState::on_btnOk_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     QString add = ui->leRoomCode->text();
     if (ui->leNewState->asInt() == ROOM_STATE_OUTOF) {
+        if (ui->lbOO->text() != "OK") {
+            message_error(tr("Invalid date range"));
+            return;
+        }
         QString fId;
         QString invId = uuidx(VAUCHER_INVOICE_N);
         add += QString(" %1 - %2")

@@ -15,7 +15,7 @@ class RoomScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    RoomScene(QObject *parent = 0);
+    RoomScene(QObject *parent = nullptr);
     ~RoomScene();
     void initBackgroung(int columnCount, const QStringList &rooms);
     void rowsSelect(const QSet<int> &rows);

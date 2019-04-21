@@ -55,6 +55,9 @@
      <property name="selectionMode">
       <enum>QAbstractItemView::NoSelection</enum>
      </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
      <column>
       <property name="text">
        <string>Invoice</string>

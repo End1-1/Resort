@@ -91,6 +91,11 @@ QWidget *FCashReport::firstElement()
     return ui->deFrom;
 }
 
+QWidget *FCashReport::lastElement()
+{
+    return ui->deTo;
+}
+
 void FCashReport::open()
 {
     WReportGrid *rg = addTab<WReportGrid>();

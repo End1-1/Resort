@@ -1,9 +1,9 @@
 #include "dlgcheckadvancebeforecancel.h"
 #include "ui_dlgcheckadvancebeforecancel.h"
 #include "dlgnoshow.h"
+#include "dlgtransferanyamount.h"
 #include "message.h"
 #include "dlgrefundvaucher.h"
-#include "dlgcityadvance.h"
 
 DlgCheckAdvanceBeforeCancel::DlgCheckAdvanceBeforeCancel(const QString &inv, QWidget *parent) :
     BaseDialog(parent),
@@ -85,6 +85,10 @@ void DlgCheckAdvanceBeforeCancel::on_btnCancelreservation_clicked()
 
 void DlgCheckAdvanceBeforeCancel::on_btnTransferToCL_clicked()
 {
-    DlgCityAdvance::cityAdvance("", ui->leInvoice->text(), 1);
+    DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);
+    d->setHint(hint_from_reserve);
+    d->setReservation(ui->leReservation->text());
+    d->exec();
+    delete d;
     getBalance();
 }

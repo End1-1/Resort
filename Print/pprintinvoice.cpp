@@ -76,9 +76,10 @@ void PPrintInvoice::previewInvoice()
 //    trHeader->setFont(f);
     QString inv;
     if (fPreferences.getDb(def_invoice_header_mode).toInt() == 0) {
-        inv = QString("%1 #%2")
+        inv = QString("%1 #%2, %3")
             .arg(tr("ROOM"))
-            .arg(QString("%1").arg(dh.getString("f_room")));
+            .arg(QString("%1").arg(dh.getString("f_room")))
+            .arg(fId);
     } else {
         inv = QString("%1 #%2")
                 .arg(tr("S/N"))
@@ -100,7 +101,7 @@ void PPrintInvoice::previewInvoice()
     logo->setRect(QRectF(20, 10, 500, 300));
     PTextRect th;
     th.setBorders(false, false, false, false);
-    PTextRect *r = 0;
+    PTextRect *r = nullptr;
     QPen pline(Qt::SolidLine);
     pline.setWidth(3);
     QFont f(qApp->font().family(), 25);
@@ -356,6 +357,8 @@ void PPrintInvoice::previewInvoice()
     th.setFont(f);
     th.setWrapMode(QTextOption::WordWrap);
     ps->addTextRect(new PTextRect(20, top, 2000, rowHeight * 3, fPreferences.getDb(def_vouchers_invoice_footer).toString(), &th, f));
+    TrackControl tc(0);
+    tc.insert("Print invoice request", fId, "");
     pp->exec();
     delete pp;
 }

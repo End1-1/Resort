@@ -14,7 +14,7 @@ class ReservationInfo : public QGraphicsItem
 {
 public:
     friend class TimerBlya;
-    ReservationInfo(const QString &reserveCode, QGraphicsItem *parent = 0);
+    ReservationInfo(const QString &reserveCode, QGraphicsItem *parent = nullptr);
     ~ReservationInfo();
     QRectF boundingRect() const;
     CacheReservation fReservation;

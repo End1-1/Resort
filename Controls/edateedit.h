@@ -13,7 +13,7 @@ class EDateEdit : public QLineEdit
     Q_PROPERTY(QString Field READ getField WRITE setField)
     Q_PROPERTY(bool DoNotCheckMinDate READ getCheckMinDate WRITE setCheckMinDate)
 public:
-    EDateEdit(QWidget *parent = 0);
+    EDateEdit(QWidget *parent = nullptr);
     void setText(const QString &text);
     inline QDate date() { return QDate::fromString(text(), def_date_format);}
     void setDate(const QDate &date);

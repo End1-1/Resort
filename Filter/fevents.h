@@ -12,15 +12,18 @@ class FEvents : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FEvents(QWidget *parent = 0);
+    explicit FEvents(QWidget *parent = nullptr);
     ~FEvents();
     virtual QWidget *firstElement();
     virtual QString reportTitle();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
     static void open();
+
 private:
     Ui::FEvents *ui;
     QString fQuery;
+
 private slots:
     void removeEvent();
     void eliminate();

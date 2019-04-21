@@ -84,6 +84,11 @@ QWidget *FReservationsCommon::firstElement()
     return ui->deStart;
 }
 
+QWidget *FReservationsCommon::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FReservationsCommon::reportTitle()
 {
     return QString("%1 %2 From: %3 To %4, State: %5")

@@ -21,7 +21,7 @@ void BaseDialog::keyPressEvent(QKeyEvent *e)
 
 void BaseDialog::returnPressed()
 {
-
+    focusNextChild();
 }
 
 void BaseDialog::escapePressed()

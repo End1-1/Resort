@@ -27,7 +27,7 @@ class BaseWidget : public QWidget, public Base
 {
     Q_OBJECT
 public:
-    explicit BaseWidget(QWidget *parent = 0);
+    explicit BaseWidget(QWidget *parent = nullptr);
     ~BaseWidget();
     void setTab(QTabWidget *tabWidget, int index);
     virtual void setup();

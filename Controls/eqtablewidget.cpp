@@ -64,6 +64,9 @@ QString EQTableWidget::toString(int row, int column)
 {
     QLocale loc;
     QTableWidgetItem *i = item(row, column);
+    if (!i) {
+        return "";
+    }
     QVariant v = i->data(Qt::EditRole);
     switch (v.type()) {
     case QVariant::Double:
@@ -88,7 +91,7 @@ void EQTableWidget::setItemWithValue(int row, int column, const QVariant &displa
     setItem(row, column, Utils::tableItem(display, user));
 }
 
-void EQTableWidget::addButton(int row, int column, const char *slot, QObject *receiver, const QIcon &icon)
+QPushButton *EQTableWidget::addButton(int row, int column, const char *slot, QObject *receiver, const QIcon &icon)
 {
     EPushButton *b = new EPushButton();
     b->setTag(row);
@@ -97,6 +100,7 @@ void EQTableWidget::addButton(int row, int column, const char *slot, QObject *re
     //b->setMinimumSize(25, 25);
     connect(b, SIGNAL(clickedWithTag(int)), receiver, slot);
     setCellWidget(row, column, b);
+    return b;
 }
 
 EPushButton *EQTableWidget::button(int row, int column)

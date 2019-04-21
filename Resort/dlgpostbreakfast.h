@@ -13,7 +13,7 @@ class DlgPostBreakfast : public BaseExtendedDialog
 
 public:
     enum POST_TYPE {ptNone = 0, ptBreakfast, ptMinibar};
-    explicit DlgPostBreakfast(QWidget *parent = 0);
+    explicit DlgPostBreakfast(QWidget *parent = nullptr);
     ~DlgPostBreakfast();
     virtual void callback(int sel, const QString &code);
     static bool postBreakfast(const QString &invoice, POST_TYPE pt = ptNone);

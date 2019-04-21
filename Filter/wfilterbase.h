@@ -10,10 +10,11 @@ class WFilterBase : public BaseWidget
 {
     Q_OBJECT
 public:
-    explicit WFilterBase(QWidget *parent = 0);
+    explicit WFilterBase(QWidget *parent = nullptr);
     ~WFilterBase();
     virtual void apply(WReportGrid *rg) = 0;
     virtual QWidget *firstElement() = 0;
+    virtual QWidget *lastElement() = 0;
     virtual QString reportTitle();
     virtual bool officialTitle();
     virtual bool handlePrint();
@@ -84,6 +85,7 @@ protected:
     }
 protected slots:
     void groupCheckClicked(bool value);
+    virtual bool event(QEvent *e);
 };
 
 #endif // WFILTERBASE_H

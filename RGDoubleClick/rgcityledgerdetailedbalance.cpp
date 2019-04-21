@@ -15,6 +15,6 @@ void RGCityLedgerDetailedBalance::doubleClick(TableModel *t, int row)
     QDate date = QDate::currentDate();
     date = date.addDays(-1 * (date.day() - 1));
     QString cityLedger = t->data(row, 0, Qt::DisplayRole).toString();
-    clb->setData(date, cityLedger);
+    clb->setData(date, date, cityLedger);
     clb->apply(rg);
 }

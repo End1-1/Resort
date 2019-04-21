@@ -31,6 +31,11 @@ QWidget *FBreakfast::firstElement()
     return ui->deStart;
 }
 
+QWidget *FBreakfast::lastElement()
+{
+    return ui->deEnd;
+}
+
 void FBreakfast::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

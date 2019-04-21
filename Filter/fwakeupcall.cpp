@@ -31,6 +31,11 @@ QWidget *FWakeupCall::firstElement()
     return ui->wd->fw();
 }
 
+QWidget *FWakeupCall::lastElement()
+{
+    return ui->wd->lw();
+}
+
 void FWakeupCall::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();

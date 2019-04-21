@@ -14,15 +14,18 @@ class FInvoices : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FInvoices(QWidget *parent = 0);
+    explicit FInvoices(QWidget *parent = nullptr);
     ~FInvoices();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     QCheckBox *chFreeRooming();
     static void openReport(bool free);
+
 private:
     Ui::FInvoices *ui;
+
 private slots:
     void removeInvoiceWithAllReference();
     void on_btnNext_clicked();

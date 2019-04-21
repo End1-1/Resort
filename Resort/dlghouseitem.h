@@ -13,7 +13,7 @@ class DlgHouseItem : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgHouseItem(QWidget *parent = 0);
+    explicit DlgHouseItem(QWidget *parent = nullptr);
     ~DlgHouseItem();
     virtual void callback(int sel, const QString &code);
     static void openWindow();

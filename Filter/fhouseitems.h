@@ -12,7 +12,7 @@ class FHouseItems : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FHouseItems(QWidget *parent = 0);
+    explicit FHouseItems(QWidget *parent = nullptr);
     ~FHouseItems();
     virtual QString reportTitle();
     virtual QWidget *firstElement();

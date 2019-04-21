@@ -250,7 +250,8 @@ void Login::on_btnLogin_clicked()
         BaseUIDX::fAirPass = __dd1Password;
     }
 
-    bool secondDb = !r__(cr__do_no_write_second_db);
+    bool secondDb = true;
+    //!r__(cr__do_no_write_second_db);
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
     if (dbParams.count() == 4) {
         __dd2Host = dbParams[0];
@@ -275,32 +276,6 @@ void Login::on_btnLogin_clicked()
         fPreferences.setDb(def_tax_port, fDD.getString(1));
         fPreferences.setDb(def_tax_password, fDD.getString(2));
         fPreferences.setDb(def_tax_adg, fDD.getString(3));
-    }
-
-    /* check for updates */
-    fDD[":f_app"] = "smarthotel";
-    fDD.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
-    if (fDD.rowCount() > 0) { /*
-        if (Utils::getVersionString(qApp->applicationFilePath()) != fDbRows.at(0).at(0).toString()) {
-            #ifdef Q_OS_WIN
-            int result = (int)::ShellExecuteA(0, "open","updater.exe", 0, 0, SW_SHOWNORMAL);
-            if (SE_ERR_ACCESSDENIED == result)
-            {
-            // Requesting elevation
-            result = (int)::ShellExecuteA(0, "runas", "updater.exe", 0, 0, SW_SHOWNORMAL);
-            }
-            if (result <= 32)
-            {
-            // error handling
-            }
-            #else
-            if (!QProcess::startDetached("updater.exe"))
-            {
-            // error handling
-            }
-            #endif
-
-        }*/
     }
 
     /* rate for usd */

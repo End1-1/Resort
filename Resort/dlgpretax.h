@@ -12,7 +12,7 @@ class DlgPreTax : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPreTax(QWidget *parent = 0);
+    explicit DlgPreTax(QWidget *parent = nullptr);
     ~DlgPreTax();
     void addRow(const QList<QVariant> &data);
     void setInvoice(const QString &invoice);

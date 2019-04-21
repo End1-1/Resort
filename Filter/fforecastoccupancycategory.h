@@ -12,14 +12,15 @@ class FForecastOccupancyCategory : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FForecastOccupancyCategory(QWidget *parent = 0);
+    explicit FForecastOccupancyCategory(QWidget *parent = nullptr);
     ~FForecastOccupancyCategory();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
+
 private slots:
     void on_deStart_dateChanged(const QDate &date);
-
     void on_deEnd_dateChanged(const QDate &date);
 
 private:

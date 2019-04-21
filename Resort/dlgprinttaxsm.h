@@ -22,7 +22,7 @@ class DlgPrintTaxSM : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPrintTaxSM(QWidget *parent = 0);
+    explicit DlgPrintTaxSM(QWidget *parent = nullptr);
     ~DlgPrintTaxSM();
     void addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty);
     virtual int exec();
@@ -36,11 +36,10 @@ public:
     int fTaxback;
     static bool printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode);
     static int printTaxback(int number, const QString &vaucher, int &taxCode);
+
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnRetry_clicked();
-
     void on_btnNoNeed_clicked();
 
 private:

@@ -12,11 +12,13 @@ class FCityTrayLedger : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCityTrayLedger(QWidget *parent = 0);
+    explicit FCityTrayLedger(QWidget *parent = nullptr);
     ~FCityTrayLedger();
     virtual QString reportTitle();
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual void apply(WReportGrid *rg);
+
 private:
     Ui::FCityTrayLedger *ui;
 };

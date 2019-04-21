@@ -12,7 +12,7 @@ class DlgPERemoveReason : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPERemoveReason(QWidget *parent = 0);
+    explicit DlgPERemoveReason(QWidget *parent = nullptr);
     ~DlgPERemoveReason();
 
 private slots:

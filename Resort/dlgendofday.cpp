@@ -321,6 +321,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     }
 
     if (result) {
+        fDD.exec("insert into f_eod (f_date) values (current_timestamp())");
         fDD.commit();
         fPreferences.setLocalDate(def_working_day, WORKING_DATE.addDays(1));
         if (!fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {

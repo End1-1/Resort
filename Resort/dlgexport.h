@@ -12,7 +12,7 @@ class DlgExport : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgExport(QWidget *parent = 0);
+    explicit DlgExport(QWidget *parent = nullptr);
     ~DlgExport();
     static void start();
 private slots:

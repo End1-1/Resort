@@ -12,12 +12,14 @@ class FCityLedgerBalance : public WFilterBase
     Q_OBJECT
 
 public:
-    explicit FCityLedgerBalance(QWidget *parent = 0);
+    explicit FCityLedgerBalance(QWidget *parent = nullptr);
     ~FCityLedgerBalance();
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
+    virtual QWidget *lastElement();
     virtual QString reportTitle();
     static void open();
+
 private:
     Ui::FCityLedgerBalance *ui;
 };

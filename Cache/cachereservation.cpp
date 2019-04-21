@@ -29,6 +29,9 @@ CacheReservation::CacheReservation() :
 
 bool CacheReservation::hasNext(CacheReservation &c, bool fill)
 {
+    if (!fValid) {
+        return false;
+    }
     CacheReservation *ci = (CacheReservation*)fInstance->fStruct;
     QString id = fData.at(pos_id).toString();
     int room = fData.at(pos_room).toInt();
@@ -145,37 +148,28 @@ void CacheReservation::check(const QDate &start, const QDate &end, int room,
 
             }
         }
-        if (start <= cr.fDateStart() && end >= cr.fDateEnd() && cr.fDateStart() != cr.fDateEnd()) {
-            out.insert(cr.fId(), cr);
-            startOk = false;
-            endOk = false;
+        if (start >= cr.fDateEnd()) {
             it++;
             continue;
         }
-        if (start > cr.fDateStart() && end < cr.fDateEnd()) {
-            out.insert(cr.fId(), cr);
-            startOk = false;
-            endOk = false;
+        if (end <= cr.fDateStart()) {
             it++;
             continue;
         }
-        if (start <= cr.fDateStart()) {
-            if (end > cr.fDateStart()) {
-                if (cr.fDateStart() != cr.fDateEnd()) {
-                    out.insert(cr.fId(), cr);
-                    endOk = false;
-                    it++;
-                    continue;
-                }
-            }
-        }
-        if (end > cr.fDateEnd()) {
-            if (start < cr.fDateEnd()) {
-                out.insert(cr.fId(), cr);
+        if (start < cr.fDateEnd()) {
+            out.insert(cr.fId(), cr);
+            if (start >= cr.fDateStart()) {
                 startOk = false;
-                it++;
-                continue;
             }
+            if (end < cr.fDateEnd().addDays(1)) {
+                endOk = false;
+            }
+            if (start <= cr.fDateStart() && end >= cr.fDateEnd()) {
+                startOk = false;
+                endOk = false;
+            }
+            it++;
+            continue;
         }
         it++;
     }
@@ -193,26 +187,33 @@ void CacheReservation::exludeList(const QDate &start, const QDate &end, QSet<int
 //        if (!cr.fValid) {
 //            continue;
 //        }
-        if (start <= cr.fDateStart() && end >= cr.fDateEnd()) {
-            excludeRooms.insert(cr.fRoom().toInt());
+        int room = cr.fRoom().toInt();
+        QDate s = cr.fDateStart();
+        QDate e = cr.fDateEnd();
+        if (start <= s && end >= e) {
+            if (s == e && end > e) {
+                it++;
+                continue;
+            }
+            excludeRooms.insert(room);
             it++;
             continue;
         }
-        if (start >= cr.fDateStart() && end <= cr.fDateEnd()) {
-            excludeRooms.insert(cr.fRoom().toInt());
+        if (start >= s && end <= e) {
+            excludeRooms.insert(room);
             it++;
             continue;
         }
-        if (start <= cr.fDateStart()) {
-            if (end > cr.fDateStart()) {
-                excludeRooms.insert(cr.fRoom().toInt());
+        if (start <= s) {
+            if (end > s) {
+                excludeRooms.insert(room);
                 it++;
                 continue;
             }
         }
-        if (end > cr.fDateEnd()) {
-            if (start < cr.fDateEnd()) {
-                excludeRooms.insert(cr.fRoom().toInt());
+        if (end > e) {
+            if (start < e) {
+                excludeRooms.insert(room);
                 it++;
                 continue;
             }

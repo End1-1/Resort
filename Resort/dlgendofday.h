@@ -12,7 +12,7 @@ class DlgEndOfDay : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgEndOfDay(QWidget *parent = 0);
+    explicit DlgEndOfDay(QWidget *parent = nullptr);
     ~DlgEndOfDay();
 
 private slots:

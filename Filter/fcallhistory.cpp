@@ -45,6 +45,11 @@ QWidget *FCallHistory::firstElement()
     return ui->deStart;
 }
 
+QWidget *FCallHistory::lastElement()
+{
+    return ui->deEnd;
+}
+
 QString FCallHistory::reportTitle()
 {
     return QString("%1 %2 %3 %4 %5")

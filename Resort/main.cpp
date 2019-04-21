@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     p.initFromConfig();
 
     a.setStyle(QStyleFactory::create("fusion"));
-    a.setFont(QFont("Arial", 10));
+    a.setFont(QFont("Arial", 9));
 
     QFile styleFile("./style.css");
     if (styleFile.exists()) {

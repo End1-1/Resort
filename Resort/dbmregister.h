@@ -57,6 +57,7 @@ public:
     QString fError;
     TrackControl *fTc;
     bool save(DoubleDatabase &dd);
+    void showLog();
 
     void setleID(EQLineEdit *l);
     void setleInvoice(EQLineEdit *l);

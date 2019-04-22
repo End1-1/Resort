@@ -9,6 +9,7 @@
 #include "pprintscene.h"
 #include "cacheinvoiceitem.h"
 #include "paymentmode.h"
+#include "dlgtracking.h"
 #include "dlgprinttaxsm.h"
 #include "pprintvaucher.h"
 #include "cachecladvance.h"
@@ -404,4 +405,9 @@ void DlgAdvanceEntry::on_rbAdvance_clicked(bool checked)
 void DlgAdvanceEntry::on_btnService_clicked(bool checked)
 {
     changeTaxMode(checked);
+}
+
+void DlgAdvanceEntry::on_btnLog_clicked()
+{
+    DlgTracking::showTracking(ui->leVaucher->text());
 }

@@ -9,7 +9,10 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QFile>
+#include <QFileDialog>
 #include <QProcess>
 #include <QInputDialog>
 
@@ -36,6 +39,8 @@
 #define def_air_pass "air_pass"
 #define def_loc_call_item_code "local call item code"
 #define def_int_call_item_code "internation call item code"
+#define def_read_from_file "read from file"
+#define def_read_from_file_name "read from file name"
 
 DlgMain::DlgMain(QWidget *parent) :
     QDialog(parent),
@@ -85,6 +90,9 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->leRawData->setText(s.value("test").toString());
     ui->leIntCallItemCode->setText(s.value(def_loc_call_item_code).toString());
     ui->leOutCallItemCode->setText(s.value(def_int_call_item_code).toString());
+    ui->chReadFromFile->setChecked(s.value(def_read_from_file).toBool());
+    ui->leFromFileName->setText(s.value(def_read_from_file_name).toString());
+    ui->leFromFileName->setEnabled(ui->chReadFromFile->isChecked());
 
     fPref.appendDatabase("MainDb", ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), "", "", "", "");
     fPref.initFromDb("MainDb", "", 0);
@@ -111,6 +119,7 @@ DlgMain::DlgMain(QWidget *parent) :
     fDb.close();
     connect(&fPort, SIGNAL(readyRead()), this, SLOT(readyRead()));
     connect(&fPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(portError(QSerialPort::SerialPortError)));
+    connect(&fReadFromFileTimer, SIGNAL(timeout()), this, SLOT(readFromFileTimeout()));
     configureComPort();
     writeToFile(fPort.readAll());
 
@@ -118,7 +127,8 @@ DlgMain::DlgMain(QWidget *parent) :
         if (index == 1) {
             ui->tabSettings->setVisible(false);
             QString pwd = QInputDialog::getText(this, tr("Password"), tr("Password"), QLineEdit::PasswordEchoOnEdit);
-            if (pwd == ui->lePassword->text()) {
+            QString storedPwd = ui->lePassword->text();
+            if (pwd == storedPwd) {
                 ui->tabSettings->setVisible(true);
             } else {
                 QMessageBox::critical(this, tr("Error"), tr("Invalid password"));
@@ -521,6 +531,148 @@ void DlgMain::processLine1(QString line)
     fDb.close();
 }
 
+void DlgMain::processLog1(const QString &num1, const QString &num2, const QString &durationStr, const QString &direction, const QDate &date, const QTime &time)
+{
+    DoubleDatabase fDb;
+    fDb.setDatabase(ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), 1);
+    bool secondDb = true;
+    QStringList dbParams = fPref.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    if (dbParams.count() == 4) {
+        __dd2Host = dbParams[0];
+        __dd2Database = dbParams[1];
+        __dd2Username = dbParams[2];
+        __dd2Password = dbParams[3];
+
+        fDb.logEvent("ATS, Set second db");
+        fDb.setDatabase(__dd2Host, __dd2Database, __dd2Username, __dd2Password, 2);
+    } else {
+        secondDb = false;
+    }
+    fDb.resetDoNotUse();
+    if (!fDb.open(true, secondDb)) {
+        callLog("DB connection error");
+        return;
+    }
+
+    QString guest;
+    int isLocal = 1;
+    QString area = "***";
+    QString amount;
+    double price =  rates["***"];
+    if (num1.length() > 6) {
+        area = num1.mid(0, 7);
+        bool found = false;
+        while (!found) {
+            area = area.remove(area.length() - 1, 1);
+            if (area.isEmpty()) {
+                break;
+            }
+            for (QMap<QString, double>::const_iterator it = rates.begin(); it != rates.end(); it++) {
+                if (it.key() == area) {
+                    found = true;
+                    price = rates[area];
+                    isLocal = fCallType[area];
+                    goto mark;
+                }
+            }
+        }
+    }
+
+    mark:
+    callLog(area);
+    int duration = QTime(0, 0, 0).secsTo(QTime::fromString(durationStr, "HH:mm:ss"));
+    callLog(QString::number(duration));
+    callLog(float_str(price, 2));
+    if (duration < 16) {
+        price = 0;
+    }
+    int mins = duration / 60;
+    if (duration % 60 > 0) {
+        mins++;
+    }
+    price = price * mins;
+    amount = float_str(price, 2);
+    if (direction != "O" && direction != "T") {
+        price = 0;
+        amount = "0";
+    }
+    // try to get guest
+
+    if (price > 0.1) {
+        fDb[":f_phone"] = num2;
+        fDb.exec("select f_id from f_room where f_phone=:f_phone");
+        if (fDb.nextRow()) {
+            fDb[":f_room"] = fDb.getInt(0);
+            fDb[":f_state"] = RESERVE_CHECKIN;
+            fDb.exec("select r.f_invoice, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
+                       "r.f_room "
+                       "from f_reservation r "
+                       "inner join f_guests g on g.f_id=r.f_guest "
+                       "where r.f_room=:f_room and r.f_state=:f_state");
+        }
+    }
+    if (fDb.nextRow()) {
+        callLog("Have invoice");
+        guest = fDb.getString(1);
+        QString invoice= fDb.getString(0);
+        QString room = fDb.getString(2);
+
+        QString rid = uuidx("CM");
+        fDb.insertId("m_register", rid);
+        fDb[":f_source"] = "CM";
+        fDb[":f_wdate"] = QDate::fromString(fPref.getDb(def_working_day).toString(), def_date_format);
+        fDb[":f_rdate"] = QDate::currentDate();
+        fDb[":f_time"] = QTime::currentTime();
+        fDb[":f_user"] = ui->leUserId->text().toInt();
+        fDb[":f_room"] = room;
+        fDb[":f_guest"] = guest;
+        fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
+        fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
+        fDb[":f_amountAmd"] = trunc(price);
+        fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
+        fDb[":f_amountUsd"] = def_usd;
+        fDb[":f_fiscal"] = 0;
+        fDb[":f_paymentMode"] = PAYMENT_CREDIT;
+        fDb[":f_creditCard"] = 0;
+        fDb[":f_cityLedger"] = 0;
+        fDb[":f_paymentComment"] = "";
+        fDb[":f_dc"] = "CREDIT";
+        fDb[":f_sign"] = 1;
+        fDb[":f_doc"] = "";
+        fDb[":f_rec"] = "";
+        fDb[":f_inv"] = invoice;
+        fDb[":f_finance"] = 1;
+        fDb[":f_remarks"] = "";
+        fDb[":f_canceled"] = 0;
+        fDb[":f_cancelReason"] = "";
+        fDb[":f_side"] = 0;
+        fDb.update("m_register", where_id(ap(rid)));
+
+    } else {
+        //No price for another case
+        callLog("No invoice");
+        amount = "0";
+    }
+
+    fDb[":f_ats_id"] = 0;
+    fDb[":f_local"] = num1;
+    fDb[":f_u1"] = "-";
+    fDb[":f_duration"] = QTime::fromString(durationStr, "HH:mm:ss");
+    fDb[":f_date"] = date;
+    fDb[":f_time"] = time;
+    fDb[":f_ident"] = fCallMap[direction];
+    fDb[":f_remote"] = num2;
+    fDb[":f_cost"] = amount;
+    fDb[":f_acc"] = "";
+    fDb[":f_doc"] = 0;
+    int id = fDb.insert("f_call_log", true);
+    if (id < 0) {
+        callLog(fDb.fLastError);
+    }
+
+    fDb.close();
+}
+
 void DlgMain::callLog(const QString &txt)
 {
     ui->te->setPlainText(ui->te->toPlainText() + "\r\n" + txt);
@@ -539,6 +691,10 @@ void DlgMain::writeToFile(const QString &line)
 
 void DlgMain::configureComPort()
 {
+    if (ui->chReadFromFile->isChecked()) {
+        fReadFromFileTimer.start(30000);
+        return;
+    }
     if (fPort.isOpen()) {
         fPort.close();
     }
@@ -600,6 +756,33 @@ void DlgMain::readyRead()
         }
         fBuffer.remove(0, pos + 2);
     }
+}
+
+void DlgMain::readFromFileTimeout()
+{
+    QSqlDatabase dp = QSqlDatabase::addDatabase("QODBC", "paradox");
+    dp.setDatabaseName("DRIVER={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=" + ui->leFromFileName->text());
+    if (!dp.open()) {
+        QMessageBox::critical(this, tr("Error"), dp.lastError().databaseText());
+        return;
+    }
+    QSqlQuery q(dp);
+    if (!q.exec("select DATE, ITIME, EXTENSION, NUMBER, IDURATION from " + ui->leFromFileName->text())) {
+        QMessageBox::critical(this, tr("Error"), q.lastError().databaseText());
+        return;
+    }
+    QStringList recNum;
+    while (q.next()) {
+        qDebug() << q.value(5);
+        recNum << q.value(5).toString();
+        processLog1(q.value(3).toString(),
+                    q.value(2).toString(),
+                    QTime::fromMSecsSinceStartOfDay(q.value(4).toInt() * 1000).toString("HH:mm:ss"),
+                    q.value(2).toString().at(0) == "#" ? "G" : "O",
+                    q.value(0).toDate(),
+                    QTime::fromMSecsSinceStartOfDay(q.value(1).toInt() * 1000));
+    }
+    q.exec("delete from " + ui->leFromFileName->text());
 }
 
 void DlgMain::portError(QSerialPort::SerialPortError serialPortError)
@@ -780,4 +963,25 @@ void DlgMain::on_leOutCallItemCode_textChanged(const QString &arg1)
 {
     QSettings s(def_smarthotel, def_smarthotel_ats);
     s.setValue(def_int_call_item_code, arg1);
+}
+
+void DlgMain::on_chReadFromFile_clicked(bool checked)
+{
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue(def_read_from_file, checked);
+    ui->leFromFileName->setEnabled(checked);
+    if (checked) {
+        fReadFromFileTimer.start(30000);
+    }
+}
+
+void DlgMain::on_btnFile_clicked()
+{
+    QString f = QFileDialog::getOpenFileName(this, tr("Select file"));
+    if (f.isEmpty()) {
+        return;
+    }
+    ui->leFromFileName->setText(f);
+    QSettings s(def_smarthotel, def_smarthotel_ats);
+    s.setValue(def_read_from_file_name, f);
 }

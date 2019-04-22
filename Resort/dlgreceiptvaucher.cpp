@@ -7,6 +7,7 @@
 #include "vauchers.h"
 #include "pimage.h"
 #include "printtax.h"
+#include "dlgtracking.h"
 #include "cacheactiveroom.h"
 #include "paymentmode.h"
 #include "pprintvaucher.h"
@@ -393,4 +394,9 @@ void DlgReceiptVaucher::on_lePaymentCode_textChanged(const QString &arg1)
     if (ro) {
         ui->deDate->setDate(WORKING_DATE);
     }
+}
+
+void DlgReceiptVaucher::on_btnLog_clicked()
+{
+    DlgTracking::showTracking(ui->leVaucher->text());
 }

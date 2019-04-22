@@ -20,7 +20,7 @@ public:
     inline QString fNoVatDept() {return getString("f_noVatDept"); }
     inline QString fTaxName() {return getString("f_taxName"); }
     inline double fPrice() {return getDouble("f_price"); }
-    inline bool fNoManual() {return (bool) getInt("f_auto"); }
+    inline bool fNoManual() {return getInt("f_auto") == 1 ? true : false; }
 };
 
 #endif // CACHEINVOICEITEM_H

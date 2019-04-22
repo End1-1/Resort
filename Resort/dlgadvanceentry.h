@@ -29,6 +29,8 @@ private slots:
     void on_rbAdvance_clicked(bool checked);
     void on_btnService_clicked(bool checked);
 
+    void on_btnLog_clicked();
+
 private:
     explicit DlgAdvanceEntry(QList<QVariant> &values, QWidget *parent = nullptr);
     Ui::DlgAdvanceEntry *ui;

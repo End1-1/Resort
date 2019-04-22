@@ -10,6 +10,7 @@
 #include "vauchers.h"
 #include "cacheinvoiceitem.h"
 #include "paymentmode.h"
+#include "dlgtracking.h"
 #include "cachetaxmap.h"
 #include "dlgprinttaxsm.h"
 #include <QProcess>
@@ -23,6 +24,7 @@ DlgNoShow::DlgNoShow(QWidget *parent) :
     ui(new Ui::DlgNoShow)
 {
     ui->setupUi(this);
+    ui->leReserve->setSelector(this, cache(cid_red_reservation), nullptr, HINT_RED_RESERVE);
     ui->leVATCode->setSelector(this, cache(cid_vat_mode), ui->leVATName);
     ui->leVATCode->setInitialValue(VAT_NOVAT);
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName);
@@ -142,6 +144,13 @@ void DlgNoShow::on_btnSave_clicked()
             return;
         }
     }
+    if (ui->lePaymentMode->asInt() == PAYMENT_ADVANCE) {
+        if (ui->leAmount->asDouble() > ui->leBalance->asDouble()) {
+            message_error(tr("Amount cannot be greater than advance"));
+            return;
+        }
+    }
+
     if (ui->lePaymentMode->asInt() == 0) {
         message_error(tr("Payment mode was note selected"));
         return;
@@ -190,6 +199,11 @@ void DlgNoShow::on_btnSave_clicked()
     fDD[":f_rb"] = 0;
     fDD[":f_cash"] = ui->lePaymentMode->asInt() == PAYMENT_CL ? 0 : 1;
     fDD.update("m_register", where_id(ap(ui->leCode->text())));
+    TrackControl tc(TRACK_INVOICE_ITEM);
+    tc.fInvoice = ui->leInvoice->text();
+    tc.fReservation = ui->leReserve->text();
+    tc.fRecord = ui->leCode->text();
+    tc.insert(ui->rbCancelation->isChecked() ? "CANCELATION FEE" : "NO SHOW FEE", ui->lePaymentName->text() + "/" + ui->leAmount->text(), "");
     message_info(tr("Saved"));
     getBalance();
 }
@@ -218,6 +232,10 @@ void DlgNoShow::on_btnPrintTax_clicked()
     double card = pm == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
     double prepaid = pm == PAYMENT_ADVANCE ? ui->leAmount->asDouble() : 0;
     DlgPrintTaxSM dpt;
+    QString dep = ii.fVatDept();
+    if (ui->leVATCode->asInt() == VAT_NOVAT) {
+        dep = ii.fNoVatDept();
+    }
     dpt.addGoods(ii.fVatDept(),
                  ii.fAdgt(),
                  ii.fCode(),
@@ -273,4 +291,9 @@ void DlgNoShow::getBalance()
 //    } else {
 //        fDockPay->setFilterList(fp);
 //    }
+}
+
+void DlgNoShow::on_btnLog_clicked()
+{
+    DlgTracking::showTracking(ui->leCode->text());
 }

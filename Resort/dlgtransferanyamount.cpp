@@ -517,3 +517,8 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
     dd.commit();
     message_info(tr("Saved"));
 }
+
+void DlgTransferAnyAmount::on_btnLog_clicked()
+{
+    fDoc1.showLog();
+}

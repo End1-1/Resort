@@ -16,6 +16,7 @@
 #include "cachecreditcard.h"
 #include "cacheactiveroom.h"
 #include "paymentmode.h"
+#include "dlgtracking.h"
 #include <QDir>
 #include <QProcess>
 
@@ -606,4 +607,9 @@ void DlgPostingCharges::on_btnNew_clicked()
     DlgPostingCharges *p = new DlgPostingCharges(this);
     p->exec();
     delete p;
+}
+
+void DlgPostingCharges::on_btnLog_clicked()
+{
+    DlgTracking::showTracking(ui->leVaucherId->text());
 }

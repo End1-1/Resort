@@ -27,15 +27,12 @@ public:
     bool fMultiCheck;
     void filter(const QString &arg1);
     CacheInstance *fCacheInstance;
+
 private slots:
     void on_tblData_doubleClicked(const QModelIndex &index);
-
     void on_btnCacnel_clicked();
-
     void on_btnOK_clicked();
-
     void on_lineEdit_textEdited(const QString &arg1);
-
     void on_btnRefresh_clicked();
 
 private:

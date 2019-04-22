@@ -13,6 +13,7 @@ class DlgTracking : public BaseExtendedDialog
 
 public:    
     static void showTracking(int trackId, const QString &windowId);
+    static void showTracking(const QString &windowId);
 private slots:
     void on_chOld_clicked(bool checked);
 

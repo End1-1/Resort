@@ -6,6 +6,7 @@
 #include "eqlineedit.h"
 #include "edateedit.h"
 #include "trackcontrol.h"
+#include "dlgtracking.h"
 #include <QPlainTextEdit>
 
 DBMRegister::DBMRegister()
@@ -152,6 +153,11 @@ bool DBMRegister::save(DoubleDatabase &dd)
     fTc->insert((isNew ? "NEW " : "EDIT ") + QString("VOUCHER"), fFinalName, "");
     fTc->resetChanges();
     return true;
+}
+
+void DBMRegister::showLog()
+{
+    DlgTracking::showTracking(fId);
 }
 
 void DBMRegister::setleID(EQLineEdit *l)

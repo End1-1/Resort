@@ -238,7 +238,7 @@ void FVauchers::cancelation()
     if (message_confirm(tr("Confirm to remove selected voucher")) != QDialog::Accepted) {
         return;
     }
-    QString reason = QInputDialog::getText(0, tr("Reason for remove"), tr("Reason"));
+    QString reason = QInputDialog::getText(this, tr("Reason for remove"), tr("Reason"));
     if (reason.isEmpty()) {
         message_error(tr("Reason must be specified"));
         return;

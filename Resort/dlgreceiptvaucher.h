@@ -25,6 +25,8 @@ private slots:
     void on_leAmountAMD_textEdited(const QString &arg1);
     void on_btnNew_clicked();
     void on_lePaymentCode_textChanged(const QString &arg1);
+    void on_btnLog_clicked();
+
 private:
     Ui::DlgReceiptVaucher *ui;
     void saveRoom();

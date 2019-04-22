@@ -39,10 +39,34 @@ void DlgTracking::showTracking(int trackId, const QString &windowId)
     delete d;
 }
 
+void DlgTracking::showTracking(const QString &windowId)
+{
+    if (!r__(cr__tracking_chnages_individual)) {
+        message_error(tr("Access denied"));
+        return;
+    }
+    if (!fPreferences.getDb(def_show_logs).toBool()) {
+        message_error(tr("Logs disabled"));
+        return;
+    }
+    DlgTracking *d = new DlgTracking(fPreferences.getDefaultParentForMessage());
+    d->fWindow = windowId;
+    QString query = "select f_comp, f_date, f_time, f_user, "
+            "f_action, f_value1, f_value2 "
+            "from airlog.log "
+            "where (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
+            "order by f_date desc, f_time desc";
+    d->loadTrack(query, 0, windowId);
+    d->exec();
+    delete d;
+}
+
 void DlgTracking::loadTrack(const QString &query, int trackId, const QString &windowId)
 {
     DoubleDatabase db;
-    db[":f_table"] = trackId;
+    if (trackId > 0) {
+        db[":f_table"] = trackId;
+    }
     db[":f_rec"] = windowId;
     db[":f_reservation"] = windowId;
     db[":f_invoice"] = windowId;

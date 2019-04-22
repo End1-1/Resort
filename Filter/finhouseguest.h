@@ -23,6 +23,8 @@ private slots:
     void on_chDate_clicked(bool checked);
     void on_chTime_clicked(bool checked);
 
+    void on_chAll_clicked(bool checked);
+
 private:
     Ui::FInHouseGuest *ui;
 };

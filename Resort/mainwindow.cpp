@@ -7,12 +7,14 @@
 #include "appconfig.h"
 #include "loginsettings.h"
 #include "databasesconnections.h"
+#include "fcitytrayledger2.h"
 #include "message.h"
 #include "wmaindesk.h"
 #include "wreportgrid.h"
 #include "fcallrates.h"
 #include "fcanceledreservations.h"
 #include "freportbypayment.h"
+#include "fexpectedarrivals2.h"
 #include "wquickroomassignment.h"
 #include "fhotelhierarchy.h"
 #include "guestcheckin.h"
@@ -557,6 +559,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
     ui->actionExpected_arrivals->setVisible(r__(cr__expected_arrivals_deparutures));
+    ui->actionExpected_arrivals_departures_2->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_pax));
     ui->actionRoom_assignment->setVisible(r__(cr__room_assignment));
     ui->actionRe_checkin->setVisible(r__(cr__re_checkin));
@@ -600,6 +603,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionRestaurant->setVisible(r__(cr__report_restaurant));
     ui->actionInvoices->setVisible(r__(cr__report_checkout_invoices));
     ui->actionGuest_Tray_Ledger->setVisible(r__(cr__bookeeping_guest_tray_ledger));
+    ui->actionGuest_Tray_Ledger_By_Date->setVisible(r__(cr__bookeeping_guest_tray_ledger));
     ui->actionIn_house_detailed_balance->setVisible(r__(cr__bookeeping_inhouse_detailed));
     ui->actionYearly_financial_report->setVisible(r__(cr__bookeeping_yearly_financial_report));
     ui->actionCheckout_invoices_free_rooming->setVisible(r__(cr__report_checkout_invoices));
@@ -1671,8 +1675,7 @@ void MainWindow::on_actionIn_house_guest_triggered()
 
 void MainWindow::on_actionExpected_arrivals_triggered()
 {
-    WReportGrid *wr = addTab<WReportGrid>();
-    wr->setQueryModel<FExpectedArrivals>();
+    FExpectedArrivals::openFilterReport<FExpectedArrivals, WReportGrid>();
 }
 
 void MainWindow::on_actionPosting_charge_triggered()
@@ -2170,4 +2173,14 @@ void MainWindow::on_actionRoom_assignment_triggered()
 void MainWindow::on_actionTemporary_receipts_triggered()
 {
     addTab<DlgQuickAdvance>();
+}
+
+void MainWindow::on_actionExpected_arrivals_departures_2_triggered()
+{
+    FExpectedArrivals2::openFilterReport<FExpectedArrivals2, WReportGrid>();
+}
+
+void MainWindow::on_actionGuest_Tray_Ledger_By_Date_triggered()
+{
+    FCityTrayLedger2::openFilterReport<FCityTrayLedger2, WReportGrid>();
 }

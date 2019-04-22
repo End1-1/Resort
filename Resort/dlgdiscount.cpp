@@ -5,6 +5,7 @@
 #include "cacheinvoiceitem.h"
 #include "vauchers.h"
 #include "pprintvaucher.h"
+#include "dlgtracking.h"
 
 #define HINT_ROOM 1
 
@@ -28,7 +29,7 @@ DlgDiscount::DlgDiscount(QWidget *parent) :
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->addWidget(ui->deDate, "Date")
             .addWidget(ui->leCLCode, "City ledger")
-            .addWidget(ui->leDiscountAmount, "Discount amount")
+            .addWidget(ui->leValue, "Discount amount")
             .addWidget(ui->leFinalAmount, "Final amount")
             .addWidget(ui->leGuest, "Guest")
             .addWidget(ui->leRoomCode, "Room")
@@ -80,7 +81,11 @@ void DlgDiscount::setParams(const QString &room, double guestAmount, double comp
     ui->leInvoice->setText(fInvoice);
     ui->leRoomName->setText(ar.fRoomName());
     ui->leGuest->setText(ar.fGuestName());
-    ui->leAmount->setText(float_str(guestAmount, 2));
+    if (ui->leVaucher->isEmpty()) {
+        ui->leAmount->setText(float_str(guestAmount, 2));
+    } else {
+        ui->leAmount->setText(float_str(guestAmount + ui->leValue->asDouble(), 2));
+    }
     ui->leFinalAmount->setText(float_str(guestAmount, 2));
     fTrackControl->resetChanges();
 }
@@ -99,12 +104,13 @@ void DlgDiscount::openVaucher(const QString &id)
     d->ui->deDate->setDate(fDD.getValue("f_wdate").toDate());
     d->ui->leVaucher->setText(id);
     d->ui->leInvoice->setText(fDD.getValue("f_inv").toString());
-    d->ui->leRoomCode->setText(fDD.getValue("f_room").toString());
     d->ui->leGuest->setText(fDD.getValue("f_guest").toString());
     d->ui->leCLCode->setText(fDD.getValue("f_cityledger").toString());
-    d->ui->leAmount->setText(fDD.getValue("f_amountAmd").toString());
+    d->ui->leValue->setText(fDD.getValue("f_amountAmd").toString());
+    d->ui->leRoomCode->setInitialValue(fDD.getValue("f_room").toString());
     d->ui->rbGuest->setChecked(fDD.getValue("f_rb").toInt() == 0);
     d->fTrackControl->resetChanges();
+    d->on_leValue_textChanged(d->ui->leValue->text());
     d->exec();
     delete d;
 }
@@ -120,22 +126,9 @@ void DlgDiscount::on_leValue_textChanged(const QString &arg1)
     countDiscount();
 }
 
-void DlgDiscount::on_rbAmount_clicked()
-{
-    ui->lbType->setText("AMD");
-    ui->leValue->setValidator(new QDoubleValidator(0, 999999999, 2));
-    countDiscount();
-}
-
 void DlgDiscount::countDiscount()
 {
-    if (ui->rbAmount->isChecked()) {
-        ui->leFinalAmount->setDouble(ui->leAmount->asDouble() - ui->leValue->asDouble());
-        ui->leDiscountAmount->setText(ui->leValue->text());
-    } else {
-        ui->leDiscountAmount->setDouble(ui->leAmount->asDouble() * (ui->leValue->asDouble() / 100));
-        ui->leFinalAmount->setDouble(ui->leAmount->asDouble() - ui->leDiscountAmount->asDouble());
-    }
+    ui->leFinalAmount->setDouble(ui->leAmount->asDouble() - ui->leValue->asDouble());
 }
 
 void DlgDiscount::sideChanged(bool guest)
@@ -148,20 +141,9 @@ void DlgDiscount::sideChanged(bool guest)
     ui->leGuest->setVisible(guest);
     ui->leRoomCode->setVisible(guest);
     ui->leRoomName->setVisible(guest);
-    ui->rbPercent->setEnabled(guest);
     ui->gbGuest->setEnabled(guest);
     ui->rbCompany->setEnabled(guest);
     adjustSize();
-}
-
-void DlgDiscount::on_rbPercent_clicked()
-{
-    ui->lbType->setText("%");
-    ui->leValue->setValidator(new QDoubleValidator(0, 100, 2));
-    if (ui->leValue->asDouble() > 100.0001) {
-        ui->leValue->setDouble(100);
-    }
-    countDiscount();
 }
 
 void DlgDiscount::on_gbGuest_clicked()
@@ -207,7 +189,7 @@ void DlgDiscount::on_btnOk_clicked()
     fDD[":f_guest"] = ui->rbGuest->isChecked() ? ui->leGuest->text() : ui->leCLName->text();
     fDD[":f_itemCode"] = fPreferences.getDb(def_invoice_default_discount_id);
     fDD[":f_finalName"] = tr("DISCOUNT S/N ") + ui->leVaucher->text();
-    fDD[":f_amountAmd"] = ui->leDiscountAmount->asDouble();
+    fDD[":f_amountAmd"] = ui->leValue->asDouble();
     fDD[":f_amountVat"] = 0;
     fDD[":f_amountUsd"] = def_usd;
     fDD[":f_fiscal"] = 0;
@@ -223,13 +205,7 @@ void DlgDiscount::on_btnOk_clicked()
     fDD[":f_finance"] = 1;
     fDD[":f_canceled"] = 0;
     fDD[":f_cancelReason"] = "";
-    if (ui->rbAmount->isChecked()) {
-        fDD[":f_remarks"] = QString("Discount, %1AMD").arg(ui->leDiscountAmount->asDouble());
-    } else {
-        fDD[":f_remarks"] = QString("Discount, %1% (%2AMD)")
-                .arg(ui->leValue->asDouble())
-                .arg(ui->leDiscountAmount->asDouble());
-    }
+    fDD[":f_remarks"] = QString("Discount, %1AMD").arg(ui->leValue->asDouble());
     fDD[":f_side"] = 0;
     fDD.update("m_register", where_id(ap(ui->leVaucher->text())));
     fDD.commit();
@@ -243,14 +219,8 @@ void DlgDiscount::on_btnOk_clicked()
     fTrackControl->fReservation = ui->leReservation->text();
     fTrackControl->fRecord = ui->leVaucher->text();
     fTrackControl->insert(msg, value, "");
-
-    if (ui->rbAmount->isChecked()) {
-        fTrackControl->insert("Discount", float_str(ui->leAmount->asDouble(), 2),
+    fTrackControl->insert("Discount", float_str(ui->leAmount->asDouble(), 2),
                               QString("%1AMD, Final amount: %2AMD").arg(ui->leValue->asDouble()).arg(ui->leFinalAmount->text()));
-    } else {
-        fTrackControl->insert("Discount", float_str(ui->leAmount->asDouble(), 2),
-                              QString("%1%, Final amount: %2AMD").arg(ui->leValue->asDouble()).arg(ui->leFinalAmount->text()));
-    }
     ui->btnOk->setEnabled(false);
     ui->btnPrint->setEnabled(true);
 }
@@ -272,4 +242,9 @@ void DlgDiscount::on_btnPrint_clicked()
         return;
     }
     PPrintVaucher::printVaucher(ui->leVaucher->text());
+}
+
+void DlgDiscount::on_btnLog_clicked()
+{
+    DlgTracking::showTracking(ui->leVaucher->text());
 }

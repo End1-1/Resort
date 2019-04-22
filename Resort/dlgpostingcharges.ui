@@ -293,6 +293,17 @@
       <widget class="QWidget" name="widget" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
+         <widget class="QToolButton" name="btnLog">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -592,6 +603,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -603,11 +619,6 @@
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
    <class>EQComboBox</class>
@@ -633,6 +644,8 @@
   <tabstop>btnPrint</tabstop>
   <tabstop>btnCancel</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

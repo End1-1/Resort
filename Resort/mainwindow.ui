@@ -121,6 +121,7 @@
     </property>
     <addaction name="actionVauchers"/>
     <addaction name="actionGuest_Tray_Ledger"/>
+    <addaction name="actionGuest_Tray_Ledger_By_Date"/>
     <addaction name="actionIn_house_detailed_balance"/>
     <addaction name="actionDaily_movement"/>
     <addaction name="actionMonthly_Report"/>
@@ -205,6 +206,7 @@
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
     <addaction name="actionExpected_arrivals"/>
+    <addaction name="actionExpected_arrivals_departures_2"/>
     <addaction name="actionDaily_transactions"/>
     <addaction name="actionRe_checkin"/>
     <addaction name="actionRoom_assignment"/>
@@ -1421,6 +1423,24 @@
   <action name="actionTemporary_receipts">
    <property name="text">
     <string>Temporary receipts</string>
+   </property>
+  </action>
+  <action name="actionExpected_arrivals_departures_2">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
+   </property>
+   <property name="text">
+    <string>Expected arrivals / departures 2</string>
+   </property>
+  </action>
+  <action name="actionGuest_Tray_Ledger_By_Date">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/graph.png</normaloff>:/images/graph.png</iconset>
+   </property>
+   <property name="text">
+    <string>Guest Tray Ledger By Date</string>
    </property>
   </action>
  </widget>

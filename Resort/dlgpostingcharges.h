@@ -44,6 +44,8 @@ private slots:
 
     void on_btnNew_clicked();
 
+    void on_btnLog_clicked();
+
 private:
     Ui::DlgPostingCharges *ui;
     QStringList fCompanySide;

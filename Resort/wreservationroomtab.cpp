@@ -812,8 +812,8 @@ void WReservationRoomTab::reCheckin()
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_canceluser"] = WORKING_USERID;
     fDD[":f_canceldate"] = QDateTime::currentDateTime();
-    fDD.exec("update m_register set f_canceluser=:f_canceluser, f_canceldate=:canceldate "
-             "where f_source=:f_source and f_canceluser is null or f_canceluser=0 and f_inv=:f_inv");
+    fDD.exec("update m_register set f_canceled=1, f_canceluser=:f_canceluser, f_canceldate=:f_canceldate "
+             "where f_source=:f_source and f_canceled=0 and f_inv=:f_inv");
     fTrackControl->insert("Recheckin", "", "");
     setGroupBoxesEnabled(true);
     save();
@@ -1629,8 +1629,8 @@ int WReservationRoomTab::firstGuestId()
 QString WReservationRoomTab::mainGuest()
 {
     CacheGuest g;
-    if (g.get(firstGuestId())) {
-        return g.fName();
+    if (g.get(firstGuestId()) && ui->tblGuest->rowCount() > 0) {
+        return ui->tblGuest->toString(0, 1) + " " + ui->tblGuest->toString(0, 2);
     } else {
         return "No guest";
     }
@@ -1800,6 +1800,12 @@ void WReservationRoomTab::tblGuestChange(int tag)
         fTrackControl->insertMessage("Guest changed", ui->tblGuest->toString(tag, 2), v.at(2).toString() + " " + v.at(3).toString());
         ui->tblGuest->item(tag, 1)->setText(v.at(1).toString());
         ui->tblGuest->item(tag, 2)->setText(v.at(2).toString() + " " + v.at(3).toString());
+        if (tag == 0) {
+            DoubleDatabase dd(true, doubleDatabase);
+            dd[":f_guest"] = mainGuest();
+            dd[":f_inv"] = ui->leInvoice->text();
+            dd.exec("update m_register set f_guest=:f_guest where f_inv=:f_inv");
+        }
     }
     delete g;
 }
@@ -1826,6 +1832,14 @@ void WReservationRoomTab::tblGuestRemove(int row)
     ui->tblGuest->removeCellWidget(row, 3);
     ui->tblGuest->removeCellWidget(row, 4);
     ui->tblGuest->removeRow(row);
+    if (row == 0) {
+        if (ui->tblGuest->rowCount() > 0) {
+            DoubleDatabase dd(true, doubleDatabase);
+            dd[":f_guest"] = mainGuest();
+            dd[":f_inv"] = ui->leInvoice->text();
+            dd.exec("update m_register set f_guest=:f_guest where f_inv=:f_inv");
+        }
+    }
     btn1->deleteLater();
     btn2->deleteLater();
 }
@@ -1863,6 +1877,12 @@ void WReservationRoomTab::tblGuestChangeInfo(int tag)
         fTrackControl->insert("Guest info edited", ui->tblGuest->toString(tag, 2), v.at(2).toString() + " " + v.at(3).toString());
         ui->tblGuest->item(tag, 1)->setText(v.at(1).toString());
         ui->tblGuest->item(tag, 2)->setText(v.at(2).toString() + " " + v.at(3).toString());
+        if (tag == 0) {
+            DoubleDatabase dd(true, doubleDatabase);
+            dd[":f_guest"] = mainGuest();
+            dd[":f_inv"] = ui->leInvoice->text();
+            dd.exec("update m_register set f_guest=:f_guest where f_inv=:f_inv");
+        }
     }
     delete g;
 }

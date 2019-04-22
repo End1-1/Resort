@@ -24,6 +24,8 @@ private slots:
     void on_btnSave_clicked();
     void on_btnPrintTax_clicked();
 
+    void on_btnLog_clicked();
+
 private:
     Ui::DlgNoShow *ui;
     void getBalance();

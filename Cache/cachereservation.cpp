@@ -9,7 +9,7 @@ CacheReservation::CacheReservation() :
     fCacheId = cid_reservation;
     fLoadQuery = "select r.f_id, r.f_state, r.f_reserveState, r.f_room, rm.f_short, r.f_cardex, r.f_startDate, r.f_endDate, "
                   "concat(g.f_firstName, ' ', g.f_lastName) as f_guest_name, c.f_name as f_cardex_name, r.f_invoice,  "
-                  "rs.f_" + def_lang + " as f_reserveStateName, a.amount, coalesce(cc.credit, 0), coalesce(cd.debet, 0), "
+                  "rs.f_" + def_lang + " as f_reserveStateName, a.amount, coalesce(cc.credit, 0) as credit, coalesce(cd.debet, 0) as debet, "
                   "r.f_remarks, r.f_arrangement, r.f_author, r.f_group, "
                   "r.f_created, r.f_createTime "
                   "from f_reservation r "

@@ -135,3 +135,10 @@ void FInHouseGuest::on_chTime_clicked(bool checked)
         ui->chDate->setChecked(true);
     }
 }
+
+void FInHouseGuest::on_chAll_clicked(bool checked)
+{
+    ui->chDisplayName->setChecked(checked);
+    ui->chDisplayRate->setChecked(checked);
+    ui->chDisplayCardex->setChecked(checked);
+}

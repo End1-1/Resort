@@ -62,7 +62,7 @@ bool isTaxPay(const QString &code)
 bool isTaxPrepay(const QString &code)
 {
     return code == VAUCHER_RECEIPT_N
-            || VAUCHER_ADVANCE_N;
+            || code == VAUCHER_ADVANCE_N;
 }
 
 bool openVaucherInvoice(const QString &vaucherId) {
@@ -109,8 +109,8 @@ bool removeVaucher(const QString &id, const QString &reason)
 {
     Preferences p;
     DoubleDatabase db(true, doubleDatabase);
-    QString src, name;
-    int doc, rec, item, fiscal;
+    QString src, name, doc;
+    int rec, item, fiscal;
     QString f_inv;
     int track = TRACK_VAUCHER;
     db[":f_id"] = id;
@@ -118,7 +118,7 @@ bool removeVaucher(const QString &id, const QString &reason)
               "from m_register where f_id=:f_id");
     if (db.nextRow()) {
         src = db.getString(0);
-        doc = db.getInt(1);
+        doc = db.getString(1);
         rec = db.getInt(2);
         item = db.getInt(3);
         name = db.getString(4);
@@ -140,12 +140,12 @@ bool removeVaucher(const QString &id, const QString &reason)
         db[":f_cancelUser"] = fMainWindow->fPreferences.getDb(def_working_user_id).toInt();
         db[":f_cancelDate"] = QDateTime::currentDateTime();
         db[":f_cancelReason"] = reason;
-        db.update("m_register", where_id(doc));
+        db.update("m_register", where_id(id));
     } else if (src == "CH") {
         if (item == 17) {
             db[":f_show"] = 0;
-            db[":f_doc"] = 0;
-            db.update("f_reservation_meal", where_field("f_doc", doc));
+            db[":f_doc"] = "";
+            db.update("f_reservation_meal", where_field("f_doc", id));
         }
     } else if (src == "RV" || src == "AV") {
         track = TRACK_RESERVATION;
@@ -154,13 +154,6 @@ bool removeVaucher(const QString &id, const QString &reason)
                 // IN FUTURE: UPDATE PREPAID
             }
         }
-    } else if (src == "TR") {
-        DoubleDatabase dr(true, doubleDatabase);
-        dr[":f_canceled"] = 1;
-        dr[":f_cancelUser"] = p.getLocal(def_working_user_id).toInt();
-        dr[":f_cancelDate"] = QDateTime::currentDateTime();
-        dr[":f_cancelReason"] = reason;
-        dr.update("m_register", where_id(ap(db.getValue("f_doc").toString())));
     }
 
     db[":f_canceled"] = 1;
@@ -169,10 +162,24 @@ bool removeVaucher(const QString &id, const QString &reason)
     db[":f_cancelReason"] = reason;
     db.update("m_register", where_id(ap(id)));
 
+    if (!doc.isEmpty()) {
+        db[":f_canceled"] = 1;
+        db[":f_cancelUser"] = p.getLocal(def_working_user_id).toInt();
+        db[":f_cancelDate"] = QDateTime::currentDateTime();
+        db[":f_cancelReason"] = reason;
+        db.update("m_register", where_id(ap(doc)));
+    }
+
     TrackControl::insert(track, "VAUCHER CANCELED", QString("%1%2 %3")
                   .arg(src)
-                  .arg(doc)
+                  .arg(id)
                   .arg(name), "", id, f_inv);
+    if (!doc.isEmpty()) {
+        TrackControl::insert(track, "VAUCHER CANCELED", QString("%1%2 %3")
+                      .arg(src)
+                      .arg(doc)
+                      .arg(name), "", doc, f_inv);
+    }
     Q_UNUSED(rec)
     return true;
 }

@@ -175,5 +175,6 @@ void DlgSelector::on_btnRefresh_clicked()
     if (fCacheInstance) {
         fCacheInstance->load();
         setData(fCacheInstance->fRows);
+        filter(ui->lineEdit->text());
     }
 }

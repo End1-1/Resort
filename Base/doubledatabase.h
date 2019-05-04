@@ -76,6 +76,7 @@ public:
     inline int getInt(int row, const QString &columnName) {return fDbRows.at(row).at(fNameColumnMap[columnName.toLower()]).toInt(); }
     inline int getInt(int column) {return fDbRows.at(fCursorPos).at(column).toInt(); }
     inline int getInt(const QString &columnName) {return fDbRows.at(fCursorPos).at(fNameColumnMap[columnName.toLower()]).toInt(); }
+    inline uint getUInt(const QString &columnName) {return fDbRows.at(fCursorPos).at(fNameColumnMap[columnName.toLower()]).toUInt(); }
     inline double getDouble(int column) {return fDbRows.at(fCursorPos).at(column).toDouble(); }
     inline double getDouble(const QString &columnName) {return fDbRows.at(fCursorPos).at(fNameColumnMap[columnName.toLower()]).toDouble(); }
     inline QDate getDate(int row, const QString &columnName) { return fDbRows.at(row).at(fNameColumnMap[columnName.toLower()]).toDate(); }

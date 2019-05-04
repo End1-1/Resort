@@ -111,7 +111,7 @@
         <enum>Qt::NoContextMenu</enum>
        </property>
        <property name="readOnly">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -215,11 +215,33 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="3">
+      <widget class="QToolButton" name="btnSticky">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Resort/res.qrc">
+         <normaloff>:/images/sticky.png</normaloff>:/images/sticky.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
+  </customwidget>
   <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
@@ -227,11 +249,6 @@
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
-  </customwidget>
-  <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -140,5 +140,8 @@
         <file>images/plus.png</file>
         <file>images/hourglass.png</file>
         <file>images/bedroom.png</file>
+        <file>images/sticky.png</file>
+        <file>images/folder.png</file>
+        <file>images/upward.png</file>
     </qresource>
 </RCC>

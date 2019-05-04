@@ -35,11 +35,31 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="0" column="4">
-       <widget class="EQLineEdit" name="leInvoice">
+      <item row="0" column="8">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Room</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="EQLineEdit" name="leRoomName">
         <property name="maximumSize">
          <size>
-          <width>70</width>
+          <width>100</width>
           <height>16777215</height>
          </size>
         </property>
@@ -48,6 +68,30 @@
         </property>
         <property name="readOnly">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Guest</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" colspan="5">
+       <widget class="EQLineEdit" name="leCityLedgerName">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>Invoice N:</string>
         </property>
        </widget>
       </item>
@@ -67,26 +111,49 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="EQLineEdit" name="leRoomCode">
+      <item row="0" column="5">
+       <widget class="QLineEdit" name="leReservation">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>40</width>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>City ledger</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="EQLineEdit" name="leCityLedgerCode">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="EQLineEdit" name="leInvoice">
+        <property name="maximumSize">
+         <size>
+          <width>70</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="readOnly">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Room</string>
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -107,85 +174,35 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_19">
-        <property name="text">
-         <string>City ledger</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="EQLineEdit" name="leRoomName">
+      <item row="0" column="1">
+       <widget class="EQLineEdit" name="leRoomCode">
         <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
          <size>
           <width>40</width>
-          <height>20</height>
+          <height>16777215</height>
          </size>
         </property>
-       </spacer>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_18">
-        <property name="text">
-         <string>Invoice N:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Guest</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="EQLineEdit" name="leCityLedgerCode">
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3" colspan="5">
-       <widget class="EQLineEdit" name="leCityLedgerName">
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QLineEdit" name="leReservation">
-        <property name="enabled">
          <bool>false</bool>
         </property>
-        <property name="maximumSize">
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="QPushButton" name="btnOptions">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
+        </property>
+        <property name="iconSize">
          <size>
-          <width>80</width>
-          <height>16777215</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
        </widget>
@@ -284,13 +301,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="lbCityLedger">
-        <property name="text">
-         <string>City Ledger</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

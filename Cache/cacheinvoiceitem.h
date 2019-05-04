@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_invoice_item 20
+static const int cid_invoice_item = 20;
 
 class CacheInvoiceItem : public CacheBaseStruct
 {

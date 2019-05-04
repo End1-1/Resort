@@ -595,6 +595,42 @@ departures</string>
           </widget>
          </item>
          <item>
+          <widget class="QToolButton" name="btnArrivalDeparture_2">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Arrivals
+departures 2</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QToolButton" name="btnCheckoutInvoices">
            <property name="minimumSize">
             <size>
@@ -691,76 +727,6 @@ Invoices</string>
            <property name="icon">
             <iconset resource="res.qrc">
              <normaloff>:/images/phone-call.png</normaloff>:/images/phone-call.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-           <property name="Tag" stdset="0">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="btnRemarks">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Remarks</string>
-           </property>
-           <property name="icon">
-            <iconset resource="res.qrc">
-             <normaloff>:/images/remarks.png</normaloff>:/images/remarks.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-           <property name="Tag" stdset="0">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="btnContacts">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Contacts</string>
-           </property>
-           <property name="icon">
-            <iconset resource="res.qrc">
-             <normaloff>:/images/phone-book.png</normaloff>:/images/phone-book.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1753,6 +1719,76 @@ Transactions</string>
            </property>
            <property name="arrowType">
             <enum>Qt::NoArrow</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="btnRemarks">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Remarks</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/remarks.png</normaloff>:/images/remarks.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="btnContacts">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Contacts</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/phone-book.png</normaloff>:/images/phone-book.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
            </property>
            <property name="Tag" stdset="0">
             <string/>

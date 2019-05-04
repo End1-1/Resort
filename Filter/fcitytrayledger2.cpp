@@ -14,7 +14,7 @@ FCityTrayLedger2::FCityTrayLedger2(QWidget *parent) :
         if (val.count() == 0) {
             return;
         }
-        QString invoice = val.at(0).toString();
+        QString invoice = val.at(2).toString();
         DoubleDatabase dd(true, false);
         dd[":f_invoice"] = invoice;
         dd.exec("select f_state from f_reservation where f_invoice=:f_invoice");
@@ -58,15 +58,15 @@ QWidget *FCityTrayLedger2::lastElement()
 void FCityTrayLedger2::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
-    rg->fModel->setColumn(100, "", tr("Invoice"))
-            .setColumn(40, "", tr("Room"))
+    rg->fModel->setColumn(50, "", tr("Room"))
             .setColumn(220, "", tr("Guest"))
+            .setColumn(80, "", tr("Invoice"))
             .setColumn(30, "", tr("Pax"))
             .setColumn(40, "", tr("Cat"))
             .setColumn(30, "", tr("Arr"))
             .setColumn(80, "", tr("Rate"))
-            .setColumn(120, "", tr("Arrival"))
-            .setColumn(120, "", tr("Departure"))
+            .setColumn(110, "", tr("Arrival"))
+            .setColumn(110, "", tr("Departure"))
             .setColumn(70, "", tr("Time"))
             .setColumn(100, "", tr("AC balance, AMD"))
             .setColumn(100, "", tr("AC balance, USD"))
@@ -75,23 +75,27 @@ void FCityTrayLedger2::apply(WReportGrid *rg)
             .setColumn(120, "", tr("Payment"))
             .setColumn(100, "", tr("Nationality"))
             .setColumn(200, "", tr("Source"));
-    QString query = "select r.f_invoice, r.f_room, g.guest, r.f_man + r.f_woman + r.f_child as pax, rv.f_" + def_lang + ", "
-            "ra.f_" + def_lang + ", r.f_pricePerNight, r.f_startDate, r.f_endDate, r.f_checkouttime, "
-            "if(m.f_side=0, m.f_amountamd, 0), if(m.f_side=0, m.f_amountamd / m.f_amountusd, 0),  "
-            "if(m.f_side=1, m.f_amountamd, 0), if(m.f_side=1, m.f_amountamd / m.f_amountusd, 0), "
-            "pm.f_" + def_lang + ", n.f_name, c.f_name "
-            "from m_register m "
-            "inner join f_reservation r on r.f_invoice=m.f_inv "
+    QString query = "select r.f_room, g.guest, r.f_invoice, r.f_man + r.f_woman + r.f_child as pax, left(rv.f_en, 1), ra.f_en, "
+            "r.f_pricePerNight, r.f_startDate, r.f_endDate, r.f_checkouttime, "
+            "sum(if(m.f_side=0, m.f_amountamd*f_sign, 0)), sum(if(m.f_side=0, m.f_amountamd / m.f_amountusd*f_sign, 0)), "
+            "sum(if(m.f_side=1, m.f_amountamd*f_sign, 0)), sum(if(m.f_side=1,m.f_amountamd / m.f_amountusd*f_sign, 0)), "
+            "pm.f_en, n.f_name, c.f_name "
+            "from f_reservation r "
+            "left join m_register m  on r.f_invoice=m.f_inv "
             "left join f_room rm on rm.f_id = r.f_room "
             "left join f_room_view rv on rv.f_id=rm.f_view "
             "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
             "left join f_payment_type pm on pm.f_id=r.f_paymentType "
             "left join guests g on g.f_id=r.f_guest "
-            "left join f_guests gg on gg.f_id=r.f_guest "
+            "left join f_guests gg on gg.f_id=r.f_guest  "
             "left join f_nationality n on gg.f_nation=n.f_short "
             "left join f_cardex c on c.f_cardex=r.f_cardex "
-            "where (r.f_state in (1, 3)) and cast(concat(m.f_rdate, ' ', m.f_time) as datetime) between r.f_startdate and ':date :time' "
-            "order by rm.f_building, r.f_room, r.f_startDate ";
+            "where m.f_finance=1 and m.f_canceled=0 "
+            "and cast(concat(m.f_rdate, ' ', m.f_time) as datetime) <= ':date :time' "
+            "and ((r.f_state=1 and ':date :time' between cast(concat(r.f_startdate, ' ', r.f_checkintime) as datetime) and ':date :time') "
+            "or (r.f_state=3 and ':date :time' between cast(concat(r.f_startdate, ' ', r.f_checkintime) as datetime) and cast(concat(r.f_enddate, ' ', r.f_checkouttime) as datetime))) "
+            "group by 1,2,3,4,5,6,7,8,9,10,15,16,17 "
+            "order by rm.f_building, r.f_room, r.f_invoice, r.f_startDate  ";
     query.replace(":date", ui->deDate->dateMySql(false));
     query.replace(":time", ui->teTime->time().toString(def_time_format));
     rg->fModel->setSqlQuery(query);

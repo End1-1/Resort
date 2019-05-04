@@ -18,6 +18,7 @@
 #include <QPrinterInfo>
 
 QMap<QString, Report> WReportGrid::fReportOptions;
+static const int font_size_print_delta = 16;
 
 WReportGrid::WReportGrid(QWidget *parent) :
     BaseWidget(parent),
@@ -67,6 +68,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
             r.fFontSize = dd.getInt("f_fontsize");
             r.fPrintOnly = dd.getInt("f_printonly");
             r.fFontBold = dd.getInt("f_fontbold");
+            r.fRowHeight = dd.getInt("f_rowheight");
             fReportOptions[dd.getString("f_report")] = r;
         }
     }
@@ -184,6 +186,9 @@ void WReportGrid::setTblTotalData(const QList<int> &columns, const QList<double>
     ui->tblTotals->setVisible(true);
     ui->tblMain->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->tblTotals->clear();
+    for (int i = 0; i < ui->tblTotals->columnCount(); i++) {
+        ui->tblTotals->setItem(0, i, new C5TableWidgetItem());
+    }
     for (int i = 0, count = columns.count(); i < count; i++) {
         ui->tblTotals->setItemWithValue(0, columns.at(i), values.at(i));
     }
@@ -201,7 +206,7 @@ void WReportGrid::setTblNoTotalData()
 
 void WReportGrid::countToTotal(int col)
 {
-    ui->tblTotals->setItem(0, col, new QTableWidgetItem(QString::number(fModel->rowCount())));
+    ui->tblTotals->setItem(0, col, new C5TableWidgetItem(QString::number(fModel->rowCount())));
 }
 
 void WReportGrid::setup()
@@ -224,6 +229,13 @@ void WReportGrid::setupTabTextAndIcon(const QString &name, const QString &image)
             ui->btnPrint->setVisible(false);
             ui->btnPrint2->setVisible(true);
         }
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(r.fRowHeight);
+        QFont font(r.fFontName, r.fFontSize);
+        font.setBold(r.fFontBold);
+        ui->tblMain->setFont(font);
+        ui->tblTotals->setFont(font);
+    } else {
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(21);
     }
 }
 
@@ -259,6 +271,17 @@ void WReportGrid::on_btnExcel_clicked()
     for (int j = 0; j < rowCount; j++) {
         for (int i = 0; i < colCount; i++) {
             s->addCell(j + 2, i + 1, fModel->data(j, i, Qt::EditRole), d.style()->styleNum("body"));
+        }
+    }
+    /* TOTALS ROWS */
+    if (ui->tblTotals->isVisible()) {
+        QFont totalFont(qApp->font());
+        totalFont.setBold(true);
+        d.style()->addFont("footer", headerFont);
+        color = QColor::fromRgb(193, 206, 221);
+        d.style()->addBackgrounFill("footer", color);
+        for (int i = 0; i < colCount; i++) {
+            s->addCell(1 + fModel->rowCount() + 1, i + 1, ui->tblTotals->itemValue(0, i, Qt::EditRole), d.style()->styleNum("footer"));
         }
     }
     QString err;
@@ -484,9 +507,11 @@ bool WReportGrid::event(QEvent *event)
         case Qt::Key_Return: {
             QWidget *w = focusWidget();
             focusNextChild();
-            QWidget *l = fFilter->lastElement();
-            if (w == l) {
-                on_btnRefresh_clicked();
+            if (fFilter) {
+                QWidget *l = fFilter->lastElement();
+                if (w == l) {
+                    on_btnRefresh_clicked();
+                }
             }
             return true;
         }
@@ -654,6 +679,7 @@ void WReportGrid::on_btnPrint_clicked()
         rs = fReportOptions[fGridClassName];
         rs.fValid = true;
     } else {
+        rs.fRowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
         rs.fValid = true;
         rs.fFontSize = 8;
         rs.fFontName = "Arial";
@@ -662,7 +688,10 @@ void WReportGrid::on_btnPrint_clicked()
     QBrush b(Qt::white, Qt::SolidPattern);
     PTextRect trFooter;
     trFooter.setBrush(b);
-    QFont f(rs.fFontName, 20);
+    QFont f(rs.fFontName, rs.fFontSize + font_size_print_delta);
+    f.setBold(rs.fFontBold);
+    QFont fb(f);
+    fb.setBold(true);
     trFooter.setFont(f);
     trFooter.setBorders(false, false, false, false);
     trFooter.setTextAlignment(Qt::AlignLeft);
@@ -672,18 +701,17 @@ void WReportGrid::on_btnPrint_clicked()
     int footerTop = paperSize.height() - 50;
     PTextRect prTempl;
     prTempl.setWrapMode(QTextOption::NoWrap);
-    prTempl.setFont(QFont(rs.fFontName, 17 + rs.fFontSize));
-    prTempl.setFontBold(rs.fFontBold);
+    prTempl.setFont(f);
     prTempl.setBorders(true, true, true, true);
     QPen pen;
     pen.setWidth(2);
     prTempl.setRectPen(pen);
     PTextRect prHead(prTempl, "");
-    prHead.setFont(QFont(rs.fFontName, 20));
+    prHead.setFont(fb);
     prHead.setBrush(QBrush(QColor::fromRgb(215, 215, 215), Qt::SolidPattern));
     prHead.setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
-    int rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
+    int rowHeight = rs.fRowHeight;
     int headerHeight = ui->tblMain->horizontalHeader()->height() * resize_factor * 2;
     PPrintScene *ps = addScene(0, po);
     QString title = "NO TITLE";
@@ -720,18 +748,15 @@ void WReportGrid::on_btnPrint_clicked()
     } else {
         PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                            .arg(title));
-        QFont captionFont(rs.fFontName, 20);
-        captionFont.setItalic(true);
         caption->setWrapMode(QTextOption::NoWrap);
-        captionFont.setBold(true);
-        caption->setFont(captionFont);
-        caption->setRect(20, 0, totalWidth, (rowHeight * resize_factor) + 20);
+        caption->setFont(fb);
+        caption->setRect(20, 0, totalWidth, (rowHeight * resize_factor) + 50);
         caption->setBorders(false, false, false, false);
         caption->setTextAlignment(Qt::AlignHCenter);
         ps->addTextRect(caption);
         caption->setBorders(false, false, false, false);
         //caption->adjustRect();
-        topOffcet = caption->height();
+        topOffcet += caption->height();
     }
 
     prTempl.setWrapMode(QTextOption::NoWrap);
@@ -748,19 +773,13 @@ void WReportGrid::on_btnPrint_clicked()
     }
     top += headerHeight;
     for (int i = 0, rowCount = fModel->rowCount(); i < rowCount; i++) {
-        rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
+        rowHeight = rs.fRowHeight;
         for (int j = 0, colCount = fModel->columnCount(); j < colCount; j++) {
             if (ui->tblMain->columnWidth(j) == 0) {
                 continue;
             }
             QFont nf = fModel->data(i, j, Qt::FontRole).value<QFont>();
-            if (nf.family() == "NO") {
-                nf.setFamily(rs.fFontName);
-                nf.setPointSize(rs.fFontSize + 17);
-                nf.setBold(rs.fFontBold);
-            } else {
-                nf.setPointSize(nf.pointSize() + 17);
-            }
+            nf.setPointSize(nf.pointSize() + font_size_print_delta);
             prTempl.setFont(nf);
             QBrush br(fModel->data(i, j, Qt::BackgroundColorRole).value<QColor>());
             if (br.color() == Qt::white) {
@@ -780,7 +799,7 @@ void WReportGrid::on_btnPrint_clicked()
                                 .arg(__dd1Database.left(2)), &trFooter);
                 trFooter.setTextAlignment(Qt::AlignLeft);
                 /*header*/
-                rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
+                rowHeight = rs.fRowHeight;
                 top = 5;
                 page++;
                 ps = addScene(0, po);
@@ -805,12 +824,9 @@ void WReportGrid::on_btnPrint_clicked()
                 } else {
                     PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                                        .arg(title));
-                    QFont captionFont(rs.fFontName, 20);
-                    captionFont.setItalic(true);
                     caption->setWrapMode(QTextOption::NoWrap);
-                    captionFont.setBold(true);
-                    caption->setFont(captionFont);
-                    caption->setRect(10, 0,  totalWidth, ui->tblMain->verticalHeader()->defaultSectionSize() * 3.5 * resize_factor);
+                    caption->setFont(fb);
+                    caption->setRect(10, 0,  totalWidth, rs.fRowHeight * 3.5 * resize_factor);
                     caption->setBorders(false, false, false, false);
                     caption->setTextAlignment(Qt::AlignHCenter);
                     ps->addTextRect(caption);
@@ -847,11 +863,9 @@ void WReportGrid::on_btnPrint_clicked()
         top += (rowHeight * resize_factor) + 20;
     }
     top += rowHeight;
+    //TOTAL ROW
     if (ui->tblTotals->isVisible()) {
-        QFont font(rs.fFontName, 18);
-        font.setBold(true);
-        font.setPointSize(font.pointSize() - 1);
-        prTempl.setFont(font);
+        prTempl.setFont(fb);
         for (int j = 0, colCount = fModel->columnCount(); j < colCount; j++) {
             if (ui->tblMain->columnWidth(j) == 0) {
                 continue;
@@ -892,11 +906,8 @@ void WReportGrid::on_btnPrint_clicked()
                 } else {
                     PTextRect *caption = new PTextRect(prTempl, QString("%1")
                                                        .arg(title));
-                    QFont captionFont(rs.fFontName, 20);
-                    captionFont.setItalic(true);
                     caption->setWrapMode(QTextOption::NoWrap);
-                    captionFont.setBold(true);
-                    caption->setFont(captionFont);
+                    caption->setFont(fb);
                     caption->setRect(10, 0, 1200, ui->tblMain->verticalHeader()->defaultSectionSize() * 1.5 * resize_factor);
                     caption->setBorders(false, false, false, false);
                     ps->addTextRect(caption);
@@ -924,7 +935,7 @@ void WReportGrid::on_btnPrint_clicked()
                 }
             }
             if (!ui->tblTotals->item(0, j)) {
-                ui->tblTotals->setItem(0, j, new QTableWidgetItem());
+                ui->tblTotals->setItem(0, j, new C5TableWidgetItem());
             }
             PTextRect *tr = new PTextRect(distanceCol.at(j) * resize_factor, top,
                                           colwidth * resize_factor, (rowHeight * resize_factor) + 20,
@@ -976,10 +987,11 @@ void WReportGrid::on_btnPrint_clicked()
 void WReportGrid::on_btnConfigGrid_clicked()
 {
     QString fName = "Arial";
-    int fSize = 0;
+    int fSize = qApp->font().pointSize();
     bool fBold = false;
     bool reset = false;
     bool printOnly = false;
+    int rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
     registerInReportBuilder(false);
     DoubleDatabase dd(true, doubleDatabase);
     dd[":f_report"] = fGridClassName;
@@ -990,15 +1002,17 @@ void WReportGrid::on_btnConfigGrid_clicked()
         fSize = dd.getInt("f_fontsize");
         fBold = dd.getInt("f_fontbold") == 0 ? false : true;
         printOnly = dd.getInt("f_printonly") == 0 ? false : true;
+        rowHeight = dd.getInt("f_rowheight");
     }
-    if (!DlgConfigGrid::config(fName, fSize, fBold, printOnly, reset, this)) {
+    if (!DlgConfigGrid::config(fName, fSize, fBold, printOnly, reset, rowHeight, this)) {
         return;
     }
     if (reset) {
         fName = "Arial";
-        fSize = 0;
+        fSize = qApp->font().pointSize();
         fBold = false;
         printOnly = false;
+        rowHeight = 21;
     }
     dd[":f_report"] = fGridClassName;
     dd[":f_group"] = WORKING_USERGROUP;
@@ -1006,14 +1020,23 @@ void WReportGrid::on_btnConfigGrid_clicked()
     dd[":f_fontname"] = fName;
     dd[":f_fontsize"] = fSize;
     dd[":f_fontbold"] = fBold ? 1 : 0;
-    dd.exec("update rp_main set f_printonly=:f_printonly, f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold where f_group=:f_group and f_report=:f_report");
+    dd[":f_rowheight"] = rowHeight;
+    dd.exec("update rp_main set f_printonly=:f_printonly, f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold, "
+            "f_rowheight=:f_rowheight where f_group=:f_group and f_report=:f_report");
     Report r;
     r.fValid = true;
     r.fPrintOnly = printOnly;
     r.fFontName = fName;
     r.fFontSize = fSize;
     r.fFontBold = fBold;
+    r.fRowHeight = rowHeight;
     fReportOptions[fGridClassName] = r;
+
+    QFont f(fName, fSize);
+    f.setBold(fBold);
+    ui->tblMain->setFont(f);
+    ui->tblTotals->setFont(f);
+    ui->tblMain->verticalHeader()->setDefaultSectionSize(rowHeight);
 }
 
 void WReportGrid::endApply()

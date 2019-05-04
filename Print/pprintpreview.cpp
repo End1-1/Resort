@@ -1,5 +1,6 @@
 #include "pprintpreview.h"
 #include "ui_pprintpreview.h"
+#include "utils.h"
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QShowEvent>
@@ -21,6 +22,7 @@ PPrintPreview::PPrintPreview(QWidget *parent) :
     setPrintOrientation(Portrait);
     ui->cbPrinters->addItems(QPrinterInfo::availablePrinterNames());
     ui->cbPrinters->setCurrentIndex(ui->cbPrinters->findText(QPrinterInfo::defaultPrinterName()));
+    ui->chCloseAfterPrint->setChecked(__s.value("closeprintpreviewafterprint").toBool());
 }
 
 PPrintPreview::~PPrintPreview()
@@ -131,6 +133,9 @@ void PPrintPreview::on_btnPrint_clicked()
         }
         fPrintScene.at(printPages.at(i))->render(&painter);
     }
+    if (ui->chCloseAfterPrint->isChecked()) {
+        accept();
+    }
 }
 
 void PPrintPreview::on_btnZoomOut_clicked()
@@ -194,4 +199,9 @@ void PPrintPreview::on_btnLast_clicked()
 void PPrintPreview::on_cbPrintSelection_currentIndexChanged(int index)
 {
     ui->lePages->setVisible(index == 2);
+}
+
+void PPrintPreview::on_chCloseAfterPrint_clicked(bool checked)
+{
+    __s.setValue("closeprintpreviewafterprint", checked);
 }

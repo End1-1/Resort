@@ -284,7 +284,7 @@ void DlgPostingCharges::on_btnOk_clicked()
     }
     if (ui->rbCity->isChecked()) {
         dc = "DEBIT";
-        sign = 1;
+        sign = -1;
         rb = 2;
     }
     if (ui->leVaucher->text().isEmpty()) {
@@ -347,7 +347,7 @@ void DlgPostingCharges::on_btnOk_clicked()
     fDD[":f_remarks"] = ui->teRemark->toPlainText();
     fDD[":f_canceled"] = 0;
     fDD[":f_cancelReason"] = "";
-    fDD[":f_side"] = (int) ui->chPayByComp->isChecked();
+    fDD[":f_side"] = ui->chPayByComp->isChecked() ? 1 : 0;
     fDD[":f_rb"] = rb;
     fDD[":f_cash"] = ui->rbDirect->isChecked() ? 1 : 0;
     fDD.update("m_register", where_id(ap(ui->leVaucherId->text())));

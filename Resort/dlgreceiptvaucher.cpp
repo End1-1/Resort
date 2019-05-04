@@ -9,6 +9,7 @@
 #include "printtax.h"
 #include "dlgtracking.h"
 #include "cacheactiveroom.h"
+#include "cacheroom.h"
 #include "paymentmode.h"
 #include "pprintvaucher.h"
 #include "cacheusers.h"
@@ -25,12 +26,8 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->setupUi(this);
     ui->leOpcode->setSelector(this, cache(cid_users), ui->leOpName);
     ui->leOpcode->setInitialValue(WORKING_USERID);
-    ui->leRoom->setVisible(false);
-    ui->leReservation->setVisible(false);
-    ui->leName->setReadOnly(!r__(cr__super_correction));
+    ui->leFinalName->setReadOnly(!r__(cr__super_correction));
     ui->deDate->setDate(WORKING_DATE);
-
-    ui->lePartnerCode->setSelector(this, cache(cid_active_room), ui->lePartnerName, HINT_ACTIVE_ROOM);
     ui->lePaymentCode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName, HINT_PAYMENT_MODE);
     ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
                                      << QString::number(PAYMENT_CARD)
@@ -39,6 +36,20 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
     fTrackControl = new TrackControl(TRACK_RESERVATION);
+    fDoc.setleID(ui->leVaucher);
+    fDoc.fSource = VAUCHER_RECEIPT_N;
+    ui->wRoom->setDBMRegister(&fDoc);
+    ui->wCL->setDBMRegister(&fDoc);
+    fDoc.setleWDate(ui->deDate);
+    fDoc.fItemCode = fPreferences.getDb(def_receip_vaucher_id).toUInt();
+    fDoc.fFinance = 1;
+    fDoc.setleFinalName(ui->leFinalName);
+    fDoc.setlePaymentMode(ui->lePaymentCode, ui->lePaymentName);
+    fDoc.setleAmountAMD(ui->leAmountAMD);
+    fDoc.setleAmountUSD(ui->leAmountUSD);
+    fDoc.setleCreditCard(ui->leCardCode, ui->leCardName);
+    fDoc.setleRemarks(ui->teRemarks);
+    on_tabWidget_currentChanged(0);
 }
 
 DlgReceiptVaucher::~DlgReceiptVaucher()
@@ -46,48 +57,11 @@ DlgReceiptVaucher::~DlgReceiptVaucher()
     delete ui;
 }
 
-void DlgReceiptVaucher::setVaucher(const QString &id)
+void DlgReceiptVaucher::setVoucher(const QString &id)
 {
-    ui->leVaucher->setText(id);
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD[":f_id"] = id;
-    fDD.exec("select m.f_room, m.f_inv, m.f_guest, m.f_amountAmd, m.f_creditCard, m.f_cityLedger, \
-        m.f_fiscal, m.f_wdate, m.f_finalName, m.f_doc, m.f_remarks, m.f_paymentMode, m.f_rb, m.f_user \
-        from m_register m \
-        where f_id=:f_id");
-    if (fDD.rowCount() > 0) {
-        QList<QList<QVariant> > &fDbRows = fDD.fDbRows;
-        ui->leInvoice->setText(fDbRows.at(0).at(1).toString());
-        ui->leAmountAMD->setDouble(fDbRows.at(0).at(3).toDouble());
-        ui->leAmountUSD->setDouble(ui->leAmountAMD->asDouble() / def_usd);
-        ui->leCardCode->setInitialValue(fDbRows.at(0).at(4).toString());
-        ui->deDate->setDate(fDbRows.at(0).at(7).toDate());
-        ui->leName->setText(fDbRows.at(0).at(8).toString());
-        ui->teRemarks->setPlainText(fDbRows.at(0).at(10).toString());
-        // = fDbRows.at(0).at(9).toInt();
-        ui->lePaymentCode->setInitialValue(fDbRows.at(0).at(11).toString());
-        ui->leRoom->setText(fDbRows.at(0).at(0).toString());
-        ui->rbGuest->setChecked(fDbRows.at(0).at(12).toInt());
-        ui->leOpcode->setInitialValue(fDbRows.at(0).at(13).toString());
-        if (fDbRows.at(0).at(5).toInt() > 0) {
-            ui->rbCityLedger->setChecked(true);
-            ui->rbGuest->setChecked(false);
-            ui->lePartnerCode->setInitialValue(fDbRows.at(0).at(5).toString());
-        } else {
-            ui->rbCityLedger->setChecked(false);
-            ui->rbGuest->setChecked(true);
-            ui->lePartnerCode->setText(fDbRows.at(0).at(0).toString());
-            ui->lePartnerName->setText(fDbRows.at(0).at(2).toString());
-        }
-        if (ui->rbGuest->isChecked()) {
-            fDD[":f_id"] = ui->lePartnerCode->asInt();
-            fDD.exec("select concat(g.f_firstName, ' ' , g.f_lastName) from f_guests g where f_id=:f_id");
-            if (fDD.rowCount() > 0) {
-                ui->lePartnerName->setText(fDbRows.at(0).at(0).toString());
-            }
-        }
-    }
-    fTrackControl->resetChanges();
+    clearSelectors();
+    DoubleDatabase dd(true, false);
+    fDoc.open(dd, id);
     switch (ui->lePaymentCode->asInt()) {
         case PAYMENT_BANK:
             ui->deDate->setReadOnly(!r__(cr__rv_change_date_bank));
@@ -100,77 +74,45 @@ void DlgReceiptVaucher::setVaucher(const QString &id)
             break;
         case PAYMENT_CARD:
             ui->deDate->setReadOnly(!r__(cr__rv_change_date_card));
+            cardVisible(true);
             break;
         default:
             ui->deDate->setReadOnly(true);
             break;
     }
-
+    fixTabWidget();
+    setBalance();
     ui->btnSave->setVisible(r__(cr__super_correction));
+    ui->leAmountAMD->setReadOnly(!r__(cr__super_correction));
     if (r__(cr__super_correction)) {
         ui->deDate->setReadOnly(false);
     }
     ui->btnPrint->setEnabled(true);
+    adjustSize();
 }
 
 
 void DlgReceiptVaucher::callback(int sel, const QString &code)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
     switch (sel) {
-    case HINT_ACTIVE_ROOM: {
-        CacheActiveRoom c;
-        if (c.get(code)) {
-        ui->leInvoice->setText(c.fInvoice());
-        ui->leReservation->setText(c.fCode());
-        ui->lePartnerCode->setText(c.fRoomCode());
-        ui->lePartnerName->setText(c.fGuestName());
-        ui->leRoom->setText(c.fRoomCode());
-        fDD[":f_side"] = 0;
-        fDD[":f_invoice"] = c.fInvoice();
-        fDD.exec("select sum(f_amountAmd*f_sign) from m_register where f_side=:f_side and f_inv=:f_invoice "
-                   "and f_canceled=0 and f_finance=1 ");
-        if (fDD.nextRow()) {
-            ui->leBalance->setText(fDD.getString(0));
-        }
-        fTrackControl->resetChanges();
-        }
-        break;
-    }
-    case HINT_CITY_LEDGER: {
-        ui->leRoom->clear();
-        ui->leInvoice->clear();
-        CacheCityLedger c;
-        if (c.get(code)) {
-            fDD[":f_cityLedger"] = ui->lePartnerCode->asInt();
-            fDD.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-                     m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) from m_register m \
-                     where f_cityLedger=:f_cityLedger and f_canceled=0 and f_finance=1 ");
-            if (fDD.nextRow()) {
-                ui->leBalance->setText(fDD.getString(0));
-            }
-            ui->leName->setText(tr("PAYMENT ") + " " + c.fName());
-        }
-        break;
-    }
     case HINT_PAYMENT_MODE: {
         CachePaymentMode c;
         if (c.get(code)) {
             switch (c.fCode().toInt()) {
             case PAYMENT_CASH:
                 cardVisible(false);
-                ui->leName->setText(tr("PAYMENT CASH"));
+                ui->leFinalName->setText(tr("PAYMENT CASH"));
                 break;
             case PAYMENT_CARD:
                 cardVisible(true);
                 break;
             case PAYMENT_BANK:
                 cardVisible(false);
-                ui->leName->setText(tr("PAYMENT BANK"));
+                ui->leFinalName->setText(tr("PAYMENT BANK"));
                 break;
             default:
                 cardVisible(false);
-                ui->leName->setText("PAYMENT " + c.fName());
+                ui->leFinalName->setText("PAYMENT " + c.fName());
                 break;
             }
         }
@@ -179,7 +121,7 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
     case HINT_CARD: {
         CacheCreditCard c;
         if (c.get(code)) {
-            ui->leName->setText(tr("PAYMENT") + " " + c.fName());
+            ui->leFinalName->setText(tr("PAYMENT") + " " + c.fName());
         }
         break;
     }
@@ -192,156 +134,96 @@ void DlgReceiptVaucher::on_btnSave_clicked()
     if (ui->leAmountAMD->asDouble() < 0.1) {
         errors += tr("Amount cannot be equal to zero.") + "<br>";
     }
-    if (ui->rbGuest->isChecked()) {
-        CacheActiveRoom c;
-        if (!c.get(ui->lePartnerCode->text()) && ui->leVaucher->isEmpty()) {
-            errors += tr("Incorrect room number") + "<br>";
+    QString dc = "DEBIT";
+    int sign = -1;
+    QString finalName = tr("PAYMENT") + " ";
+    QString room;
+    switch (ui->tabWidget->currentIndex()) {
+    case 0:
+        if (ui->wRoom->room() == 0) {
+            errors += tr("Room is not selected") + "<br>";
+        } else {
+            room = QString::number(ui->wRoom->room());
         }
-    }
-    if (ui->rbCityLedger->isChecked()) {
-        CacheCityLedger c;
-        if (!c.get(ui->lePartnerCode->text())) {
-            errors += tr("Incorrect city ledger code") + "<br>";
+        switch (ui->lePaymentCode->asInt()) {
+        case PAYMENT_CASH:
+            finalName += "CASH";
+            break;
+        case PAYMENT_BANK:
+            finalName += "BANK";
+            break;
+        case PAYMENT_CARD:
+            finalName += ui->leCardName->text();
+            break;
+        case PAYMENT_CL:
+            finalName += "C/L " + ui->wRoom->guest();
+            break;
+        case PAYMENT_BARTER:
+            finalName += "BARTER " + ui->wRoom->guest();
+            break;
+        default:
+            errors += tr("Selected payment mode is not allowed here") + "<br>";
+            break;
+        }
+        break;
+    case 1:
+        dc = "CREDIT";
+        sign = 1;
+        ui->wRoom->setGuest(ui->wCL->cityLedgerName());
+        ui->wRoom->setRoom(ui->wCL->cityLedger());
+        if (ui->wCL->cityLedger() == 0) {
+            errors += tr("Cityledger is not selected") + "<br>";
+        } else {
+            room = QString::number(ui->wCL->cityLedger());
+        }
+        switch (ui->lePaymentCode->asInt()) {
+        case PAYMENT_CASH:
+            finalName += "CASH";
+            break;
+        case PAYMENT_BANK:
+            finalName += "BANK";
+            break;
+        case PAYMENT_CARD:
+            finalName += ui->leCardName->text();
+            break;
+        case PAYMENT_BARTER:
+            finalName += "BARTER " + ui->wCL->cityLedgerName();
+            break;
+        default:
+            errors += tr("Selected payment mode is not allowed here") + "<br>";
+            break;
         }
     }
     if (ui->lePaymentCode->asInt() == PAYMENT_CARD) {
         if (ui->leCardCode->asInt() == 0) {
-            errors += tr("Card is not selected");
+            errors += tr("Card is not selected") + "<br>";
         }
     }
+    ui->leFinalName->setText(finalName);
     if (!errors.isEmpty()) {
         message_error(errors);
         return;
     }
-    saveRoom();
-}
 
-void DlgReceiptVaucher::on_rbGuest_clicked(bool checked)
-{
-    if (checked) {        
-        ui->lePartnerCode->setSelector(this, cache(cid_active_room), ui->lePartnerName, HINT_ACTIVE_ROOM);
+    DoubleDatabase fDD(true, doubleDatabase);
+    fDoc.fDC = dc;
+    fDoc.fSign = sign;
+    fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
+    fDoc.fRb = ui->tabWidget->currentIndex();
+    if(!fDoc.save(fDD)) {
+        message_error(fDoc.fError);
+        return;
     }
-}
-
-void DlgReceiptVaucher::on_rbCityLedger_clicked(bool checked)
-{
-    if (checked) {
-        ui->lePartnerCode->setSelector(this, cache(cid_city_ledger), ui->lePartnerName, HINT_CITY_LEDGER);
-        ui->leBalance->clear();
-    }
+    clearSelectors();
+    setBalance();
+    fixTabWidget();
+    ui->btnPrint->setEnabled(true);
+    ui->btnSave->setEnabled(false);
 }
 
 void DlgReceiptVaucher::on_btnCancel_clicked()
 {
     reject();
-}
-
-void DlgReceiptVaucher::saveRoom()
-{
-    int rb = ui->rbCityLedger->isChecked();
-    QString dc = "CREDIT";
-    int sign = -1;
-    if (ui->rbCityLedger->isChecked()) {
-        dc = "DEBIT";
-        sign = 1;
-    }
-    QString finalName;
-    if (ui->rbGuest->isChecked()) {
-        switch (ui->lePaymentCode->asInt()) {
-        case PAYMENT_CASH:
-            finalName = "CASH";
-            break;
-        case PAYMENT_BANK:
-            finalName = "BANK";
-            break;
-        case PAYMENT_CARD:
-            finalName = "CARD " + ui->leCardName->text();
-            break;
-        case PAYMENT_CL:
-            finalName = "C/L " + ui->lePartnerName->text();
-            break;
-        case PAYMENT_BARTER:
-            finalName = "BARTER " + ui->lePartnerName->text();
-            break;
-        default:
-            message_error(tr("Selected payment mode is not allowed here"));
-            return;
-        }
-    } else {
-        switch (ui->lePaymentCode->asInt()) {
-        case PAYMENT_CASH:
-            finalName = "CASH";
-            break;
-        case PAYMENT_BANK:
-            finalName = "BANK";
-            break;
-        case PAYMENT_CARD:
-            finalName = "CARD " + ui->leCardName->text();
-            break;
-        case PAYMENT_BARTER:
-            finalName = "BARTER " + ui->lePartnerName->text();
-            break;
-        default:
-            message_error(tr("Selected payment mode is not allowed here"));
-            return;
-        }
-    }
-    bool isNew = false;
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD.startTransaction();
-    if (ui->leVaucher->isEmpty()) {
-        isNew = true;
-        ui->leVaucher->setText(uuidx(VAUCHER_RECEIPT_N));
-        fDD.insertId("m_register", ui->leVaucher->text());
-    }
-    fDD[":f_source"] = VAUCHER_RECEIPT_N;
-    if (isNew) {
-        fDD[":f_rdate"] = QDate::currentDate();
-        fDD[":f_time"] = QTime::currentTime();
-        fDD[":f_user"] = ui->leOpcode->asInt();
-    }
-    fDD[":f_wdate"] = ui->deDate->date();
-    fDD[":f_room"] = (ui->rbCityLedger->isChecked() ? "-" : ui->leRoom->text());
-    fDD[":f_guest"] = ui->lePartnerName->text();
-    fDD[":f_itemCode"] = fPreferences.getDb(def_receip_vaucher_id);
-    fDD[":f_finalName"] = ui->leName->text();
-    fDD[":f_amountAmd"] = ui->leAmountAMD->asDouble();
-    fDD[":f_amountVat"] = 0;
-    fDD[":f_amountUsd"] = def_usd;
-    fDD[":f_fiscal"] = 0;
-    fDD[":f_paymentMode"] = ui->lePaymentCode->asInt();
-    fDD[":f_creditCard"] = ui->leCardCode->asInt();
-    fDD[":f_cityLedger"] = (ui->rbCityLedger->isChecked() ? ui->lePartnerCode->asInt() : 0);
-    fDD[":f_paymentComment"] = vaucherPaymentName(ui->lePaymentCode->asInt(),
-                                                      ui->leCardCode->text(),
-                                                      ui->lePartnerCode->text());
-    fDD[":f_dc"] = dc;
-    fDD[":f_sign"] = sign;
-    fDD[":f_doc"] = "";
-    fDD[":f_rec"] = "";
-    fDD[":f_inv"] = ui->leInvoice->text();
-    fDD[":f_finance"] = 1;
-    fDD[":f_remarks"] = ui->teRemarks->toPlainText();
-    fDD[":f_canceled"] = 0;
-    fDD[":f_cancelReason"] = "";
-    fDD[":f_side"] = 0;
-    fDD[":f_rb"] = rb;
-    fDD[":f_cash"] = 1;
-    fDD.update("m_register", where_id(ap(ui->leVaucher->text())));
-    fDD.commit();
-
-    QString msg = isNew ? "New receipt" : "Receipt modified";
-    msg += " " + ui->leVaucher->text();
-    QString value = ui->deDate->text() + "/" + ui->leRoom->text()
-            + "/" + ui->lePartnerName->text() + "/" + ui->lePaymentName->text()
-            + "/" + ui->leCardName->text() + "/" + ui->leName->text() + "/" + ui->leAmountAMD->text();
-    fTrackControl->fInvoice = ui->leInvoice->text();
-    fTrackControl->fRecord = ui->leVaucher->text();
-    fTrackControl->fReservation = ui->leReservation->text();
-    fTrackControl->insert(msg, value, "");
-
-    ui->btnPrint->setEnabled(true);
-    ui->btnSave->setEnabled(false);
 }
 
 void DlgReceiptVaucher::cardVisible(bool v)
@@ -352,6 +234,47 @@ void DlgReceiptVaucher::cardVisible(bool v)
     if (!v) {
         ui->leCardCode->clear();
         ui->leCardName->clear();
+    }
+}
+
+void DlgReceiptVaucher::clearSelectors()
+{
+    ui->wRoom->clearSelector();
+    ui->wCL->clearSelector();
+    ui->lePaymentCode->clearSelector();
+    ui->leCardCode->clearSelector();
+    if (!r__(cr__super_correction)) {
+        ui->leOpcode->clearSelector();
+    }
+    ui->tabWidget->disconnect(this, SLOT(on_tabWidget_currentChanged(int)));
+}
+
+void DlgReceiptVaucher::fixTabWidget()
+{
+    switch (fDoc.fRb) {
+    case 0: {
+        ui->tabWidget->setTabEnabled(1, false);
+        CacheRoom c;
+        if (c.get(ui->wRoom->room())) {
+            ui->wRoom->setRoomCategory(c.fName());
+        }
+        break;
+    }
+    case 1:
+        ui->tabWidget->setTabEnabled(0, false);
+        break;
+    }
+}
+
+void DlgReceiptVaucher::setBalance()
+{
+    switch (ui->tabWidget->currentIndex()) {
+    case 0:
+        ui->wRoom->setBalance();
+        break;
+    case 1:
+        ui->wCL->setBalance();
+        break;
     }
 }
 
@@ -399,4 +322,20 @@ void DlgReceiptVaucher::on_lePaymentCode_textChanged(const QString &arg1)
 void DlgReceiptVaucher::on_btnLog_clicked()
 {
     DlgTracking::showTracking(ui->leVaucher->text());
+}
+
+void DlgReceiptVaucher::on_tabWidget_currentChanged(int index)
+{
+    switch (index) {
+    case 0: {
+        ui->wCL->clear();
+        ui->wRoom->initSelector();
+        break;
+    }
+    case 1:
+        ui->wRoom->clear();
+        ui->wCL->initSelector();
+        break;
+    }
+    adjustSize();
 }

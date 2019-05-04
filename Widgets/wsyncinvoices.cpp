@@ -87,13 +87,14 @@ void WSyncInvoices::loadInvoice(const QString &id)
     fVauchers[":f_inv"] = id;
     fVauchers.exec("select * from m_register where f_inv=:f_inv and f_canceled=0 order by f_wdate");
 
+    /* loook 8
     ui->tblMain->setValue(0, 1, fReserv.getValue(0, "f_id"));
     ui->tblMain->setValue(1, 1, fGuests.getValue(0, "f_firstName").toString() + " " + fGuests.getValue(0, "f_lastName").toString());
     ui->tblMain->setValue(2, 1, fReserv.getValue(0, "f_startDate"));
     ui->tblMain->setValue(3, 1, fReserv.getValue(0, "f_endDate"));
     ui->tblMain->setValue(4, 1, fReserv.getValue(0, "f_invoice"));
     ui->tblMain->setValue(0, 4, fReserv.getValue(0, "f"));
-
+    */
     QFont boldFont(qApp->font());
     boldFont.setBold(true);
     ui->tblData->setRowCount(fVauchers.rowCount());
@@ -214,8 +215,9 @@ void WSyncInvoices::countPBalance()
     } else {
         ui->lbSemaphore->setPixmap(QPixmap(":/images/ball-red.png"));
     }
-    ui->tblPMain->setItemWithValue(5, 1, debit);
-    ui->tblPMain->setItemWithValue(5, 4, credit);
+    // looook
+//    ui->tblPMain->setItemWithValue(5, 1, debit);
+//    ui->tblPMain->setItemWithValue(5, 4, credit);
 }
 
 void WSyncInvoices::on_leInvoice_returnPressed()

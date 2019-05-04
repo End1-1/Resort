@@ -340,6 +340,25 @@
    <header location="global">eqtablewidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>leVaucher</tabstop>
+  <tabstop>leGroupCode</tabstop>
+  <tabstop>leNameAm</tabstop>
+  <tabstop>leNameEn</tabstop>
+  <tabstop>leNameRu</tabstop>
+  <tabstop>lePrice</tabstop>
+  <tabstop>leTaxName</tabstop>
+  <tabstop>leADGT</tabstop>
+  <tabstop>leVATDept</tabstop>
+  <tabstop>leReceptionTax</tabstop>
+  <tabstop>leNoVATDept</tabstop>
+  <tabstop>chAuto</tabstop>
+  <tabstop>chRest</tabstop>
+  <tabstop>btnOk</tabstop>
+  <tabstop>tnCancel</tabstop>
+  <tabstop>tblTaxPrint</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

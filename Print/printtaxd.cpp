@@ -34,20 +34,20 @@ void PrintTaxD::build()
     ui->tblData->setRowCount(fRecList.count());
     for (int i = 0; i < fRecList.count(); i++) {
         depts << fDept.at(i);
-        ui->tblData->setItem(i, 0, new QTableWidgetItem(fRecList.at(i)));
-        ui->tblData->setItem(i, 1, new QTableWidgetItem(fCodeList.at(i)));
-        ui->tblData->setItem(i, 2, new QTableWidgetItem(fNameList.at(i)));
-        ui->tblData->setItem(i, 3, new QTableWidgetItem(fPriceList.at(i)));
-        ui->tblData->setItem(i, 4, new QTableWidgetItem());
+        ui->tblData->setItem(i, 0, new C5TableWidgetItem(fRecList.at(i)));
+        ui->tblData->setItem(i, 1, new C5TableWidgetItem(fCodeList.at(i)));
+        ui->tblData->setItem(i, 2, new C5TableWidgetItem(fNameList.at(i)));
+        ui->tblData->setItem(i, 3, new C5TableWidgetItem(fPriceList.at(i)));
+        ui->tblData->setItem(i, 4, new C5TableWidgetItem());
         ui->tblData->setItemChecked(i, 4, true);
-        ui->tblData->setItem(i, 5, new QTableWidgetItem(fAdgCode.at(i)));
-        ui->tblData->setItem(i, 6, new QTableWidgetItem(fTaxNameList.at(i)));
-        ui->tblData->setItem(i, 7, new QTableWidgetItem(fQtyList.at(i)));
+        ui->tblData->setItem(i, 5, new C5TableWidgetItem(fAdgCode.at(i)));
+        ui->tblData->setItem(i, 6, new C5TableWidgetItem(fTaxNameList.at(i)));
+        ui->tblData->setItem(i, 7, new C5TableWidgetItem(fQtyList.at(i)));
     }
     countAmount();
     int col = 0;
     foreach (QString s, depts) {
-        ui->tblFilter->setItem(0, col++, new QTableWidgetItem(s));
+        ui->tblFilter->setItem(0, col++, new C5TableWidgetItem(s));
     }
 }
 
@@ -79,7 +79,6 @@ bool PrintTaxD::print()
                      fTaxNameList.at(i),
                      fPriceList.at(i).toDouble(),
                      fQtyList.at(i).toDouble());
-
     }
     dpt.fOrder = fInvoice;
     dpt.fCardAmount = fAmountCard.toDouble();
@@ -104,14 +103,14 @@ void PrintTaxD::countAmount()
     ui->leTotal->setDouble(total);
     ui->leCash->setDouble(total);
     ui->leCard->setDouble(0);
-    fAmountCard = ui->leCard->text();
-    fAmountCash = ui->leCash->text();
-    fAmountPre = ui->lePre->text();
+    fAmountCard = QString::number(ui->leCard->asDouble());
+    fAmountCash = QString::number(ui->leCash->asDouble());
+    fAmountPre = QString::number(ui->lePre->asDouble());
     if (ui->leAvailablePrepaid->asDouble() > 0.1) {
         if (ui->leAvailablePrepaid->asDouble() >= ui->leTotal->asDouble()) {
-            ui->lePre->setText(ui->leTotal->text());
+            ui->lePre->setText(QString::number(ui->leTotal->asDouble()));
         } else {
-            ui->lePre->setText(ui->leAvailablePrepaid->text());
+            ui->lePre->setText(QString::number(ui->leAvailablePrepaid->asDouble()));
         }
         correctAmounts(ui->lePre, ui->leCash, ui->leCard);
     }
@@ -213,9 +212,9 @@ void PrintTaxD::correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3)
         l3->setDouble(l3->asDouble() + l2->asDouble());
         l2->setDouble(0);
     }
-    fAmountCard = ui->leCard->text();
-    fAmountCash = ui->leCash->text();
-    fAmountPre = ui->lePre->text();
+    fAmountCard = QString::number(ui->leCard->asDouble());
+    fAmountCash = QString::number(ui->leCash->asDouble());
+    fAmountPre = QString::number(ui->lePre->asDouble());
 }
 
 void PrintTaxD::on_chCheckUncheckAll_clicked(bool checked)

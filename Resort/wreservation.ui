@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1177</width>
+    <width>1233</width>
     <height>607</height>
    </rect>
   </property>
@@ -146,6 +146,23 @@
           <width>20</width>
           <height>20</height>
          </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnInvoice">
+        <property name="maximumSize">
+         <size>
+          <width>2222</width>
+          <height>2222</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Invoice</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
         </property>
        </widget>
       </item>

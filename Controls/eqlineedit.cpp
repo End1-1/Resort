@@ -81,6 +81,11 @@ void EQLineEdit::setInt(int val)
     setText(QString::number(val));
 }
 
+void EQLineEdit::setUInt(uint val)
+{
+    setText(QString::number(val));
+}
+
 void EQLineEdit::setDouble(double val)
 {
     const QValidator *v = validator();
@@ -212,11 +217,21 @@ quint32 EQLineEdit::asUInt()
 
 double EQLineEdit::asDouble()
 {
-    return text().toDouble();
+    return QLocale().toDouble(text());
+}
+
+void EQLineEdit::clearSelector()
+{
+    fBase = nullptr;
+    fCacheInstance = nullptr;
+    fNameEdit = nullptr;
+    fHint = 0;
+    setReadOnly(true);
 }
 
 void EQLineEdit::setSelector(Base *base, CacheInstance *cacheInstance, QLineEdit *nameEdit, int hint)
 {
+    setReadOnly(false);
     fBase = base;
     fCacheInstance = cacheInstance;
     fNameEdit = nameEdit;
@@ -229,6 +244,9 @@ void EQLineEdit::setSelector(Base *base, CacheInstance *cacheInstance, QLineEdit
 
 void EQLineEdit::setInitialValue(const QString &value)
 {
+    if (!fCacheInstance) {
+        return;
+    }
     if (fCacheInstance->fStruct->get(value)) {
         if (fNameEdit && (fNameEdit != this)) {
             setText(value);
@@ -238,31 +256,37 @@ void EQLineEdit::setInitialValue(const QString &value)
             fShowText = fCacheInstance->fStruct->getString(1);
             setText(fCacheInstance->fStruct->getString(1));
         }
+    } else {
+        clear();
+        if (fNameEdit && (fNameEdit != this)) {
+            fNameEdit->clear();
+        } else {
+            fHiddenText = "";
+            fShowText = "";
+        }
     }
     QString code;
-    if (fCacheInstance) {
+    if (fEnableHiddenText) {
+        code = fHiddenText;
+    } else {
+        code = text();
+    }
+    if (fCacheInstance->fStruct->get(code)) {
         if (fEnableHiddenText) {
-            code = fHiddenText;
+            setText(fCacheInstance->fStruct->getString(1));
         } else {
-            code = text();
-        }
-        if (fCacheInstance->fStruct->get(code)) {
-            if (fEnableHiddenText) {
-                setText(fCacheInstance->fStruct->getString(1));
-            } else {
-                if (fNameEdit) {
-                    fNameEdit->setText(fCacheInstance->fStruct->getString(1));
-                }
+            if (fNameEdit) {
+                fNameEdit->setText(fCacheInstance->fStruct->getString(1));
             }
+        }
+    } else {
+        if (fEnableHiddenText) {
+            fHiddenText.clear();
+            clear();
         } else {
-            if (fEnableHiddenText) {
-                fHiddenText.clear();
-                clear();
-            } else {
-                clear();
-                if (fNameEdit) {
-                    fNameEdit->clear();
-                }
+            clear();
+            if (fNameEdit) {
+                fNameEdit->clear();
             }
         }
     }

@@ -21,8 +21,10 @@ public:
     QString invoice();
     virtual void setupTab();
     virtual void callback(int sel, const QString &code);
+
 protected:
     virtual bool event(QEvent *event);
+
 private:
     DoubleDatabase fDb;
     Ui::WAccInvoice *ui;
@@ -32,6 +34,11 @@ private:
     void countAmounts();
     int fCurrentInvoicePosition;
     void correctCOCL();
+    QString fOldCardex;
+    QString fOldCardexCode;
+    QString fOldVAT;
+    QString fOldVATCode;
+
 private slots:
     void handleValues(const QList<QVariant> &values);
     void on_btnTracking_clicked();

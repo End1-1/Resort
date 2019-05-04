@@ -140,7 +140,7 @@ void DlgGPOSOrderInfo::countTotal()
     ui->leTotal->setDouble(total);
 }
 
-void DlgGPOSOrderInfo::on_tblData_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *previous)
+void DlgGPOSOrderInfo::on_tblData_currentItemChanged(C5TableWidgetItem *current, C5TableWidgetItem *previous)
 {
     Q_UNUSED(current)
     Q_UNUSED(previous)
@@ -192,8 +192,8 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
         pt->fAdgCode.append(ui->tblData->toString(i, 4));
         pt->fCodeList.append(ui->tblData->toString(i, 5));
         pt->fNameList.append(ui->tblData->toString(i, 0));
-        pt->fQtyList.append(float_str(ui->tblData->toDouble(i, 1), 2));
-        pt->fPriceList.append(float_str(ui->tblData->toDouble(i, 6), 2));
+        pt->fQtyList.append(QString::number(ui->tblData->toDouble(i, 1), 'f', 2));
+        pt->fPriceList.append(QString::number(ui->tblData->toDouble(i, 6), 'f', 2));
         pt->fTaxNameList.append(ui->tblData->toString(i, 0));
     }
     fDD[":f_tax"] = 1;

@@ -29,10 +29,13 @@ private slots:
     void on_btnMultiSelect_clicked();
     void on_tblData_clicked(const QModelIndex &index);
 
+    void on_tblCategory_clicked(const QModelIndex &index);
+
 private:
     QString fBed;
     int fFloor;
     int fSmoke;
+    QString fCat;
     QDate fDate1;
     QDate fDate2;
     QStringList fExclude;

@@ -11,9 +11,9 @@
 class PTextRect : public QGraphicsItem
 {
 public:
-    PTextRect(QGraphicsItem *parent = 0);
-    PTextRect(PTextRect &pr, const QString &text, QGraphicsItem *parent = 0);
-    PTextRect(qreal x, qreal y, qreal w, qreal h, const QString &text, PTextRect *pr = 0, const QFont &font = QFont("Times", 10), QGraphicsItem *parent = 0);
+    PTextRect(QGraphicsItem *parent = nullptr);
+    PTextRect(PTextRect &pr, const QString &text, QGraphicsItem *parent = nullptr);
+    PTextRect(qreal x, qreal y, qreal w, qreal h, const QString &text, PTextRect *pr = nullptr, const QFont &font = QFont("Times", 10), QGraphicsItem *parent = 0);
     ~PTextRect();
     void setRect(qreal x, qreal y, qreal w, qreal h);
     void setWrapMode(QTextOption::WrapMode mode);

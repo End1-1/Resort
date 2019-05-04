@@ -3,13 +3,14 @@
 
 #include "defines.h"
 #include "edateedit.h"
+#include "eqtablewidget.h"
 #include <QTableWidget>
 #include <QList>
 #include <QDate>
 #include <QSettings>
 #include <QHostInfo>
 
-#define float_str(value, f) QString::number(value, 'f', f).remove(QRegExp("\\.0+$")).remove(QRegExp("\\.$"))
+QString float_str(double value, int f);
 #define float_equal(value1, value2) (abs(value1 - value2) < 0.01 ? true : false)
 #define float_greaterOrEqual(value1, value2) (value1 - value2 >= 0.01 ? true : false)
 #define float_printout(x) QLocale().toString(x, 'f', 2)
@@ -52,9 +53,9 @@ namespace Utils {
         }
     }
 
-    inline QTableWidgetItem *tableItem(const QVariant &display, const QVariant &userData = QVariant()) {
+    inline C5TableWidgetItem *tableItem(const QVariant &display, const QVariant &userData = QVariant()) {
         //QString displayStr = variantToString(display);
-        QTableWidgetItem *i = new QTableWidgetItem();
+        C5TableWidgetItem *i = new C5TableWidgetItem();
         i->setData(Qt::EditRole, display);
         i->setData(Qt::UserRole, userData);
         return i;
@@ -64,7 +65,7 @@ namespace Utils {
     void fillTableWithElements(QTableWidget *tw, QList<T> &list, int role = Qt::UserRole) {
         int row = 0, col = 0;
         for (typename QList<T>::const_iterator it = list.begin(); it != list.end(); it++) {
-            QTableWidgetItem *item = new QTableWidgetItem();
+            C5TableWidgetItem *item = new C5TableWidgetItem();
             item->setData(role, qVariantFromValue(*it));
             tw->setItem(row, col++, item);
             if (col == tw->columnCount()) {
@@ -76,6 +77,11 @@ namespace Utils {
 
     double countVATAmount(double amount, int mode);
 }
+
+bool isDoubleEqual(double v1, double v2, int prec);
+bool isDoubleNotEqual(double v1, double v2, int prec);
+bool isDoubleLess(double v1, double v2, int prec);
+bool isDoubleGreat(double v1, double v2, int prec);
 
 extern QMap<int, QString> l1;
 extern QMap<int, QString> l2;

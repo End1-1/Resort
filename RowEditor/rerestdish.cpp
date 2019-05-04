@@ -268,10 +268,10 @@ void RERestDish::save()
     for (int i = 0, rowCount = ui->tblMenu->rowCount(); i < rowCount; i++) {
         int id = cellValue(i, 1).toInt();
         QCheckBox *check = static_cast<QCheckBox*>(ui->tblMenu->cellWidget(i, 0));
-        fDD[":f_state"] = (int) check->isChecked();
+        fDD[":f_state"] = check->isChecked() ? "1" : "0";
         fDD[":f_menu"] = cellValue(i, 2);
         fDD[":f_dish"] = ui->leCode->text();
-        fDD[":f_price"] = cellValue(i, 4);
+        fDD[":f_price"] = cellDouble(i, 4);
         fDD[":f_print1"] = cellValue(i, 5);
         fDD[":f_print2"] = cellValue(i, 6);
         fDD[":f_store"] = static_cast<EQLineEdit*>(ui->tblMenu->cellWidget(i, 7))->fHiddenText.toInt();
@@ -374,7 +374,7 @@ void RERestDish::dishMod(const QString &code)
         int row = ui->tblModifier->rowCount();
         ui->tblModifier->setRowCount(row + 1);
         for (int i = 0, colCount = ui->tblModifier->columnCount(); i < colCount; i++) {
-            ui->tblModifier->setItem(row, i, new QTableWidgetItem());
+            ui->tblModifier->setItem(row, i, new C5TableWidgetItem());
         }
         ui->tblModifier->item(row, 1)->setText(m.fCode());
         ui->tblModifier->item(row, 2)->setText(m.fName());
@@ -442,6 +442,12 @@ QString RERestDish::cellValue(int row, int column)
 {
     EQLineEdit *l = static_cast<EQLineEdit*>(ui->tblMenu->cellWidget(row, column));
     return l->text();
+}
+
+double RERestDish::cellDouble(int row, int column)
+{
+    EQLineEdit *l = static_cast<EQLineEdit*>(ui->tblMenu->cellWidget(row, column));
+    return l->asDouble();
 }
 
 void RERestDish::setCellValue(int row, int column, const QString &value)

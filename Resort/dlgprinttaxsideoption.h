@@ -19,9 +19,9 @@ public:
     explicit DlgPrintTaxSideOption(QWidget *parent = nullptr);
     ~DlgPrintTaxSideOption();
     static int printTaxSide();
+
 private slots:
     void on_btnPrint_clicked();
-
     void on_btnCancel_clicked();
 
 private:

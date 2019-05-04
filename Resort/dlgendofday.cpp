@@ -4,6 +4,7 @@
 #include "wreservation.h"
 #include "winvoice.h"
 #include "paymentmode.h"
+#include "utils.h"
 #include "vauchers.h"
 
 DlgEndOfDay::DlgEndOfDay(QWidget *parent) :
@@ -49,7 +50,6 @@ void DlgEndOfDay::on_btnOk_clicked()
         message_error(tr("Unable to complete automatic charging, check the booking"));
         return;
     }
-    fCompanySideItems.clear();
 
     QString query;
     bool first = true;
@@ -58,7 +58,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     fDD.startTransaction();
     for (int i = 0, count = ui->tblCharges->rowCount(); i < count; i++) {
 
-        double amount = ui->tblCharges->item(i, 8)->data(Qt::EditRole).toFloat();
+        double amount = ui->tblCharges->item(i, 8)->data(Qt::EditRole).toDouble();
         double vatAmount = 0;
         int vat = ui->tblCharges->item(i, 1)->data(Qt::EditRole).toInt();
         switch (vat) {
@@ -110,7 +110,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         fDD[":f_remarks"] = "";
         fDD[":f_canceled"] = 0;
         fDD[":f_cancelReason"] = "";
-        fDD[":f_side"] = (fCompanySideItems[ui->tblCharges->item(i, 2)->data(Qt::EditRole).toInt()].contains(ui->tblCharges->item(i, 2)->data(Qt::EditRole).toInt()) ? 1 : 0);
+        fDD[":f_side"] = fPreferences.getDb(def_rooming_eod_default_side).toInt();
         fDD[":f_cash"] = 0;
         result = result && fDD.update("m_register", where_id(ap(rid)));
         fTrackControl->resetChanges();
@@ -240,7 +240,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     for (int j = 0; j < dbrows.count(); j++) {
         QString inv = dbrows.at(j).at(1).toString();
         for (int i = dbrowTax.count() - 1; i > -1; i--) {
-            if (inv == dbrowTax.at(i).at(1).toString() && dbrows.at(j).at(2).toDouble() == dbrowTax.at(i).at(2).toDouble()) {
+            if ((inv == dbrowTax.at(i).at(1).toString()) && isDoubleEqual(dbrows.at(j).at(2).toDouble(), dbrowTax.at(i).at(2).toDouble(), 2)) {
                 fDD[":f_fiscal"] = 1;
                 fDD.update("m_register", where_id(ap(dbrows.at(j).at(0).toString())));
                 fDD[":f_used"] = 1;
@@ -255,7 +255,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     for (int j = 0; j < dbrows.count(); j++) {
         QString inv = dbrows.at(j).at(1).toString();
         for (int i = dbrowTax.count() - 1; i > -1; i--) {
-            if (inv == dbrowTax.at(i).at(1).toString() && dbrows.at(j).at(2).toDouble() == dbrowTax.at(i).at(2).toDouble()) {
+            if ((inv == dbrowTax.at(i).at(1).toString()) && isDoubleEqual(dbrows.at(j).at(2).toDouble(), dbrowTax.at(i).at(2).toDouble(), 2)) {
                 fDD[":f_fiscal"] = 1;
                 fDD.update("m_register", where_id(ap(dbrows.at(j).at(0).toString())));
                 fDD[":f_used"] = 1;
@@ -414,7 +414,9 @@ void DlgEndOfDay::loadData()
         connect(b, SIGNAL(clickedWithId(QString)), this, SLOT(openInvoice(QString)));
         ui->tblCharges->setCellWidget(i, 10, b);
     }
+#ifndef QT_DEBUG
     if (WORKING_DATE.daysTo(QDate::currentDate()) <= 0) {
         ui->btnOk->setEnabled(false);
     }
+#endif
 }

@@ -25,6 +25,8 @@ public:
 
 private:
     Ui::FCityLedgerDetailedBalance *ui;
+    void applyNat(WReportGrid *rg);
+    void applyNorm(WReportGrid *rg);
 
 private slots:
     void openInvoice();

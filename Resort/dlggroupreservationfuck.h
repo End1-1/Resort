@@ -18,6 +18,7 @@ public:
     static void openGroup(int id);
     void loadGroup(int id);
     virtual void setup();
+
 private slots:
     void preCount(const QString &str);
     void removeRow();
@@ -51,7 +52,6 @@ private slots:
     void on_btnClearFilter_clicked();
     void on_btnPrint_clicked();
     void on_btnCancelGroup_clicked();
-
     void on_btnReviveReservations_clicked();
 
 private:

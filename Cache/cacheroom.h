@@ -13,6 +13,7 @@ public:
     inline QString fCode() {return getString("f_id"); }
     inline QString fName() {return getString("f_short"); }
     inline int fState() { return getInt("f_state"); }
+    inline int fCategoryId() { return getInt("f_class"); }
     inline QString fCategoryShort() {return getString("f_cshort"); }
     inline QString fCategory() { return getString("f_description"); }
     inline QString fBed() {return getString("f_bed"); }

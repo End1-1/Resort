@@ -66,6 +66,7 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnReservations->setVisible(r__(cr__reservations));
     ui->btnInhouseGuest->setVisible(r__(cr__inhouse_guest));
     ui->btnArrivalDeparture->setVisible(r__(cr__expected_arrivals_deparutures));
+    ui->btnArrivalDeparture_2->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->btnCallHistory->setVisible(r__(cr__calls_history));
     ui->btnNotes->setVisible(r__(cr__notes));
     ui->btnContacts->setVisible(r__(cr__contacts));
@@ -203,7 +204,7 @@ void WWelcome::on_btnRoomChart_clicked()
 
 void WWelcome::on_btnAdvance_clicked()
 {
-    DlgAdvanceEntry::advance();
+    fMainWindow->on_actionNew_advance_entry_triggered();
 }
 
 void WWelcome::on_btnPostCharge_clicked()
@@ -386,4 +387,9 @@ void WWelcome::on_btnNewRoomChart_clicked()
 void WWelcome::on_btnTransferAmount_clicked()
 {
     fMainWindow->on_actionTransfer_amount_triggered();
+}
+
+void WWelcome::on_btnArrivalDeparture_2_clicked()
+{
+    fMainWindow->on_actionExpected_arrivals_departures_2_triggered();
 }

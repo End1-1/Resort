@@ -5,7 +5,7 @@
 #include <QDate>
 #include <QSettings>
 
-static QSettings  __ss("SmartHotel", "SmartHotel");;
+static QSettings  __ss("SmartHotel", "SmartHotel");
 
 static const int COLUMN_WIDTH = 25;
 static const int ROW_HEIGHT = 22;

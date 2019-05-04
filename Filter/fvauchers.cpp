@@ -7,6 +7,7 @@
 #include "pprintvaucher.h"
 #include "wvauchereditor.h"
 #include "cachevaucher.h"
+#include "dlgprintvoucherasinvoice.h"
 #include <QInputDialog>
 
 #define SEL_VAUCHER 1
@@ -22,6 +23,7 @@ FVauchers::FVauchers(QWidget *parent) :
     fReportGrid->addToolBarButton(":/images/edit.png", tr("Edit"), SLOT(edit()), this)->setFocusPolicy(Qt::ClickFocus);
     fReportGrid->addToolBarButton(":/images/invoice.png", tr("Open invoice"), SLOT(openInvoice()), this)->setFocusPolicy(Qt::ClickFocus);
     fReportGrid->addToolBarButton(":/images/printer.png", tr("Print voucher"), SLOT(printVaucher()), this)->setFocusPolicy(Qt::ClickFocus);
+    fReportGrid->addToolBarButton(":/images/printer.png", tr("Print voucher as invoice"), SLOT(printVoucherAsInvoice()), this)->setFocusPolicy(Qt::ClickFocus);
     fBtnRevive = fReportGrid->addToolBarButton(":/images/heart-pulses.png", tr("Revive voucher"), SLOT(reviveVaucher()), this);
     fBtnRevive->setFocusPolicy(Qt::ClickFocus);
     fBtnRevive->setEnabled(false);
@@ -29,12 +31,6 @@ FVauchers::FVauchers(QWidget *parent) :
     QToolButton *btnVaucher = fReportGrid->addToolBarButton(":/images/notepad.png", tr("Edit raw data"), SLOT(editRawData()), this);
     btnVaucher->setVisible(r__(cr__super_correction));
     btnVaucher->setFocusPolicy(Qt::ClickFocus);
-//    QToolButton *btnCorrectCLNames = fReportGrid->addToolBarButton(":/images/change.png", tr("Correct CL names"), SLOT(correctCLNames()), this);
-//    btnCorrectCLNames->setVisible(r__(cr__super_correction));
-//    btnCorrectCLNames->setFocusPolicy(Qt::ClickFocus);
-//    QToolButton *btnCorrectCLNamesBack = fReportGrid->addToolBarButton(":/images/change.png", tr("Correct CL names to original"), SLOT(correctCLNamesBack()), this);
-//    btnCorrectCLNamesBack->setVisible(r__(cr__super_correction));
-//    btnCorrectCLNamesBack->setFocusPolicy(Qt::ClickFocus);
     if (r__(cr__super_correction)) {
         fReportGrid->addToolBarButton(":/images/biohazard.png", tr("Eliminate"), SLOT(eliminateVoucher()), this)->setFocusPolicy(Qt::ClickFocus);
     }
@@ -66,7 +62,8 @@ FVauchers::FVauchers(QWidget *parent) :
             r.f_canceled,\
             r.f_cancelReason, \
             r.f_cancelDate, \
-            uc.f_username \
+            uc.f_username, \
+            r.f_inv \
         FROM m_register r \
         left join users u on u.f_id=r.f_user \
         left join f_payment_type i on i.f_id=r.f_paymentMode \
@@ -75,7 +72,6 @@ FVauchers::FVauchers(QWidget *parent) :
 
         ui->leVaucherCode->setSelector(this, cache(cid_vaucher), ui->leVacherName);
         connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRow(QList<QVariant>)));
-
         connect(fReportGrid, SIGNAL(clickOnRow(int)), this, SLOT(clickOnRow(int)));
 }
 
@@ -128,6 +124,7 @@ void FVauchers::apply(WReportGrid *rg)
             .setColumn(canceled * 2, "", tr("CancelReason"))
             .setColumn(canceled, "", tr("Cancel date"))
             .setColumn(canceled * 2, "", tr("Cancel User"))
+            .setColumn(0, "", tr("Invoice"))
             ;
     QString query = fQuery;
     query = query.replace(":f_date1", ui->deFrom->dateMySql()).replace(":f_date2", ui->deTo->dateMySql());
@@ -334,6 +331,32 @@ void FVauchers::printVaucher()
         return;
     }
     PPrintVaucher::printVaucher(out.at(0).toString());
+}
+
+void FVauchers::printVoucherAsInvoice()
+{
+    QList<QVariant> out;
+    if (fReportGrid->fillRowValuesOut(out) < 0) {
+        message_info(tr("Nothing was selected"));
+        return;
+    }
+    QString ch, rv;
+    if (out.at(1).toString() == VAUCHER_RECEIPT_N) {
+        rv = out.at(0).toString();
+    } else {
+        ch = out.at(0).toString();
+    }
+    if (!out.at(29).toString().isEmpty()) {
+        DoubleDatabase dd(true, false);
+        dd[":f_invoice"] = out.at(29);
+        dd.exec("select f_id from f_reservation where f_invoice=:f_invoice");
+        if (dd.nextRow()) {
+            openVaucherInvoice(out.at(0).toString());
+            return;
+        }
+    }
+    DlgPrintVoucherAsInvoice *p = addTab<DlgPrintVoucherAsInvoice>();
+    p->addVoucher(out.at(0).toString());
 }
 
 void FVauchers::doubleClickOnRow(const QList<QVariant> &values)

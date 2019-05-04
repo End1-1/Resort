@@ -20,6 +20,7 @@ public:
     void setInvoice(const QString &id);
     void setSaleItem(const QString &code, bool disableChanges = false);
     int fLastInsertId;
+
 private slots:
     void on_btnCancel_clicked();
     void on_btnOk_clicked();
@@ -33,17 +34,11 @@ private slots:
     void on_rbDirect_clicked(bool checked);
     void on_rbCity_clicked(bool checked);
     void on_btnPrint_clicked();
-
     void on_btnPrintTax_clicked();
-
     void on_leTaxCash_textChanged(const QString &arg1);
-
     void on_leTaxCard_textChanged(const QString &arg1);
-
     void on_leTaxPre_textChanged(const QString &arg1);
-
     void on_btnNew_clicked();
-
     void on_btnLog_clicked();
 
 private:

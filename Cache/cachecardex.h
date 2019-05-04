@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_cardex 5
+static const int cid_cardex = 5;
 
 class CacheCardex : public CacheBaseStruct
 {

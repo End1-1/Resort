@@ -12,15 +12,17 @@ class RERestDish : public RowEditorDialog
     Q_OBJECT
 
 public:
-    explicit RERestDish(QList<QVariant> &values, QWidget *parent = 0);
+    explicit RERestDish(QList<QVariant> &values, QWidget *parent = nullptr);
     ~RERestDish();
     virtual void selector(int number, const QVariant &value);
+
 protected:
     virtual bool isDataCorrect();
     virtual void valuesToWidgets();
     virtual void clearWidgets();
     virtual void save();
     virtual void hide();
+
 private slots:
     void checkComplex(bool v);
     void tabPageIndexChanged(int index);
@@ -43,6 +45,7 @@ private:
     QStringList fRemovedModifiers;
     EQLineEdit *createLineEdit(int row, int column);
     QString cellValue(int row, int column);
+    double cellDouble(int row, int column);
     void setCellValue(int row, int column, const QString &value);
     void addDishRow(const QString &code, const QString &name, double qty);
     void dishMod(const QString &code);

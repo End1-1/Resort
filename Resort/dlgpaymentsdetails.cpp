@@ -10,6 +10,7 @@
 #include "pprintvaucher.h"
 #include "printtax.h"
 #include "paymentmode.h"
+#include "dlginvoicepaymentoptions.h"
 #include "dlgprinttaxsm.h"
 #include "vauchers.h"
 #include <QInputDialog>
@@ -34,13 +35,12 @@ DlgPaymentsDetails::DlgPaymentsDetails(QWidget *parent) :
     Utils::tableSetColumnWidths(ui->tblRefund, ui->tblRefund->columnCount(),
                                 0, 120, 100, 100, 80, 200, 100, 30, 0);
 
-    ui->leRoomCode->setSelector(this, cache(cid_active_room), 0, HINT_ACTIVE_ROOM);
+    ui->leRoomCode->setSelector(this, cache(cid_active_room), nullptr, HINT_ACTIVE_ROOM);
 
 
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->fInvoice = ui->leInvoice->text();
     fTrackControl->fReservation = ui->leReservation->text();
-    ui->lbCityLedger->setVisible(false);
 
     fCheckoutFlag = 0;
 }
@@ -58,6 +58,9 @@ void DlgPaymentsDetails::callback(int sel, const QString &code)
         if (c.get(code)) {
             EQTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
             int row = t->currentRow();
+            if (row < 0) {
+                return;
+            }
             if (lineEdit(t, row, 10)->text() == "RV") {
                 lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
             } else{
@@ -74,6 +77,9 @@ void DlgPaymentsDetails::callback(int sel, const QString &code)
         if (c.get(code)) {
             QTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
             int row = t->currentRow();
+            if (row < 0) {
+                return;
+            }
             if (lineEdit(t, row, 10)->text() == "RV") {
                  lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
             } else{
@@ -336,25 +342,15 @@ void DlgPaymentsDetails::newPaidRow(int mode)
     double amount = side == 0 ? ui->leBalanceAMDGuest->asDouble() : ui->leBalanceCompAMD->asDouble();
     if (amount < 0.01) {
         amount = 0;
-        rv = "RV";
-        finalName = "PAYMENT";
     }
 
-//    CI_InvoiceItem *ci = CacheInvoiceItem::instance()->get(QString::number(mode));
-//    if (!ci) {
-//        return;
-//    }
-//    if (ci.fGroup() != IG_PAYMENT) {
-//        message_error_tr("This method is not allowed for refund");
-//        return;
-//    }
     CachePaymentMode ci;
     ci.get(mode);
     QTableWidget *t = side == 0 ? ui->tblGuest : ui->tblCompany;
     int row = t->rowCount();
     t->setRowCount(row + 1);
     t->setCurrentCell(row, 0);
-    EQLineEdit *cardCLSelect = 0;
+    EQLineEdit *cardCLSelect = nullptr;
     for (int i = 0, colCount = t->columnCount(); i < colCount; i++) {
         EQLineEdit *l = createLineEdit(t, row, i);
         l->fTag = side;
@@ -378,10 +374,19 @@ void DlgPaymentsDetails::newPaidRow(int mode)
     connect(b, SIGNAL(clickedWithTag(int)), this, SLOT(removeRowClicked(int)));
     t->setCellWidget(row, 8, b);
     QList<QVariant> values;
+#ifdef _METROPOL_
+    if (mode == PAYMENT_CL) {
+        finalName = "CHECKOUT C/L";
+    } else {
+        finalName += " " + ci.fName();
+    }
+#else
+    finalName += " " + ci.fName();
+#endif
     values << ""
            << WORKING_DATE.toString(def_date_format)
            << ci.fCode()
-           << finalName + " " + ci.fName()
+           << finalName
            << ""
            << amount
            << float_str(amount / def_usd, 2)
@@ -460,7 +465,7 @@ void DlgPaymentsDetails::newRefundRow(int mode)
 void DlgPaymentsDetails::setRowValues(QTableWidget *t, int row, const QList<QVariant> &values)
 {
     for (int i = 0, count = values.count(); i < count; i++) {
-        t->setItem(row, i, new QTableWidgetItem(values.at(i).toString()));
+        t->setItem(row, i, new C5TableWidgetItem(values.at(i).toString()));
         EQLineEdit *l = lineEdit(t, row, i);
         if (!l) {
             continue;
@@ -527,6 +532,9 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                 modeName = "BANK";
                 break;
             case PAYMENT_CL:
+//#ifdef _METROPOL_
+//                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, C/L %2").arg(ui->leGuest->text()).arg(lineEdit(t, i, 4)->text()));
+//#endif
                 clCode = lineEdit(t, i, 4)->text().toInt();
                 modeName = lineEdit(t, i, 7)->text();
                 break;
@@ -553,7 +561,7 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             fDD[":f_guest"] = ui->leGuest->text();
             fDD[":f_itemCode"] = fPreferences.getDb(def_receip_vaucher_id);
             fDD[":f_finalName"] = lineEdit(t, i, 3)->text();
-            fDD[":f_amountAmd"] = lineEdit(t, i, 5)->text();
+            fDD[":f_amountAmd"] = lineEdit(t, i, 5)->asDouble();
             fDD[":f_amountVat"] = 0;
             fDD[":f_amountUsd"] = def_usd;
             fDD[":f_fiscal"] = 0;
@@ -652,13 +660,13 @@ void DlgPaymentsDetails::on_btnSave_clicked()
     QList<int> printRows1;
     QList<int> printRows2;
     if (!savePayment(ui->tblGuest, 0, printRows1)) {
-        if (printRows1.count() > 0) {
+        if (printRows1.count() > 0 && !DlgInvoicePaymentOptions::doNotPrintVoucher()) {
             printPayment(ui->tblGuest, printRows1);
         }
         return;
     }
     if (!savePayment(ui->tblCompany, 1, printRows2)) {
-        if (printRows2.count() > 0) {
+        if (printRows2.count() > 0 && !DlgInvoicePaymentOptions::doNotPrintVoucher()) {
             printPayment(ui->tblCompany, printRows2);
         }
         return;
@@ -679,7 +687,7 @@ void DlgPaymentsDetails::on_btnSave_clicked()
             fDD[":f_guest"] = ui->leGuest->text();
             fDD[":f_itemCode"] = fPreferences.getDb(def_invoice_default_refund_id);
             fDD[":f_finalName"] = tr("REFUND ") + rid;
-            fDD[":f_amountAmd"] = ui->tblRefund->toString(i, 2);
+            fDD[":f_amountAmd"] = ui->tblRefund->lineEdit(i, 2)->asDouble();
             fDD[":f_amountVat"] = 0;
             fDD[":f_amountUsd"] = def_usd;
             fDD[":f_fiscal"] = 0;
@@ -705,15 +713,25 @@ void DlgPaymentsDetails::on_btnSave_clicked()
     }
     fTrackControl->saveChanges();
     fDD.commit();
-    if (printRows1.count() > 0) {
+    if (printRows1.count() > 0 && !DlgInvoicePaymentOptions::doNotPrintVoucher()) {
         printPayment(ui->tblGuest, printRows1);
     }
-    if (printRows2.count() > 0) {
+    if (printRows2.count() > 0 && !DlgInvoicePaymentOptions::doNotPrintVoucher()) {
         printPayment(ui->tblCompany, printRows2);
     }
-    if (printRefundRow.count() > 0) {
+    if (printRefundRow.count() > 0 && !DlgInvoicePaymentOptions::doNotPrintVoucher()) {
         foreach (int i, printRefundRow) {
             PPrintVaucher::printVaucher(ui->tblRefund->toString(i, 0));
         }
     }
+    if (fCheckoutFlag && DlgInvoicePaymentOptions::closeAfterSaveCheckout()) {
+        accept();
+    }
+}
+
+void DlgPaymentsDetails::on_btnOptions_clicked()
+{
+    DlgInvoicePaymentOptions *d = new DlgInvoicePaymentOptions(this);
+    d->exec();
+    delete d;
 }

@@ -73,6 +73,10 @@
 #define def_show_logs "show_logs"
 #define def_checkin_voucher_id "Checkin voucher item code"
 #define def_transfer_amount_id "Transfer amount voucher id"
+#define def_rooming_eod_default_side "Rooming EOD default side"
+#define def_extrarooming_id "Extra rooming id"
+#define def_offer_extrarooming "Offer extra rooming"
+#define def_offer_dayuse "Offer day use"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

@@ -36,6 +36,12 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui(new Ui::WAccInvoice)
 {
     ui->setupUi(this);
+    ui->tblTotal->addRow();
+    ui->tblTotal->addRow();
+    for (int i =0 ; i < ui->tblTotal->columnCount(); i++) {
+        for (int j =0; j < 2; j++)
+        ui->tblTotal->setItemWithValue(j, i, QVariant());
+    }
     fDb.open(true, doubleDatabase);
     ui->leReservationId->setVisible(false);
     ui->deCheckIn->setReadOnly(!r__(cr__super_correction));
@@ -61,10 +67,10 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     fTrackControl->addWidget(ui->deCheckIn, "Check in date");
     fTrackControl->addWidget(ui->deDeparture, "Departure date");
 
-    if (r__(cr__super_correction)) {
-        ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardex, sel_cardex);
-        ui->leVATMode->setSelector(this, cache(cid_vat_mode), ui->leVATMode, sel_vat_mode);
-    }
+    ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardex, sel_cardex);
+    ui->leVatCode->setSelector(this, cache(cid_vat_mode), ui->leVATMode, sel_vat_mode);
+    ui->leCardexCode->setEnabled(r__(cr__super_correction));
+    ui->leVatCode->setEnabled(r__(cr__super_correction));
 }
 
 WAccInvoice::~WAccInvoice()
@@ -108,27 +114,27 @@ void WAccInvoice::callback(int sel, const QString &code)
     }
     case sel_cardex: {
         CacheCardex c;
-        if (c.get(code)) {
-        if (message_confirm(tr("Change the cardex?")) == QDialog::Accepted) {
-            QString oldCardex = ui->leCardex->text();
-            ui->leCardex->setText(c.fCode() + "/" + c.fName());
-            fDD[":f_cardex"] = c.fCode();
-            fDD.update("f_reservation", where_id(ap(ui->leReservationId->text())));
-            fTrackControl->insert(TRACK_RESERVATION, "Cardex", oldCardex, ui->leCardex->text());
-            //fTrackControl->saveChanges(ui->leReservationId->text());
+        if (c.get(code) && code != fOldCardexCode) {
+            if (message_confirm(tr("Change the cardex?")) == QDialog::Accepted) {
+                fOldCardex = c.fName();
+                fOldCardexCode = code;
+                fDD[":f_cardex"] = c.fCode();
+                fDD.update("f_reservation", where_id(ap(ui->leReservationId->text())));
+                fTrackControl->insert(TRACK_RESERVATION, "Cardex changed", fOldCardex, ui->leCardex->text());
+                //fTrackControl->saveChanges(ui->leReservationId->text());
+            }
         }
-    }
         break;
     }
     case sel_vat_mode: {
             CacheVatMode c;
-            if (c.get(code)) {
+            if (c.get(code) && code != fOldVATCode) {
                 if (message_confirm(tr("Change the VAT mode?")) == QDialog::Accepted) {
-                    QString oldMode = ui->leVATMode->text();
-                    ui->leVATMode->setText(c.fName());
+                    fOldVAT = ui->leVATMode->text();
+                    fOldVATCode = code;
                     fDD[":f_vatMode"] = c.fCode().toInt();
                     fDD.update("f_reservation", where_id(ap(ui->leReservationId->text())));
-                    fTrackControl->insert("VAT mode",  oldMode, ui->leVATMode->text());
+                    fTrackControl->insert("VAT mode",  fOldVAT, ui->leVATMode->text());
                 }
             }
             break;
@@ -166,7 +172,7 @@ void WAccInvoice::load(const QString &id)
             "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
             "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
             "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
-            "concat(r.f_cardex, '/', c.f_name), "
+            "r.f_cardex,  "
             "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
             "from f_reservation r "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -208,10 +214,12 @@ void WAccInvoice::load(const QString &id)
     ui->leNationality->setText(fDbRows.at(0).at(c++).toString());
     ui->leOperatorIn->setText(fDbRows.at(0).at(c++).toString());
     ui->leOperatorOut->setText(fDbRows.at(0).at(c++).toString());
-    ui->leCardex->setText(fDbRows.at(0).at(c++).toString());
+    fOldCardexCode = fDbRows.at(0).at(c++).toString();
+    ui->leCardexCode->setInitialValue(fOldCardexCode);
     ui->leGuestCount->setText(fDbRows.at(0).at(c++).toString());
     ui->leReservationId->setText(fDbRows.at(0).at(c++).toString());
-    ui->leVATMode->fHiddenText = fDbRows.at(0).at(c++).toString();
+    fOldVATCode = fDbRows.at(0).at(c++).toString();
+    ui->leVatCode->setInitialValue(fOldVATCode);
     ui->teRemarks->setPlainText(fDbRows.at(0).at(c++).toString());
 
     CacheVatMode v;
@@ -238,6 +246,8 @@ void WAccInvoice::load(const QString &id)
     fTrackControl->resetChanges();
     connect(ui->deEntry, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deEntry_userDateChanged(QDate)));
     connect(ui->deDeparture, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deDeparture_userDateChanged(QDate)));
+    fOldCardex = ui->leCardex->text();
+    fOldVAT = ui->leVATMode->text();
 }
 
 QString WAccInvoice::invoice()
@@ -288,7 +298,7 @@ void WAccInvoice::viewEntries()
         //rec id - 0
         ui->tblData->setItem(row, 0, Utils::tableItem(rowData.at(0)));
         //selection - 1
-        QTableWidgetItem *item = new QTableWidgetItem();
+        C5TableWidgetItem *item = new C5TableWidgetItem();
         item->setData(Qt::UserRole, rowData.at(1));
         item->setCheckState(Qt::Checked);
         ui->tblData->setItem(row, 1, item);
@@ -313,7 +323,7 @@ void WAccInvoice::viewEntries()
         //vat - 7
         ui->tblData->setItem(row, 7, Utils::tableItem(rowData.at(6)));
         //tax - 8
-        QTableWidgetItem *itemTax = new QTableWidgetItem();
+        C5TableWidgetItem *itemTax = new C5TableWidgetItem();
         itemTax->setFlags(itemTax->flags() ^ Qt::ItemIsUserCheckable);
         itemTax->setCheckState(rowData.at(7).toInt() == 0  ? Qt::Unchecked : Qt::Checked);
         ui->tblData->setItem(row, 8, itemTax);
@@ -337,9 +347,9 @@ void WAccInvoice::countAmounts()
 {
     double debet = 0, credit = 0, vat = 0;
     for (int i = 0, count = ui->tblData->rowCount(); i < count; i++) {
-        debet += ui->tblData->item(i, 5)->text().toDouble();
-        credit += ui->tblData->item(i, 6)->text().toDouble();
-        vat += ui->tblData->item(i, 7)->text().toDouble();
+        debet += ui->tblData->toDouble(i, 5);
+        credit += ui->tblData->toDouble(i, 6);
+        vat += ui->tblData->toDouble(i, 7);
     }
     ui->tblTotal->setItem(0, 5, Utils::tableItem(debet));
     ui->tblTotal->setItem(0, 6, Utils::tableItem(credit));
@@ -455,21 +465,30 @@ void WAccInvoice::on_chPaymentByCompany_clicked()
 
 void WAccInvoice::on_btnPrint_clicked()
 {
+    QStringList ids;
+    for (int i = 0; i < ui->tblData->rowCount(); i++) {
+        if (ui->tblData->item(i, 1)->checkState() == Qt::Checked) {
+            ids << ui->tblData->toString(i, 0);
+        }
+    }
+    if (!r__(cr__print_partial_invoice)) {
+        ids.clear();
+    }
     switch (DlgInvoicePrintOption::getOption()) {
     case pio_none:
         break;
     case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, this);
         break;
     case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, this);
         break;
     case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, this);
-        PPrintInvoice(ui->leInvoice->text(), 1, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, this);
         break;
     case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, this);
+        PPrintInvoice(ui->leInvoice->text(), -1, ids, this);
         break;
     }
 }
@@ -530,7 +549,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 qty = drb.getValue("f_pax").toString();
                 price = drb.getValue("f_price").toString();
             }
-            pt->fDept.append(ui->leVATMode->fHiddenText.toInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+            pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
             pt->fRecList.append(ui->tblData->toString(i, 0));
             pt->fCodeList.append(c.fCode());
             pt->fNameList.append(c.fTaxName());
@@ -564,7 +583,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 if (!c.fVatReception().isEmpty()) {
                     vatReception = c.fVatReception();
                 }
-                pt->fDept.append(ui->leVATMode->fHiddenText.toInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+                pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
                 pt->fRecList.append(ui->tblData->toString(i, 0));
                 pt->fCodeList.append(fDD.getString(0));
                 pt->fNameList.append(fDD.getString(1));

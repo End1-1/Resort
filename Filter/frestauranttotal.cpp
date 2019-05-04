@@ -574,7 +574,7 @@ void FRestaurantTotal::printReceipt()
         f.setPointSize(24);
         th.setFont(f);
         ps->addTextRect(new PTextRect(left + 10, top, 400, rowHeight, tr("Total, AMD"), &th, f));
-        top += ps->addTextRect(new PTextRect(left + 500, top, 200, rowHeight, float_str(dh.getValue("f_total").toDouble(), 0), &th, f))->textHeight();
+        top += ps->addTextRect(new PTextRect(left + 500, top, 200, rowHeight, float_str(dh.getValue("f_total").toDouble(), 1), &th, f))->textHeight();
         ps->addTextRect(new PTextRect(left + 10, top, 400, rowHeight, tr("Total, USD"), &th, f));
         top += ps->addTextRect(new PTextRect(left + 500, top, 200, rowHeight, float_str(dh.getValue("f_total").toDouble() / def_usd, 2), &th, f))->textHeight();
 

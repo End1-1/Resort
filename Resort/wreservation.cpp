@@ -304,6 +304,7 @@ void WReservation::commonChanges()
     ui->lbLastModify->setText(tr("Last modify") + ": " + r->lastModify());
     ui->btnRecheckin->setEnabled(r->canRecheckin());
     ui->btnRevive->setEnabled(r->reserveState() == RESERVE_REMOVED);
+    ui->btnInvoice->setEnabled(r->canOpenInvoice());
 }
 
 void WReservation::tabCloseRequest(int index)
@@ -635,4 +636,9 @@ WReservationRoomTab *WReservation::r()
 void WReservation::on_btnSendConfirmation_clicked()
 {
     r()->sendConfirmation();
+}
+
+void WReservation::on_btnInvoice_clicked()
+{
+    r()->openInvoice();
 }

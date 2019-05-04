@@ -142,6 +142,7 @@ public slots:
     void on_actionDaily_transactions_triggered();
     void on_actionHotel_hierarchy_triggered();
     void on_actionNew_room_chart_triggered();
+    void on_actionExpected_arrivals_departures_2_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -175,12 +176,9 @@ private slots:
     void on_actionRoom_arrangement_triggered();
     void on_actionCall_rates_triggered();
     void on_actionRoom_assignment_triggered();
-
     void on_actionTemporary_receipts_triggered();
-
-    void on_actionExpected_arrivals_departures_2_triggered();
-
     void on_actionGuest_Tray_Ledger_By_Date_triggered();
+    void on_actionRecover_invoice_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -56,6 +56,7 @@ WVaucherEditor::WVaucherEditor(QWidget *parent) :
             .addWidget(ui->leGuestCompany, "Guest/Company side")
             .addWidget(ui->teRemarks, "Remarks")
             .addWidget(ui->leVATCode, "Vat mode")
+            .addWidget(ui->leRb, "RB")
             ;
     ui->leUserCode->setSelector(this, cache(cid_users), ui->leUserName);
     ui->leCancelUserCode->setSelector(this, cache(cid_users), ui->leCancelUserName);
@@ -196,6 +197,7 @@ void WVaucherEditor::loadVaucher(const QString &id)
     ui->leAmount->setText(fDD.getValue("f_amountAmd").toString());
     ui->lePrepaid->setText(fDD.getValue("f_usedPrepaid").toString());
     ui->leVAT->setText(fDD.getValue("f_amountVat").toString());
+    ui->leVATCode->setInitialValue(fDD.getString("f_vatmode"));
     ui->leUSD->setText(fDD.getValue("f_amountUsd").toString());
     ui->leFiscal->setText(fDD.getValue("f_fiscal").toString());
     ui->lePayCode->setInitialValue(fDD.getValue("f_paymentMode").toString());
@@ -213,7 +215,7 @@ void WVaucherEditor::loadVaucher(const QString &id)
     ui->leCancelUserCode->setInitialValue(fDD.getValue("f_cancelUser").toString());
     ui->leGuestCompany->setText(fDD.getValue("f_side").toString());
     ui->teRemarks->setPlainText(fDD.getValue("f_remarks").toString());
-
+    ui->leRb->setText(fDD.getString("f_rb"));
     fTc->resetChanges();
 }
 
@@ -327,6 +329,7 @@ void WVaucherEditor::on_btnSave_clicked()
     fDD[":f_usedPrepaid"] = ui->lePrepaid->asDouble();
     fDD[":f_amountVat"] = ui->leVAT->asDouble();
     fDD[":f_amountUSD"] = ui->leUSD->asDouble();
+    fDD[":f_vatmode"] = ui->leVATCode->asInt();
     fDD[":f_fiscal"] = ui->leFiscal->asInt();
     fDD[":f_paymentMode"] = ui->lePayCode->asInt();
     fDD[":f_creditCard"] = ui->leCardCode->asInt();
@@ -343,6 +346,7 @@ void WVaucherEditor::on_btnSave_clicked()
     fDD[":f_cancelReason"] = ui->leCancelReason->text();
     fDD[":f_side"] = ui->leGuestCompany->asInt();
     fDD[":f_remarks"] = ui->teRemarks->toPlainText();
+    fDD[":f_rb"] = ui->leRb->asInt();
     fDD.update("m_register", where_id(ap(ui->leCode->text())));
     fTc->saveChanges();
     fFlagNew = false;

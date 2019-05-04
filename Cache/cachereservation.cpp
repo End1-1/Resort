@@ -20,7 +20,7 @@ CacheReservation::CacheReservation() :
                   "left join (select f_inv, sum(f_amountAmd) as amount from m_register where f_source='AV' and f_canceled=0 and f_finance=1) a on  a.f_inv=r.f_invoice "
                   "left join (select f_inv, sum(f_amountAmd) as credit from m_register where f_sign=1 and f_canceled=0 and f_finance=1 group by 1) cc on cc.f_inv=r.f_invoice "
                   "left join (select f_inv, sum(f_amountAmd) as debet from m_register where f_sign=-1 and f_canceled=0 and f_finance=1 group by 1) cd on cd.f_inv=r.f_invoice "
-                  "where (r.f_state in (1,2,7) or (r.f_state in (4, 9) and r.f_endDate>='"
+                  "where (r.f_state in (1,2) or (r.f_state in (4, 9, 7) and r.f_endDate>='"
                    + __preferences.getLocalDate(def_working_day).toString(def_mysql_date_format) + "')) :cond  ";
     fReplaceUpdateQuery = ":cond";
     fUpdateQuery = " and r.f_id=:f_id";
@@ -32,7 +32,7 @@ bool CacheReservation::hasNext(CacheReservation &c, bool fill)
     if (!fValid) {
         return false;
     }
-    CacheReservation *ci = (CacheReservation*)fInstance->fStruct;
+    CacheReservation *ci = static_cast<CacheReservation*>(fInstance->fStruct);
     QString id = fData.at(pos_id).toString();
     int room = fData.at(pos_room).toInt();
     QDate endDate = fData.at(pos_dateend).toDate();

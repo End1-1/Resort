@@ -51,7 +51,7 @@
          <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>Dearture</string>
+         <string>Departure</string>
         </property>
        </widget>
       </item>

@@ -51,6 +51,9 @@ void CacheInstance::clear()
 
 void CacheInstance::update(const QString &code)
 {
+    if (code == "0" || code.isEmpty()) {
+        return;
+    }
     QMutexLocker m(&__mutex);
     DoubleDatabase fDD(true, false);
     fDD[":f_id"] = code;

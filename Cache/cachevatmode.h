@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_vat_mode 22
+static const int cid_vat_mode = 22;
 
 class CacheVatMode : public CacheBaseStruct
 {

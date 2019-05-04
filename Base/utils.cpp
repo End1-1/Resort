@@ -6,6 +6,10 @@
 QMap<int, QString> l1;
 QMap<int, QString> l2;
 QMap<int, QString> l3;
+static const QLocale locale = QLocale();
+static const QString DecimalPoint = QLocale().decimalPoint();
+static const QRegExp reZero = QRegExp("(?!\\d[\\" + DecimalPoint +"][1-9]+)0+$");
+static const QRegExp rDP("[\\" + DecimalPoint + "]$");
 QSettings __s("SmartHotel", "SmartHotel");
 
 namespace Utils {
@@ -15,7 +19,7 @@ void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data, int role)
     int rowCount = tw->rowCount();
     tw->setRowCount(rowCount + 1);
     for (int i = 0; i < tw->columnCount(); i++)
-        tw->setItem(rowCount, i, new QTableWidgetItem());
+        tw->setItem(rowCount, i, new C5TableWidgetItem());
     Utils::tableSetRowData(tw, rowCount, data, false, role);
 }
 
@@ -99,7 +103,7 @@ void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool app
     }
     for (int i = start, rowCount = tw->rowCount(); i < rowCount; i++) {
         for (int j = 0, colCount = tw->columnCount(); j < colCount; j++) {
-            QTableWidgetItem *item = new QTableWidgetItem();
+            C5TableWidgetItem *item = new C5TableWidgetItem();
             item->setData(Qt::EditRole, data.at(i - start).at(j));
             tw->setItem(i, j, item);
         }
@@ -176,7 +180,7 @@ void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data)
     int row = tw->rowCount();
     tw->setRowCount(row + 1);
     for (int i = 0; i < data.count(); i++) {
-        tw->setItem(row, i, new QTableWidgetItem(data[i].toString()));
+        tw->setItem(row, i, new C5TableWidgetItem(data[i].toString()));
     }
 }
 
@@ -184,7 +188,7 @@ void tableSetRowDataWithOffcet(QTableWidget *tw, int row, const QList<QVariant> 
 {
     for (int i = 0; i < data.count(); i++) {
         if (createItem) {
-            tw->setItem(row, i + colOffcet, new QTableWidgetItem());
+            tw->setItem(row, i + colOffcet, new C5TableWidgetItem());
         }
         tw->item(row, i + colOffcet)->setData(role, data[i]);
     }
@@ -355,4 +359,38 @@ void dateEditNext(EDateEdit *d1, EDateEdit *d2)
     }
 }
 
+}
+
+bool isDoubleEqual(double v1, double v2, int prec)
+{
+    v1 *= prec;
+    v2 *= prec;
+    return static_cast<int>(v1) == static_cast<int>(v2);
+}
+
+bool isDoubleLess(double v1, double v2, int prec)
+{
+    v1 *= prec;
+    v2 *= prec;
+    return static_cast<int>(v1) < static_cast<int>(v2);
+}
+
+bool isDoubleGreat(double v1, double v2, int prec)
+{
+    v1 *= prec;
+    v2 *= prec;
+    return static_cast<int>(v1) > static_cast<int>(v2);
+}
+
+bool isDoubleNotEqual(double v1, double v2, int prec)
+{
+    v1 *= prec;
+    v2 *= prec;
+    return static_cast<int>(v1) != static_cast<int>(v2);
+}
+
+QString float_str(double value, int f)
+{
+    f = 2;
+    return locale.toString(value, 'f', f).remove(reZero).remove(rDP);
 }

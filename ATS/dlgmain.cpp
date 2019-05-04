@@ -783,6 +783,7 @@ void DlgMain::readFromFileTimeout()
                     QTime::fromMSecsSinceStartOfDay(q.value(1).toInt() * 1000));
     }
     q.exec("delete from " + ui->leFromFileName->text());
+    dp.close();
 }
 
 void DlgMain::portError(QSerialPort::SerialPortError serialPortError)

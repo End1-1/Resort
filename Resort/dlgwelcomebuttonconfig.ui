@@ -358,6 +358,54 @@ departures</string>
        </widget>
       </item>
       <item>
+       <widget class="EToolbarButton" name="btnArrivalDeparture_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>555</width>
+          <height>555</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Arrivals
+departures 2</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+        <property name="Tag" stdset="0">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="EToolbarButton" name="btnCheckoutInvoices">
         <property name="minimumSize">
          <size>
@@ -506,103 +554,6 @@ Invoices</string>
        </widget>
       </item>
       <item>
-       <widget class="EToolbarButton" name="btnRemarks">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>555</width>
-          <height>555</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Remarks</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/remarks.png</normaloff>:/images/remarks.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-        <property name="autoRaise">
-         <bool>true</bool>
-        </property>
-        <property name="arrowType">
-         <enum>Qt::NoArrow</enum>
-        </property>
-        <property name="Tag" stdset="0">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EToolbarButton" name="btnContacts">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>555</width>
-          <height>555</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Contacts</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/phone-book.png</normaloff>:/images/phone-book.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-        <property name="autoRaise">
-         <bool>true</bool>
-        </property>
-        <property name="Tag" stdset="0">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer_4">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -717,6 +668,103 @@ Transactions</string>
         </property>
         <property name="arrowType">
          <enum>Qt::NoArrow</enum>
+        </property>
+        <property name="Tag" stdset="0">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="EToolbarButton" name="btnRemarks">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>555</width>
+          <height>555</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Remarks</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/remarks.png</normaloff>:/images/remarks.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
+        </property>
+        <property name="arrowType">
+         <enum>Qt::NoArrow</enum>
+        </property>
+        <property name="Tag" stdset="0">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="EToolbarButton" name="btnContacts">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>555</width>
+          <height>555</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string>Contacts</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/phone-book.png</normaloff>:/images/phone-book.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+        <property name="autoRaise">
+         <bool>true</bool>
         </property>
         <property name="Tag" stdset="0">
          <string/>
@@ -1822,7 +1870,6 @@ reservations</string>
   <tabstop>btnCashReportDetailed</tabstop>
   <tabstop>btnAdvance</tabstop>
   <tabstop>btnReceipt</tabstop>
-  <tabstop>btnContacts</tabstop>
   <tabstop>btnMonthlyMovement</tabstop>
   <tabstop>btnNewGroupResevation</tabstop>
   <tabstop>btnCheckoutInvoices</tabstop>

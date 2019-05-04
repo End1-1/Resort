@@ -2,7 +2,6 @@
 #define WRESERVATIONROOMTAB_H
 
 #include "basewidget.h"
-#include "dwreservationitemsize.h"
 #include "cacheroom.h"
 #include "cacheguest.h"
 
@@ -63,6 +62,7 @@ public:
     bool canCopyLast();
     bool canRevive();
     bool revive();
+    bool canOpenInvoice();
     void copyLast(const QString &lastId = "");
     QString author();
     QString lastModify();
@@ -74,6 +74,7 @@ public:
     EQComboBox *cbRoomArrangement();
     void addRemoveFromGroup();
     void sendConfirmation();
+    void openInvoice();
     void callback(int sel, const QString &code);
 
 protected:
@@ -105,7 +106,6 @@ private slots:
     void on_chExtraBed_clicked(bool checked);
     void on_btnNewGuest_clicked();
     void on_cbPaymentType_currentIndexChanged(int index);
-    void on_btnItemSide_clicked();
     void on_leSearchGuest_returnPressed();
     void on_chMealIncluded_clicked(bool checked);
     void on_btnAppendAdvance_clicked();
@@ -128,15 +128,14 @@ private:
     bool fCityLedgerOk;
     QString fAuthor;
     QString fLastModify;
-    DWReservationItemSize *fDockItemSide;
-    QList<int> fItemSide;
     void addGuest(CacheGuest &g, bool log);
     void countTotal();
     void setEarlyCheckIn(bool v);
     void checkDatesCross();
     void setGroupBoxesEnabled(bool v);
-    void saveVaucher();
+    void saveVaucher(int createUser);
     void getAdvance();
+
 signals:
     void roomChanged(const QString &roomName, int tabIndex);
     void commonChanges();

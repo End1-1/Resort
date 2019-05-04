@@ -18,6 +18,11 @@ DEFINES += _HOTEL_
 DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
+    dlginvoicepaymentoptions.cpp \
+    dlgprintvoucherasinvoice.cpp \
+    dlgrecoverinvoice.cpp \
+    dlgseachfromdatabase.cpp \
+    dlgsingleprinttax.cpp \
         mainwindow.cpp \
     login.cpp \
     loginsettings.cpp \
@@ -25,7 +30,9 @@ SOURCES += main.cpp\
     databasesconnections.cpp \
     databaseconnection.cpp \
     databasepasswordchange.cpp \
+    wcityledger.cpp \
     wmaindesk.cpp \
+    wpaymentdetails.cpp \
     wreservation.cpp \
     wguest.cpp \
     winvoice.cpp \
@@ -63,7 +70,6 @@ SOURCES += main.cpp\
     dwmaindeskhint.cpp \
     ../Base/command.cpp \
     broadcastthread.cpp \
-    dwreservationitemsize.cpp \
     dlgpostingcharges.cpp \
     ../Cache/cacheinvoiceitem.cpp \
     ../Cache/cacheactiveroom.cpp \
@@ -209,7 +215,6 @@ SOURCES += main.cpp\
     ../Filter/fcallhistory.cpp \
     dlgtaxback.cpp \
     ../Filter/fcardexsales.cpp \
-    dlgadvance.cpp \
     ../Filter/fcommonfilterbydate.cpp \
     dlgprintrandomtax.cpp \
     dlgtaxreference.cpp \
@@ -395,16 +400,26 @@ SOURCES += main.cpp\
     ../Controls/radiogroupwidget.cpp \
     ../Filter/fexpectedarrivals2.cpp \
     ../Filter/fcitytrayledger2.cpp \
-    ../Filter/fcitytrayledger2.cpp
+    ../Filter/fcitytrayledger2.cpp \
+    dlgofferinvoiceextra.cpp \
+    dlgpostcharge.cpp \
+    wguestinvoice.cpp
 
 HEADERS  += mainwindow.h \
+    dlginvoicepaymentoptions.h \
+    dlgprintvoucherasinvoice.h \
+    dlgrecoverinvoice.h \
+    dlgseachfromdatabase.h \
+    dlgsingleprinttax.h \
     login.h \
     loginsettings.h \
     message.h \
     databasesconnections.h \
     databaseconnection.h \
     databasepasswordchange.h \
+    wcityledger.h \
     wmaindesk.h \
+    wpaymentdetails.h \
     wreservation.h \
     wguest.h \
     winvoice.h \
@@ -443,7 +458,6 @@ HEADERS  += mainwindow.h \
     dwmaindeskhint.h \
     ../Base/command.h \
     broadcastthread.h \
-    dwreservationitemsize.h \
     dlgpostingcharges.h \
     ../Cache/cacheinvoiceitem.h \
     ../Cache/cacheactiveroom.h \
@@ -591,7 +605,6 @@ HEADERS  += mainwindow.h \
     ../Filter/fcallhistory.h \
     dlgtaxback.h \
     ../Filter/fcardexsales.h \
-    dlgadvance.h \
     ../Filter/fcommonfilterbydate.h \
     dlgprintrandomtax.h \
     dlgtaxreference.h \
@@ -781,16 +794,26 @@ HEADERS  += mainwindow.h \
     ../Controls/radiogroupwidget.h \
     ../Filter/fexpectedarrivals2.h \
     ../Filter/fcitytrayledger2.h \
-    ../Filter/fcitytrayledger2.h
+    ../Filter/fcitytrayledger2.h \
+    dlgofferinvoiceextra.h \
+    dlgpostcharge.h \
+    wguestinvoice.h
 
 FORMS    += mainwindow.ui \
+    dlginvoicepaymentoptions.ui \
+    dlgprintvoucherasinvoice.ui \
+    dlgrecoverinvoice.ui \
+    dlgseachfromdatabase.ui \
+    dlgsingleprinttax.ui \
     login.ui \
     loginsettings.ui \
     message.ui \
     databasesconnections.ui \
     databaseconnection.ui \
     databasepasswordchange.ui \
+    wcityledger.ui \
     wmaindesk.ui \
+    wpaymentdetails.ui \
     wreservation.ui \
     wguest.ui \
     winvoice.ui \
@@ -808,7 +831,6 @@ FORMS    += mainwindow.ui \
     dlgendofday.ui \
     dlgcardex.ui \
     dwmaindeskhint.ui \
-    dwreservationitemsize.ui \
     dlgpostingcharges.ui \
     dlgpaymentsdetails.ui \
     ../RowEditor/reresthall.ui \
@@ -880,7 +902,6 @@ FORMS    += mainwindow.ui \
     ../Filter/fcallhistory.ui \
     dlgtaxback.ui \
     ../Filter/fcardexsales.ui \
-    dlgadvance.ui \
     ../Filter/fcommonfilterbydate.ui \
     dlgprintrandomtax.ui \
     dlgtaxreference.ui \
@@ -1004,7 +1025,10 @@ FORMS    += mainwindow.ui \
     dlgtransferanyamount.ui \
     ../Filter/fexpectedarrivals2.ui \
     ../Filter/fcitytrayledger2.ui \
-    ../Filter/fcitytrayledger2.ui
+    ../Filter/fcitytrayledger2.ui \
+    dlgofferinvoiceextra.ui \
+    dlgpostcharge.ui \
+    wguestinvoice.ui
 
 RESOURCES += \
     res.qrc

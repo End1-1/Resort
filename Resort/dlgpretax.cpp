@@ -19,7 +19,7 @@ DlgPreTax::~DlgPreTax()
 void DlgPreTax::addRow(const QList<QVariant> &data)
 {
     Utils::tableAppendRowData(ui->tblData, data, Qt::DisplayRole);
-    QTableWidgetItem *item = ui->tblData->item(ui->tblData->rowCount() - 1, 3);
+    C5TableWidgetItem *item = ui->tblData->item(ui->tblData->rowCount() - 1, 3);
     item->setCheckState(Qt::Checked);
     countTotal();
 }
@@ -33,7 +33,7 @@ void DlgPreTax::countTotal()
 {
     double total = 0;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
-        QTableWidgetItem *item = ui->tblData->item(i, 3);
+        C5TableWidgetItem *item = ui->tblData->item(i, 3);
         if (item->checkState() == Qt::Checked) {
             total += ui->tblData->toDouble(i, 2);
         }
@@ -51,7 +51,7 @@ void DlgPreTax::on_tblData_clicked(const QModelIndex &index)
 void DlgPreTax::on_btnOk_clicked()
 {
     for (int  i = 0; i < ui->tblData->rowCount(); i++) {
-        QTableWidgetItem *item = ui->tblData->item(i, 3);
+        C5TableWidgetItem *item = ui->tblData->item(i, 3);
         if (item->checkState() == Qt::Checked) {
             int tc;
             if (DlgPrintTaxSM::printAdvance(ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc)) {

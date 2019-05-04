@@ -417,14 +417,12 @@ void DlgGroupReservationFuck::makeTrackControl(int row)
 {
     TrackControl *t = new TrackControl(TRACK_RESERVATION);
     t->fReservation = ui->tblRoom->toString(row, 0);
+    t->addWidget(ui->tblRoom->lineEdit(row, 1), "(In group) Room");
     t->addWidget(ui->tblRoom->dateEdit(row, 4), "(In group) Entry date");
     t->addWidget(ui->tblRoom->dateEdit(row, 5), "(In group) Departure date");
     t->addWidget(ui->tblRoom->lineEdit(row, 6), "(In group) Price");
     t->addWidget(ui->tblRoom->comboBox(row, 9), "(In group) Arrangement");
     t->addWidget(ui->tblRoom->lineEdit(row, 10), "(In group) Guest");
-    //t->addWidget(ui->tblRoom->lineEdit(row, 12), "(In group) Male");
-    //t->addWidget(ui->tblRoom->lineEdit(row, 13), "(In group) Female");
-    //t->addWidget(ui->tblRoom->lineEdit(row, 14), "(In group) Child");
     ui->tblRoom->item(row, 0)->setData(Qt::UserRole, qVariantFromValue(t));
 }
 
@@ -510,7 +508,7 @@ void DlgGroupReservationFuck::on_tblRoom_clicked(const QModelIndex &index)
     if (!index.isValid()) {
         return;
     }
-    QTableWidgetItem *item = ui->tblRoom->item(index.row(), 11);
+    C5TableWidgetItem *item = ui->tblRoom->item(index.row(), 11);
     if (!item) {
         return;
     }
@@ -729,7 +727,12 @@ void DlgGroupReservationFuck::save()
             ui->tblRoom->setItemWithValue(i, 0, rsId);
             fTrackControl->resetChanges();
             fTrackControl->fReservation = ui->tblRoom->toString(i, 0);
-            fTrackControl->insert("Created in group: " + ui->leGroupName->text(), "",  "");
+            fTrackControl->insert("Created in group: " + ui->leGroupName->text(), QString("%1-%2, %3, %4:%5")
+                                  .arg(ui->tblRoom->dateEdit(i, 4)->text())
+                                  .arg(ui->tblRoom->dateEdit(i, 5)->text())
+                                  .arg(ui->tblRoom->lineEdit(i, 6)->text())
+                                  .arg(ui->tblRoom->toString(i, 2))
+                                  .arg(ui->tblRoom->lineEdit(i, 1)->text()),  "");
             makeTrackControl(i);
 
         }
@@ -763,7 +766,7 @@ void DlgGroupReservationFuck::save()
             fDD[":f_paymentMode"] = PAYMENT_CASH;
             fDD[":f_creditCard"] = 0;
             fDD[":f_cityLedger"] = 0;
-            fDD[":f_paymentComment"] = vaucherPaymentName(PAYMENT_CASH, 0, 0);
+            fDD[":f_paymentComment"] = vaucherPaymentName(PAYMENT_CASH, "0", "0");
             fDD[":f_dc"] = "";
             fDD[":f_sign"] = 1;
             fDD[":f_doc"] = "";
@@ -787,7 +790,7 @@ void DlgGroupReservationFuck::save()
         fDD[":f_paymentMode"] = PAYMENT_CASH;
         fDD[":f_creditCard"] = 0;
         fDD[":f_cityLedger"] = 0;
-        fDD[":f_paymentComment"] = vaucherPaymentName(PAYMENT_CASH, 0, 0);
+        fDD[":f_paymentComment"] = vaucherPaymentName(PAYMENT_CASH, "0", "0");
         fDD[":f_dc"] = "";
         fDD[":f_sign"] = 1;
         fDD[":f_doc"] = "";

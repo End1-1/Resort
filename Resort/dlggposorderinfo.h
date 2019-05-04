@@ -21,7 +21,7 @@ private slots:
     void showDishHistory(int tag);
     void on_btnOk_clicked();
     void on_btnSave_clicked();
-    void on_tblData_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *previous);
+    void on_tblData_currentItemChanged(C5TableWidgetItem *current, C5TableWidgetItem *previous);
 
     void on_btnPrint_clicked();
 

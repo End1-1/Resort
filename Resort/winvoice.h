@@ -20,9 +20,12 @@ public:
     void startTracking();
     bool activeDoc(const QString &invoice);
     static void openInvoiceWindow(const QString &invoice);
+    static void openInvoiceFromReservation(const QString &reserve);
+
 protected:
     virtual void setupTab();
     virtual bool canClose();
+
 private slots:
     void cacheUpdated(int cache, const QString &id);
     void viewGPOSOrder(const QString &id);
@@ -30,7 +33,7 @@ private slots:
     void on_btnShowRight_clicked();
     void on_leRoomCode_returnPressed();
     void on_btnLeft_clicked();
-    void moveTableRow(QTableWidget *from, QTableWidget *to);
+    void moveTableRow(EQTableWidget *from, EQTableWidget *to);
     void on_btnDoubleLeft_clicked();
     void on_btnRight_clicked();
     void on_btnDoubleRight_clicked();

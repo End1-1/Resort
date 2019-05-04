@@ -25,7 +25,6 @@ private slots:
 private:
     Ui::DlgEndOfDay *ui;
     bool fCanCharge;
-    QMap<int, QList<int> > fCompanySideItems; //reservation
     void loadData();
 };
 

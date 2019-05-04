@@ -36,7 +36,7 @@ void DlgSelector::setData(QMap<QString, QList<QVariant> > &data)
     int row = 0;
     while (it != data.end()) {
         for (int j = 0, colCount = ui->tblData->columnCount(); j < colCount; j++) {
-            QTableWidgetItem *item = new QTableWidgetItem();
+            C5TableWidgetItem *item = new C5TableWidgetItem();
             if (j == 0) {
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
                 item->setCheckState(Qt::Unchecked);

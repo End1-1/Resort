@@ -38,6 +38,7 @@ private slots:
     void edit();
     void recover();
     void printVaucher();
+    void printVoucherAsInvoice();
     void doubleClickOnRow(const QList<QVariant> &values);
     void on_chCanceled_clicked(bool checked);
     void on_toolButton_2_clicked();

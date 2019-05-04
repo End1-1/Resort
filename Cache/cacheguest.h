@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_guest 43
+static const int cid_guest = 43;
 
 class CacheGuest : public CacheBaseStruct
 {

@@ -237,7 +237,7 @@ void FDailyMovement::processItems(QString items)
         payment[fDD.getValue(i, "f_paymentMode").toInt()] = payment[fDD.getValue(i, "f_paymentMode").toInt()] + fDD.getValue(i, "f_amountAmd").toDouble();
         payment[-1] = payment[-1] + fDD.getValue(i, "f_amountAmd").toDouble();
         payment[-2] = payment[-2] + fDD.getValue(i, "f_amountVat").toDouble();
-        payment[-3] = payment[-2] + fDD.getValue(i, "f_amountUsd").toDouble();
+        payment[-3] = payment[-3] + fDD.getValue(i, "f_amountUsd").toDouble();
         rows << oneRow;
     }
     QList<QVariant> trr = emptyRow;

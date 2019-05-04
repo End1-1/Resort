@@ -126,12 +126,12 @@ void WGlobalDbConfig::getTax()
     fDD.exec("select f_id, f_comp, f_active, f_host, f_port, f_password from serv_tax order by f_comp");
     ui->tblTax->setRowCount(fDD.rowCount());
     for (int i = 0; i < fDD.rowCount(); i++) {
-        ui->tblTax->setItem(i, 0, new QTableWidgetItem(fDD.getValue(i, "f_id").toString()));
-        ui->tblTax->setItem(i, 1, new QTableWidgetItem(fDD.getValue(i, "f_comp").toString()));
-        ui->tblTax->setItem(i, 2, new QTableWidgetItem(fDD.getValue(i, "f_active").toString()));
-        ui->tblTax->setItem(i, 3, new QTableWidgetItem(fDD.getValue(i, "f_host").toString()));
-        ui->tblTax->setItem(i, 4, new QTableWidgetItem(fDD.getValue(i, "f_port").toString()));
-        ui->tblTax->setItem(i, 5, new QTableWidgetItem(fDD.getValue(i, "f_password").toString()));
+        ui->tblTax->setItem(i, 0, new C5TableWidgetItem(fDD.getValue(i, "f_id").toString()));
+        ui->tblTax->setItem(i, 1, new C5TableWidgetItem(fDD.getValue(i, "f_comp").toString()));
+        ui->tblTax->setItem(i, 2, new C5TableWidgetItem(fDD.getValue(i, "f_active").toString()));
+        ui->tblTax->setItem(i, 3, new C5TableWidgetItem(fDD.getValue(i, "f_host").toString()));
+        ui->tblTax->setItem(i, 4, new C5TableWidgetItem(fDD.getValue(i, "f_port").toString()));
+        ui->tblTax->setItem(i, 5, new C5TableWidgetItem(fDD.getValue(i, "f_password").toString()));
     }
 }
 
@@ -207,6 +207,10 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leCheckinVoucherId->setText(fPreferences.getDb(def_checkin_voucher_id).toString());
     ui->cbInvoiceHeader->setCurrentIndex(fPreferences.getDb(def_invoice_header_mode).toInt());
     ui->leTransferAmountVoucherId->setInt(fPreferences.getDb(def_transfer_amount_id).toInt());
+    ui->leRoomingEODSide->setInt(fPreferences.getDb(def_rooming_eod_default_side).toInt());
+    ui->leExtraRooming->setText(fPreferences.getDb(def_extrarooming_id).toString());
+    ui->chOfferDayUse->setChecked(fPreferences.getDb(def_offer_dayuse).toInt() == 1);
+    ui->chOfferExtraRooming->setChecked(fPreferences.getDb(def_offer_extrarooming).toInt() == 1);
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -248,6 +252,10 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
             .addWidget(ui->leExternalRestaurantDb, "External restaurant db")
             .addWidget(ui->leTransferAmountVoucherId, "Transfer amount voucher id")
+            .addWidget(ui->leRoomingEODSide, "Rooming EOD default side")
+            .addWidget(ui->leExtraRooming, "Extran rooming id")
+            .addWidget(ui->chOfferDayUse, "Offer day use")
+            .addWidget(ui->chOfferExtraRooming, "Offer extra rooming")
             ;
 
     getCompSettings();
@@ -267,6 +275,16 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
 WGlobalDbConfig::~WGlobalDbConfig()
 {
     delete ui;
+}
+
+bool WGlobalDbConfig::canClose()
+{
+    if (!BaseWidget::canClose()) {
+        if (message_confirm(tr("Save changes?")) == QDialog::Accepted) {
+            on_btnSave_clicked();
+        }
+    }
+    return true;
 }
 
 void WGlobalDbConfig::setupTab()
@@ -324,6 +342,10 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? "0" : "1");
     values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
     values.insert(def_transfer_amount_id , ui->leTransferAmountVoucherId->text());
+    values.insert(def_rooming_eod_default_side, QString::number(ui->leRoomingEODSide->text().toInt()));
+    values.insert(def_extrarooming_id, ui->leExtraRooming->text());
+    values.insert(def_offer_dayuse, ui->chOfferDayUse->isChecked() ? "1" : "0");
+    values.insert(def_offer_extrarooming, ui->chOfferExtraRooming->isChecked() ? "1" : "0");
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
@@ -371,7 +393,9 @@ void WGlobalDbConfig::on_btnSave_clicked()
             fDD[":f_fontsize"] = ui->sbrpFontSize->value();
             fDD[":f_printonly"] = ui->chrpReadyOnly->isChecked();
             fDD[":f_fontbold"] = ui->chrpFontBold->isChecked();
-            fDD.exec("update rp_main set f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold, f_printonly=:f_printonly where f_group=:f_group and f_report=:f_report");
+            fDD[":f_rowheight"] = ui->chrpRowHeight->value();
+            fDD.exec("update rp_main set f_fontname=:f_fontname, f_fontsize=:f_fontsize, f_fontbold=:f_fontbold, "
+                     "f_printonly=:f_printonly, f_rowheight=:f_rowheight where f_group=:f_group and f_report=:f_report");
         }
     }
 
@@ -632,7 +656,7 @@ void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
     dd1.exec("delete from f_reservation_map");
     dd1.exec("select r.f_id, r.f_invoice, r.f_state, r.f_reservestate, r.f_room, r.f_startdate, r.f_enddate, "
             "g.guest as f_guest, r.f_cardex, c.f_name as f_cardexname, rm.f_short as f_roomshort, rm.f_state as f_roomstate, sn.f_en as f_statename, rsn.f_en as f_reservestatename,  "
-            "r.f_invoice, r.f_group, rg.f_name as f_groupname, rm.f_building, rm.f_floor, group_concat(g1.gname separator ', ') as f_allguest "
+            "r.f_invoice, r.f_group, rg.f_name as f_groupname, rm.f_building, rm.f_floor, group_concat(g1.gname separator ', ') as f_allguest, rm.f_class "
             "from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
             "left join f_cardex c on c.f_cardex=r.f_cardex "
@@ -653,6 +677,7 @@ void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
         dd2[":f_reservestate"] = dd1.getInt("f_reservestate");
         dd2[":f_reservestatename"] = dd1.getString("f_reservestatename");
         dd2[":f_room"] = dd1.getInt("f_room");
+        dd2[":f_roomcategory"] = dd1.getInt("f_class");
         dd2[":f_roomshort"] = dd1.getString("f_roomshort");
         dd2[":f_roomstate"] = dd1.getString("f_roomstate");
         dd2[":f_roomfloor"] = dd1.getInt("f_floor");
@@ -725,6 +750,9 @@ void WGlobalDbConfig::on_lwrpGroups_currentRowChanged(int currentRow)
 
 void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
 {
+    if (currentRow < 0) {
+        return;
+    }
     QListWidgetItem *item = ui->lwrpReports->item(currentRow);
     DoubleDatabase dd(true, false);
     dd[":f_group"] = item->data(Qt::UserRole);
@@ -735,5 +763,6 @@ void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
         ui->fbrpFontName->setCurrentText(dd.getString("f_fontname"));
         ui->sbrpFontSize->setValue(dd.getInt("f_fontsize"));
         ui->chrpFontBold->setChecked(dd.getInt("f_fontbold"));
+        ui->chrpRowHeight->setValue(dd.getInt("f_rowheight"));
     }
 }

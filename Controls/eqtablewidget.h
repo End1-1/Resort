@@ -12,6 +12,17 @@
 #define for_row_count(x) for(int i = 0, rowCount = x->rowCount(); i < rowCount; i++)
 #define for_col_count(x) for(int j = 0, colCount = x->columnCount(); j < colCount; j++);
 
+class C5TableWidgetItem : public QTableWidgetItem {
+public:
+    explicit C5TableWidgetItem(int type = Type);
+
+    explicit C5TableWidgetItem(const QString &text, int type = Type);
+
+    virtual QVariant data(int role) const override;
+
+    inline QString text() {return data(Qt::DisplayRole).toString(); }
+};
+
 class EQTableWidget : public QTableWidget
 {
     Q_OBJECT
@@ -23,7 +34,9 @@ public:
     double sumOfColumn(int column, int columnCond, int cond);
     QString toString(int row, int column);
     inline double toDouble(int row, int column) {return item(row, column)->data(Qt::EditRole).toDouble();}
-    void setItem(int row, int column, QTableWidgetItem *i);
+    C5TableWidgetItem *item(int row, int column);
+    void setItem(int row, int column, C5TableWidgetItem *i);
+    //void setItem(int row, int column, const QVariant &v);
     inline int toInt(int row, int column) {return item(row, column)->data(Qt::EditRole).toInt();}
     void setItemWithValue(int row, int column, const QVariant &display, const QVariant &user = QVariant());
     QPushButton *addButton(int row, int column, const char *slot, QObject *receiver, const QIcon &icon);

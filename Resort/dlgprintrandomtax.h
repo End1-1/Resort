@@ -15,10 +15,12 @@ public:
     explicit DlgPrintRandomTax(QWidget *parent = nullptr);
     ~DlgPrintRandomTax();
     void setHeader(const QString &room, const QString &guest, const QString &invoice);
+
 private:
     Ui::DlgPrintRandomTax *ui;
     void countTotal();
     void correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3);
+
 private slots:
     void on_btnAdd_clicked();
     void btnClickWithTag(int tag);

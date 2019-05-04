@@ -44,14 +44,14 @@ WMainDesk::WMainDesk(QWidget *parent) :
     ui->tblClasses->setColumnCount(fDD.rowCount());
     int c = 0;
     while (fDD.nextRow()) {
-        ui->tblClasses->setItem(0, c++, new QTableWidgetItem(fDD.getString(0)));
+        ui->tblClasses->setItem(0, c++, new C5TableWidgetItem(fDD.getString(0)));
     }
     fDD.exec("select f_id from f_room_bed order by 1");
     ui->tblBed->setRowCount(1);
     ui->tblBed->setColumnCount(fDD.rowCount());
     c = 0;
     while (fDD.nextRow()) {
-        ui->tblBed->setItem(0, c++, new QTableWidgetItem(fDD.getString(0)));
+        ui->tblBed->setItem(0, c++, new C5TableWidgetItem(fDD.getString(0)));
     }
     ui->tblClasses->setMaximumWidth((ui->tblClasses->columnCount() * ui->tblClasses->horizontalHeader()->defaultSectionSize()) + 5);
     ui->tblBed->setMaximumWidth((ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize()) + 5);
@@ -69,7 +69,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     ui->tblDay->setRowCount(1);
     ui->tblDay->setItemDelegate(new DayItemDelegate());
     for (int i = 0; i < dayCount; i++) {
-        QTableWidgetItem *item = new QTableWidgetItem();
+        C5TableWidgetItem *item = new C5TableWidgetItem();
         item->setData(Qt::UserRole, fDateStart.addDays(i));
         ui->tblDay->setItem(0, i, item);
     }
@@ -80,7 +80,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     int col = 0;
     for (QDate d = fDateStart, end = fDateEnd.addDays(1); d < end; d = d.addDays(d.daysInMonth())) {
         ui->tblMonth->setSpan(0, col, 1, d.daysInMonth());
-        QTableWidgetItem *item = new QTableWidgetItem();
+        C5TableWidgetItem *item = new C5TableWidgetItem();
         item->setData(Qt::UserRole, d);
         ui->tblMonth->setItem(0, col, item);
         col += d.daysInMonth();
@@ -244,9 +244,9 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
         int row = t->rowCount();
         t->setRowCount(row + 1);
         for (int i = 0; i < v.count(); i++) {
-           t->setItem(row, i, new QTableWidgetItem(Utils::variantToString(v.at(i))));
+           t->setItem(row, i, new C5TableWidgetItem(Utils::variantToString(v.at(i))));
         }
-        QTableWidgetItem *item = t->item(row, 0);
+        C5TableWidgetItem *item = t->item(row, 0);
         item->setData(Qt::UserRole, item->text());
         item->setText("");
         QString pixmapName;
@@ -429,7 +429,7 @@ void WMainDesk::filterRoom()
     ui->tblRoom->setRowCount(fRoomList.count());
     ui->tblRoom->setColumnCount(1);
     for (int i = 0, count = fRoomList.count(); i < count; i++) {
-        QTableWidgetItem *item = new QTableWidgetItem();
+        C5TableWidgetItem *item = new C5TableWidgetItem();
         item->setData(Qt::UserRole, fRoomList.at(i));
         ui->tblRoom->setItem(i, 0, item);
     }
@@ -559,11 +559,9 @@ void WMainDesk::on_btnScrollLeft_clicked()
 
 void WMainDesk::on_btnCheckIn_clicked()
 {
-    WReservation *w = nullptr;
     QList<CacheRoom*> rooms;
     rooms.append(nullptr);
-    w = addTab<WReservation>();
-    w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
+    addTab<WReservation>()->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }
 
 void WMainDesk::on_btnClearSelection_clicked()
@@ -630,7 +628,7 @@ void WMainDesk::loadReservationList()
         fReservationHint.append(v);
     }
 
-    QTableWidget *t = fDockHint->tableWidget();
+    EQTableWidget *t = fDockHint->tableWidget();
     t->setRowCount(fReservationHint.count());
     Utils::tableSetColumnWidths(t, 12,
                                 30, 0, 60, 250, 120, 120, 70, 70, 30, 0, 200, 0);
@@ -644,9 +642,9 @@ void WMainDesk::loadReservationList()
             continue;
         }
         for (int i = 0; i < it->count(); i++) {
-           t->setItem(row, i, new QTableWidgetItem(Utils::variantToString(it->at(i))));
+           t->setItem(row, i, new C5TableWidgetItem(Utils::variantToString(it->at(i))));
         }
-        QTableWidgetItem *item = t->item(row, 0);
+        C5TableWidgetItem *item = t->item(row, 0);
         item->setData(Qt::UserRole, item->text());
         item->setText("");
         QString pixmapName;

@@ -5,7 +5,8 @@
 #include "paymentmode.h"
 #include "cacheroomstate.h"
 
-#define HINT_ROOM_STATE 1
+static const int HINT_ROOM_STATE = 1;
+static const int HINT_ROOM = 2;
 
 RoomState::RoomState(QWidget *parent) :
     BaseExtendedDialog(parent),
@@ -13,8 +14,10 @@ RoomState::RoomState(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->wdtOut->setVisible(false);
+    ui->leRoomCode->setSelector(this, cache(cid_room), ui->leRoomName, HINT_ROOM);
     ui->leNewState->setSelector(this, cache(cid_room_state), ui->leNewStateName, HINT_ROOM_STATE);
     fTrackControl = new TrackControl(TRACK_ROOM_STATE);
+    ui->btnSticky->setChecked(__s.value("roomstatesticky", true).toBool());
     adjustSize();
 }
 
@@ -46,31 +49,39 @@ void RoomState::callback(int sel, const QString &code)
         }
         break;
     }
+    case HINT_ROOM: {
+        if (fRoom.get(code)) {
+            ui->leRoomCode->setText(fRoom.fCode());
+            ui->leRoomName->setText(fRoom.fName());
+            ui->leCurrentState->setInt(fRoom.fState());
+            CacheRoomState crs;
+            crs.get(fRoom.fState());
+            ui->leCurrentStateName->setText(crs.fName());
+            ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
+            DoubleDatabase fDD(true, doubleDatabase);
+            fDD[":f_room"] = fRoom.fCode();
+            fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
+            if (fDD.nextRow()) {
+                if (fDD.getInt("c") == fDD.getInt("s")) {
+                    ui->lbStatus->setPixmap(QPixmap(":/images/ball-green.png"));
+                } else {
+                    ui->lbStatus->setPixmap(QPixmap(":/images/ball-red.png"));
+                }
+            }
+        } else {
+            ui->leRoomCode->clear();
+            ui->leRoomName->clear();
+            ui->leCurrentState->clear();
+            ui->leCurrentStateName->clear();
+        }
+        break;
+    }
     }
 }
 
 void RoomState::setRoom(const QString &code)
 {
-    if (!fRoom.get(code)) {
-        return;
-    }
-    ui->leRoomCode->setText(fRoom.fCode());
-    ui->leRoomName->setText(fRoom.fName());
-    ui->leCurrentState->setInt(fRoom.fState());
-    CacheRoomState crs;
-    crs.get(fRoom.fState());
-    ui->leCurrentStateName->setText(crs.fName());
-    ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD[":f_room"] = fRoom.fCode();
-    fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
-    if (fDD.nextRow()) {
-        if (fDD.getInt("c") == fDD.getInt("s")) {
-            ui->lbStatus->setPixmap(QPixmap(":/images/ball-green.png"));
-        } else {
-            ui->lbStatus->setPixmap(QPixmap(":/images/ball-red.png"));
-        }
-    }
+    ui->leRoomCode->setInitialValue(code);
 }
 
 void RoomState::on_btnCancel_clicked()
@@ -82,6 +93,9 @@ void RoomState::on_btnOk_clicked()
 {
     if (ui->leNewState->text().isEmpty()) {
         message_error(tr("Select the new state for room"));
+        return;
+    }
+    if (!ui->leNewState->isEnabled()) {
         return;
     }
     DoubleDatabase fDD(true, doubleDatabase);
@@ -159,7 +173,17 @@ void RoomState::on_btnOk_clicked()
     fDD.insert("f_room_state_change");
     fTrackControl->insert("Room state changed", ui->leCurrentStateName->text(), ui->leNewStateName->text() + add);
     BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
-    accept();
+    if (ui->btnSticky->isChecked()) {
+        ui->leRoomCode->clear();
+        ui->leNewState->clear();
+        ui->leRoomCode->setInitialValue("");
+        ui->leNewState->setInitialValue("");
+        ui->leRoomCode->setFocus();
+        ui->leNewState->setFocus();
+        ui->leRoomCode->setFocus();
+    } else {
+        accept();
+    }
 }
 
 void RoomState::on_deStart_textChanged(const QString &arg1)
@@ -186,4 +210,9 @@ void RoomState::checkOO()
     } else {
         ui->lbOO->setText("OK");
     }
+}
+
+void RoomState::on_btnSticky_clicked(bool checked)
+{
+    __s.setValue("roomstatesticky", checked);
 }

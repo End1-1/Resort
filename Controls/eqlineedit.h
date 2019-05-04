@@ -27,6 +27,7 @@ public:
     void setText(const QString &text);
     QString text();
     void setInt(int val);
+    void setUInt(uint val);
     void setDouble(double val);
     void setBgColor(const QColor &color);
     void setMultipleOfDouble(const QString &val1, const QString &val2, int prec = 0);
@@ -71,6 +72,7 @@ public:
     QStringList fCommonFilter;
     QMap<QString, QStringList> fFieldFilter;
     QStringList fCodeExcludeFilter;
+    void clearSelector();
     void setSelector(Base *base, CacheInstance *cacheInstance, QLineEdit *nameEdit, int hint = 0);
     void setInitialValue(const QString &value);
     void setInitialValue(int value);

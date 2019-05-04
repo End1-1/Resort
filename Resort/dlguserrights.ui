@@ -505,6 +505,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chChangePostChargeWorkingDate">
+         <property name="text">
+          <string>Change post charge working date</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>131</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="EQCheckBox" name="chDiscountVaucher">
          <property name="text">
           <string>Discount voucher</string>
@@ -571,6 +581,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>89</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chPrintInvoicePartialy">
+         <property name="text">
+          <string>Print invoice partialy</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>130</number>
          </property>
         </widget>
        </item>
@@ -1193,6 +1213,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>13</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chPartnersRemove">
+         <property name="text">
+          <string>Remove cardex</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>129</number>
          </property>
         </widget>
        </item>

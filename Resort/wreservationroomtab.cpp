@@ -14,6 +14,7 @@
 #include "cacheactiveroom.h"
 #include "cacheroom.h"
 #include "cacheredreservation.h"
+#include "dlgofferinvoiceextra.h"
 #include "wreservation.h"
 #include "cachecardex.h"
 #include "dlggroupreserveoption.h"
@@ -40,8 +41,6 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
 {
     ui->setupUi(this);
     fReservation = static_cast<WReservation*>(parent);
-    fDockItemSide = new DWReservationItemSize(fItemSide, this);
-    fDockItemSide->hide();
     ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexname, HINT_CARDEX);
     ui->leCardexCode->setInitialValue(fPreferences.getDb(def_default_cardex).toString());
     ui->leCityLedgerCode->setSelector(this, cache(cid_city_ledger), ui->leCityLedgerName, HINT_CITYLEDGER);
@@ -391,22 +390,7 @@ bool WReservationRoomTab::save()
             }
         }
     }
-    bool first = true;
-    QString query = "";
-    for (QList<int>::const_iterator it =  fItemSide.begin(); it != fItemSide.end(); it++) {
-        if (first) {
-            first = false;
-        } else {
-            query += ",";
-        }
-        query += QString("('%1', %2)").arg(ui->leReservId->text()).arg(*it);
-    }
-    if (query.length() > 0) {
-        query = "insert into f_reservation_item_side (f_reservation, f_itemId) values " + query;
-        if (result) {
-            result = fDD.exec(query);
-        }
-    }
+    QString query;
     if (result && !oldRoom.isEmpty()) {
         fDD[":f_room"] = ui->leRoomCode->text();
         result = result && fDD.exec("update m_register set f_room=:f_room where f_inv=" + ap(ui->leInvoice->text()));
@@ -431,6 +415,7 @@ bool WReservationRoomTab::save()
             dd2[":f_reservestatename"] = ui->leStatusName->text();
             dd2[":f_room"] = ui->leRoomCode->text();
             dd2[":f_roomshort"] = ui->leRoomName->text();
+            dd2[":f_roomcategory"] = room.fCategoryId();
             dd2[":f_roomstate"] = room.fState();
             dd2[":f_roomfloor"] = room.fFloor();
             dd2[":f_roombuilding"] = room.fBuilding();
@@ -469,7 +454,7 @@ bool WReservationRoomTab::save()
         fDD.commit();
         emit commonChanges();
         fTrackControl->saveChanges();
-        saveVaucher();
+        saveVaucher(createUser);
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
         BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->leReservId->text());
@@ -707,13 +692,6 @@ void WReservationRoomTab::loadReservation(const QString &id)
     ui->btnAppendAdvance->setEnabled(ui->leReserveCode->asInt() == RESERVE_RESERVE);
     ui->leNoVATReason->setEnabled(ui->cbVAT->asInt() == VAT_NOVAT);
     on_cbPaymentType_currentIndexChanged(0);
-    fItemSide.clear();
-    query = "select f_itemId from f_reservation_item_side where f_reservation=:f_reservation";
-    fDD[":f_reservation"] = ui->leReservId->text();
-    fDD.exec(query);
-    while (fDD.nextRow()) {
-        fItemSide.append(fDD.getInt(0));
-    }
     //Meal
     ui->sbMealQty->setEnabled(!ui->chMealIncluded->isChecked());
     ui->leMealPrice->setEnabled(!ui->chMealIncluded->isChecked());
@@ -855,22 +833,6 @@ bool WReservationRoomTab::canCheckIn(QString &why)
 bool WReservationRoomTab::checkIn(QString &errorString)
 {
     bool error = false;
-    if (QTime::currentTime() < fPreferences.getDb(def_earyly_checkin).toTime()) {
-        if (!ui->chEarlyCheckIn->isChecked() || ui->leEarlyCheckInFee->asDouble() < 0.01) {
-            if (fPreferences.getDb(def_earyly_checkin_id).toInt() == 0) {
-                message_error(tr("Early checkin code not define in the settings. Contact to administrator."));
-                return false;
-            }
-            switch (message_yesnocancel("Charge early checkin fee? Yes - return to editor")) {
-            case RESULT_YES:
-                return false;
-            case RESULT_NO:
-                break;
-            case RESULT_CANCEL:
-                return false;
-            }
-        }
-    }
     ui->lbRoom->setStyleSheet("color:black");
     if (ui->leRoomName->text().length() == 0) {
         errorString += tr("No room selected for this reservation") + "<br>";
@@ -888,11 +850,6 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         ui->lbStatusCode->setStyleSheet("color:red");
     }
     ui->lbRoomPrice->setStyleSheet("color:black");
-    if (ui->leRooming->text().toFloat() < 0.1 && ui->cbPaymentType->currentData().toInt() != PAYMENT_COMPLIMENTARY) {
-        //message_error_tr("Price is not defined");
-        //ui->lbRoomPrice->setStyleSheet("color:red");
-        //return false;
-    }
     bool passportFound = false;
     for (int i = 0; i < ui->tblGuest->rowCount(); i++) {
         CacheGuest g;
@@ -1018,47 +975,45 @@ bool WReservationRoomTab::checkIn(QString &errorString)
     /*------------------------ END ADVANCE ----------------------*/
     /*------------------------ BEGIN EARLY CHECKIN FEE ----------------*/
     if (result) {
-        if (ui->leEarlyCheckInFee->asDouble() > 0.1) {
+        if (isDoubleGreat(ui->leEarlyCheckInFee->asDouble(), 0, 2)) {
             CacheInvoiceItem ii;
-            ii.get(fPreferences.getDb(def_earyly_checkin_id).toString());
-            fDD[":f_id"] = 0;
-            int vid = fDD.insert("m_v_postcharge");
-            fDD[":f_id"] = 0;
-            int rid = fDD.insert("m_register");
-            fDD[":f_source"] = ii.fVaucher();
-            fDD[":f_wdate"] = WORKING_DATE;
-            fDD[":f_rdate"] = QDate::currentDate();
-            fDD[":f_time"] = QTime::currentTime();
-            fDD[":f_user"] = WORKING_USERID;
-            fDD[":f_room"] = ui->leRoomCode->text();
-            fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
-            fDD[":f_itemCode"] = fPreferences.getDb(def_earyly_checkin_id).toInt();
-            fDD[":f_finalName"] = ii.fName();
-            fDD[":f_amountAmd"] = ui->leEarlyCheckInFee->asDouble();
-            fDD[":f_amountVat"] = Utils::countVATAmount(ui->leEarlyCheckInFee->asDouble(), ui->cbVAT->currentData().toInt());
-            fDD[":f_amountUsd"] = def_usd;
-            fDD[":f_fiscal"] = 0;
-            fDD[":f_paymentMode"] = PAYMENT_CREDIT;
-            fDD[":f_creditCard"] = 0;
-            fDD[":f_cityLedger"] = 0;
-            fDD[":f_paymentComment"] = "";
-            fDD[":f_dc"] = "CREDIT";
-            fDD[":f_sign"] = 1;
-            fDD[":f_doc"] = vid;
-            fDD[":f_rec"] = 0;
-            fDD[":f_inv"] = ui->leInvoice->text();
-            fDD[":f_finance"] = 1;
-            fDD[":f_remarks"] = "";
-            fDD[":f_canceled"] = 0;
-            fDD[":f_cancelReason"] = "";
-            fDD[":f_side"] = fItemSide.contains(fPreferences.getDb(def_earyly_checkin_id).toInt());
-            result = result && fDD.update("m_register", where_id(ap(rid)));
-
-            if (result) {
-                fTrackControl->insert("Auto early checkin fee", QString("%1 / %2 / %3")
-                             .arg(WORKING_DATE.toString(def_date_format))
-                             .arg(ui->teEarlyCheckIn->time().toString(def_time_format))
-                             .arg(ui->leEarlyCheckInFee->text()), "");
+            if (ii.get(fPreferences.getDb(def_earyly_checkin_id).toString())) {
+                fDD[":f_id"] =  uuidx(ii.fVaucher());
+                fDD[":f_source"] = ii.fVaucher();
+                fDD[":f_res"] = ui->leReservId->text();
+                fDD[":f_wdate"] = WORKING_DATE;
+                fDD[":f_rdate"] = QDate::currentDate();
+                fDD[":f_time"] = QTime::currentTime();
+                fDD[":f_user"] = WORKING_USERID;
+                fDD[":f_room"] = ui->leRoomCode->text();
+                fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
+                fDD[":f_itemCode"] = fPreferences.getDb(def_earyly_checkin_id).toInt();
+                fDD[":f_finalName"] = ii.fName();
+                fDD[":f_amountAmd"] = ui->leEarlyCheckInFee->asDouble();
+                fDD[":f_amountVat"] = Utils::countVATAmount(ui->leEarlyCheckInFee->asDouble(), ui->cbVAT->currentData().toInt());
+                fDD[":f_amountUsd"] = def_usd;
+                fDD[":f_fiscal"] = 0;
+                fDD[":f_paymentMode"] = PAYMENT_CREDIT;
+                fDD[":f_creditCard"] = 0;
+                fDD[":f_cityLedger"] = 0;
+                fDD[":f_paymentComment"] = "";
+                fDD[":f_dc"] = "CREDIT";
+                fDD[":f_sign"] = 1;
+                fDD[":f_doc"] = "";
+                fDD[":f_rec"] = 0;
+                fDD[":f_inv"] = ui->leInvoice->text();
+                fDD[":f_finance"] = 1;
+                fDD[":f_remarks"] = "";
+                fDD[":f_canceled"] = 0;
+                fDD[":f_cancelReason"] = "";
+                fDD[":f_side"] = fPreferences.getDb(def_rooming_eod_default_side).toInt();
+                result = result && fDD.insert("m_register");
+                if (result) {
+                    fTrackControl->insert("Auto early checkin fee", QString("%1 / %2 / %3")
+                                 .arg(WORKING_DATE.toString(def_date_format))
+                                 .arg(ui->teEarlyCheckIn->time().toString(def_time_format))
+                                 .arg(ui->leEarlyCheckInFee->text()), "");
+                }
             }
         }
     }
@@ -1067,46 +1022,47 @@ bool WReservationRoomTab::checkIn(QString &errorString)
     if (result) {
         if (ui->leArrivalFee->asDouble() > 0.1) {
             CacheInvoiceItem ia;
-            ia.get(fPreferences.getDb(def_airport_pickup_id).toString());
-            fDD[":f_id"] = 0;
-            int vid = fDD.insert("m_v_receipt");
-            fDD[":f_id"] = 0;
-            int rid = fDD.insert("m_register");
-            fDD[":f_source"] = ia.fVaucher();
-            fDD[":f_wdate"] = WORKING_DATE;
-            fDD[":f_rdate"] = QDate::currentDate();
-            fDD[":f_time"] = QTime::currentTime();
-            fDD[":f_user"] = WORKING_USERID;
-            fDD[":f_room"] = ui->leRoomCode->text();
-            fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
-            fDD[":f_itemCode"] = ia.fCode();
-            fDD[":f_finalName"] = ia.fName();
-            fDD[":f_amountAmd"] = ui->leArrivalFee->asDouble();
-            fDD[":f_amountVat"] = Utils::countVATAmount(ui->leArrivalFee->asDouble(), ui->cbVAT->currentData().toInt());
-            fDD[":f_amountUsd"] = def_usd;
-            fDD[":f_fiscal"] = 0;
-            fDD[":f_paymentMode"] = PAYMENT_CREDIT;
-            fDD[":f_creditCard"] = 0;
-            fDD[":f_cityLedger"] = 0;
-            fDD[":f_paymentComment"] = "";
-            fDD[":f_dc"] = "CREDIT";
-            fDD[":f_sign"] = 1;
-            fDD[":f_doc"] = vid;
-            fDD[":f_rec"] = 0;
-            fDD[":f_inv"] = ui->leInvoice->text();
-            fDD[":f_finance"] = 1;
-            fDD[":f_remarks"] = "";
-            fDD[":f_canceled"] = 0;
-            fDD[":f_cancelReason"] = "";
-            fDD[":f_side"] = fItemSide.contains(fPreferences.getDb(def_earyly_checkin_id).toInt());
-            result = result && fDD.update("m_register", where_id(ap(rid)));
-            if (result) {
-                fTrackControl->insert("Auto airport pickup fee", QString("%1 / %2 ")
-                             .arg(WORKING_DATE.toString(def_date_format))
-                             .arg(ui->leArrivalFee->text()), "");
+            if (ia.get(fPreferences.getDb(def_airport_pickup_id).toString())) {
+                fDD[":f_id"] = uuidx(ia.fVaucher());
+                fDD[":f_res"] = ui->leReservId->text();
+                fDD[":f_source"] = ia.fVaucher();
+                fDD[":f_wdate"] = WORKING_DATE;
+                fDD[":f_rdate"] = QDate::currentDate();
+                fDD[":f_time"] = QTime::currentTime();
+                fDD[":f_user"] = WORKING_USERID;
+                fDD[":f_room"] = ui->leRoomCode->text();
+                fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
+                fDD[":f_itemCode"] = ia.fCode();
+                fDD[":f_finalName"] = ia.fName();
+                fDD[":f_amountAmd"] = ui->leArrivalFee->asDouble();
+                fDD[":f_amountVat"] = Utils::countVATAmount(ui->leArrivalFee->asDouble(), ui->cbVAT->currentData().toInt());
+                fDD[":f_amountUsd"] = def_usd;
+                fDD[":f_fiscal"] = 0;
+                fDD[":f_paymentMode"] = PAYMENT_CREDIT;
+                fDD[":f_creditCard"] = 0;
+                fDD[":f_cityLedger"] = 0;
+                fDD[":f_paymentComment"] = "";
+                fDD[":f_dc"] = "CREDIT";
+                fDD[":f_sign"] = 1;
+                fDD[":f_doc"] = "";
+                fDD[":f_rec"] = 0;
+                fDD[":f_inv"] = ui->leInvoice->text();
+                fDD[":f_finance"] = 1;
+                fDD[":f_remarks"] = "";
+                fDD[":f_canceled"] = 0;
+                fDD[":f_cancelReason"] = "";
+                fDD[":f_side"] = fPreferences.getDb(def_rooming_eod_default_side).toInt();
+                result = result && fDD.insert("m_register");
+                if (result) {
+                    fTrackControl->insert("Auto airport pickup fee", QString("%1 / %2 ")
+                                 .arg(WORKING_DATE.toString(def_date_format))
+                                 .arg(ui->leArrivalFee->text()), "");
+                }
             }
         }
     }
+    /*------------------------ END AIRPORT PICKUP -------------------------*/
+    /*----------------------- CHECKIN VOUCHER *----------------------------*/
     if (result) {
         QString checkinid = uuidx(VOUCHER_CHECKIN_N);
         fDD[":f_id"] = checkinid;
@@ -1143,7 +1099,8 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         fDD[":f_side"] = 0;
         result = result && fDD.insert("m_register", false);
     }
-    /*------------------------ END AIRPORT PICKUP -------------------------*/
+    /*----------------------- END OF CHECKIN VOUCHER ----------------------------*/
+
     if (result) {
         fDD.commit();
         ui->leReserveCode->setInitialValue(RESERVE_CHECKIN);
@@ -1157,6 +1114,22 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         PPrintCheckin::print(ui->leReservId->text());
     } else {
         fDD.rollback();
+    }
+    if (result) {
+        /* ---------------------OFFER EXTRA IF EARLY CHECKIN ----------------------- */
+        if (QTime::currentTime() < fPreferences.getDb(def_earyly_checkin).toTime()) {
+            if (!ui->chEarlyCheckIn->isChecked() || isDoubleLess(ui->leEarlyCheckInFee->asDouble(), 0.1, 10)) {
+                if (fPreferences.getDb(def_earyly_checkin_id).toInt() == 0) {
+                    message_error(tr("Early checkin code not define in the settings. Contact to administrator."));
+                    return false;
+                }
+                DlgOfferInvoiceExtra *d = new DlgOfferInvoiceExtra(this);
+                d->setRoom(ui->leRoomCode->asInt());
+                d->setExtra(DlgOfferInvoiceExtra::exEarlyCheckin);
+                d->exec();
+                d->deleteLater();
+            }
+        }
     }
     return result;
 }
@@ -1194,6 +1167,10 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
     fDD[":f_cancelDate"] = QDateTime::currentDateTime();
     ui->leReserveCode->setInitialValue(RESERVE_REMOVED);
     result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+    fDD[":f_id"] = ui->leReservId->text();
+    fDD.exec("delete from f_reservation_chart where f_id=:f_id");
+    fDD[":f_reservation"] = ui->leReservId->text();
+    fDD.exec("delete from f_reservation_map where f_reservation=:f_reservation");
 
     if (result) {
         fTrackControl->insert("Reservation was canceled", "", "");
@@ -1242,14 +1219,19 @@ bool WReservationRoomTab::revive()
     fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
     fTrackControl->insert("Revive", "", "");
     loadReservation(ui->leReservId->text());
-    BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
     fDD[":f_id"] = ui->leReservId->text();
     fDD.exec("select f_group from f_reservation where f_id=:f_id");
     if (fDD.nextRow()) {
         fReservation->setGroup(fDD.getInt("f_group"));
     }
+    save();
     emit commonChanges();
     return true;
+}
+
+bool WReservationRoomTab::canOpenInvoice()
+{
+    return ui->leReserveCode->asInt() == RESERVE_CHECKIN || ui->leReserveCode->asInt() == RESERVE_CHECKOUT;
 }
 
 void WReservationRoomTab::copyLast(const QString &lastId)
@@ -1273,6 +1255,11 @@ void WReservationRoomTab::copyLast(const QString &lastId)
     loadReservation(last);
     ui->leReservId->clear();
     ui->leInvoice->clear();
+    ui->leReserveCode->setInt(RESERVE_RESERVE);
+    ui->deEntry->setEnabled(true);
+    ui->deDeparture->setEnabled(true);
+    ui->deCreated->setDate(QDate::currentDate());
+    setGroupBoxesEnabled(true);
     fTrackControl->resetChanges();
     checkDatesCross();
 }
@@ -1376,6 +1363,11 @@ void WReservationRoomTab::addRemoveFromGroup()
 void WReservationRoomTab::sendConfirmation()
 {
     DlgEmail::sendDialog();
+}
+
+void WReservationRoomTab::openInvoice()
+{
+    openInvoiceWithId(ui->leInvoice->text());
 }
 
 void WReservationRoomTab::callback(int sel, const QString &code)
@@ -1561,7 +1553,7 @@ void WReservationRoomTab::setGroupBoxesEnabled(bool v)
     ui->grRemarks->setEnabled(v);
 }
 
-void WReservationRoomTab::saveVaucher()
+void WReservationRoomTab::saveVaucher(int createUser)
 {
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
@@ -1572,7 +1564,9 @@ void WReservationRoomTab::saveVaucher()
     fDD[":f_id"] = ui->leReservId->text();
     fDD[":f_res"] = ui->leReservId->text();
     fDD[":f_source"] = VAUCHER_RESERVATION_N;
-    fDD[":f_wdate"] = WORKING_DATE;
+    if (createUser > 0) {
+        fDD[":f_wdate"] = WORKING_DATE;
+    }
     fDD[":f_rdate"] = QDate::currentDate();
     fDD[":f_time"] = QTime::currentTime();
     fDD[":f_user"] = WORKING_USERID;
@@ -1587,7 +1581,7 @@ void WReservationRoomTab::saveVaucher()
     fDD[":f_paymentMode"] = ui->cbPaymentType->currentData();
     fDD[":f_creditCard"] = 0;
     fDD[":f_cityLedger"] = ui->leCityLedgerCode->asInt();
-    fDD[":f_paymentComment"] = vaucherPaymentName(ui->cbPaymentType->currentData().toInt(), 0, ui->leCityLedgerCode->text());
+    fDD[":f_paymentComment"] = vaucherPaymentName(ui->cbPaymentType->currentData().toInt(), "0", ui->leCityLedgerCode->text());
     fDD[":f_dc"] = "";
     fDD[":f_sign"] = 1;
     fDD[":f_doc"] = "";
@@ -1628,8 +1622,7 @@ int WReservationRoomTab::firstGuestId()
 
 QString WReservationRoomTab::mainGuest()
 {
-    CacheGuest g;
-    if (g.get(firstGuestId()) && ui->tblGuest->rowCount() > 0) {
+    if (ui->tblGuest->rowCount() > 0) {
         return ui->tblGuest->toString(0, 1) + " " + ui->tblGuest->toString(0, 2);
     } else {
         return "No guest";
@@ -1798,13 +1791,18 @@ void WReservationRoomTab::tblGuestChange(int tag)
     g->setValues();
     if (g->exec() == QDialog::Accepted) {
         fTrackControl->insertMessage("Guest changed", ui->tblGuest->toString(tag, 2), v.at(2).toString() + " " + v.at(3).toString());
+        ui->tblGuest->setItemWithValue(tag, 0, v.at(0));
         ui->tblGuest->item(tag, 1)->setText(v.at(1).toString());
         ui->tblGuest->item(tag, 2)->setText(v.at(2).toString() + " " + v.at(3).toString());
-        if (tag == 0) {
+        if (tag == 0 && !ui->leInvoice->isEmpty()) {
             DoubleDatabase dd(true, doubleDatabase);
             dd[":f_guest"] = mainGuest();
             dd[":f_inv"] = ui->leInvoice->text();
             dd.exec("update m_register set f_guest=:f_guest where f_inv=:f_inv");
+            BroadcastThread::cmdRefreshCache(cid_guest, ui->tblGuest->toString(0, 0));
+            BroadcastThread::cmdRefreshCache(cid_active_room, ui->leRoomCode->text());
+            BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
+            BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->leReservId->text());
         }
     }
     delete g;
@@ -1833,7 +1831,7 @@ void WReservationRoomTab::tblGuestRemove(int row)
     ui->tblGuest->removeCellWidget(row, 4);
     ui->tblGuest->removeRow(row);
     if (row == 0) {
-        if (ui->tblGuest->rowCount() > 0) {
+        if (ui->tblGuest->rowCount() > 0  && !ui->leInvoice->isEmpty()) {
             DoubleDatabase dd(true, doubleDatabase);
             dd[":f_guest"] = mainGuest();
             dd[":f_inv"] = ui->leInvoice->text();
@@ -1877,11 +1875,15 @@ void WReservationRoomTab::tblGuestChangeInfo(int tag)
         fTrackControl->insert("Guest info edited", ui->tblGuest->toString(tag, 2), v.at(2).toString() + " " + v.at(3).toString());
         ui->tblGuest->item(tag, 1)->setText(v.at(1).toString());
         ui->tblGuest->item(tag, 2)->setText(v.at(2).toString() + " " + v.at(3).toString());
-        if (tag == 0) {
+        if (tag == 0 && !ui->leInvoice->isEmpty()) {
             DoubleDatabase dd(true, doubleDatabase);
             dd[":f_guest"] = mainGuest();
             dd[":f_inv"] = ui->leInvoice->text();
             dd.exec("update m_register set f_guest=:f_guest where f_inv=:f_inv");
+            BroadcastThread::cmdRefreshCache(cid_guest, ui->tblGuest->toString(0, 0));
+            BroadcastThread::cmdRefreshCache(cid_active_room, ui->leRoomCode->text());
+            BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
+            BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->leReservId->text());
         }
     }
     delete g;
@@ -1937,14 +1939,14 @@ void WReservationRoomTab::addGuest(CacheGuest &g, bool log)
 {
     int row = ui->tblGuest->rowCount();
     ui->tblGuest->setRowCount(ui->tblGuest->rowCount() + 1);
-    QTableWidgetItem *iCode = new QTableWidgetItem();
+    C5TableWidgetItem *iCode = new C5TableWidgetItem();
     iCode->setData(Qt::DisplayRole, g.fId());
-    QTableWidgetItem *iTitle = new QTableWidgetItem();
+    C5TableWidgetItem *iTitle = new C5TableWidgetItem();
     iTitle->setData(Qt::DisplayRole, g.fTitle());
-    QTableWidgetItem *iName = new QTableWidgetItem();
+    C5TableWidgetItem *iName = new C5TableWidgetItem();
     iName->setData(Qt::DisplayRole, g.fFullName());
-    QTableWidgetItem *iInfo = new QTableWidgetItem();
-    QTableWidgetItem *iRemove = new QTableWidgetItem();
+    C5TableWidgetItem *iInfo = new C5TableWidgetItem();
+    C5TableWidgetItem *iRemove = new C5TableWidgetItem();
     ui->tblGuest->setItem(row, 0, iCode);
     ui->tblGuest->setItem(row, 1, iTitle);
     ui->tblGuest->setItem(row, 2, iName);
@@ -2130,12 +2132,6 @@ void WReservationRoomTab::on_cbPaymentType_currentIndexChanged(int index)
     ui->leCityLedgerName->setEnabled(pm == PAYMENT_CL);
 }
 
-void WReservationRoomTab::on_btnItemSide_clicked()
-{
-    fDockItemSide->show();
-    fDockItemSide->raise();
-}
-
 void WReservationRoomTab::on_leSearchGuest_returnPressed()
 {
     if (ui->leSearchGuest->text().trimmed().isEmpty()) {
@@ -2209,7 +2205,9 @@ void WReservationRoomTab::on_btnAppendAdvance_clicked()
         message_error(tr("Save reservation first"));
         return;
     }
-    DlgAdvanceEntry::advance(ui->leReservId->text());
+    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReservId->text(), this);
+    d->exec();
+    delete d;
     getAdvance();
 }
 

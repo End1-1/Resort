@@ -61,6 +61,7 @@ void DlgNoShow::callback(int sel, const QString &code)
             }
             ui->btnPrintTax->setEnabled(ci.fCode().toInt() != PAYMENT_CL);
         }
+        ui->leCardCode->setEnabled(ui->lePaymentMode->asInt() == PAYMENT_CARD);
         break;
     }
     case HINT_RED_RESERVE: {

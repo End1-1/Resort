@@ -5,7 +5,7 @@
 #include "utils.h"
 #include <QDate>
 
-#define cid_reservation 34
+static const int cid_reservation = 34;
 
 #define pos_id 0
 #define pos_room 3

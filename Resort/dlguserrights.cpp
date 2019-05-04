@@ -166,6 +166,9 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chCancelCurrentDate, "Voucher cancelation on current date")
             .addWidget(ui->chAdvanceReceiptInvoice, "Advance voucher in invoice")
             .addWidget(ui->chTempReceipt, "Temporary receipts")
+            .addWidget(ui->chPartnersRemove, "Remove cardex")
+            .addWidget(ui->chPrintInvoicePartialy, "Print invoice partialy")
+            .addWidget(ui->chChangePostChargeWorkingDate, "Change post charge working date")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

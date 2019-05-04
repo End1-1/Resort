@@ -14,8 +14,8 @@ DlgReservationRemarks::DlgReservationRemarks(QWidget *parent) :
     ui->tblData->setRowCount(fDD.rowCount());
     int row = 0;
     while (fDD.nextRow()) {
-        ui->tblData->setItem(row, 0, new QTableWidgetItem(fDD.getString(0)));
-        ui->tblData->setItem(row++, 1, new QTableWidgetItem(fDD.getString(1)));
+        ui->tblData->setItem(row, 0, new C5TableWidgetItem(fDD.getString(0)));
+        ui->tblData->setItem(row++, 1, new C5TableWidgetItem(fDD.getString(1)));
     }
 }
 
@@ -67,8 +67,8 @@ void DlgReservationRemarks::on_btnSaveAs_clicked()
     fDD[":f_text"] = ui->teText->toPlainText();
     int id = fDD.insert("f_reservation_remarks");
     ui->tblData->setRowCount(ui->tblData->rowCount() + 1);
-    ui->tblData->setItem(ui->tblData->rowCount() - 1, 0, new QTableWidgetItem());
-    ui->tblData->setItem(ui->tblData->rowCount() - 1, 1, new QTableWidgetItem());
+    ui->tblData->setItem(ui->tblData->rowCount() - 1, 0, new C5TableWidgetItem());
+    ui->tblData->setItem(ui->tblData->rowCount() - 1, 1, new C5TableWidgetItem());
     ui->tblData->setValue(ui->tblData->rowCount() - 1, 0, id);
     ui->tblData->setValue(ui->tblData->rowCount() - 1, 1, ui->teText->toPlainText());
     fTrackControl->insert("New remarks", ui->teText->toPlainText(), "");

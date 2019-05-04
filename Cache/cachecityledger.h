@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_city_ledger 24
+static const int cid_city_ledger = 24;
 
 class CacheCityLedger : public CacheBaseStruct
 {

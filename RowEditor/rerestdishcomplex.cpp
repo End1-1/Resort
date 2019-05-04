@@ -147,7 +147,7 @@ void RERestDishComplex::on_btnAdd_clicked()
     }
     int row = ui->tblDishes->rowCount();
     ui->tblDishes->setRowCount(row + 1);
-    ui->tblDishes->setItem(row, 0, new QTableWidgetItem("0"));
+    ui->tblDishes->setItem(row, 0, new C5TableWidgetItem("0"));
     ui->tblDishes->setItem(row, 1, Utils::tableItem(c.fCode()));
     ui->tblDishes->setItem(row, 2, Utils::tableItem(c.fMenu()));
     ui->tblDishes->setItem(row, 3, Utils::tableItem(c.fName()));

@@ -28,11 +28,14 @@ public:
     static void openReserveWindows(const QString &code);
     static void openReserveGroup(int group);
     static void openVaucher(const QString &id);
+
 public slots:
     WReservationRoomTab *newRoomTab(bool autocreate = false);
+
 protected:
     virtual void setupTab();
     virtual bool canClose();
+
 private slots:
     void loadFromData(const QList<QVariant> &data);
     void commonChanges();
@@ -53,6 +56,7 @@ private slots:
     void on_btnAddRemoveGroup_clicked();
     WReservationRoomTab *r();
     void on_btnSendConfirmation_clicked();
+    void on_btnInvoice_clicked();
 
 private:
     Ui::WReservation *ui;

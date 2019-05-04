@@ -22,6 +22,7 @@ private slots:
     void on_btnOk_clicked();
     void on_deStart_textChanged(const QString &arg1);
     void on_deEnd_textChanged(const QString &arg1);
+    void on_btnSticky_clicked(bool checked);
 
 private:
     Ui::RoomState *ui;

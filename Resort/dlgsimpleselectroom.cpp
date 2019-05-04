@@ -2,6 +2,7 @@
 #include "ui_dlgsimpleselectroom.h"
 #include "cachereservation.h"
 #include "cacheroom.h"
+#include "cacheroomcategory.h"
 #include "cachebed.h"
 
 DlgSimpleSelectRoom::DlgSimpleSelectRoom(QWidget *parent) :
@@ -12,11 +13,11 @@ DlgSimpleSelectRoom::DlgSimpleSelectRoom(QWidget *parent) :
     ui->tblData->setSortingEnabled(false);
     qApp->processEvents();
 
-    QTableWidgetItem *i1 = new QTableWidgetItem(tr("Any"));
+    C5TableWidgetItem *i1 = new C5TableWidgetItem(tr("Any"));
     i1->setData(Qt::UserRole, 0);
-    QTableWidgetItem *i2 = new QTableWidgetItem(tr("Yes"));
+    C5TableWidgetItem *i2 = new C5TableWidgetItem(tr("Yes"));
     i1->setData(Qt::UserRole, 1);
-    QTableWidgetItem *i3 = new QTableWidgetItem(tr("No"));
+    C5TableWidgetItem *i3 = new C5TableWidgetItem(tr("No"));
     i2->setData(Qt::UserRole, 2);
     ui->tblSmoke->setItem(0, 0, i1);
     ui->tblSmoke->setItem(0, 1, i2);
@@ -25,7 +26,17 @@ DlgSimpleSelectRoom::DlgSimpleSelectRoom(QWidget *parent) :
     ui->tblFloor->setColumnCount(9);
     ui->tblFloor->setRowCount(1);
     for (int i = 0; i < ui->tblFloor->columnCount(); i++) {
-        ui->tblFloor->setItem(0, i, new QTableWidgetItem(QString::number(i + 1)));
+        ui->tblFloor->setItem(0, i, new C5TableWidgetItem(QString::number(i + 1)));
+    }
+
+    CacheInstance *ci = cache(cid_room_category);
+    ui->tblCategory->setColumnCount(ci->count());
+    ui->tblCategory->setRowCount(1);
+    int col = 0;
+    QMap<QString, QList<QVariant> >::iterator it = ci->fRows.begin();
+    while (it != ci->fRows.end()) {
+        ui->tblCategory->setItem(0, col++, new C5TableWidgetItem(it.value().at(1).toString()));
+        it++;
     }
     fSingleSelection = false;
 }
@@ -43,6 +54,12 @@ int DlgSimpleSelectRoom::getRoom(const QString &cat, const QDate &d1, const QDat
     fDate1 = d1;
     fDate2 = d2;
     ui->lbCat->setText(cat);
+    fCat = cat;
+    if (fCat.length() > 0) {
+        ui->tblCategory->setEnabled(false);
+    } else {
+        ui->lbCat->setText(tr("Category"));
+    }
     filter();
     return exec();
 }
@@ -56,7 +73,7 @@ void DlgSimpleSelectRoom::getRoomsList(QStringList &rooms)
 {
     for (int r = 0; r < ui->tblData->rowCount(); r++) {
         for (int c = 0; c < ui->tblData->columnCount(); c++) {
-            QTableWidgetItem *item = ui->tblData->item(r, c);
+            C5TableWidgetItem *item = ui->tblData->item(r, c);
             if (!item) {
                 break;
             }
@@ -113,8 +130,10 @@ void DlgSimpleSelectRoom::on_btnClearRoomFilter_clicked()
     fBed = "";
     fSmoke = 0;
     fFloor = 0;
+    fCat = "";
     ui->tblFloor->clearSelection();
     ui->tblSmoke->clearSelection();
+    ui->tblCategory->clearSelection();
     filter2();
 }
 
@@ -146,6 +165,10 @@ void DlgSimpleSelectRoom::filter()
             it++;
             continue;
         }
+        if (fCat.length() > 0 && croom.fCategoryShort() != fCat) {
+            it++;
+            continue;
+        }
         roomList.append(croom.fCode());
         it++;
     }
@@ -170,7 +193,7 @@ void DlgSimpleSelectRoom::filter2()
 {
     for (int r = 0; r < ui->tblData->rowCount(); r++) {
         for (int c = 0; c < ui->tblData->columnCount(); c++) {
-            QTableWidgetItem *item = ui->tblData->item(r, c);
+            C5TableWidgetItem *item = ui->tblData->item(r, c);
             if (!item) {
                 break;
             }
@@ -181,6 +204,12 @@ void DlgSimpleSelectRoom::filter2()
             item->setFlags(item->flags() | Qt::ItemIsEnabled);
             if (!fBed.isEmpty()) {
                 if (fBed != cr.fBed()) {
+                    item->setFlags(item->flags() ^ Qt::ItemIsEnabled);
+                    continue;
+                }
+            }
+            if (!fCat.isEmpty()) {
+                if (fCat != cr.fCategoryShort()) {
                     item->setFlags(item->flags() ^ Qt::ItemIsEnabled);
                     continue;
                 }
@@ -212,7 +241,7 @@ void DlgSimpleSelectRoom::on_tblData_clicked(const QModelIndex &index)
     int total = 0;
     for (int r = 0; r < ui->tblData->rowCount(); r++) {
         for (int c = 0; c < ui->tblData->columnCount(); c++) {
-            QTableWidgetItem *item = ui->tblData->item(r, c);
+            C5TableWidgetItem *item = ui->tblData->item(r, c);
             if (!item) {
                 continue;
             }
@@ -227,4 +256,13 @@ void DlgSimpleSelectRoom::on_tblData_clicked(const QModelIndex &index)
         }
     }
     ui->lbTotal->setText(QString("Total: %1").arg(total));
+}
+
+void DlgSimpleSelectRoom::on_tblCategory_clicked(const QModelIndex &index)
+{
+    if (!index.isValid()) {
+        return;
+    }
+    fCat = index.data(Qt::DisplayRole).toString();
+    filter2();
 }

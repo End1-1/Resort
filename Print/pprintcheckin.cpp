@@ -71,8 +71,8 @@ void PPrintCheckin::print(const QString &id)
     val << fDD.getValue("f_startDate").toDate().toString(def_date_format)
         << fDD.getValue("f_endDate").toDate().toString(def_date_format)
         << fDD.getValue("f_room").toString()
-        << float_str(fDD.getValue("f_roomFee").toDouble(), 0)
-        << float_str(fDD.getValue("f_extraBedFee").toDouble(), 0)
+        << float_str(fDD.getValue("f_roomFee").toDouble(), 2)
+        << float_str(fDD.getValue("f_extraBedFee").toDouble(), 2)
         << QString::number(fDD.getValue("f_man").toInt() + fDD.getValue("f_woman").toInt() + fDD.getValue("f_child").toInt())
         << cra.fName()
         << cpm.fName();
@@ -160,6 +160,10 @@ void PPrintCheckin::print(const QString &id)
     ps->addTextRect(20, top, 300, 80, tr("GUEST SIGNATURE"), &trData);
     ps->addLine(305, top + 70, 800, top + 70, QPen(Qt::SolidPattern, 3));
 
+    top += 200;
+    trData.setTextAlignment(Qt::AlignLeft);
+    top += ps->addTextRect(20, top, 2100, 80, tr("REMARKS"), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, fDD.getString("f_remarks"), &trData)->textHeight();
 
     pv.exec();
 }

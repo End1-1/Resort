@@ -67,6 +67,7 @@ private slots:
     void on_btnHotelHierarchy_clicked();
     void on_btnNewRoomChart_clicked();
     void on_btnTransferAmount_clicked();
+    void on_btnArrivalDeparture_2_clicked();
 };
 
 #endif // WWELCOME_H

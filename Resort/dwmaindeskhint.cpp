@@ -145,7 +145,7 @@ void DWMainDeskHint::hide()
     QDockWidget::hide();
 }
 
-QTableWidget *DWMainDeskHint::tableWidget()
+EQTableWidget *DWMainDeskHint::tableWidget()
 {
     return ui->tblDockHint;
 }

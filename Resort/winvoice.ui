@@ -1208,6 +1208,9 @@ operator</string>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
            <column>
             <property name="text">
              <string>RecId</string>
@@ -1407,6 +1410,9 @@ color:red;</string>
            </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
            </property>
            <column>
             <property name="text">

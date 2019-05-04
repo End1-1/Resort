@@ -2,6 +2,7 @@
 #include "ui_dlgroom.h"
 #include "cachebed.h"
 #include "cacheroomcategory.h"
+#include "cacheroom.h"
 #include "cacheroomview.h"
 
 DlgRoom::DlgRoom(QList<QVariant> &values, QWidget *parent) :
@@ -79,7 +80,7 @@ void DlgRoom::on_btnOK_clicked()
     fDD[":f_bed"] = ui->leBedCode->text();
     fDD[":f_bedQty"] = ui->leQty->text();
     fDD[":f_queue"] = ui->leQueue->text();
-    fDD[":f_smoke"] = (int) ui->chSmoking->isChecked();
+    fDD[":f_smoke"] = ui->chSmoking->isChecked() ? 1 : 0;
     fDD[":f_phone"] = ui->lePhone->text();
     if (isNew) {
         QMap<QString, QVariant> e;
@@ -93,5 +94,6 @@ void DlgRoom::on_btnOK_clicked()
         fDD.update("f_room", "where f_id=" + ui->leCode->text());
     }
     widgetsToValues();
+    BroadcastThread::cmdRefreshCache(cid_room, ui->leCode->text());
     accept();
 }

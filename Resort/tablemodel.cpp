@@ -200,7 +200,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         case QVariant::Time:
             return v.toTime().toString("HH:mm:ss");
         case QVariant::Double:
-            return fLocale.toString(v.toDouble(), 'f', 2).remove(QRegExp("\\.0+$")).remove(QRegExp("\\.$"));
+            return float_str(v.toDouble(), 2);
         default:
             return v;
         }
@@ -224,7 +224,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
                     return f;
                 }
             }
-            return QFont("NO", 0);
+            return fTableView->font();
         }
     }
     default:

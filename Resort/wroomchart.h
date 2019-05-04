@@ -16,44 +16,31 @@ class WRoomChart : public BaseWidget
 
 public:
     explicit WRoomChart(QWidget *parent = nullptr);
-
     ~WRoomChart();
-
     void loadReservations();
-
     virtual void setup();
-
     virtual void setupTab();
-
     void singleClick(const QString &id);
-
     void doubleClick(const QString &id);
+    QGraphicsScene *fMainScene;
+    QGraphicsScene *fRoomScene;
+    QGraphicsScene *fDateScene;
 
 private:
     Ui::WRoomChart *ui;
-
-    QGraphicsScene *fMainScene;
-
-    QGraphicsScene *fRoomScene;
-
-    QGraphicsScene *fDateScene;
-
     WRoomChartDock *fDock;
-
     int fVisibleDays;
-
     virtual bool event(QEvent *event);
+    QString categoriesFilter();
 
 private slots:
+    void catButtonClicked();
     void mainViewVerticalScrollBarValueChanged(int value);
-
     void mainViewHorizontalScrollBarValueChanged(int value);
-
     void roomViewVerticalScrollBarValueChanged(int value);
-
     void dateViewHorizontalScrollBarValueChanged(int value);
-
     void on_btnReset_clicked();
+    void on_btnNewReservation_clicked();
 };
 
 #endif // WROOMCHART_H

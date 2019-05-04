@@ -22,6 +22,9 @@
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
     <widget class="QWidget" name="widget" native="true">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
        <number>0</number>
@@ -37,6 +40,9 @@
       </property>
       <item>
        <widget class="QLabel" name="label">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Invoice #</string>
         </property>
@@ -55,6 +61,9 @@
           <width>25</width>
           <height>25</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="toolTip">
          <string>Previouse invoice</string>
@@ -82,6 +91,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
        </widget>
       </item>
       <item>
@@ -98,6 +110,9 @@
           <height>25</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Next invoice</string>
         </property>
@@ -112,6 +127,9 @@
       </item>
       <item>
        <widget class="EQLineEdit" name="leReservationId">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -141,7 +159,7 @@
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>Posting
@@ -183,7 +201,7 @@ Charges</string>
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>New
@@ -225,7 +243,7 @@ voucher</string>
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>Edit raw
@@ -267,7 +285,7 @@ voucher</string>
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>View
@@ -309,7 +327,7 @@ Reserve</string>
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>Edit
@@ -338,6 +356,9 @@ Reserve</string>
           <height>21212</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Print invoice</string>
         </property>
@@ -357,6 +378,9 @@ Reserve</string>
           <width>21545</width>
           <height>21212</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="toolTip">
          <string>Print fiscal</string>
@@ -378,6 +402,9 @@ Reserve</string>
           <height>21212</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Print fiscal</string>
         </property>
@@ -397,6 +424,9 @@ Reserve</string>
           <width>21545</width>
           <height>21212</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="toolTip">
          <string>Print fiscal</string>
@@ -418,6 +448,9 @@ Reserve</string>
           <height>21212</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Corrections</string>
         </property>
@@ -434,6 +467,9 @@ Reserve</string>
           <width>222</width>
           <height>222</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
          <string>Move entry</string>
@@ -452,6 +488,9 @@ Reserve</string>
           <height>21212</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Eliminate Entry</string>
         </property>
@@ -469,6 +508,9 @@ Reserve</string>
           <height>21212</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Change CL</string>
         </property>
@@ -480,6 +522,9 @@ Reserve</string>
       </item>
       <item>
        <spacer name="horizontalSpacer">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -493,6 +538,9 @@ Reserve</string>
       </item>
       <item>
        <widget class="QPushButton" name="btnTracking">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Show history</string>
         </property>
@@ -510,7 +558,10 @@ Reserve</string>
    </item>
    <item>
     <widget class="QWidget" name="widget_3" native="true">
-     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -523,92 +574,16 @@ Reserve</string>
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="1" column="4">
-       <widget class="EQDateEdit" name="deCheckIn">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Entry</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9" colspan="5">
-       <widget class="EQLineEdit" name="leCardex">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="EQLineEdit" name="leRoom">
+      <item row="1" column="12">
+       <widget class="EQLineEdit" name="leVatCode">
         <property name="maximumSize">
          <size>
-          <width>50</width>
+          <width>30</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Room</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Guest</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>CheckIn
-date</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="EQLineEdit" name="leCategory">
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="EQLineEdit" name="leArrangment">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -617,140 +592,51 @@ date</string>
       </item>
       <item row="1" column="8">
        <widget class="QLabel" name="label_17">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Guest qty</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
-       <widget class="EQTimeEdit" name="teCheckInTime">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="12">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Nationality</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="13">
-       <widget class="EQLineEdit" name="leNationality">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="EQDateEdit" name="deDeparture">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Departure</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6" colspan="6">
-       <widget class="EQLineEdit" name="leGuest">
-        <property name="minimumSize">
-         <size>
-          <width>250</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Arrangment</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="8">
        <widget class="QLabel" name="label_16">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Cardex</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="6">
-       <widget class="QLabel" name="label_10">
+      <item row="0" column="13">
+       <widget class="QLabel" name="label_5">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
-         <string>CheckOut
-time</string>
+         <string>Nationality</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="9">
-       <widget class="EQLineEdit" name="leGuestCount">
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="text">
+         <string>Entry</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="EQDateEdit" name="deEntry">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="15">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="10">
+      <item row="1" column="11">
        <widget class="QLabel" name="label_18">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>VAT</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="12" colspan="2">
-       <widget class="EQLineEdit" name="leVATMode">
-        <property name="readOnly">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -759,20 +645,81 @@ time</string>
         <property name="enabled">
          <bool>false</bool>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
-       <widget class="QLabel" name="label_9">
+      <item row="1" column="7">
+       <widget class="EQTimeEdit" name="teCheckInTime">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="btnGuestInfo">
+        <property name="minimumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
-         <string>CheckIn
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6" colspan="7">
+       <widget class="EQLineEdit" name="leGuest">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="6">
+       <widget class="QLabel" name="label_10">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>CheckOut
 time</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="14" rowspan="3">
+      <item row="0" column="15" rowspan="3">
        <widget class="QGroupBox" name="groupBox">
         <property name="minimumSize">
          <size>
@@ -785,6 +732,9 @@ time</string>
           <width>16777215</width>
           <height>5555</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="title">
          <string>Options</string>
@@ -804,6 +754,9 @@ time</string>
          </property>
          <item row="2" column="0">
           <widget class="EQCheckBox" name="chPaymentByCompany">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Company</string>
            </property>
@@ -817,6 +770,9 @@ time</string>
          </item>
          <item row="1" column="1">
           <widget class="QRadioButton" name="rbNoGroup">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>No group</string>
            </property>
@@ -827,6 +783,9 @@ time</string>
          </item>
          <item row="2" column="1">
           <widget class="QRadioButton" name="rbEntryName">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Entry name</string>
            </property>
@@ -834,6 +793,9 @@ time</string>
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_12">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Payment by</string>
            </property>
@@ -841,6 +803,9 @@ time</string>
          </item>
          <item row="1" column="0">
           <widget class="EQCheckBox" name="chPaymentByGuest">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Guest</string>
            </property>
@@ -854,6 +819,9 @@ time</string>
          </item>
          <item row="0" column="1">
           <widget class="QLabel" name="label_13">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Group by</string>
            </property>
@@ -861,6 +829,9 @@ time</string>
          </item>
          <item row="1" column="2">
           <widget class="QCheckBox" name="chViewAllVauchers">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="text">
             <string>Show hidden vauchers</string>
            </property>
@@ -869,26 +840,246 @@ time</string>
         </layout>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="btnGuestInfo">
-        <property name="minimumSize">
-         <size>
-          <width>25</width>
-          <height>25</height>
-         </size>
-        </property>
+      <item row="0" column="1">
+       <widget class="EQLineEdit" name="leCategory">
         <property name="maximumSize">
          <size>
-          <width>25</width>
-          <height>25</height>
+          <width>40</width>
+          <height>16777215</height>
          </size>
         </property>
-        <property name="text">
-         <string/>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_8">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>CheckIn
+date</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="EQDateEdit" name="deEntry">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Departure</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="13" colspan="2">
+       <widget class="EQLineEdit" name="leVATMode">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_4">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Guest</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="16">
+       <spacer name="horizontalSpacer_2">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="EQDateEdit" name="deDeparture">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="14">
+       <widget class="EQLineEdit" name="leNationality">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="EQLineEdit" name="leArrangment">
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="EQLineEdit" name="leRoom">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10">
+       <widget class="EQLineEdit" name="leGuestCount">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="EQDateEdit" name="deCheckIn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="label_11">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Arrangment</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Room</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Category</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLabel" name="label_9">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>CheckIn
+time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="10" colspan="5">
+       <widget class="EQLineEdit" name="leCardex">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="EQLineEdit" name="leCardexCode">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -902,6 +1093,9 @@ time</string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <property name="leftMargin">
@@ -918,6 +1112,9 @@ time</string>
       </property>
       <item>
        <widget class="QWidget" name="widget_4" native="true">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="leftMargin">
           <number>0</number>
@@ -933,6 +1130,9 @@ time</string>
          </property>
          <item>
           <widget class="EQTableWidget" name="tblData">
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1036,6 +1236,9 @@ time</string>
              <height>55</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::ClickFocus</enum>
+           </property>
            <property name="frameShape">
             <enum>QFrame::Box</enum>
            </property>
@@ -1057,16 +1260,6 @@ time</string>
            <attribute name="verticalHeaderDefaultSectionSize">
             <number>25</number>
            </attribute>
-           <row>
-            <property name="text">
-             <string>New Row</string>
-            </property>
-           </row>
-           <row>
-            <property name="text">
-             <string>New Row</string>
-            </property>
-           </row>
            <column>
             <property name="text">
              <string>RecId</string>
@@ -1117,106 +1310,6 @@ time</string>
              <string>Side</string>
             </property>
            </column>
-           <item row="0" column="0">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="1">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="2">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="3">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="4">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="5">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="6">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="7">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="8">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="0" column="9">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="0">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="1">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="2">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="3">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="4">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="5">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="6">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="7">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="8">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
-           <item row="1" column="9">
-            <property name="text">
-             <string/>
-            </property>
-           </item>
           </widget>
          </item>
         </layout>
@@ -1232,6 +1325,9 @@ time</string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="title">
       <string>Remarks</string>
@@ -1257,6 +1353,9 @@ time</string>
           <height>50</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="frameShape">
          <enum>QFrame::Box</enum>
         </property>
@@ -1273,6 +1372,9 @@ time</string>
    </item>
    <item>
     <widget class="QFrame" name="frame">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -1294,6 +1396,9 @@ time</string>
       </property>
       <item>
        <widget class="QLabel" name="label_14">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Operator in</string>
         </property>
@@ -1307,6 +1412,9 @@ time</string>
           <height>0</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -1314,6 +1422,9 @@ time</string>
       </item>
       <item>
        <widget class="QLabel" name="label_15">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="text">
          <string>Operator out</string>
         </property>
@@ -1327,6 +1438,9 @@ time</string>
           <height>0</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -1334,6 +1448,9 @@ time</string>
       </item>
       <item>
        <spacer name="horizontalSpacer_4">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -1352,6 +1469,11 @@ time</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1363,11 +1485,6 @@ time</string>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
    <class>EQDateEdit</class>

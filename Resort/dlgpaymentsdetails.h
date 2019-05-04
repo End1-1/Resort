@@ -17,6 +17,7 @@ public:
     void setInvoice(const QString &id);
     bool isZeroBalance();
     void setCheckoutFlag();
+
 private slots:
     void refundRemove(int tag);
     void refundTextChanged(const QString &text);
@@ -27,6 +28,7 @@ private slots:
     void on_btnCityLedger_clicked();
     void on_btnBank_clicked();
     void on_btnSave_clicked();
+    void on_btnOptions_clicked();
 
 private:
     int fCheckoutFlag;

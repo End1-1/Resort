@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_red_reservation 45
+static const int cid_red_reservation = 45;
 
 class CacheRedReservation : public CacheBaseStruct
 {

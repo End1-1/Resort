@@ -30,10 +30,6 @@ FCityLedgerDetailedBalance::~FCityLedgerDetailedBalance()
 
 void FCityLedgerDetailedBalance::apply(WReportGrid *rg)
 {
-    QString query = rg->fStaticQuery;
-    query = query.replace(":d1", ui->deFrom->dateMySql())
-            .replace(":d2", ui->deTo->dateMySql())
-            .replace(":cl", QString::number(ui->leCLCode->text().toInt()));
     rg->fModel->clearColumns();
     rg->fModel->
              setColumn(0, "", tr(""))
@@ -46,8 +42,14 @@ void FCityLedgerDetailedBalance::apply(WReportGrid *rg)
             .setColumn(100, "", tr("VOUCHER"))
             .setColumn(100, "", tr("INVOICE"))
             ;
-   // rg->fModel->setSqlQuery();
-    rg->fModel->apply(query.split(";", QString::SkipEmptyParts));
+    if (ui->leCLCode->asInt() == 0) {
+        return;
+    }
+#ifdef _METROPOL_
+    applyNorm(rg);
+#else
+    applyNat(rg);
+#endif
     QList<int> sumCols;
     QList<double> sumVals;
     sumCols << 3 << 4;
@@ -377,6 +379,37 @@ void FCityLedgerDetailedBalance::open()
     WReportGrid *rg = addTab<WReportGrid>();
     FCityLedgerDetailedBalance *clb = new FCityLedgerDetailedBalance(rg);
     clb->apply(rg);
+}
+
+void FCityLedgerDetailedBalance::applyNat(WReportGrid *rg)
+{
+    QString query = rg->fStaticQuery;
+    query = query.replace(":d1", ui->deFrom->dateMySql())
+            .replace(":d2", ui->deTo->dateMySql())
+            .replace(":cl", QString::number(ui->leCLCode->text().toInt()));
+    rg->fModel->apply(query.split(";", QString::SkipEmptyParts));
+}
+
+void FCityLedgerDetailedBalance::applyNorm(WReportGrid *rg)
+{
+    //Multiple by -1 need for backward compatibity previouse report
+    QString query =
+            "select '', :d1, 'BROUGHT FORWARD',  "
+            "sum(f_amountamd*f_sign)*-1, '0' as dd, '0' as cc, '-', '-', '-', '00:00:00' "
+            "from m_register  "
+            "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
+            "and f_wdate < :d1 "
+            "union "
+            "select f_id, f_wdate, f_finalname, f_amountamd*f_sign*-1, '0' as dd, '0' as cc, f_room, f_id, f_inv, f_time "
+            "from m_register "
+            "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
+            "and f_wdate between :d1 and :d2 "
+            "order by 2, 10 ";
+    query.replace(":d1", ui->deFrom->dateMySql())
+            .replace(":d2", ui->deTo->dateMySql())
+            .replace(":cl", QString::number(ui->leCLCode->text().toInt()));
+    rg->fModel->setSqlQuery(query);
+    rg->fModel->apply(rg);
 }
 
 void FCityLedgerDetailedBalance::openInvoice()

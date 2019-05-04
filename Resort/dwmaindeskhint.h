@@ -22,7 +22,7 @@ public:
     void checkOutFilter();
     void airFilter();
     void hide();
-    QTableWidget *tableWidget();
+    EQTableWidget *tableWidget();
     void show();
 
 private:

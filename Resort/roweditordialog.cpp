@@ -165,7 +165,7 @@ bool RowEditorDialog::saveOnly()
         message_error(error);
         return false;
     }
-    EQLineEdit *id = 0;
+    EQLineEdit *id = nullptr;
     for (QList<QWidget*>::const_iterator it = fWidgets.begin(); it != fWidgets.end(); it++) {
         QWidget *w = *it;
         if (isLineEdit(w)) {

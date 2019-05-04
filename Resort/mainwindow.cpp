@@ -21,6 +21,8 @@
 #include "dlgquickroomassignment.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
+#include "dlgrecoverinvoice.h"
+#include "dlgpostcharge.h"
 #include "wwelcome.h"
 #include "fhouseitems.h"
 #include "fwakeupcall.h"
@@ -578,6 +580,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCurrencies->setVisible(r__(cr__currencies));
     ui->actionNew_advance_entry->setVisible(r__(cr__advance_vaucher));
     ui->actionPosting_charge->setVisible(r__(cr__postchage_vaucher));
+    ui->actionPosting_charge_2->setVisible(r__(cr__postchage_vaucher) && r__(cr__super_correction));
     ui->actionReceipt_vaucher->setVisible(r__(cr__receipt_vaucher));
     ui->actionDiscount->setVisible(r__(cr__discount_vaucher));
     ui->actionTransfer_amount->setVisible(r__(cr__discount_vaucher));
@@ -671,6 +674,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionUtils->setVisible(WORKING_USERGROUP == 1);
     ui->actionWeb->setVisible(false);
     ui->actionExecute_failed_sql->setVisible(r__(cr__exec_failed_sql_queries));
+    ui->actionRecover_invoice->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__super_correction));
 
     ui->menuBar->actions().at(12)->setVisible(r__(cr__storehouse_all_items)); // Storehouse
 
@@ -1194,7 +1198,9 @@ void MainWindow::on_actionChange_password_triggered()
 
 void MainWindow::on_actionNew_advance_entry_triggered()
 {
-    DlgAdvanceEntry::advance();
+    DlgAdvanceEntry *d = new DlgAdvanceEntry("", this);
+    d->exec();
+    delete d;
 }
 
 void MainWindow::on_actionGlobal_config_triggered()
@@ -1565,10 +1571,11 @@ void MainWindow::on_actionIn_house_guest_triggered()
     QList<int> widths;
     widths << 0 //date
            << 70 //room
-           << 100 // cat
+           << 70 // cat
+           << 250 //guest
            << 60 //adul
            << 60 //child
-           << 60 //acc
+           << 50 //acc
            << 100 //entry
            << 100 //dep
            << 120 // nat
@@ -1576,14 +1583,14 @@ void MainWindow::on_actionIn_house_guest_triggered()
            << 60 // extra bed
            << 60 // meal
            << 30 // vat
-           << 250 //gues
            << 300 // cardex
-           << 250 // operator
+           << 200 // operator
               ;
     QStringList fields;
     fields << "current_date"
            << "r.f_room"
            << "c.f_short"
+           << "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName)"
            << "r.f_man+r.f_woman"
            << "r.f_child"
            << "ar.f_" + def_lang
@@ -1594,7 +1601,6 @@ void MainWindow::on_actionIn_house_guest_triggered()
            << "r.f_extraBedFee"
            << "r.f_mealPrice"
            << "v.f_vat"
-           << "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName)"
            << "cx.f_name"
            << "concat(u.f_firstName, ' ', u.f_lastName)"
               ;
@@ -1602,6 +1608,7 @@ void MainWindow::on_actionIn_house_guest_triggered()
     titles << tr("Date")
            << tr("Room")
            << tr("Cat")
+           << tr("Guest")
            << tr("Adults")
            << tr("Childs")
            << tr("Acc.")
@@ -1612,7 +1619,6 @@ void MainWindow::on_actionIn_house_guest_triggered()
            << tr("Extra bed")
            << tr("Meal plan")
            << tr("VAT")
-           << tr("Guest")
            << tr("Cardex")
            << tr("Operator")
               ;
@@ -1680,7 +1686,7 @@ void MainWindow::on_actionExpected_arrivals_triggered()
 
 void MainWindow::on_actionPosting_charge_triggered()
 {
-    DlgPostingCharges *p = new DlgPostingCharges(this);
+    DlgPostCharge *p = new DlgPostCharge(this);
     p->exec();
     delete p;
 }
@@ -2183,4 +2189,11 @@ void MainWindow::on_actionExpected_arrivals_departures_2_triggered()
 void MainWindow::on_actionGuest_Tray_Ledger_By_Date_triggered()
 {
     FCityTrayLedger2::openFilterReport<FCityTrayLedger2, WReportGrid>();
+}
+
+void MainWindow::on_actionRecover_invoice_triggered()
+{
+    DlgRecoverInvoice *d = new DlgRecoverInvoice(this);
+    d->exec();
+    d->deleteLater();
 }

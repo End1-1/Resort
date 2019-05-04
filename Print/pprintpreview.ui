@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>957</width>
+    <width>1208</width>
     <height>700</height>
    </rect>
   </property>
@@ -338,6 +338,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="chCloseAfterPrint">
+        <property name="text">
+         <string>Close after print</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnPrint">
         <property name="minimumSize">
          <size>
@@ -403,7 +410,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>953</width>
+           <width>1204</width>
            <height>658</height>
           </rect>
          </property>

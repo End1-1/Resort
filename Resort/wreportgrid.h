@@ -25,6 +25,7 @@ typedef struct {
     bool fPrintOnly;
     bool fFontBold;
     bool fValid;
+    int fRowHeight;
 } Report;
 
 class WReportGrid : public BaseWidget

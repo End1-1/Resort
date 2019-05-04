@@ -15,11 +15,11 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     ui->setupUi(this);
     loadRooms();
 
-    QTableWidgetItem *i1 = new QTableWidgetItem(tr("Any"));
+    C5TableWidgetItem *i1 = new C5TableWidgetItem(tr("Any"));
     i1->setData(Qt::UserRole, 0);
-    QTableWidgetItem *i2 = new QTableWidgetItem(tr("Yes"));
+    C5TableWidgetItem *i2 = new C5TableWidgetItem(tr("Yes"));
     i1->setData(Qt::UserRole, 1);
-    QTableWidgetItem *i3 = new QTableWidgetItem(tr("No"));
+    C5TableWidgetItem *i3 = new C5TableWidgetItem(tr("No"));
     i2->setData(Qt::UserRole, 2);
     ui->tblSmoke->setItem(0, 0, i1);
     ui->tblSmoke->setItem(0, 1, i2);
@@ -31,7 +31,7 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     int col = 0;
     QMap<QString, QList<QVariant> >::iterator it = ci->fRows.begin();
     while (it != ci->fRows.end()) {
-        ui->tblCategory->setItem(0, col++, new QTableWidgetItem(it.value().at(1).toString()));
+        ui->tblCategory->setItem(0, col++, new C5TableWidgetItem(it.value().at(1).toString()));
         it++;
     }
 
@@ -41,7 +41,7 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     col = 0;
     it = ci->fRows.begin();
     while (it != ci->fRows.end()) {
-        ui->tblBed->setItem(0, col++, new QTableWidgetItem(it.value().at(0).toString()));
+        ui->tblBed->setItem(0, col++, new C5TableWidgetItem(it.value().at(0).toString()));
         it++;
     }
 
@@ -49,7 +49,7 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     ui->tblFloor->setColumnCount(9);
     ui->tblFloor->setRowCount(1);
     for (int i = 0; i < ui->tblFloor->columnCount(); i++) {
-        ui->tblFloor->setItem(0, i, new QTableWidgetItem(QString::number(i + 1)));
+        ui->tblFloor->setItem(0, i, new C5TableWidgetItem(QString::number(i + 1)));
     }
 
     fSingleMode = false;
@@ -92,7 +92,7 @@ void DlgCreateGroupReservation::loadRooms()
     }
     ui->tblData->setVerticalHeaderLabels(floors);
     QSize size(ui->tblData->size());
-    size.setWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + 20);
+    size.setWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + 40);
     size.setHeight((floors.count() * ui->tblData->verticalHeader()->defaultSectionSize()) + 25);
     ui->tblData->setMinimumHeight(size.height());
     ui->tblData->setMaximumHeight(size.height());
@@ -104,7 +104,6 @@ void DlgCreateGroupReservation::setSingleMode(bool mode)
 {
     fSingleMode = mode;
     if (fSingleMode) {
-        ui->wdtGroup->setVisible(false);
         ui->btnCreate->setText(tr("Select"));
         setWindowTitle(tr("Select room"));
     }

@@ -16,6 +16,9 @@ DlgTransferAnyAmount::DlgTransferAnyAmount(QWidget *parent) :
     ui(new Ui::DlgTransferAnyAmount)
 {
     ui->setupUi(this);
+    QDoubleValidator *dv = new QDoubleValidator(0,999999999, 2);
+    dv->setNotation(QDoubleValidator::StandardNotation);
+    ui->letoAmount->setValidator(dv);
     ui->rbfromRoom->click();
     ui->rbtoCL->click();
     // FROM SIDE
@@ -153,7 +156,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             ui->lefromBalance->clear();
         }
         if (ui->lefromBalance->asDouble() < 0) {
-            ui->rbfromCredit->setChecked(true);
+            ui->rbfromDebit->setChecked(true);
         } else {
             ui->rbfromCredit->setChecked(true);
         }
@@ -250,6 +253,8 @@ void DlgTransferAnyAmount::on_rbfromReserve_clicked()
     ui->lefromReserve->setStyleSheet("background:yellow;");
     ui->defromEntry->clear();
     ui->defromDeparture->clear();
+    ui->lefromRoomCode->clear();
+    ui->lefromReserve->setInitialValue(ui->lefromReserve->text());
 }
 
 void DlgTransferAnyAmount::on_rbfromRoom_clicked()
@@ -266,6 +271,8 @@ void DlgTransferAnyAmount::on_rbfromRoom_clicked()
     ui->lefromReserve->setStyleSheet("");
     ui->defromEntry->clear();
     ui->defromDeparture->clear();
+    ui->lefromRoomCode->clear();
+    ui->lefromRoomCode->setInitialValue(ui->lefromRoomCode->text());
 }
 
 void DlgTransferAnyAmount::on_rbfromCL_clicked()
@@ -285,6 +292,7 @@ void DlgTransferAnyAmount::on_rbfromCL_clicked()
     ui->lefromReserve->setStyleSheet("");
     ui->defromEntry->clear();
     ui->defromDeparture->clear();
+    ui->letoCL->setInitialValue(ui->letoCL->text());
 }
 
 void DlgTransferAnyAmount::on_rbtoReserve_clicked()
@@ -301,6 +309,8 @@ void DlgTransferAnyAmount::on_rbtoReserve_clicked()
     ui->letoReserve->setStyleSheet("background:yellow;");
     ui->detoEntry->clear();
     ui->detoDeparture->clear();
+    ui->letoRoomCode->clear();
+    ui->letoReserve->setInitialValue(ui->letoReserve->text());
 }
 
 void DlgTransferAnyAmount::on_rbtoRoom_clicked()
@@ -317,6 +327,8 @@ void DlgTransferAnyAmount::on_rbtoRoom_clicked()
     ui->letoReserve->setStyleSheet("");
     ui->detoEntry->clear();
     ui->detoDeparture->clear();
+    ui->letoRoomCode->clear();
+    ui->letoRoomCode->setInitialValue(ui->letoRoomCode->text());
 }
 
 void DlgTransferAnyAmount::on_rbtoCL_clicked()
@@ -336,6 +348,7 @@ void DlgTransferAnyAmount::on_rbtoCL_clicked()
     ui->letoReserve->setStyleSheet("");
     ui->detoEntry->clear();
     ui->detoDeparture->clear();
+    ui->letoCL->setInitialValue(ui->letoCL->text());
 }
 
 void DlgTransferAnyAmount::on_letoAmount_textChanged(const QString &arg1)
@@ -368,7 +381,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         }
         break;
     case hint_from_room:
-        replaceFrom = ui->lefromInvoice->text();
+        replaceFrom = ui->lefromRoomCode->text() + "," + ui->lefromInvoice->text();
         guestFrom = ui->lefromGuest->text();
         if (ui->lefromInvoice->isEmpty()) {
             err += tr("Source invoice is empty") + "<br>";
@@ -378,7 +391,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         }
         break;
     case hint_from_cl:
-        replaceFrom = "CL/" + ui->lefromCL->text();
+        replaceFrom = "CL/" + ui->lefromCLName->text();
         guestFrom = ui->lefromCLName->text();
         if (ui->lefromCL->text() == ui->letoCL->text()) {
             err += tr("Useless transfer") + "<br>";
@@ -398,14 +411,14 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         }
         break;
     case hint_to_room:
-        replaceTo = ui->letoInvoice->text();
+        replaceTo = ui->letoRoomCode->text() + ", " + ui->letoInvoice->text();
         guestTo = ui->letoGuest->text();
         if (ui->letoInvoice->isEmpty()) {
             err += tr("Destination invoice is empty") + "<br>";
         }
         break;
     case hint_to_cl:
-        replaceTo = "CL/" + ui->letoCL->text();
+        replaceTo = "CL/" + ui->letoCLName->text();
         guestTo = ui->letoCLName->text();
         if (ui->letoCL->asInt() == 0) {
             err += tr("Destination cityledger is empty") + "<br>";
@@ -417,56 +430,72 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
     int dcc1 = 0, dcc2 = 0;
     switch (ui->wDC->radioTag()) {
     case dc_debit:
-//        if (ui->lefromBalance->asDouble() >= 0.001) {
-//            err += tr("Insufficient funds on debit balance");
-//        }
         switch (ui->wfromAction->radioTag()) {
         case hint_from_reserve:
         case hint_from_room:
             dcn1 = PAY_CREDIT;
             dcc1 = 1;
+            switch (ui->wtoAction->radioTag()) {
+            case hint_to_reserve:
+            case hint_to_room:
+                dcn2 = PAY_DEBIT;
+                dcc2 = -1;
+                break;
+            case hint_to_cl:
+                dcn2 = PAY_CREDIT;
+                dcc2 = 1;
+                break;
+            }
             break;
         case hint_from_cl:
             dcn1 = PAY_CREDIT;
             dcc1 = 1;
-            break;
-        }
-        switch (ui->wtoAction->radioTag()) {
-        case hint_to_reserve:
-        case hint_to_room:
-            dcn2 = PAY_DEBIT;
-            dcc2 = -1;
-            break;
-        case hint_to_cl:
-            dcn2 = PAY_CREDIT;
-            dcc2 = 1;
+            switch (ui->wtoAction->radioTag()) {
+            case hint_to_reserve:
+            case hint_to_room:
+                dcn2 = PAY_CREDIT;
+                dcc2 = 1;
+                break;
+            case hint_to_cl:
+                dcn2 = PAY_DEBIT;
+                dcc2 = -1;
+                break;
+            }
             break;
         }
         break;
     case dc_credit:
-//        if (ui->lefromBalance->asDouble() <= 0.001) {
-//            err += tr("insufficient funds on credit balance");
-//        }
         switch (ui->wfromAction->radioTag()) {
         case hint_from_reserve:
         case hint_from_room:
             dcn1 = PAY_DEBIT;
             dcc1 = -1;
+            switch (ui->wtoAction->radioTag()) {
+            case hint_to_reserve:
+            case hint_to_room:
+                dcn2 = PAY_CREDIT;
+                dcc2 = 1;
+                break;
+            case hint_to_cl:
+                dcn2 = PAY_DEBIT;
+                dcc2 = -1;
+                break;
+            }
             break;
         case hint_from_cl:
             dcn1 = PAY_DEBIT;
             dcc1 = -1;
-            break;
-        }
-        switch (ui->wtoAction->radioTag()) {
-        case hint_to_reserve:
-        case hint_to_room:
-            dcn2 = PAY_CREDIT;
-            dcc2 = 1;
-            break;
-        case hint_to_cl:
-            dcn2 = PAY_DEBIT;
-            dcc2 = -1;
+            switch (ui->wtoAction->radioTag()) {
+            case hint_to_reserve:
+            case hint_to_room:
+                dcn2 = PAY_DEBIT;
+                dcc2 = -1;
+                break;
+            case hint_to_cl:
+                dcn2 = PAY_CREDIT;
+                dcc2 = 1;
+                break;
+            }
             break;
         }
         break;
@@ -515,10 +544,22 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         return;
     }
     dd.commit();
+    ui->lefromCL->clearSelector();
+    ui->lefromRoomCode->clearSelector();
+    ui->lefromReserve->clearSelector();
+    ui->letoCL->clearSelector();
+    ui->letoRoomCode->clearSelector();
+    ui->letoReserve->clearSelector();
     message_info(tr("Saved"));
 }
 
 void DlgTransferAnyAmount::on_btnLog_clicked()
 {
     fDoc1.showLog();
+}
+
+void DlgTransferAnyAmount::disableControls()
+{
+    ui->wfromAction->setEnabled(false);
+    ui->wtoAction->setEnabled(false);
 }

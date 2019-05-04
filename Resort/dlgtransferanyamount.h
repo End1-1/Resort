@@ -37,13 +37,13 @@ private slots:
     void on_rbtoCL_clicked();
     void on_letoAmount_textChanged(const QString &arg1);
     void on_btnSave_clicked();
-
     void on_btnLog_clicked();
 
 private:
     Ui::DlgTransferAnyAmount *ui;
     DBMRegister fDoc1;
     DBMRegister fDoc2;
+    void disableControls();
 };
 
 #endif // DLGTRANSFERANYAMOUNT_H

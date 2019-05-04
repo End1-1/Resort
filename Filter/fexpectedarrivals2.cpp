@@ -212,7 +212,7 @@ void FExpectedArrivals2::printArrival(WReportGrid *rg)
         rg->fTableView->setRowHeight(i, rg->fTableView->verticalHeader()->defaultSectionSize());
     }
     foreach (int i, rowsHeights) {
-        rg->fTableView->setRowHeight(i, 10);
+        rg->fTableView->setRowHeight(i, 5);
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {
@@ -385,7 +385,7 @@ void FExpectedArrivals2::printDeparture(WReportGrid *rg)
         rg->fTableView->setRowHeight(i, rg->fTableView->verticalHeader()->defaultSectionSize());
     }
     foreach (int i, rowsHeights) {
-        rg->fTableView->setRowHeight(i, 10);
+        rg->fTableView->setRowHeight(i, 5);
     }
 }
 
@@ -611,7 +611,7 @@ void FExpectedArrivals2::printBoth(WReportGrid *rg)
         rg->fTableView->setRowHeight(i, rg->fTableView->verticalHeader()->defaultSectionSize());
     }
     foreach (int i, rowsHeights) {
-        rg->fTableView->setRowHeight(i, 10);
+        rg->fTableView->setRowHeight(i, 5);
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {

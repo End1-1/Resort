@@ -135,9 +135,9 @@
 #define cr__call_rate 126
 #define cr__advance_voucher_invoice 127
 #define cr__temporary_receipts 128
-#define cr__1
-#define cr__1
-#define cr__1
+#define cr__remove_cardex 129
+#define cr__print_partial_invoice 130
+#define cr__change_postcharge_wdate 131
 #define cr__1
 #define cr__1
 #define cr__1

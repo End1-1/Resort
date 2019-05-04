@@ -20,6 +20,8 @@ public:
     DBMRegister(const DBMRegister &r);
     DBMRegister &operator=(const DBMRegister &r);
     ~DBMRegister();
+    void open(DoubleDatabase &d, const QString &id);
+    static bool openVoucher(const QString &id, QString &err);
     QString fId;
     QString fSource;
     QString fReserve;
@@ -28,17 +30,23 @@ public:
     QDate fRDate;
     QTime fTime;
     quint32 fUser;
+    QString fUserName;
     quint32 fRoom;
     QString fGuest;
     quint32 fItemCode;
+    QString fItemName;
     QString fFinalName;
     double fUsedPrepaid;
     double fAmountAMD;
     double fAmountVAT;
     double fAmountUSD;
+    quint32 fVATMode;
+    QString fVATModeName;
     quint32 fFiscal;
     quint32 fPaymentMode;
+    QString fPaymentModeName;
     quint32 fCreditCard;
+    QString fCreditCardName;
     quint32 fCityLedger;
     QString fCityLedgerName;
     QString fPaymentComment;
@@ -53,6 +61,7 @@ public:
     quint32 fCancelUser;
     QString fCancelReason;
     QDateTime fCancelDate;
+    int fRb;
 
     QString fError;
     TrackControl *fTc;
@@ -60,12 +69,18 @@ public:
     void showLog();
 
     void setleID(EQLineEdit *l);
+    void setleUser(EQLineEdit *l1, EQLineEdit *l2);
+    void setleFinalName(EQLineEdit *l);
     void setleInvoice(EQLineEdit *l);
     void setleReserve(EQLineEdit *l);
     void setleWDate(EDateEdit *d);
     void setleGuest(EQLineEdit *l);
     void setleRoom(EQLineEdit *l);
+    void setleItemName(EQLineEdit *l1, EQLineEdit *l2);
     void setleCityLedger(EQLineEdit *l1, EQLineEdit *l2);
+    void setlePaymentMode(EQLineEdit *l1, EQLineEdit *l2);
+    void setleCreditCard(EQLineEdit *l1, EQLineEdit *l2);
+    void setleVatMode(EQLineEdit *l1, EQLineEdit *l2);
     void setleAmountAMD(EQLineEdit *l);
     void setleAmountUSD(EQLineEdit *l);
     void setleAmountVAT(EQLineEdit *l);
@@ -73,15 +88,26 @@ public:
 
 private:
     EQLineEdit *leID;
+    EQLineEdit *leUser;
+    EQLineEdit *leUserName;
+    EQLineEdit *leFinalName;
     EQLineEdit *leInvoice;
     EQLineEdit *leReserve;
     EQLineEdit *leGuest;
     EQLineEdit *leRoom;
+    EQLineEdit *leItemCode;
+    EQLineEdit *leItemName;
     EQLineEdit *leCityLedgerCode;
     EQLineEdit *leCityLedgerName;
+    EQLineEdit *lePaymentMode;
+    EQLineEdit *lePaymentModeName;
+    EQLineEdit *leCreditCard;
+    EQLineEdit *leCreditCardName;
     EQLineEdit *leAmountAMD;
     EQLineEdit *leAmountUSD;
     EQLineEdit *leAmountVAT;
+    EQLineEdit *leVatMode;
+    EQLineEdit *leVatModeName;
     EDateEdit *deWDate;
     QPlainTextEdit *ptRemarks;
 
@@ -89,17 +115,28 @@ private:
     void setle(const DBMRegister &r);
 
 private slots:
+    void userChanged(const QString &s);
+    void userNameChanged(const QString &s);
     void wdateChanged(const QString &s);
+    void finalNameChanged(const QString &s);
     void invoiceChanged(const QString &s);
     void reserveChanged(const QString &s);
     void guestChanged(const QString &s);
     void roomChanged(const QString &s);
+    void itemCodeChanged(const QString &s);
+    void itemNameChanged(const QString &s);
     void cityLedgerChanged(const QString &s);
     void cityLedgerNameChanged(const QString &s);
+    void paymentChanged(const QString &s);
+    void paymentNameChanged(const QString &s);
+    void creditCardChanged(const QString &s);
+    void creditCardNameChanged(const QString &s);
     void amountAMDChagned(const QString &s);
     void amountUSDChanged(const QString &s);
     void amountVATChanged(const QString &s);
-    void remarksChanged(const QString &s);
+    void VATModeChanged(const QString &s);
+    void VATModeNameChanged(const QString &s);
+    void remarksChanged();
 };
 
 #endif // DBMREGISTER_H

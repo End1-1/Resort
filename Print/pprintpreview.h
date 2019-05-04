@@ -32,6 +32,7 @@ private slots:
     void on_btnFirst_clicked();
     void on_btnLast_clicked();
     void on_cbPrintSelection_currentIndexChanged(int index);
+    void on_chCloseAfterPrint_clicked(bool checked);
 
 private:
     Ui::PPrintPreview *ui;

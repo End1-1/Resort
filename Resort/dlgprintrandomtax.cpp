@@ -83,8 +83,8 @@ void DlgPrintRandomTax::on_btnAdd_clicked()
         ui->tblData->setItem(row, col++, Utils::tableItem(ui->leItemCode->text()));
         ui->tblData->setItem(row, col++, Utils::tableItem(ui->leItemName->text()));
         ui->tblData->setItem(row, col++, Utils::tableItem("1"));
-        ui->tblData->setItem(row, col++, Utils::tableItem(float_str(price, 2)));
-        ui->tblData->setItem(row, col++, Utils::tableItem(float_str(price, 2)));
+        ui->tblData->setItem(row, col++, Utils::tableItem(price, 2));
+        ui->tblData->setItem(row, col++, Utils::tableItem(price, 2));
         ui->tblData->addButton(row, col++, SLOT(btnClickWithTag(int)), this, QIcon(":/images/garbage.png"));
         ui->tblData->setItem(row, col++, Utils::tableItem(ii.fAdgt()));
         ui->tblData->setItem(row, col++, Utils::tableItem(0));

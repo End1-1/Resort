@@ -33,7 +33,7 @@ void DlgExportSingleVaucher::setupVaucher(const QString &id)
     fVoucher[":f_id"] = id;
     fVoucher.exec( "select * from m_register where f_id=:f_id");
     ui->leFinalName->setText(fVoucher.getValue(0, "f_finalName").toString());
-    ui->leAmount->setText(float_str(fVoucher.getValue(0, "f_amountAmd").toDouble(), 0));
+    ui->leAmount->setText(float_str(fVoucher.getValue(0, "f_amountAmd").toDouble(), 2));
     ui->deDate->setDate(fVoucher.getValue(0, "f_wdate").toDate());
     ui->teTime->setTime(fVoucher.getValue(0, "f_time").toTime());
 }

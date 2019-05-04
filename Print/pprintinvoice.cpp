@@ -7,11 +7,20 @@
 #include "cacheusers.h"
 #include <QApplication>
 
-PPrintInvoice::PPrintInvoice(const QString &id, int side, QWidget *parent) :
+PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids, QWidget *parent) :
     BaseWidget(parent)
 {
     fId = id;
     fSide = side;
+    bool first = true;
+    foreach (QString s, ids) {
+        if (first) {
+            first = false;
+        } else {
+            fSelection += ",";
+        }
+        fSelection += QString("'%1'").arg(s);
+    }
     previewInvoice();
 }
 
@@ -27,14 +36,19 @@ void PPrintInvoice::previewInvoice()
                 "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
                 "from m_register ic "
                 "where ic.f_inv=:f_invoice and ic.f_side=:f_side "
-                "and ic.f_canceled=0 and ic.f_finance=1 "
+                "and ic.f_canceled=0 and ic.f_finance=1 :sel "
                 "order by ic.f_wdate, ic.f_id ";
     } else {
         query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, ic.f_finalName, "
                 "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
                 "from m_register ic "
-                "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 "
+                "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 :sel "
                 "order by ic.f_wdate, ic.f_id ";
+    }
+    if (fSelection.isEmpty()) {
+        query.replace(":sel", "");
+    } else {
+        query.replace(":sel", "and ic.f_id in (" + fSelection + ")");
     }
     fDD.exec(query);
 
@@ -69,7 +83,7 @@ void PPrintInvoice::previewInvoice()
     PPrintPreview *pp = new PPrintPreview(this);
     PPrintScene *ps = pp->addScene(0, Portrait);
     QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") : tr ("PROFORMA INVOICE");
-    PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, 0, QFont(qApp->font().family(), 50));
+    PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, nullptr, QFont(qApp->font().family(), 50));
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
 //    f.setPointSize(30);
@@ -85,11 +99,11 @@ void PPrintInvoice::previewInvoice()
                 .arg(tr("S/N"))
                 .arg(fId);
     }
-    PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, 0, QFont(qApp->font().family(), 30, 75));
+    PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, nullptr, QFont(qApp->font().family(), 30, 75));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
     trInvoice->setBorders(false, false, false, false);
     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                      0, QFont(qApp->font().family(), 25));
+                                      nullptr, QFont(qApp->font().family(), 25));
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
     trInfo->setWrapMode(QTextOption::WordWrap);
     trInfo->setBorders(false, false, false, false);
@@ -189,6 +203,9 @@ void PPrintInvoice::previewInvoice()
     //row 8
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Cardex"), &th, f));
     r = ps->addTextRect(new PTextRect(400, top, 2000, rowHeight, dh.getString("f_cardex") + " / " + dh.getString("f_cardexName"), &th, f));
+    if (fSelection.length() > 0) {
+        ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, "MH", &th, f));
+    }
     top += r->textHeight();
     top += r->textHeight();
     //table header

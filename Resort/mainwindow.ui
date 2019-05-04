@@ -170,6 +170,7 @@
     <addaction name="actionUtils"/>
     <addaction name="actionWeb"/>
     <addaction name="actionExecute_failed_sql"/>
+    <addaction name="actionRecover_invoice"/>
    </widget>
    <widget class="QMenu" name="menuRestaurant">
     <property name="title">
@@ -1441,6 +1442,20 @@
    </property>
    <property name="text">
     <string>Guest Tray Ledger By Date</string>
+   </property>
+  </action>
+  <action name="actionRecover_invoice">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/heart-pulses.png</normaloff>:/images/heart-pulses.png</iconset>
+   </property>
+   <property name="text">
+    <string>Recover invoice</string>
+   </property>
+  </action>
+  <action name="actionPosting_charge_2">
+   <property name="text">
+    <string>Posting charge</string>
    </property>
   </action>
  </widget>

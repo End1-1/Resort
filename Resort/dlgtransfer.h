@@ -17,6 +17,7 @@ public:
     virtual void callback(int sel, const QString &code);
     void setRoomByCode(const QString &code);
     void addRow(QList<QVariant> row);
+
 private slots:
     void on_chGuest_clicked(bool checked);
     void on_chCompany_clicked(bool checked);

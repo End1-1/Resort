@@ -9,6 +9,7 @@
 
 static const qint32 RECT_SIDE = 22;
 static const qreal Z_VALUE_RESERVE = 5;
+static const qreal Z_VALUE_CHECKIN = 6;
 static const qreal Z_VALUE_GRID_LINE = 4;
 static const qreal Z_MAX = 10;
 static const QColor LIGHT_GRAY = QColor::fromRgb(72, 72, 72);
@@ -44,7 +45,6 @@ class ClearScene : public QThread {
 
 public:
     ClearScene();
-
     void addObject(QObject *o);
 
 protected:
@@ -60,7 +60,6 @@ public:
 
 protected:
     QRectF boundingRect() const override;
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
@@ -75,7 +74,6 @@ public:
 
 protected:
     QRectF boundingRect() const override;
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
@@ -88,7 +86,6 @@ public:
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     QRectF boundingRect() const override;
 
 private:
@@ -98,38 +95,27 @@ private:
 class Reserve : public QGraphicsItem {
 public:
     Reserve(const QString &id, WRoomChart *rc);
-
     void setWidth(int w);
-
     void singleClick();
-
     void doubleClick();
-
     void removeTimer();
+    int fOffcet;
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
     QRectF boundingRect() const override;
-
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     QString fReserve;
-
     int fWidth;
-
     QColor fColor;
-
     QPointF fTempPoint;
-
     WRoomChartTime *fTimer;
-
     WRoomChart *fRoomChart;
+    bool fMouseMove;
 };
 
 #endif // WROOMCHARTCLASSES_H

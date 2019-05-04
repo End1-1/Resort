@@ -8,7 +8,7 @@ DlgConfigGrid::DlgConfigGrid(QWidget *parent) :
     ui(new Ui::DlgConfigGrid)
 {
     ui->setupUi(this);
-    fAddWidget = 0;
+    fAddWidget = nullptr;
     if (parent) {
         WReportGrid *rg = dynamic_cast<WReportGrid*>(parent);
         if (rg) {
@@ -30,19 +30,21 @@ DlgConfigGrid::~DlgConfigGrid()
     delete ui;
 }
 
-bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, bool &readOnly, bool &reset, QWidget *parent)
+bool DlgConfigGrid::config(QString &fontName, int &fontSize, bool &fontBold, bool &readOnly, bool &reset, int &rowHeight, QWidget *parent)
 {
     DlgConfigGrid *d = new DlgConfigGrid(parent);
     d->ui->fcbFontName->setCurrentText(fontName);
     d->ui->spFontSize->setValue(fontSize);
     d->ui->chFontBold->setChecked(fontBold);
     d->ui->chReadOnly->setChecked(readOnly);
+    d->ui->sbRowHeight->setValue(rowHeight);
     bool result = d->exec() == QDialog::Accepted;
     if (result) {
         fontName = d->ui->fcbFontName->currentText();
         fontSize = d->ui->spFontSize->value();
         fontBold = d->ui->chFontBold->isChecked();
         readOnly = d->ui->chReadOnly->isChecked();
+        rowHeight = d->ui->sbRowHeight->value();
         reset = d->fReset;
     }
     delete d;

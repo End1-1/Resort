@@ -7,10 +7,11 @@
 #include "wreservation.h"
 #include "winvoice.h"
 #include "waccinvoice.h"
-#include "dlgadvance.h"
 #include "dlgclinitialbalance.h"
 #include "dlgdiscount.h"
 #include "paymentmode.h"
+#include "dbmregister.h"
+#include "dlgpostcharge.h"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode) {
     QString payment = "";
@@ -21,8 +22,11 @@ QString vaucherPaymentName(int code, const QString &cardcode, const QString &clc
     case PAYMENT_CARD:
         if (cardcode.toInt() > 0) {
             CacheCreditCard ccc;
-            ccc.get(cardcode);
-            payment = ccc.fName();
+            if (ccc.get(cardcode)) {
+                payment = ccc.fName();
+            } else {
+                payment = "UNKNOWN CARD";
+            }
         }
         break;
     case PAYMENT_BANK:
@@ -30,8 +34,11 @@ QString vaucherPaymentName(int code, const QString &cardcode, const QString &clc
         break;
     case PAYMENT_CL: {
         CacheCityLedger ccl;
-        ccl.get(clcode);
-        payment = ccl.fName();
+        if (ccl.get(clcode)) {
+            payment = ccl.fName();
+        } else {
+            payment = "UNKNOWN CL";
+        }
         break;
     }
     case PAYMENT_CREDIT:
@@ -79,25 +86,26 @@ bool openVaucherInvoice(const QString &vaucherId) {
 
 void openVaucher(const QString &vaucher, const QString &id)
 {
+    QString err;
     if (vaucher == "RM" || vaucher == "CM" || vaucher == "CH" || vaucher == "PE") {
-        DlgPostingCharges *d = new DlgPostingCharges(fMainWindow->fPreferences.getDefaultParentForMessage());
-        d->loadVaucher(id);
-        d->exec();
-        delete d;
+        if (!DBMRegister::openVoucher(id, err)) {
+            message_error(err);
+        }
     } else if (vaucher == "PS") {
         DlgGPOSOrderInfo *d = new DlgGPOSOrderInfo(fMainWindow->fPreferences.getDefaultParentForMessage());
         d->setVaucher(id);
         d->exec();
         delete d;
     } else if (vaucher == "RV") {
-        DlgReceiptVaucher *d = new DlgReceiptVaucher(fMainWindow->fPreferences.getDefaultParentForMessage());
-        d->setVaucher(id);
-        d->exec();
-        delete d;
+        if (!DBMRegister::openVoucher(id, err)) {
+            message_error(err);
+        }
     } else if (vaucher == "RS") {
         WReservation::openVaucher(id);
     } else if (vaucher == "AV") {
-        DlgAdvance::openAdvance(id);
+        if (!DBMRegister::openVoucher(id, err)) {
+            message_error(err);
+        }
     } else if (vaucher == "CR") {
         DlgCLInitialBalance::openVaucher(id);
     } else if (vaucher == "DS") {
@@ -200,8 +208,7 @@ bool openInvoiceWithId(const QString &invoice)
         break;
     case RESERVE_CHECKOUT:
     case RESERVE_REMOVED: {
-        WAccInvoice *ai = addTab<WAccInvoice>();
-        ai->load(invoice);
+        WAccInvoice::openInvoice(invoice);
         break;
     }
     }

@@ -17,15 +17,13 @@ public:
     virtual void callback(int sel, const QString &code);
     static void load(const QString &id);
     static void newVaucher(const QString &invoice);
+
 private slots:
     void on_btnSave_clicked();
     void on_btnTrack_clicked();
     void on_btnPrint_clicked();
-
     void on_btnNewVaucher_clicked();
-
     void on_deWorking_textChanged(const QString &arg1);
-
     void on_leAmount_textChanged(const QString &arg1);
 
 private:

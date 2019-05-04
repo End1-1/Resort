@@ -46,7 +46,7 @@ void REInvoiceItem::valuesToWidgets()
     fDD.exec("select f_comp from serv_tax where f_active=1");
     ui->tblTaxPrint->setRowCount(fDD.rowCount());
     for (int i = 0; i < fDD.rowCount(); i++) {
-        ui->tblTaxPrint->setItem(i, 0, new QTableWidgetItem(fDD.getValue(i, "f_comp").toString()));
+        ui->tblTaxPrint->setItem(i, 0, new C5TableWidgetItem(fDD.getValue(i, "f_comp").toString()));
         fTaxMap[fDD.getValue(i, "f_comp").toString()] = i;
     }
 
@@ -57,7 +57,7 @@ void REInvoiceItem::valuesToWidgets()
             continue;
         }
         int row = fTaxMap[fDD.getValue(i, "f_comp").toString()];
-        ui->tblTaxPrint->setItem(row, 1, new QTableWidgetItem(fDD.getValue(i, "f_dept").toString()));
+        ui->tblTaxPrint->setItem(row, 1, new C5TableWidgetItem(fDD.getValue(i, "f_dept").toString()));
     }
 }
 

@@ -33,7 +33,7 @@ void DlgInvoiceCancelation::addRow(const QList<QVariant> &data)
     ui->tblData->setRowCount(row + 1);
     QString msg;
     for (int i = 0; i < ui->tblData->columnCount(); i++) {
-        ui->tblData->setItem(row, i, new QTableWidgetItem(data.at(i).toString()));
+        ui->tblData->setItem(row, i, new C5TableWidgetItem(data.at(i).toString()));
         msg += data.at(i).toString() + " /";
     }
     fTrackControl->insert("Invoice cancelation", msg, "");

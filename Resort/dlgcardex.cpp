@@ -13,7 +13,7 @@ DlgCardex::DlgCardex(QList<QVariant> &values, QWidget *parent) :
     ui->leCommision->setValidator(new QDoubleValidator(0, 999, 2));
     ui->leCLCode->setValidator(new QIntValidator());
     ui->leVATModeCode->setValidator(new QIntValidator());
-    ui->btnRemove->setVisible(r__(cr__super_correction));
+    ui->btnRemove->setVisible(r__(cr__remove_cardex));
     addWidget(ui->leCode, "Code");
     addWidget(ui->leCardexGroupName, "Group");
     addWidget(ui->leCardexGroupCode, "");
@@ -36,7 +36,6 @@ DlgCardex::DlgCardex(QList<QVariant> &values, QWidget *parent) :
     addWidget(ui->leExtra1, "Extra1");
     addWidget(ui->leExtra2, "Extra2");
     fTable = "f_cardex";
-    fCacheId = cid_cardex;
     ui->leVATModeCode->setSelector(this, cache(cid_vat_mode), ui->leVATModeName);
     ui->leVATModeCode->setInitialValue(VAT_INCLUDED);
     ui->leCardexGroupCode->setSelector(this, cache(cid_cardex_group), ui->leCardexGroupName);
@@ -122,7 +121,7 @@ void DlgCardex::on_btnOk_clicked()
     }
     save();
     BroadcastThread::cmdRefreshCache(cid_city_ledger, ui->leCLCode->text());
-    BroadcastThread::cmdRefreshCache(cid_cardex, ui->leCode->text());
+    BroadcastThread::cmdRefreshCache(cid_cardex, ui->leCardex->text());
 }
 
 void DlgCardex::on_btnRemove_clicked()

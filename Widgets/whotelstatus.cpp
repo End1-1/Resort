@@ -7,10 +7,29 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
 {
     ui->setupUi(this);
     DoubleDatabase fDD(true, doubleDatabase);
+    QStringList row1, row2, row3, row4;
+    row1 << "Working date" << "" << "Arrivals" << "" << "Empty room" << "" << "Paid occ." << "" << "Male" << "" << "F/B" << "0";
+    row2 << "Rooms in hotel" << "" << "Departures" << "" << "Room to sell" << "" << "Comp. occ" << "" << "Female" << "" << "H/B" << "0";
+    row3 << "Number of beds" << "" << "Occupied" << "" << "Avg. room rate" << "" << "   " << "" << "Childs" << "" << "B/B" << "0";
+    row4 << "Available rooms" << "" << ""       << "" << "Curr. occ." << "" << "    " << "" << "" << "" << "B/O" << "0";
+    ui->tblMain->setRowCount(4);
+    for (int i = 0; i < ui->tblMain->columnCount(); i++) {
+        ui->tblMain->setItemWithValue(0, i, row1.at(i));
+    }
+    for (int i = 0; i < ui->tblMain->columnCount(); i++) {
+        ui->tblMain->setItemWithValue(1, i, row2.at(i));
+    }
+    for (int i = 0; i < ui->tblMain->columnCount(); i++) {
+        ui->tblMain->setItemWithValue(2, i, row3.at(i));
+    }
+    for (int i = 0; i < ui->tblMain->columnCount(); i++) {
+        ui->tblMain->setItemWithValue(3, i, row4.at(i));
+    }
+
     ui->tblMain->setItemWithValue(0, 1, WORKING_DATE);
-    ui->tblMain->setItemWithValue(1, 1, fDD.singleResult("select count(f_id) from f_room"));
-    ui->tblMain->setItemWithValue(2, 1, fDD.singleResult("select sum(f_bedQty) from f_room"));
-    ui->tblMain->setItemWithValue(2, 3, fDD.singleResult("select count(f_id) from f_reservation where f_state=1"));
+    ui->tblMain->setItemWithValue(1, 1, fDD.singleResult("select count(f_id) from f_room").toInt());
+    ui->tblMain->setItemWithValue(2, 1, fDD.singleResult("select sum(f_bedQty) from f_room").toInt());
+    ui->tblMain->setItemWithValue(2, 3, fDD.singleResult("select count(f_id) from f_reservation where f_state=1").toInt());
     ui->tblMain->setItemWithValue(0, 5, ui->tblMain->toInt(1, 1) - ui->tblMain->toInt(2, 3));
     ui->tblMain->setItemWithValue(2, 5, fDD.singleResult("select sum(f_pricePerNight) / count(f_id) from f_reservation where f_state=1"));
     fDD.exec("select sum(f_man) as man, sum(f_woman) as woman, sum(f_child) as child from f_reservation where f_state=1");
@@ -109,7 +128,7 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
     Utils::tableSetColumnWidths(ui->tblGuestInHouse, ui->tblGuestInHouse->columnCount(),
                                 80, 150, 100, 100, 0);
     Utils::fillTableWithData(ui->tblGuestInHouse, fDD.fDbRows);
-    ui->lbGuestInHouse->setText(QString("%1 (%2 / %3)").arg(tr("Guest in house")).arg(fDD.rowCount()).arg((int)ui->tblGuestInHouse->sumOfColumn(4)));
+    ui->lbGuestInHouse->setText(QString("%1 (Occ. rooms: %2, Total guests: %3)").arg(tr("Guest in house")).arg(fDD.rowCount()).arg((int)ui->tblGuestInHouse->sumOfColumn(4)));
 
     Utils::tableSetColumnWidths(ui->tblCategory, ui->tblCategory->columnCount(), 30, 150, 50, 50);
     fDD.exec("select c.f_short, c.f_description, coalesce(rmc.qty, 0), coalesce(rc.qty, 0) \
@@ -153,6 +172,7 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
     }
     maxWidth += 20;
     ui->tblCategory->setMaximumWidth(maxWidth);
+
 }
 
 WHotelStatus::~WHotelStatus()

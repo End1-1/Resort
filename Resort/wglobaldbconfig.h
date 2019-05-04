@@ -15,6 +15,7 @@ class WGlobalDbConfig : public BaseWidget
 public:
     explicit WGlobalDbConfig(QWidget *parent = nullptr);
     ~WGlobalDbConfig();
+    virtual bool canClose();
 
 protected:
     virtual void setupTab();

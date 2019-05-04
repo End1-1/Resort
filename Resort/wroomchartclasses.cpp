@@ -5,9 +5,11 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
+static QSettings  __ss("SmartHotel", "SmartHotel");
+
 QFont FONT;
 QMap<int, QString> DAYS_OF_WEEK;
-QDate fFirstDate = QDate::fromString("01/03/2018", "dd/MM/yyyy");
+QDate fFirstDate = QDate::fromString("01/01/2019", "dd/MM/yyyy");
 QDate fLastDate = QDate::fromString("01/01/2021", "dd/MM/yyyy");
 
 QMap<int, int> fRoomRows;
@@ -119,7 +121,7 @@ void RoomRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         color = Qt::white;
         break;
     case ROOM_STATE_CHECKIN:
-        color = QColor::fromRgb(70, 170, 255);
+        color = QColor::fromRgb(__ss.value("checkincolor", -16733441).toInt());
         break;
     case ROOM_STATE_DIRTY:
         color = Qt::yellow;
@@ -142,7 +144,9 @@ QRectF RoomRect::boundingRect() const {
 Reserve::Reserve(const QString &id, WRoomChart *rc) {
     fReserve = id;
     fRoomChart = rc;
+    fOffcet = 0;
     fTimer = nullptr;
+    fMouseMove = false;
     setToolTip(QString("%1 %2\n%3-%4\n%5")
                .arg(fReserveCardex[id])
                .arg(fReserveGuest[id])
@@ -151,7 +155,8 @@ Reserve::Reserve(const QString &id, WRoomChart *rc) {
                .arg(fReserveRoomName[id]));
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
-    setZValue(Z_VALUE_RESERVE);
+    qreal zvalue = fReserveState[id] == RESERVE_RESERVE ? Z_VALUE_RESERVE : Z_VALUE_CHECKIN;
+    setZValue(zvalue);
 }
 
 void Reserve::setWidth(int w) {
@@ -181,10 +186,10 @@ void Reserve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     QColor fillColor;
     switch (state) {
     case RESERVE_CHECKIN:
-        fillColor = QColor::fromRgb(70, 170, 255);
+        fillColor = QColor::fromRgb(__ss.value("checkincolor", -16733441).toInt());
         break;
     case RESERVE_RESERVE:
-        fillColor = QColor::fromRgb(255, 80, 80);
+        fillColor = QColor::fromRgb(__ss.value("reservecolor", -42403).toInt());
         break;
     case RESERVE_SERVICE:
         fillColor = Qt::magenta;
@@ -206,7 +211,7 @@ void Reserve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
     QBrush brush(bgFill);
     painter->fillRect(option->rect, brush);
 
-    if (fReserveState[fReserve] == RESERVE_RESERVE) {
+    if (fReserveState[fReserve] == RESERVE_RESERVE && fWidth > 1) {
         switch (fReserveStatus[fReserve]) {
         case CONFIRM_CONFIRM:
             fillColor = Qt::green;
@@ -224,23 +229,31 @@ void Reserve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
             fillColor = Qt::blue;
             break;
         }
-        QRect statusRect(3, (option->rect.height() / 2) - 3, 7, 7);
+        QRect statusRect(3 + fOffcet, (option->rect.height() / 2) - 3, 7, 7);
         painter->setBrush(fillColor);
         painter->drawEllipse(statusRect);
     }
 
     painter->setBrush(Qt::NoBrush);
+    painter->setPen(QColor::fromRgb(100, 100, 100));
     painter->drawRect(option->rect);
 
-    QFont f(FONT.family(), 10);
+    if (fOffcet > 0 && !fMouseMove) {
+        painter->setPen(QPen(Qt::white, 2));
+        painter->drawLine(option->rect.x() + fOffcet - 1, option->rect.y(), option->rect.x() + fOffcet - 1, option->rect.y() + option->rect.height());
+    }
+
+    QFont f(FONT.family(), 9);
+    f.setBold(true);
     painter->setFont(f);
+    painter->setPen(QColor::fromRgb(20, 20, 20));
     QRectF textRect = option->rect;
-    textRect.adjust(13, 2, -2, -2);
+    textRect.adjust(13 + fOffcet, 2, -2, -2);
     painter->drawText(textRect, fReserveGuest[fReserve]);
 }
 
 QRectF Reserve::boundingRect() const {
-    return QRectF(0, 0, (RECT_SIDE * fWidth) - 4, RECT_SIDE - 4);
+    return QRectF(0, 0, (RECT_SIDE * fWidth) - 2 - (RECT_SIDE / 2), RECT_SIDE - 4);
 }
 
 void Reserve::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -255,19 +268,22 @@ void Reserve::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     } else {
         fTimer->incDoubleClick();
     }
+    fMouseMove = true;
 }
 
 void Reserve::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsItem::mouseMoveEvent(event);
+    fMouseMove = true;
 }
 
 void Reserve::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    setPos(fTempPoint);
+    setPos(fTempPoint.x(), fTempPoint.y());
     setZValue(Z_VALUE_RESERVE);
     update();
     QGraphicsItem::mouseReleaseEvent(event);
     if (fTimer) {
         fTimer->incDoubleClick();
     }
+    fMouseMove = false;
 }
 

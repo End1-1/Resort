@@ -20,7 +20,9 @@ public:
     DBMRegister(const DBMRegister &r);
     DBMRegister &operator=(const DBMRegister &r);
     ~DBMRegister();
+    static QString voucherQuery();
     void open(DoubleDatabase &d, const QString &id);
+    void fetchData(DoubleDatabase &d);
     static bool openVoucher(const QString &id, QString &err);
     QString fId;
     QString fSource;
@@ -84,6 +86,7 @@ public:
     void setleAmountAMD(EQLineEdit *l);
     void setleAmountUSD(EQLineEdit *l);
     void setleAmountVAT(EQLineEdit *l);
+    void setleFiscal(EQLineEdit *l);
     void setleRemarks(QPlainTextEdit *p);
 
 private:
@@ -108,6 +111,7 @@ private:
     EQLineEdit *leAmountVAT;
     EQLineEdit *leVatMode;
     EQLineEdit *leVatModeName;
+    EQLineEdit *leTaxCode;
     EDateEdit *deWDate;
     QPlainTextEdit *ptRemarks;
 
@@ -136,6 +140,7 @@ private slots:
     void amountVATChanged(const QString &s);
     void VATModeChanged(const QString &s);
     void VATModeNameChanged(const QString &s);
+    void taxCodeChanged(const QString &s);
     void remarksChanged();
 };
 

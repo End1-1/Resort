@@ -4,6 +4,7 @@
 #include "wroomchart.h"
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 
 static QSettings  __ss("SmartHotel", "SmartHotel");
 
@@ -153,15 +154,24 @@ Reserve::Reserve(const QString &id, WRoomChart *rc) {
                .arg(fReserveDateStart[id].toString(def_date_format))
                .arg(fReserveDateEnd[id].toString(def_date_format))
                .arg(fReserveRoomName[id]));
-    setFlags(ItemIsSelectable | ItemIsMovable);
+    setFlags(ItemIsSelectable);
     setAcceptHoverEvents(true);
     qreal zvalue = fReserveState[id] == RESERVE_RESERVE ? Z_VALUE_RESERVE : Z_VALUE_CHECKIN;
     setZValue(zvalue);
+    if (fReserveState[fReserve] == RESERVE_CHECKIN) {
+        fOffcet = (fReserveDateStart[id].daysTo(__preferences.getLocalDate(def_working_day))) * RECT_SIDE;
+        fOffcet -= 13;
+    }
 }
 
 void Reserve::setWidth(int w) {
     fWidth = w;
     update();
+}
+
+int Reserve::width()
+{
+    return boundingRect().width();
 }
 
 void Reserve::singleClick()
@@ -258,6 +268,8 @@ QRectF Reserve::boundingRect() const {
 
 void Reserve::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     fTempPoint = pos();
+    fMouseOffcetX = event->scenePos().x() - fTempPoint.x();
+    fMouseOffcetY = event->scenePos().y() - fTempPoint.y();
     fColor = Qt::green;
     setZValue(Z_MAX);
     update();
@@ -273,17 +285,144 @@ void Reserve::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void Reserve::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsItem::mouseMoveEvent(event);
-    fMouseMove = true;
+    if (fMouseMove) {
+        QPointF p = event->scenePos();
+        p.setX(p.x() - fMouseOffcetX);
+        p.setY(p.y() - fMouseOffcetY);
+        setPos(p);
+    }
 }
 
 void Reserve::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+    QGraphicsItem::mouseReleaseEvent(event);
+    if (fTimer) {
+        if (fTempPoint == event->scenePos()) {
+            fTimer->incDoubleClick();
+        }
+    }
+    resetPos();
+}
+
+void Reserve::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QGraphicsItem::hoverLeaveEvent(event);
+    if (fMouseMove) {
+        resetPos();
+    }
+}
+
+void Reserve::resetPos()
+{
     setPos(fTempPoint.x(), fTempPoint.y());
     setZValue(Z_VALUE_RESERVE);
     update();
-    QGraphicsItem::mouseReleaseEvent(event);
-    if (fTimer) {
-        fTimer->incDoubleClick();
-    }
     fMouseMove = false;
 }
 
+ChartScene::ChartScene() :
+    QGraphicsScene()
+{
+    addItem(&fTempRect);
+    fHandleTempRect = false;
+}
+
+void ChartScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mousePressEvent(event);
+    Reserve *r = dynamic_cast<Reserve*>(itemAt(event->scenePos(), QTransform()));
+    if (r) {
+        if (event->modifiers() & Qt::ControlModifier) {
+            r->resetPos();
+            fTempRect.fMouseOffcetX = event->scenePos().x() - r->scenePos().x();
+            fTempRect.fMouseOffcetY = event->scenePos().y() - r->scenePos().y();
+            fTempRect.fWidth = r->width();
+            fTempRect.setRect(r->pos().x() + 2, r->pos().y() + 2, r->width(), RECT_SIDE - 4);
+            fTempRect.fFreeMove = true;
+            fHandleTempRect = true;
+        }
+        return;
+    }
+    fStartPoint = nearestPointLeft(event->scenePos());
+    fHandleTempRect = true;
+}
+
+void ChartScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mouseMoveEvent(event);
+    if (!fHandleTempRect) {
+        return;
+    }
+    if (fTempRect.fFreeMove) {
+        QPointF p = event->scenePos();
+        p.setX(p.x() - fTempRect.fMouseOffcetX);
+        p.setY(p.y() - fTempRect.fMouseOffcetY);
+        p = nearestPointLeft(p);
+        fTempRect.setRect(p.x(), p.y() + 1, fTempRect.fWidth, RECT_SIDE - 2);
+    } else {
+        fTempRect.setRect(fStartPoint.x(), fStartPoint.y() + 2, event->scenePos().x() - fStartPoint.x(), RECT_SIDE - 4);
+    }
+}
+
+void ChartScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mouseReleaseEvent(event);
+    if (fHandleTempRect) {
+        fHandleTempRect = false;
+        double posX = fTempRect.rect().x();
+        posX /= RECT_SIDE;
+        if (fTempRect.rect().width() > 10) {
+            emit createReserve(0, posX, &fTempRect);
+        } else {
+            fTempRect.reset();
+        }
+    }
+    update();
+}
+
+QPointF ChartScene::nearestPointLeft(const QPointF &p)
+{
+    int x = p.x();
+    int y = p.y();
+    x -= (x % RECT_SIDE);
+    y -= (y % RECT_SIDE);
+    return QPointF(x + 2, y);
+}
+
+QPointF ChartScene::nearestPointRight(const QPointF &p)
+{
+    int x = p.x();
+    int y = p.y();
+    x += x - (x % RECT_SIDE);
+    y += y + (y % RECT_SIDE);
+    return QPointF(x + 2, y);
+}
+
+
+TempRectItem::TempRectItem(QGraphicsItem *parent) :
+    QGraphicsRectItem (parent)
+{
+    setZValue(Z_VALUE_TEMP_RECT);
+    fFreeMove = false;
+    fMouseOffcetX = 0;
+    fMouseOffcetY = 0;
+}
+
+void TempRectItem::reset()
+{
+    setPos(0, 0);
+    setRect(0, 0, 0, 0);
+    fFreeMove = false;
+}
+
+void TempRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(widget);
+    painter->fillRect(option->rect, Qt::magenta);
+    QRectF rText = option->rect;
+    rText.adjust(2, 2, -2, -2);
+    double posX = rect().x();
+    posX /= RECT_SIDE;
+    QDate d1 = fFirstDate.addDays(posX);
+    QDate d2 = fFirstDate.addDays(rect().right() / RECT_SIDE);
+    painter->drawText(rText, d1.toString(def_date_format) + "-" + d2.toString(def_date_format));
+}

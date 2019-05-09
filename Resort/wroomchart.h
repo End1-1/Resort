@@ -9,6 +9,8 @@ class WRoomChart;
 }
 
 class WRoomChartDock;
+class ChartScene;
+class TempRectItem;
 
 class WRoomChart : public BaseWidget
 {
@@ -22,7 +24,7 @@ public:
     virtual void setupTab();
     void singleClick(const QString &id);
     void doubleClick(const QString &id);
-    QGraphicsScene *fMainScene;
+    ChartScene *fMainScene;
     QGraphicsScene *fRoomScene;
     QGraphicsScene *fDateScene;
 
@@ -34,6 +36,7 @@ private:
     QString categoriesFilter();
 
 private slots:
+    void createReserve(int row, int column, TempRectItem *t);
     void catButtonClicked();
     void mainViewVerticalScrollBarValueChanged(int value);
     void mainViewHorizontalScrollBarValueChanged(int value);

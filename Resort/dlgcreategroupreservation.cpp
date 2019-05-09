@@ -53,6 +53,7 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     }
 
     fSingleMode = false;
+    setMinimumWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + ui->tblData->horizontalHeader()->defaultSectionSize());
 }
 
 DlgCreateGroupReservation::~DlgCreateGroupReservation()

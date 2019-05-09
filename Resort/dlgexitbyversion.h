@@ -28,4 +28,6 @@ private:
     void setVersions(const QString &appVersion, const QString &dbVersion);
 };
 
+extern bool DO_NOT_CHECK_VERSION;
+
 #endif // DLGEXITBYVERSION_H

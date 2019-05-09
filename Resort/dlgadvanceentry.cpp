@@ -43,6 +43,7 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     fDoc.fSource = VAUCHER_ADVANCE_N;
     fDoc.fItemCode = fPreferences.getDb(def_advance_voucher_id).toUInt();
     fDoc.setleFinalName(ui->leFinalName);
+    fDoc.setleFiscal(ui->leTax);
     fDoc.fDC = "DEBET";
     fDoc.fSign = -1;
     fDoc.fFinance = 1;
@@ -89,6 +90,10 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     QString finalName;
     switch (fDoc.fPaymentMode) {
     case PAYMENT_CARD:
+        if (ui->wPayment->cardName().isEmpty()) {
+            message_error(tr("Card is not selected"));
+            return;
+        }
         finalName = "CC/" + ui->wPayment->cardName();
         break;
     case PAYMENT_CASH:
@@ -132,6 +137,10 @@ void DlgAdvanceEntry::on_btnNew_clicked()
 
 void DlgAdvanceEntry::on_btnPrintTax_clicked()
 {
+    if (ui->leTax->asInt() > 0) {
+        message_error(tr("Already printed"));
+        return;
+    }
     if (ui->leVoucher->text().isEmpty()) {
         message_error(tr("Save first"));
         return;
@@ -146,6 +155,12 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     int taxCode = 0;
     if (ui->rbAdvance->isChecked()) {
         if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode)) {
+            return;
+        }
+        ui->leTax->setInt(taxCode);
+        DoubleDatabase dd(true, doubleDatabase);
+        if (!fDoc.save(dd)) {
+            message_error(fDoc.fError);
             return;
         }
     } else {
@@ -171,6 +186,12 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
         int result = dpt.exec();
         if (result == TAX_OK) {
             taxCode = dpt.fTaxCode;
+            ui->leTax->setInt(taxCode);
+            DoubleDatabase dd(true, doubleDatabase);
+            if (!fDoc.save(dd)) {
+                message_error(fDoc.fError);
+                return;
+            }
         }
     }
 }

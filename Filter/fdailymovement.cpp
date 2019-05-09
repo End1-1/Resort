@@ -254,7 +254,7 @@ void FDailyMovement::processItems(QString items)
     }
     names.remove(names.length() - 1, 1);
     if (totalRowSeparate) {
-        names += " " + float_printout(payment[-1]) ;
+        names += " " + float_str(payment[-1]) ;
         trr[0] = names;
         if (fPreferences.getDb(def_daily_movement_total_side).toInt() == 0) {
             rows << trr;
@@ -270,9 +270,9 @@ void FDailyMovement::processItems(QString items)
             }
             CachePaymentMode ci;
             if (ci.get(it.key())) {
-                names = QString("%1: %2").arg(ci.fName()).arg(float_printout(it.value()));
+                names = QString("%1: %2").arg(ci.fName()).arg(float_str(it.value()));
             } else {
-                names = QString("%1: %2").arg("UNKNOWN").arg(float_printout(it.value()));
+                names = QString("%1: %2").arg("UNKNOWN").arg(float_str(it.value()));
             }
             trr[0] = names;
             if (fPreferences.getDb(def_daily_movement_total_side).toInt() == 0) {
@@ -282,16 +282,16 @@ void FDailyMovement::processItems(QString items)
             }
         }
     } else {
-        names += " " + float_printout(payment[-1]) + " [";
+        names += " " + float_str(payment[-1]) + " [";
         for (QMap<int, double>::const_iterator it = payment.begin(); it != payment.end(); it++) {
             if (it.key() < 0) {
                 continue;
             }
             CachePaymentMode ci;
             if (ci.get(it.key())) {
-                names += QString("%1: %2,").arg(ci.fName()).arg(float_printout(it.value()));
+                names += QString("%1: %2,").arg(ci.fName()).arg(float_str(it.value()));
             } else {
-                names += QString("%1: %2,").arg("UNKNOWN").arg(float_printout(it.value()));
+                names += QString("%1: %2,").arg("UNKNOWN").arg(float_str(it.value()));
             }
         }
         names.remove(names.length() - 1, 1);

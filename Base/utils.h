@@ -4,19 +4,15 @@
 #include "defines.h"
 #include "edateedit.h"
 #include "eqtablewidget.h"
+#include "stringutils.h"
 #include <QTableWidget>
 #include <QList>
 #include <QDate>
 #include <QSettings>
 #include <QHostInfo>
 
-QString float_str(double value, int f);
 #define float_equal(value1, value2) (abs(value1 - value2) < 0.01 ? true : false)
 #define float_greaterOrEqual(value1, value2) (value1 - value2 >= 0.01 ? true : false)
-#define float_printout(x) QLocale().toString(x, 'f', 2)
-#define ap(x) QString("'%1'").arg(x)
-#define where_id(id) QString("where f_id=%1").arg(id)
-#define where_field(field, value) QString("where %1=%2").arg(field).arg(value)
 
 namespace Utils {
     void initNumbersWords();

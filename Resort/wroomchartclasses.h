@@ -6,11 +6,13 @@
 #include <QDate>
 #include <QFont>
 #include <QTimer>
+#include <QGraphicsScene>
 
 static const qint32 RECT_SIDE = 22;
 static const qreal Z_VALUE_RESERVE = 5;
 static const qreal Z_VALUE_CHECKIN = 6;
 static const qreal Z_VALUE_GRID_LINE = 4;
+static const qreal Z_VALUE_TEMP_RECT = 6;
 static const qreal Z_MAX = 10;
 static const QColor LIGHT_GRAY = QColor::fromRgb(72, 72, 72);
 static const QColor VSELECTION_COLOR = QColor::fromRgb(0, 255, 0, 100);
@@ -96,9 +98,11 @@ class Reserve : public QGraphicsItem {
 public:
     Reserve(const QString &id, WRoomChart *rc);
     void setWidth(int w);
+    int width();
     void singleClick();
     void doubleClick();
     void removeTimer();
+    void resetPos();
     int fOffcet;
 
 protected:
@@ -107,6 +111,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
 private:
     QString fReserve;
@@ -115,7 +120,45 @@ private:
     QPointF fTempPoint;
     WRoomChartTime *fTimer;
     WRoomChart *fRoomChart;
+    qreal fMouseOffcetX;
+    qreal fMouseOffcetY;
     bool fMouseMove;
+};
+
+class TempRectItem : public QGraphicsRectItem {    
+public:
+    TempRectItem(QGraphicsItem *parent = nullptr);
+    void reset();
+
+public:
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    bool fFreeMove;
+    qreal fWidth;
+    qreal fMouseOffcetX;
+    qreal fMouseOffcetY;
+};
+
+
+class ChartScene : public QGraphicsScene {
+    Q_OBJECT
+
+public:
+    ChartScene();
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+
+private:
+    bool fHandleTempRect;
+    QPointF fStartPoint;
+    TempRectItem fTempRect;
+    QPointF nearestPointLeft(const QPointF &p);
+    QPointF nearestPointRight(const QPointF &p);
+
+signals:
+    void createReserve(int, int, TempRectItem *);
 };
 
 #endif // WROOMCHARTCLASSES_H

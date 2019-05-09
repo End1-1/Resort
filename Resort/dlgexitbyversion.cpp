@@ -2,6 +2,8 @@
 #include "ui_dlgexitbyversion.h"
 #include <QDir>
 
+bool DO_NOT_CHECK_VERSION = false;
+
 DlgExitByVersion::DlgExitByVersion(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DlgExitByVersion)

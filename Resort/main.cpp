@@ -2,6 +2,7 @@
 #include "login.h"
 #include "logging.h"
 #include "utils.h"
+#include "dlgexitbyversion.h"
 #include <QApplication>
 #include <QFontDatabase>
 #include <QFile>
@@ -45,6 +46,9 @@ int main(int argc, char *argv[])
         writelog("Logging enabled");
         QDir d;
         QMessageBox::information(nullptr, "Logging", "Logging is enabled into " + d.homePath() + "/" + _APPLICATION_ + "/log.txt");
+    }
+    if (params.contains("noversion")) {
+        DO_NOT_CHECK_VERSION = true;
     }
 #ifdef QT_DEBUG
     logEnabled = true;

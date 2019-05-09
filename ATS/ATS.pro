@@ -16,8 +16,8 @@ INCLUDEPATH += $$PWD/../Base
 INCLUDEPATH += $$PWD/../Controls
 
 SOURCES += main.cpp\
+    ../Base/stringutils.cpp \
         dlgmain.cpp \
-    ../Base/utils.cpp \
     ../Base/defines.cpp \
     ../Base/preferences.cpp \
     ../Base/baseuid.cpp \
@@ -26,7 +26,7 @@ SOURCES += main.cpp\
     ../Controls/edateedit.cpp
 
 HEADERS  += dlgmain.h \
-    ../Base/utils.h \
+    ../Base/stringutils.h \
     ../Base/defines.h \
     ../Base/preferences.h \
     rc.h \
@@ -36,8 +36,7 @@ HEADERS  += dlgmain.h \
     ../Base/logging.h \
     ../Controls/edateedit.h
 
-FORMS    += dlgmain.ui \
-    ../Resort/dlgselector.ui
+FORMS    += dlgmain.ui
 
 LIBS += -lVersion
 

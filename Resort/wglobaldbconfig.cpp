@@ -651,7 +651,7 @@ void WGlobalDbConfig::on_leExternalRestaurantDb_textChanged(const QString &arg1)
 
 void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
 {
-    DoubleDatabase dd1(true, true);
+    DoubleDatabase dd1(true, doubleDatabase);
     dd1.exec("delete from f_reservation_chart");
     dd1.exec("delete from f_reservation_map");
     dd1.exec("select r.f_id, r.f_invoice, r.f_state, r.f_reservestate, r.f_room, r.f_startdate, r.f_enddate, "
@@ -666,7 +666,7 @@ void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
             "left join f_reservation_group rg on rg.f_id=r.f_group "
             "left join (select f_reservation, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName) as gname "
                 "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
-            "where r.f_state in (1,2,4,7,9) and r.f_room>0 "
+            "where r.f_state in (1,2,4,7,9) and r.f_room>0 and r.f_startdate is not null "
             "group by 1 ");
     while (dd1.nextRow()) {
         DoubleDatabase dd2(true, true);

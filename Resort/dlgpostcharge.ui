@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>480</height>
+    <width>447</width>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -285,69 +285,13 @@
       <string>Type of sale</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="EQLineEdit" name="leItem">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
+      <item row="3" column="2" colspan="2">
+       <widget class="EQLineEdit" name="leCardName">
         <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="EQLineEdit" name="leAmount">
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2" colspan="2">
-       <widget class="EQLineEdit" name="leVATName">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="2">
-       <widget class="EQLineEdit" name="leItemName">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Item</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLabel" name="label_5">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Amount, USD</string>
         </property>
        </widget>
       </item>
@@ -361,6 +305,30 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Mode of VAT</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3">
+       <widget class="EQLineEdit" name="leFinalName">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbCard">
+        <property name="text">
+         <string>Credit card</string>
+        </property>
+       </widget>
+      </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_4">
         <property name="focusPolicy">
@@ -371,23 +339,26 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbPayment">
-        <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
+      <item row="2" column="1">
+       <widget class="EQLineEdit" name="lePayment">
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
         </property>
-        <property name="text">
-         <string>Mode of payment</string>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
         <property name="focusPolicy">
          <enum>Qt::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>Mode of VAT</string>
+         <string>Item</string>
         </property>
        </widget>
       </item>
@@ -407,8 +378,65 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="EQLineEdit" name="lePayment">
+      <item row="5" column="2">
+       <widget class="QLabel" name="label_5">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Amount, USD</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" colspan="2">
+       <widget class="EQLineEdit" name="leVATName">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Final name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <widget class="EQLineEdit" name="leItemName">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbPayment">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Mode of payment</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="EQLineEdit" name="lePaymentName">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="EQLineEdit" name="leAmount">
         <property name="maximumSize">
          <size>
           <width>80</width>
@@ -420,13 +448,16 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="2" colspan="2">
-       <widget class="EQLineEdit" name="leCardName">
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+      <item row="0" column="1">
+       <widget class="EQLineEdit" name="leItem">
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
@@ -443,32 +474,24 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="EQLineEdit" name="lePaymentName">
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Tax number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="EQLineEdit" name="leFiscal">
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::ClickFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbCard">
-        <property name="text">
-         <string>Credit card</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Final name</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="3">
-       <widget class="EQLineEdit" name="leFinalName">
         <property name="readOnly">
          <bool>true</bool>
         </property>

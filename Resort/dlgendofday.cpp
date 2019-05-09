@@ -12,7 +12,7 @@ DlgEndOfDay::DlgEndOfDay(QWidget *parent) :
     ui(new Ui::DlgEndOfDay)
 {
     ui->setupUi(this);
-    Utils::tableSetColumnWidths(ui->tblCharges, 12, 0, 0, 0, 80, 250, 80, 80, 120, 120, 100, 100, 0);
+    Utils::tableSetColumnWidths(ui->tblCharges, ui->tblCharges->columnCount(), 0, 0, 0, 80, 250, 80, 80, 120, 120, 100, 100, 0, 0);
     fCanCharge = true;
     ui->lbLastDate->setText(QString("%1 - %2")
                             .arg(tr("Last charge date"))
@@ -101,7 +101,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         fDD[":f_creditCard"] = 0;
         fDD[":f_cityLedger"] = 0;
         fDD[":f_paymentComment"] = "";
-        fDD[":f_dc"] = "DEBIT";
+        fDD[":f_dc"] = "CREDIT";
         fDD[":f_sign"] = 1;
         fDD[":f_doc"] = "";
         fDD[":f_rec"] = "";
@@ -110,7 +110,15 @@ void DlgEndOfDay::on_btnOk_clicked()
         fDD[":f_remarks"] = "";
         fDD[":f_canceled"] = 0;
         fDD[":f_cancelReason"] = "";
-        fDD[":f_side"] = fPreferences.getDb(def_rooming_eod_default_side).toInt();
+        if (fPreferences.getDb(def_rooming_eod_default_side).toInt() == 1) {
+            if (ui->tblCharges->item(i, 12)->data(Qt::EditRole).toInt() > 0) {
+                fDD[":f_side"] =  1;
+            } else {
+                fDD[":f_side"] = 0;
+            }
+        } else {
+            fDD[":f_side"] = 0;
+        }
         fDD[":f_cash"] = 0;
         result = result && fDD.update("m_register", where_id(ap(rid)));
         fTrackControl->resetChanges();
@@ -236,12 +244,12 @@ void DlgEndOfDay::on_btnOk_clicked()
                "and f_wdate=:f_wdate and f_fiscal=0 and f_canceled=0", dbrows);
     /* OLD VERSION */
     QList<QList<QVariant> > dbrowTax;
-    fDD.exec("select f_id, f_invoice, f_amount, f_source from m_free_tax where f_used=0 and f_source='RM' and f_taxCode <= 1", dbrowTax);
+    fDD.exec("select f_id, f_invoice, f_amount, f_source, f_taxcode from m_free_tax where f_used=0 and f_source='RM' and f_taxCode <= 1", dbrowTax);
     for (int j = 0; j < dbrows.count(); j++) {
         QString inv = dbrows.at(j).at(1).toString();
         for (int i = dbrowTax.count() - 1; i > -1; i--) {
             if ((inv == dbrowTax.at(i).at(1).toString()) && isDoubleEqual(dbrows.at(j).at(2).toDouble(), dbrowTax.at(i).at(2).toDouble(), 2)) {
-                fDD[":f_fiscal"] = 1;
+                fDD[":f_fiscal"] = dbrowTax.at(i).at(4);
                 fDD.update("m_register", where_id(ap(dbrows.at(j).at(0).toString())));
                 fDD[":f_used"] = 1;
                 fDD.update("m_free_tax", where_id(dbrowTax.at(i).at(0).toInt()));
@@ -251,12 +259,12 @@ void DlgEndOfDay::on_btnOk_clicked()
         }
     }
     /* NEW VERSION */
-    fDD.exec("select f_id, f_invoice, f_amount, f_source, f_taxCode from m_free_tax where f_used=0 and f_source='RM' and f_taxCode>1", dbrows);
+    fDD.exec("select f_id, f_invoice, f_amount, f_source, f_taxcode from m_free_tax where f_used=0 and f_source='RM' and f_taxCode>1", dbrowTax);
     for (int j = 0; j < dbrows.count(); j++) {
         QString inv = dbrows.at(j).at(1).toString();
         for (int i = dbrowTax.count() - 1; i > -1; i--) {
             if ((inv == dbrowTax.at(i).at(1).toString()) && isDoubleEqual(dbrows.at(j).at(2).toDouble(), dbrowTax.at(i).at(2).toDouble(), 2)) {
-                fDD[":f_fiscal"] = 1;
+                fDD[":f_fiscal"] = dbrowTax.at(i).at(4);
                 fDD.update("m_register", where_id(ap(dbrows.at(j).at(0).toString())));
                 fDD[":f_used"] = 1;
                 fDD.update("m_free_tax", where_id(dbrowTax.at(i).at(0).toInt()));
@@ -356,7 +364,7 @@ void DlgEndOfDay::loadData()
                "concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
                "r.f_pricePerNight, "
-               " '', '', ra.f_en "
+               " '', '', ra.f_en, r.f_cityledger "
                "from f_reservation r  "
                "inner join f_guests g on g.f_id=r.f_guest "
                "inner join f_room_arrangement ra on ra.f_id=r.f_arrangement "
@@ -372,7 +380,7 @@ void DlgEndOfDay::loadData()
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id,  r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
                "r.f_pricePerNight, "
-               " '', '', '' "
+               " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
                "where r.f_startDate=:f_date and r.f_state=:f_state");
@@ -396,7 +404,7 @@ void DlgEndOfDay::loadData()
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
                "r.f_pricePerNight, "
-               " '', '', '' "
+               " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
                "where r.f_endDate=:f_date and r.f_state=:f_state");

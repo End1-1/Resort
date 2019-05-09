@@ -23,7 +23,6 @@ private slots:
     void on_btnPrint_clicked();
     void on_btnSave_clicked();
     void on_btnPrintTax_clicked();
-
     void on_btnLog_clicked();
 
 private:

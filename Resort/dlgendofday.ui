@@ -118,6 +118,11 @@
        <string>Arrangement</string>
       </property>
      </column>
+     <column>
+      <property name="text">
+       <string>Cityledger</string>
+      </property>
+     </column>
     </widget>
    </item>
    <item>

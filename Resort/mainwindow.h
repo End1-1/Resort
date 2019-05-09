@@ -180,6 +180,8 @@ private slots:
     void on_actionGuest_Tray_Ledger_By_Date_triggered();
     void on_actionRecover_invoice_triggered();
 
+    void on_actionTransfer_log_triggered();
+
 private:
     Ui::MainWindow *ui;
     QTimer fTimer;

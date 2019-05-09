@@ -19,6 +19,7 @@ public:
     void setVoucher(const QString &id);
     void setRoom(int room);
     void setItem(int item);
+    void setAmount(double amount);
 
 private slots:
     void on_tabWidget_currentChanged(int index);
@@ -27,7 +28,6 @@ private slots:
     void on_leAmount_textChanged(const QString &arg1);
     void on_btnNew_clicked();
     void on_btnPrintTax_clicked();
-
     void on_btnPrint_clicked();
 
 private:

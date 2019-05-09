@@ -586,7 +586,7 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             lineEdit(t, i, 0)->setText(rid);
 
             fTrackControl->fRecord = rid;
-            fTrackControl->insert("Payment" + QString(fCheckoutFlag ? " before checkout" : ""), t->item(i, 0)->text(), lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
+            fTrackControl->insert("Payment" + QString(fCheckoutFlag ? " before checkout" : " from invoice"), t->item(i, 0)->text(), lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
 
             if (t->item(i, 10)->text() == "AV") {
                 if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i, 5)->text() + " AMD") == QDialog::Accepted) {

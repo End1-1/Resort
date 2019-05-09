@@ -12,6 +12,7 @@ DlgOfferInvoiceExtra::DlgOfferInvoiceExtra(QWidget *parent) :
     ui->btnExtraRooming->setVisible(false);
     ui->btnLateCheckout->setVisible(false);
     fExtra = false;
+    fDayUseRate = 0.0;
 }
 
 DlgOfferInvoiceExtra::~DlgOfferInvoiceExtra()
@@ -94,6 +95,7 @@ void DlgOfferInvoiceExtra::createChargeDlg(int item)
     DlgPostCharge *d = new DlgPostCharge(this);
     d->setRoom(fRoom);
     d->setItem(item);
+    d->setAmount(fDayUseRate);
     d->exec();
     d->deleteLater();
     accept();

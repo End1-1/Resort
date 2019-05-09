@@ -17,11 +17,16 @@ DEFINES += _RESORT_
 DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
+    ../Base/stringutils.cpp \
+    dbminvoice.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgofferinvoiceextra.cpp \
     dlgpostcharge.cpp \
+    dlgprintvoucherasinvoice.cpp \
     dlgrecoverinvoice.cpp \
+    dlgseachfromdatabase.cpp \
     dlgsingleprinttax.cpp \
+    dlgtransferlog.cpp \
         mainwindow.cpp \
     login.cpp \
     loginsettings.cpp \
@@ -37,6 +42,7 @@ SOURCES += main.cpp\
     wguest.cpp \
     winvoice.cpp \
     wreportgrid.cpp \
+    wroomcharttemprectdlg.cpp \
     wwelcome.cpp \
     wcontacts.cpp \
     tablemodel.cpp \
@@ -308,7 +314,7 @@ SOURCES += main.cpp\
     ../Cache/cachedebtcostumer.cpp \
     ../Filter/fbreakfast.cpp \
     ../Filter/fsalary.cpp \
-    ../../NewTax/printtaxn.cpp \
+    ../../NewTax/Src/printtaxn.cpp \
     dlgprinttaxsm.cpp \
     dlgtaxback2.cpp \
     dlgpostbreakfast.cpp \
@@ -403,11 +409,16 @@ SOURCES += main.cpp\
     ../Filter/fcitytrayledger2.cpp
 
 HEADERS  += mainwindow.h \
+    ../Base/stringutils.h \
+    dbminvoice.h \
     dlginvoicepaymentoptions.h \
     dlgofferinvoiceextra.h \
     dlgpostcharge.h \
+    dlgprintvoucherasinvoice.h \
     dlgrecoverinvoice.h \
+    dlgseachfromdatabase.h \
     dlgsingleprinttax.h \
+    dlgtransferlog.h \
     login.h \
     loginsettings.h \
     message.h \
@@ -422,6 +433,7 @@ HEADERS  += mainwindow.h \
     wguest.h \
     winvoice.h \
     wreportgrid.h \
+    wroomcharttemprectdlg.h \
     wwelcome.h \
     wcontacts.h \
     tablemodel.h \
@@ -697,7 +709,7 @@ HEADERS  += mainwindow.h \
     ../Cache/cachedebtcostumer.h \
     ../Filter/fbreakfast.h \
     ../Filter/fsalary.h \
-    ../../NewTax/printtaxn.h \
+    ../../NewTax/Src/printtaxn.h \
     dlgprinttaxsm.h \
     dlgtaxback2.h \
     dlgpostbreakfast.h \
@@ -798,8 +810,11 @@ FORMS    += mainwindow.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \
     dlgpostcharge.ui \
+    dlgprintvoucherasinvoice.ui \
     dlgrecoverinvoice.ui \
+    dlgseachfromdatabase.ui \
     dlgsingleprinttax.ui \
+    dlgtransferlog.ui \
     login.ui \
     loginsettings.ui \
     message.ui \
@@ -814,6 +829,7 @@ FORMS    += mainwindow.ui \
     wguest.ui \
     winvoice.ui \
     wreportgrid.ui \
+    wroomcharttemprectdlg.ui \
     wwelcome.ui \
     dlgcontact.ui \
     dlgnotes.ui \
@@ -1050,7 +1066,7 @@ INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
 INCLUDEPATH += C:/OpenSSL-Win32/include
 INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
-INCLUDEPATH += C:/projects/NewTax
+INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += c:/projects/XLSX/src
 
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"

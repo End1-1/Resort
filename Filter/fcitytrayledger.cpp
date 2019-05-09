@@ -74,7 +74,8 @@ void FCityTrayLedger::apply(WReportGrid *rg)
             .setColumn(100, "", tr("Nationality"))
             .setColumn(200, "", tr("Source"));
     QString query = "select r.f_room, g.guest, r.f_invoice, r.f_man + r.f_woman + r.f_child as pax, left(rv.f_" + def_lang + ", 1), "
-            "ra.f_" + def_lang + ", r.f_pricePerNight, r.f_startDate, r.f_endDate, r.f_checkouttime, sum(m.f_amountamd*m.f_sign), sum(m.f_amountamd/m.f_amountusd*m.f_sign), "
+            "ra.f_" + def_lang + ", r.f_pricePerNight, r.f_startDate, r.f_endDate, r.f_checkouttime, "
+            "sum(if(m.f_finance=1 and m.f_canceled=0, m.f_amountamd*m.f_sign, 0)), sum(if(m.f_finance=1 and m.f_canceled=0, m.f_amountamd/m.f_amountusd*m.f_sign, 0)), "
             "pm.f_" + def_lang + ", n.f_name, c.f_name "
             "from f_reservation r "
             "inner join m_register m on m.f_inv=r.f_invoice "
@@ -86,7 +87,7 @@ void FCityTrayLedger::apply(WReportGrid *rg)
             "left join f_guests gg on gg.f_id=r.f_guest "
             "left join f_nationality n on gg.f_nation=n.f_short "
             "left join f_cardex c on c.f_cardex=r.f_cardex "
-            "where r.f_state=1 and m.f_finance=1 and m.f_canceled=0 "
+            "where r.f_state=1 "
             "group by 1,2,3,4,5,6,7,8,9,10 "
             "order by rm.f_building, r.f_room, r.f_startDate ";
     rg->fModel->setSqlQuery(query);

@@ -139,6 +139,10 @@ void DlgNoShow::on_btnPrint_clicked()
 
 void DlgNoShow::on_btnSave_clicked()
 {
+    if (ui->leReserve->isEmpty()) {
+        message_error(tr("Reservation must be selected"));
+        return;
+    }
     if (ui->leBalance->asDouble() > 0.01) {
         if (ui->leAmount->asDouble() > ui->leBalance->asDouble()) {
             message_error(tr("Amount cannot be greater than balance"));
@@ -155,6 +159,12 @@ void DlgNoShow::on_btnSave_clicked()
     if (ui->lePaymentMode->asInt() == 0) {
         message_error(tr("Payment mode was note selected"));
         return;
+    }
+    if (ui->lePaymentMode->asInt() == PAYMENT_CARD) {
+        if (ui->leCardCode->asInt() == 0) {
+            message_error(tr("Type of card missing"));
+            return;
+        }
     }
     if (ui->leAmount->asDouble() < 0.01) {
         message_error(tr("Amount cannot be 0"));
@@ -215,9 +225,6 @@ void DlgNoShow::on_btnPrintTax_clicked()
         message_error(tr("Save first"));
         return;
     }
-//    if (ui->lePaymentMode->asInt() != PAYMENT_CASH || ui->lePaymentMode->asInt() != PAYMENT_CARD) {
-
-//    }
     QString itemCode = ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toString() : fPreferences.getDb(def_noshowfee_code).toString();
     CacheInvoiceItem ii;
     if (!ii.get(itemCode)) {
@@ -229,7 +236,6 @@ void DlgNoShow::on_btnPrintTax_clicked()
         return;
     }
     int pm = ui->lePaymentMode->asInt();
-//    double cash = pm == PAYMENT_CASH ? ui->leAmount->asDouble() : 0;
     double card = pm == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
     double prepaid = pm == PAYMENT_ADVANCE ? ui->leAmount->asDouble() : 0;
     DlgPrintTaxSM dpt;
@@ -287,11 +293,6 @@ void DlgNoShow::getBalance()
        << QString::number(PAYMENT_CARD)
        << QString::number(PAYMENT_CASH)
        << QString::number(PAYMENT_CL);
-//    if (ui->leBalance->asDouble() > 0.01) {
-//        fDockPay->setFilterList(fa);
-//    } else {
-//        fDockPay->setFilterList(fp);
-//    }
 }
 
 void DlgNoShow::on_btnLog_clicked()

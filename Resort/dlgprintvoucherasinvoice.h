@@ -2,6 +2,8 @@
 #define DLGPRINTVOUCHERASINVOICE_H
 
 #include "basewidget.h"
+#include "dbminvoice.h"
+#include "dbminvoice.h"
 
 namespace Ui {
 class DlgPrintVoucherAsInvoice;
@@ -14,7 +16,10 @@ class DlgPrintVoucherAsInvoice : public BaseWidget
 public:
     explicit DlgPrintVoucherAsInvoice(QWidget *parent = nullptr);
     ~DlgPrintVoucherAsInvoice();
+    static DlgPrintVoucherAsInvoice *openInvoiceWindow(const QString &id);
+    QString invoice() const;
     void setup();
+    void openInvoice(const QString &id);
     void addVoucher(const QString &id);
 
 private slots:
@@ -24,8 +29,9 @@ private slots:
 
 private:
     Ui::DlgPrintVoucherAsInvoice *ui;
-    void countTotal();
-    void addRow(const QList<QVariant> &v);
+    void addRow(const DBMRegister &r, bool appendToInvoice);
+    bool save();
+    DBMInvoice fInvoice;
 };
 
 #endif // DLGPRINTVOUCHERASINVOICE_H

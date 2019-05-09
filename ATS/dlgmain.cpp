@@ -1,9 +1,9 @@
 #include "dlgmain.h"
 #include "paymentmode.h"
 #include "ui_dlgmain.h"
-#include "utils.h"
 #include "doubledatabase.h"
 #include "baseuid.h"
+#include "stringutils.h"
 #include <QSerialPortInfo>
 #include <QDebug>
 #include <QSettings>
@@ -156,6 +156,7 @@ void DlgMain::closeEvent(QCloseEvent *e)
 
 void DlgMain::processLine(const QString &line)
 {
+    fPref.initFromDb("MainDb", "", 0);
     writeToFile(line);
     if (QDate::fromString(fPref.getDb(def_working_day).toString(), def_date_format) < QDate::currentDate()) {
         fPref.initFromDb("MainDb", "", 0);
@@ -278,7 +279,7 @@ void DlgMain::processLine(const QString &line)
         fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
         fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
         fDb[":f_amountAmd"] = trunc(price);
-        fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
+        fDb[":f_amountVat"] = trunc(price) - (trunc(price) / ((def_vat / 100) + 1));// Utils::countVATAmount(trunc(price), VAT_INCLUDED);
         fDb[":f_amountUsd"] = def_usd;
         fDb[":f_fiscal"] = 0;
         fDb[":f_paymentMode"] = PAYMENT_CREDIT;
@@ -352,6 +353,7 @@ void DlgMain::processLine(const QString &line)
 
 void DlgMain::processLine1(QString line)
 {
+    fPref.initFromDb("MainDb", "", 0);
     writeToFile(line);
     line.remove(0, 3);
     QString dateTime = line.mid(0, 8);
@@ -486,7 +488,7 @@ void DlgMain::processLine1(QString line)
         fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
         fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
         fDb[":f_amountAmd"] = trunc(price);
-        fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
+        fDb[":f_amountVat"] = trunc(price) - (trunc(price) / ((def_vat / 100) + 1));
         fDb[":f_amountUsd"] = def_usd;
         fDb[":f_fiscal"] = 0;
         fDb[":f_paymentMode"] = PAYMENT_CREDIT;
@@ -533,6 +535,7 @@ void DlgMain::processLine1(QString line)
 
 void DlgMain::processLog1(const QString &num1, const QString &num2, const QString &durationStr, const QString &direction, const QDate &date, const QTime &time)
 {
+    fPref.initFromDb("MainDb", "", 0);
     DoubleDatabase fDb;
     fDb.setDatabase(ui->leHost->text(), ui->leDb->text(), ui->leUsername->text(), ui->lePassword->text(), 1);
     bool secondDb = true;
@@ -629,7 +632,7 @@ void DlgMain::processLog1(const QString &num1, const QString &num2, const QStrin
         fDb[":f_itemCode"] = (isLocal == 1 ? ui->leIntCallItemCode->text().toInt() : ui->leOutCallItemCode->text().toInt());
         fDb[":f_finalName"] = (isLocal == 1 ? "LOC. CALL" : "INT. CALL");
         fDb[":f_amountAmd"] = trunc(price);
-        fDb[":f_amountVat"] = Utils::countVATAmount(trunc(price), VAT_INCLUDED);
+        fDb[":f_amountVat"] = trunc(price) - (trunc(price) / ((def_vat / 100) + 1));
         fDb[":f_amountUsd"] = def_usd;
         fDb[":f_fiscal"] = 0;
         fDb[":f_paymentMode"] = PAYMENT_CREDIT;

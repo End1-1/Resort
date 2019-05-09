@@ -11,7 +11,7 @@ FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
     ui->setupUi(this);
     setTabText();
     fReportGrid->fTableView->verticalHeader()->setDefaultSectionSize(18);
-    ui->cbYear->setCurrentIndex(ui->cbYear->findData(QDate::currentDate().year()));
+    ui->cbYear->setCurrentIndex(ui->cbYear->findText(QString::number(QDate::currentDate().year())));
     ui->cbMonth->setCurrentIndex(QDate::currentDate().month() - 1);
     ui->deStart->setDate(QDate::currentDate().addDays((QDate::currentDate().day() - 1) * -1));
     ui->deEnd->setDate(QDate::currentDate());
@@ -133,6 +133,10 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     if (ui->rbYear->isChecked()) {
         dateToStr = "yyyy";
     }
+    if (!ui->deStart->date().isValid() || !ui->deEnd->date().isValid()) {
+        message_error(tr("Invalid date range"));
+        return;
+    }
     for (QDate d = ui->deStart->date(); d < ui->deEnd->date().addDays(1); d = d.addDays(1)) {
         QString dateStr = d.toString(dateToStr);
         if (ui->rbWeek->isChecked()) {
@@ -212,6 +216,9 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     }
 
     rg->fModel->setDataFromSource(rows);
+    if (rows.count() < 0) {
+        return;
+    }
     QList<double> totalValues;
     rg->fModel->sumOfColumns(totalColumns, totalValues);
     totalValues[totalValues.count() - 1] = rows.at(rows.count() - 1).at(20).toDouble();
@@ -265,13 +272,13 @@ void FAccMonthlyReport::setTabText()
 void FAccMonthlyReport::setDateRange()
 {
     QString d1 = QString("01/%1/%2")
-            .arg(ui->cbMonth->currentIndex() + 1, 0, 10, QChar('0'))
+            .arg(ui->cbMonth->currentIndex() + 1, 2, 10, QChar('0'))
             .arg(ui->cbYear->currentText());
     QDate date1 = QDate::fromString(d1, def_date_format);
 
     QString d2 = QString("%1/%2/%3")
             .arg(date1.daysInMonth())
-            .arg(ui->cbMonth->currentIndex() + 1, 0, 10, QChar('0'))
+            .arg(ui->cbMonth->currentIndex() + 1, 2, 10, QChar('0'))
             .arg(ui->cbYear->currentText());
     QDate date2 = QDate::fromString(d2, def_date_format);
     ui->deStart->setDate(date1);

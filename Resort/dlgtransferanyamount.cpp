@@ -241,6 +241,7 @@ void DlgTransferAnyAmount::on_btnCancel_clicked()
 
 void DlgTransferAnyAmount::on_rbfromReserve_clicked()
 {
+    ui->wDC->setEnabled(false);
     ui->wfromCL->setVisible(false);
     ui->lefromCL->clear();
     ui->lefromCLName->clear();
@@ -259,6 +260,7 @@ void DlgTransferAnyAmount::on_rbfromReserve_clicked()
 
 void DlgTransferAnyAmount::on_rbfromRoom_clicked()
 {
+    ui->wDC->setEnabled(false);
     ui->wfromCL->setVisible(false);
     ui->lefromCL->clear();
     ui->lefromCLName->clear();
@@ -277,6 +279,7 @@ void DlgTransferAnyAmount::on_rbfromRoom_clicked()
 
 void DlgTransferAnyAmount::on_rbfromCL_clicked()
 {
+    ui->wDC->setEnabled(true);
     ui->wfromCL->setVisible(true);
     ui->wfromRoom->setVisible(false);
     ui->lefromRoomCode->clear();
@@ -365,7 +368,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
     if (ui->letoAmount->asDouble() < 0.001) {
         err += tr("Invalid amount for transfer") + "<br>";
     }
-    if (ui->letoAmount->asDouble() > abs(ui->lefromBalance->asDouble())) {
+    if (ui->letoAmount->asDouble() > abs(ui->lefromBalance->asDouble()) && !ui->rbfromCL->isChecked()) {
         err += tr("Transfer amount cannot be greater then balance") + "<br>";
     }
 

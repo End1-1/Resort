@@ -21,10 +21,30 @@ QString TrackControl::fDbHost;
 QString TrackControl::fDbDb;
 QString TrackControl::fDbUser;
 QString TrackControl::fDbPass;
+QString TrackControl::fDbHostReserve;
+QString TrackControl::fDbDbReserve;
+QString TrackControl::fDbUserReserve;
+QString TrackControl::fDbPassReserve;
+
+static QString dbHost;
+static QString dbDb;
+static QString dbUser;
+static QString dbPass;
+static bool fail = false;
 
 static const QColor COLOR_CHANGED = QColor::fromRgb(255, 255, 150);
-#define QUERY "insert into airlog.log (f_comp, f_date, f_time, f_user, f_type, f_rec, f_invoice, f_reservation, f_action, f_value1, f_value2) \
-                values (:f_comp, :f_date, :f_time, :f_user, :f_type, :f_rec, :f_invoice, :f_reservation, :f_action, :f_value1, :f_value2)"
+static const QString QUERY  = "insert into airlog.log (f_comp, f_date, f_time, f_user, f_type, f_rec, f_invoice, f_reservation, f_action, f_value1, f_value2) "
+                "values (:f_comp, :f_date, :f_time, :f_user, :f_type, :f_rec, :f_invoice, :f_reservation, :f_action, :f_value1, :f_value2)";
+
+QStringList TrackControl::currentDb()
+{
+    QStringList sl;
+    sl << dbHost
+       << dbDb
+       << dbUser
+       << dbPass;
+    return sl;
+}
 
 TrackControl::TrackControl(int table)
 {
@@ -160,10 +180,22 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
     if (Base::fPreferences.getDb(def_no_tracking_changes).toBool()) {
         return;
     }
-    DoubleDatabase db(fDbHost, fDbDb, fDbUser, fDbPass);
+    DoubleDatabase db(dbHost, dbDb, dbUser, dbPass);
     if (!db.open(true, false)) {
-        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
-        return;
+        if (fail) {
+            db.logEvent("Track control: " + db.fLastError);
+            return;
+        }
+        dbHost = fDbHostReserve;
+        dbDb = fDbDbReserve;
+        dbUser = fDbUserReserve;
+        dbPass = fDbPassReserve;
+        db.setDatabase(dbHost, dbDb, dbUser, dbPass, 1);
+        if (!db.open(true, false)) {
+            fail = true;
+            db.logEvent("Track control: " + db.fLastError);
+            return;
+        }
     }
     db[":f_comp"] = QHostInfo::localHostName().toUpper();
     db[":f_date"] = QDate::currentDate();
@@ -177,7 +209,7 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
     db[":f_value1"] = value1;
     db[":f_value2"] = value2;
     if(!db.exec(QUERY)) {
-        QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
+        db.logEvent("TrackControl: " + db.fLastError);
         return;
     }
 }
@@ -187,7 +219,7 @@ void TrackControl::del()
     if (Base::fPreferences.getDb(def_no_tracking_changes).toBool()) {
         return;
     }
-    DoubleDatabase db(fDbHost, fDbDb, fDbUser, fDbPass);
+    DoubleDatabase db(dbHost, dbDb, dbUser, dbPass);
     if (!db.open(true, false)) {
         QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
@@ -198,6 +230,15 @@ void TrackControl::del()
         QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
+}
+
+void TrackControl::setFirstConnection()
+{
+    dbHost = fDbHost;
+    dbDb = fDbDb;
+    dbUser = fDbUser;
+    dbPass = fDbPass;
+    fail = false;
 }
 
 void TrackControl::insert(int table, const QString &action, const QVariant &value1, const QVariant &value2, const QString &record, const QString &invoice, const QString &reservation)
@@ -291,6 +332,10 @@ void TrackControl::lineEditTextChanged(const QString &text)
 void TrackControl::edateTextChanged(const QString &text)
 {
     EDateEdit *e = static_cast<EDateEdit*>(sender());
+    if (!e->valid()) {
+        e->setStyleSheet("background:red");
+        return;
+    }
     if (text != oldValue(e)) {
         e->setStyleSheet("background:yellow");
     } else {
@@ -301,6 +346,9 @@ void TrackControl::edateTextChanged(const QString &text)
 void TrackControl::dateEditChanged(const QDate &date)
 {
     EQDateEdit *d = static_cast<EQDateEdit*>(sender());
+    if (!d->date().isValid()) {
+        d->setBgColor(Qt::red);
+    }
     if (date.toString(def_date_format) == oldValue(d)) {
         d->setBgColor(Qt::white);
     } else {

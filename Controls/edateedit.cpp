@@ -53,6 +53,11 @@ void EDateEdit::setCheckMinDate(bool v)
     fDoNoCheckMinDate = v;
 }
 
+bool EDateEdit::valid()
+{
+    return date().isValid();
+}
+
 void EDateEdit::focusInEvent(QFocusEvent *e)
 {
     QLineEdit::focusInEvent(e);
@@ -63,7 +68,7 @@ void EDateEdit::setBgColor(const QColor &color)
 {
     QPalette palette;
     palette.setColor(QPalette::Base, color);
-    if (!fIsValid) {
+    if (!valid()) {
         palette.setColor(QPalette::Base, Qt::red);
     }
     setPalette(palette);
@@ -77,14 +82,13 @@ void EDateEdit::newText(const QString &arg1)
             d = EDateEditMinDate;
         }
     }
-    fIsValid = d.isValid();
-    if (d.isValid()) {
+    if (valid()) {
         setBgColor(Qt::white);
     } else {
         setBgColor(Qt::red);
     }
     int cp = cursorPosition();
-    if (d.isValid()) {
+    if (valid()) {
         QLineEdit::setText(d.toString(def_date_format));
     }
     setCursorPosition(cp);

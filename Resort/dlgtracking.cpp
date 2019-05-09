@@ -32,7 +32,7 @@ void DlgTracking::showTracking(int trackId, const QString &windowId)
     QString query = "select f_comp, f_date, f_time, f_user, "
             "f_action, f_value1, f_value2 "
             "from airlog.log "
-            "where f_type=:f_table and (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
+            "where (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
             "order by f_date desc, f_time desc";
     d->loadTrack(query, trackId, windowId);
     d->exec();
@@ -63,16 +63,18 @@ void DlgTracking::showTracking(const QString &windowId)
 
 void DlgTracking::loadTrack(const QString &query, int trackId, const QString &windowId)
 {
+    Q_UNUSED(trackId);
     DoubleDatabase db;
-    if (trackId > 0) {
-        db[":f_table"] = trackId;
-    }
     db[":f_rec"] = windowId;
     db[":f_reservation"] = windowId;
     db[":f_invoice"] = windowId;
-    db.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
+    QStringList sl = TrackControl::currentDb();
+    db.setDatabase(sl.at(0), sl.at(1), sl.at(2), sl.at(3), 1);
     db.open(true, false);
-    db.exec(query);
+    if (!db.exec(query)) {
+        message_error(db.fLastError);
+        return;
+    }
     Utils::fillTableWithData(ui->tblData, db.fDbRows);
     db.close();
 }
@@ -109,7 +111,8 @@ void DlgTracking::on_chOld_clicked(bool checked)
         db[":f_rec"] = fWindow;
         db[":f_reservation"] = fWindow;
         db[":f_invoice"] = fWindow;
-        db.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
+        QStringList sl = TrackControl::currentDb();
+        db.setDatabase(sl.at(0), sl.at(1), sl.at(2), sl.at(3), 1);
         db.open(true, false);
         db.exec(query);
         db.close();

@@ -164,7 +164,7 @@ ReserveWidget *RoomScene::addReserveWidget(const QString &code)
 {
     CacheReservation r;
     if (!r.get(code)) {
-        return 0;
+        return nullptr;
     }
     ReserveWidget *rw = new ReserveWidget(code);
     connect(rw, SIGNAL(editReserv(QString)), this, SLOT(editReserveRoom(QString)));
@@ -229,7 +229,7 @@ void RoomScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         rw->createService();
         delete rw;
         delete fReserveRect;
-        fReserveRect = 0;
+        fReserveRect = nullptr;
     }
 }
 

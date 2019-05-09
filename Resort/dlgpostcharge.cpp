@@ -31,6 +31,7 @@ DlgPostCharge::DlgPostCharge(QWidget *parent) :
     fDoc.setleAmountUSD(ui->leAmountUSD);
     fDoc.setleVatMode(ui->leVAT, ui->leVATName);
     fDoc.setleRemarks(ui->teRemarks);
+    fDoc.setleFiscal(ui->leFiscal);
     ui->wRoom->setDBMRegister(&fDoc);
     ui->wCL->setDBMRegister(&fDoc);
     ui->btnNew->setEnabled(false);
@@ -41,6 +42,18 @@ DlgPostCharge::DlgPostCharge(QWidget *parent) :
     ui->leVAT->setSelector(this, cache(cid_vat_mode), ui->leVATName, 0);
     ui->leVAT->setInitialValue(VAT_INCLUDED);
     ui->leCard->setSelector(this, cache(cid_credit_card), ui->leCardName, 0);
+    ui->leItem->fFieldFilter["f_group"] << "1";
+    DoubleDatabase dd(true, false);
+    if (WORKING_USERGROUP != 1) {
+        dd[":f_auto"] = 1;
+    } else {
+        dd[":f_auto"] = 100;
+    }
+    dd[":f_group"] = 1;
+    dd.exec("select f_id from f_invoice_item where f_auto=:f_auto or f_group>:f_group");
+    while (dd.nextRow()) {
+        ui->leItem->fCodeExcludeFilter << dd.getString(0);
+    }
     on_tabWidget_currentChanged(0);
 }
 
@@ -99,11 +112,16 @@ void DlgPostCharge::setItem(int item)
     ui->leAmount->setFocus();
 }
 
+void DlgPostCharge::setAmount(double amount)
+{
+    ui->leAmount->setDouble(amount);
+}
+
 void DlgPostCharge::on_tabWidget_currentChanged(int index)
 {
     ui->wRoom->clear();
     ui->wCL->clear();
-    setPaymentVisible(index == 2);
+    setPaymentVisible(index == 1);
     setCardVisible(false);
     switch (index) {
     case 0:
@@ -321,6 +339,9 @@ void DlgPostCharge::on_btnPrintTax_clicked()
     d->addItem(ui->leItem->text(), ui->leAmount->asDouble(), mp, ui->leVoucher->text());
     if (d->exec() == QDialog::Accepted) {
         ui->btnPrintTax->setEnabled(false);
+        ui->leFiscal->setInt(d->fTaxCode);
+        DoubleDatabase dd(true, doubleDatabase);
+        fDoc.save(dd);
     }
     d->deleteLater();
 }

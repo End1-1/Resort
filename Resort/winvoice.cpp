@@ -430,6 +430,7 @@ void WInvoice::moveTableRow(EQTableWidget *from, EQTableWidget *to)
             to->setItem(rowTo, j, new C5TableWidgetItem(*(from->item(sel.at(i).row(), j))));
         }
         fTrackControl->insert("Entry moved", fromTo,
+                                  from->item(sel.at(i).row(), 3)->text() + " / " +
                                   from->item(sel.at(i).row(), 2)->text() + " / " +
                                   from->item(sel.at(i).row(), 4)->text() + " / " +
                                   from->item(sel.at(i).row(), 5)->text());
@@ -528,6 +529,7 @@ void WInvoice::on_btnCheckout_clicked()
     save();
     DlgOfferInvoiceExtra *o = new DlgOfferInvoiceExtra(this);
     o->setRoom(ui->leRoomCode->asInt());
+    o->fDayUseRate = ui->leRoomRate->asDouble();
     if (fPreferences.getDb(def_offer_dayuse).toInt() > 0) {
         o->setExtra(DlgOfferInvoiceExtra::exDayUse);
     }
@@ -1262,6 +1264,43 @@ void WInvoice::on_btnManualTax_clicked()
             }
         }
         next:
+        continue;
+    }
+    fDD[":f_invoice"] = ui->leInvoice->text();
+    fDD.exec("select f_id, f_source, f_item, f_amount, f_taxCode from m_free_tax where f_invoice=:f_invoice and f_used=0", dbrows);
+    for (int i = 0; i < ui->tblInvRight->rowCount(); i++) {
+        if (ui->tblInvRight->item(i, 6)->checkState() == Qt::Checked) {
+            continue;
+        }
+        if (ui->tblInvRight->toString(i, 8) == "RM" || ui->tblInvRight->toString(i, 8) == "CH") {
+            QMutableListIterator<QList<QVariant> >it(dbrows);
+            while (it.hasNext()) {
+                it.next();
+                if (ui->tblInvRight->toString(i, 8) == it.value().at(1).toString()) {
+                    if (ui->tblInvRight->toString(i, 8) == "RM") {
+                        if (ui->tblInvRight->toDouble(i, 4) == it.value().at(3).toDouble()) {
+                            fDD[":f_used"] = 1;
+                            fDD.update("m_free_tax", where_id(it.value().at(0).toInt()));
+                            fDD[":f_fiscal"] = it.value().at(4);
+                            fDD[":f_usedTaxId"] = it.value().at(0);
+                            fDD.update("m_register", where_id(ap(ui->tblInvRight->toString(i, 0))));
+                            it.remove();
+                        }
+                    } else {
+                        if (ui->tblInvRight->toInt(i, 11) == it.value().at(2).toInt() && ui->tblInvRight->toDouble(i, 4) == it.value().at(3).toDouble()) {
+                            fDD[":f_used"] = 1;
+                            fDD.update("m_free_tax", where_id(it.value().at(0).toInt()));
+                            fDD[":f_fiscal"] = it.value().at(4);
+                            fDD[":f_usedTaxId"] = it.value().at(0);
+                            fDD.update("m_register", where_id(ap(ui->tblInvRight->toString(i, 0))));
+                            it.remove();
+                        }
+                    }
+                    goto next2;
+                }
+            }
+        }
+        next2:
         continue;
     }
     loadInvoice(ui->leInvoice->text());

@@ -170,6 +170,7 @@
     <addaction name="actionUtils"/>
     <addaction name="actionWeb"/>
     <addaction name="actionExecute_failed_sql"/>
+    <addaction name="actionTransfer_log"/>
     <addaction name="actionRecover_invoice"/>
    </widget>
    <widget class="QMenu" name="menuRestaurant">
@@ -1456,6 +1457,15 @@
   <action name="actionPosting_charge_2">
    <property name="text">
     <string>Posting charge</string>
+   </property>
+  </action>
+  <action name="actionTransfer_log">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
+   </property>
+   <property name="text">
+    <string>Transfer log</string>
    </property>
   </action>
  </widget>

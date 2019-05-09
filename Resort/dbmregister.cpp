@@ -14,6 +14,19 @@
 #include "dlgadvanceentry.h"
 #include <QPlainTextEdit>
 
+static const QString voucher_query = "select m.f_id, m.f_source, m.f_res, m.f_inv, m.f_wdate, m.f_rdate, m.f_time, m.f_user, u.f_username, "
+                                     "m.f_room, m.f_guest, m.f_itemcode, i.f_en as f_itemname, m.f_finalname, m.f_amountamd, m.f_amountusd, m.f_usedprepaid, "
+                                     "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
+                                     "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
+                                     "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename "
+                                     "from m_register m "
+                                     "left join users u on u.f_id=m.f_user "
+                                     "left join f_invoice_item i on i.f_id=m.f_itemcode "
+                                     "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
+                                     "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
+                                     "left join f_credit_card cc on cc.f_id=m.f_creditcard "
+                                     "left join f_vat_mode vm on vm.f_id=m.f_vatmode ";
+
 DBMRegister::DBMRegister()
 {
     fWDate = Preferences().getLocalDate(def_working_day);
@@ -41,6 +54,7 @@ DBMRegister::DBMRegister()
 }
 
 DBMRegister::DBMRegister(const DBMRegister &r) :
+    fId(r.fId),
     fSource(r.fSource),
     fReserve(r.fReserve),
     fInvoice(r.fInvoice),
@@ -78,7 +92,8 @@ DBMRegister::DBMRegister(const DBMRegister &r) :
     fCanceled(r.fCanceled),
     fCancelUser(r.fCancelUser),
     fCancelReason(r.fCancelReason),
-    fCancelDate(r.fCancelDate)
+    fCancelDate(r.fCancelDate),
+    fRb(r.fRb)
 {
     init();
     setle(r);
@@ -86,6 +101,7 @@ DBMRegister::DBMRegister(const DBMRegister &r) :
 
 DBMRegister &DBMRegister::operator=(const DBMRegister &r)
 {
+    fId = r.fId;
     fSource = r.fSource;
     fReserve = r.fReserve;
     fInvoice = r.fInvoice;
@@ -134,61 +150,17 @@ DBMRegister::~DBMRegister()
     delete fTc;
 }
 
+QString DBMRegister::voucherQuery()
+{
+    return voucher_query;
+}
+
 void DBMRegister::open(DoubleDatabase &d, const QString &id)
 {
     d[":f_id"] = id;
-    d.exec("select m.f_id, m.f_source, m.f_res, m.f_inv, m.f_wdate, m.f_rdate, m.f_time, m.f_user, u.f_username, "
-           "m.f_room, m.f_guest, m.f_itemcode, i.f_en as f_itemname, m.f_finalname, m.f_amountamd, m.f_amountusd, m.f_usedprepaid, "
-           "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
-           "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
-           "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename "
-           "from m_register m "
-           "left join users u on u.f_id=m.f_user "
-           "left join f_invoice_item i on i.f_id=m.f_itemcode "
-           "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
-           "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
-           "left join f_credit_card cc on cc.f_id=m.f_creditcard "
-           "left join f_vat_mode vm on vm.f_id=m.f_vatmode "
-           "where m.f_id=:f_id");
+    d.exec(voucher_query + " where m.f_id=:f_id");
     if (d.nextRow()) {
-        fId = d.getString("f_id");
-        fSource = d.getString("f_source");
-        fReserve = d.getString("f_res");
-        fInvoice = d.getString("f_inv");
-        fWDate = d.getDate("f_wdate");
-        fRDate = d.getDate("f_rdate");
-        fTime = d.getTime("f_time");
-        fUser = d.getUInt("f_user");
-        fUserName = d.getString("f_username");
-        fRoom = d.getUInt("f_room");
-        fGuest = d.getString("f_guest");
-        fItemCode = d.getUInt("f_itemcode");
-        fItemName = d.getString("f_itemname");
-        fFinalName = d.getString("f_finalname");
-        fAmountAMD = d.getDouble("f_amountamd");
-        fAmountUSD = d.getDouble("f_amountusd");
-        fAmountVAT = d.getDouble("f_amountvat");
-        fVATMode = d.getUInt("f_vatmode");
-        fVATModeName = d.getString("f_vatmodename");
-        fFiscal = d.getUInt("f_fiscal");
-        fPaymentMode = d.getUInt("f_paymentmode");
-        fPaymentModeName = d.getString("f_paymentmodename");
-        fCreditCard = d.getUInt("f_creditcard");
-        fCreditCardName = d.getString("f_creditcardname");
-        fCityLedger = d.getUInt("f_cityledger");
-        fCityLedgerName = d.getString("f_cityledgername");
-        fPaymentComment = d.getString("f_paymentcomment");
-        fDC = d.getString("f_dc");
-        fSign = d.getInt("f_sign");
-        fDoc = d.getString("f_doc");
-        fRec = d.getString("f_rec");
-        fFinance = d.getUInt("f_finance");
-        fRemarks = d.getString("f_remarks");
-        fCanceled = d.getUInt("f_canceled");
-        fCancelUser = d.getUInt("f_canceluser");
-        fCancelDate = d.getDateTime("f_canceldate");
-        fCancelReason = d.getString("f_cancelreason");
-        fRb = d.getInt("f_rb");
+        fetchData(d);
         if (leID) {
             leID->setText(fId);
         }
@@ -255,6 +227,9 @@ void DBMRegister::open(DoubleDatabase &d, const QString &id)
         if (leCityLedgerName) {
             leCityLedgerName->setText(fCityLedgerName);
         }
+        if (leTaxCode) {
+            leTaxCode->setUInt(fFiscal);
+        }
         if (ptRemarks) {
             ptRemarks->setPlainText(fRemarks);
         }
@@ -263,6 +238,48 @@ void DBMRegister::open(DoubleDatabase &d, const QString &id)
         }
         fTc->resetChanges();
     }
+}
+
+void DBMRegister::fetchData(DoubleDatabase &d)
+{
+    fId = d.getString("f_id");
+    fSource = d.getString("f_source");
+    fReserve = d.getString("f_res");
+    fInvoice = d.getString("f_inv");
+    fWDate = d.getDate("f_wdate");
+    fRDate = d.getDate("f_rdate");
+    fTime = d.getTime("f_time");
+    fUser = d.getUInt("f_user");
+    fUserName = d.getString("f_username");
+    fRoom = d.getUInt("f_room");
+    fGuest = d.getString("f_guest");
+    fItemCode = d.getUInt("f_itemcode");
+    fItemName = d.getString("f_itemname");
+    fFinalName = d.getString("f_finalname");
+    fAmountAMD = d.getDouble("f_amountamd");
+    fAmountUSD = d.getDouble("f_amountusd");
+    fAmountVAT = d.getDouble("f_amountvat");
+    fVATMode = d.getUInt("f_vatmode");
+    fVATModeName = d.getString("f_vatmodename");
+    fFiscal = d.getUInt("f_fiscal");
+    fPaymentMode = d.getUInt("f_paymentmode");
+    fPaymentModeName = d.getString("f_paymentmodename");
+    fCreditCard = d.getUInt("f_creditcard");
+    fCreditCardName = d.getString("f_creditcardname");
+    fCityLedger = d.getUInt("f_cityledger");
+    fCityLedgerName = d.getString("f_cityledgername");
+    fPaymentComment = d.getString("f_paymentcomment");
+    fDC = d.getString("f_dc");
+    fSign = d.getInt("f_sign");
+    fDoc = d.getString("f_doc");
+    fRec = d.getString("f_rec");
+    fFinance = d.getUInt("f_finance");
+    fRemarks = d.getString("f_remarks");
+    fCanceled = d.getUInt("f_canceled");
+    fCancelUser = d.getUInt("f_canceluser");
+    fCancelDate = d.getDateTime("f_canceldate");
+    fCancelReason = d.getString("f_cancelreason");
+    fRb = d.getInt("f_rb");
 }
 
 bool DBMRegister::openVoucher(const QString &id, QString &err)
@@ -490,6 +507,13 @@ void DBMRegister::setleAmountVAT(EQLineEdit *l)
     fTc->addWidget(l, "Amount VAT");
 }
 
+void DBMRegister::setleFiscal(EQLineEdit *l)
+{
+    leTaxCode = l;
+    connect(l, SIGNAL(textChanged(QString)), this, SLOT(taxCodeChanged(QString)));
+    fTc->addWidget(l, "Tax code");
+}
+
 void DBMRegister::setleRemarks(QPlainTextEdit *p)
 {
     ptRemarks = p;
@@ -521,6 +545,7 @@ void DBMRegister::init()
     leAmountVAT = nullptr;
     leVatMode = nullptr;
     leVatModeName = nullptr;
+    leTaxCode = nullptr;
     ptRemarks = nullptr;
 
     fTc = new TrackControl(TRACK_VAUCHER);
@@ -575,6 +600,9 @@ void DBMRegister::setle(const DBMRegister &r)
     }
     if (r.ptRemarks) {
         setleRemarks(r.ptRemarks);
+    }
+    if (r.leTaxCode) {
+        setleFiscal(r.leTaxCode);
     }
     if (r.leItemCode) {
         setleItemName(r.leItemCode, r.leItemName);
@@ -689,6 +717,11 @@ void DBMRegister::VATModeChanged(const QString &s)
 void DBMRegister::VATModeNameChanged(const QString &s)
 {
     fVATModeName = s;
+}
+
+void DBMRegister::taxCodeChanged(const QString &s)
+{
+    fFiscal = s.toUInt();
 }
 
 void DBMRegister::remarksChanged()

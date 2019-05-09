@@ -12,7 +12,9 @@ class DlgSeachFromDatabase : public BaseDialog
     Q_OBJECT
 
 public:
+    enum SearchTemplate {stNone = 0, stVoucher};
     explicit DlgSeachFromDatabase(QWidget *parent = nullptr);
+    void setTemplate(SearchTemplate st);
     ~DlgSeachFromDatabase();
     QString fQuery;
     QString fField;
@@ -24,6 +26,7 @@ private slots:
 
 private:
     Ui::DlgSeachFromDatabase *ui;
+    SearchTemplate fSearchTemplate;
 };
 
 #endif // DLGSEACHFROMDATABASE_H

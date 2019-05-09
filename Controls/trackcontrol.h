@@ -89,6 +89,11 @@ public:
     static QString fDbDb;
     static QString fDbUser;
     static QString fDbPass;
+    static QString fDbHostReserve;
+    static QString fDbDbReserve;
+    static QString fDbUserReserve;
+    static QString fDbPassReserve;
+    static QStringList currentDb();
     int fTable;
     TrackControl(int table);
     QString fRecord;
@@ -106,6 +111,7 @@ public:
     void insertMessage(const QString &msg, const QString &v1, const QString &v2);
     void insert(const QString &action, const QVariant &value1, const QVariant &value2);
     void del();
+    static void setFirstConnection();
     static void insert (int table, const QString &action, const QVariant &value1, const QVariant &value2, const QString &record = "-", const QString &invoice = "-", const QString &reservation = "-");
     static void removeHistory(const QString &inv, const QString &res);
 private:

@@ -63,7 +63,7 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
             "left join f_payment_type pm on pm.f_id=m.f_paymentMode "
             "left join guests g on r.f_guest=g.f_id "
             "where m.f_wdate between :date1 and :date2 and m.f_canceled=0 and ((f_finance=1 and f_source<>'AV') or (f_finance=0 and f_source='AT')) "
-            "order by rm.f_building, r.f_room, m.f_wdate ";
+            "order by rm.f_building, r.f_room, m.f_inv, m.f_wdate ";
     query.replace(":date1", ui->deStart->dateMySql());
     query.replace(":date2", ui->deEnd->dateMySql());
     rg->fModel->setSqlQuery(query);

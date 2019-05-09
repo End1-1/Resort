@@ -14,6 +14,7 @@ class DlgSinglePrintTax : public BaseDialog
 public:
     explicit DlgSinglePrintTax(QWidget *parent = nullptr);
     ~DlgSinglePrintTax();
+    int fTaxCode;
     virtual void callback(int sel, const QString &code);
     int addItem(const QString &itemCode, double amount, int modeOfPayment, const QString &voucher);
 

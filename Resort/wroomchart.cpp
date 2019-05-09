@@ -3,6 +3,7 @@
 #include "wroomchartclasses.h"
 #include "wroomchartdock.h"
 #include "wreservation.h"
+#include "wroomcharttemprectdlg.h"
 #include "winvoice.h"
 #include <QGraphicsItem>
 #include <QScrollBar>
@@ -80,7 +81,8 @@ void WRoomChart::loadReservations()
         cs->addObject(fMainScene);
         cs->start();
     }
-    fMainScene = new QGraphicsScene();
+    fMainScene = new ChartScene();
+    connect(fMainScene, SIGNAL(createReserve(int, int, TempRectItem*)), this, SLOT(createReserve(int,int, TempRectItem*)));
     ui->mainView->setScene(fMainScene);
     fRoomScene = new QGraphicsScene();
     ui->roomView->setScene(fRoomScene);
@@ -88,11 +90,15 @@ void WRoomChart::loadReservations()
     ui->dateView->setScene(fDateScene);
 
     int rows = 0;
-    QString query = "select * from f_reservation_chart ";
+    QString query = "select rm.f_id as f_room, rc.f_id, rc.f_invoice, rc.f_state, rc.f_statename, "
+            "rc.f_reservestate, rc.f_reservestatename, rc.f_roomcategory, rm.f_short as f_roomshort, rm.f_state as f_roomstate, "
+            "rc.f_roomfloor, rm.f_building as f_roombuilding, rc.f_startdate, rc.f_enddate, rc.f_days, rc.f_guest, "
+            "rc.f_allguest, rc.f_cardex, rc.f_cardexname, rc.f_groupcode, rc.f_groupname "
+            "from f_room rm left join f_reservation_chart rc on rc.f_room=rm.f_id ";
     QStringList where;
     QString f = categoriesFilter();
     if (!f.isEmpty()) {
-        where << QString(" f_roomcategory in (%1)").arg(f);
+        where << QString(" rc.f_roomcategory in (%1)").arg(f);
     }
     if (where.count() > 0) {
         query += "where ";
@@ -106,7 +112,7 @@ void WRoomChart::loadReservations()
             query += s;
         }
     }
-    query += " order by f_roombuilding, f_room, f_startdate desc ";
+    query += " order by rm.f_building, rm.f_id, rc.f_startdate desc ";
     DoubleDatabase dd(true, false);
     dd.exec(query);
     qDebug() << "Reservation query" << t.elapsed();
@@ -115,9 +121,20 @@ void WRoomChart::loadReservations()
     int currRoom = 0;
     QDate currEntry;
     Reserve *prevReserve = nullptr;
-    if (dd.nextRow()) {        
+    if (dd.nextRow()) {
         do {
             int room = dd.getInt("f_room");
+            if (room == 0) {
+                continue;
+            }
+            if (!fRoomRows.contains(room)) {
+                fRoomRows[room] = rows++;
+                fRoomShort[room] = dd.getString("f_roomshort");
+                fRoomState[room] = dd.getInt("f_roomstate");
+            }
+            if (dd.getString("f_id").isEmpty()) {
+                continue;
+            }
             if (currRoom != room) {
                 currRoom = room;
                 currEntry = QDate::currentDate().addDays(-1);
@@ -130,11 +147,6 @@ void WRoomChart::loadReservations()
             }
             currEntry = dd.getDate("f_startdate");
             QString id = dd.getString("f_id");
-            if (!fRoomRows.contains(room)) {
-                fRoomRows[room] = rows++;
-                fRoomShort[room] = dd.getString("f_roomshort");
-                fRoomState[room] = dd.getInt("f_roomstate");
-            }
             fReserveDateStart[id] = dd.getDate("f_startdate");
             fReserveDateEnd[id] = dd.getDate("f_enddate");
             fReserveCardex[id] = dd.getString("f_cardex");
@@ -297,6 +309,19 @@ QString WRoomChart::categoriesFilter()
         }
     }
     return list;
+}
+
+void WRoomChart::createReserve(int row, int column, TempRectItem *t)
+{
+    qDebug() << row << column;
+    QDate d1 = fFirstDate.addDays(column);
+    QDate d2 = fFirstDate.addDays(t->rect().right() / RECT_SIDE);
+    WRoomChartTempRectDlg *d = new WRoomChartTempRectDlg(this);
+    d->setDates(d1, d2);
+    d->exec();
+    delete d;
+    t->reset();
+    fMainScene->update();
 }
 
 void WRoomChart::catButtonClicked()

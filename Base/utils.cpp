@@ -6,10 +6,6 @@
 QMap<int, QString> l1;
 QMap<int, QString> l2;
 QMap<int, QString> l3;
-static const QLocale locale = QLocale();
-static const QString DecimalPoint = QLocale().decimalPoint();
-static const QRegExp reZero = QRegExp("(?!\\d[\\" + DecimalPoint +"][1-9]+)0+$");
-static const QRegExp rDP("[\\" + DecimalPoint + "]$");
 QSettings __s("SmartHotel", "SmartHotel");
 
 namespace Utils {
@@ -387,10 +383,4 @@ bool isDoubleNotEqual(double v1, double v2, int prec)
     v1 *= prec;
     v2 *= prec;
     return static_cast<int>(v1) != static_cast<int>(v2);
-}
-
-QString float_str(double value, int f)
-{
-    f = 2;
-    return locale.toString(value, 'f', f).remove(reZero).remove(rDP);
 }

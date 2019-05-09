@@ -200,7 +200,7 @@ bool RowEditorDialog::saveOnly()
         } else if (isCheckBox(w)) {
             EQCheckBox *c = static_cast<EQCheckBox*>(w);
             if (!c->getField().isEmpty()) {
-                fDD[":" + c->getField()] = (int) c->isChecked();
+                fDD[":" + c->getField()] = c->isChecked() ? 1 : 0;
             }
         } else if (isTextEdit(w)) {
             EQTextEdit *t = static_cast<EQTextEdit*>(w);

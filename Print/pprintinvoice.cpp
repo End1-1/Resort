@@ -272,9 +272,9 @@ void PPrintInvoice::previewInvoice()
         totalCredit += credit;
         totalDebet += debet;
         lastBalance -= -1 * ((debet) - credit);
-        ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(debet), &th, f));
-        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(credit), &th, f));
-        ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance), &th, f));
+        ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(debet), &th, f));
+        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(credit), &th, f));
+        ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
         top += rowHeight;
         if (top > 2800) {
             top = 30;
@@ -289,9 +289,9 @@ void PPrintInvoice::previewInvoice()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total amount"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalDebet), &th, f));
-    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalCredit), &th, f));
-    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet), &th, f));
+    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit), &th, f));
+    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
     top += rowHeight;
     if (top > 2800) {
         top = 30;
@@ -303,7 +303,7 @@ void PPrintInvoice::previewInvoice()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cash"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalCash), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalCash), &th, f));
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
@@ -315,7 +315,7 @@ void PPrintInvoice::previewInvoice()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cashless"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalCard + totalOther), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalCard + totalOther), &th, f));
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
@@ -327,9 +327,9 @@ void PPrintInvoice::previewInvoice()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of USD"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalDebet / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalCredit / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance / def_usd), &th, f));
     top += rowHeight;
     if (top > 2800) {
         top = 30;
@@ -340,7 +340,7 @@ void PPrintInvoice::previewInvoice()
         ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("VAT 20%"), &th, f));
         th.setTextAlignment(Qt::AlignLeft);
         ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, "", &th, f));
-        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalVat), &th, f));
+        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalVat), &th, f));
         ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     }
     top += rowHeight;

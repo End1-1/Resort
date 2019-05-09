@@ -355,8 +355,10 @@ void FVauchers::printVoucherAsInvoice()
             return;
         }
     }
-    DlgPrintVoucherAsInvoice *p = addTab<DlgPrintVoucherAsInvoice>();
-    p->addVoucher(out.at(0).toString());
+    DlgPrintVoucherAsInvoice *p = DlgPrintVoucherAsInvoice::openInvoiceWindow(out.at(29).toString());
+    if (out.at(29).toString().isEmpty()) {
+        p->addVoucher(out.at(0).toString());
+    }
 }
 
 void FVauchers::doubleClickOnRow(const QList<QVariant> &values)

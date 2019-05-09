@@ -20,6 +20,7 @@ public:
     void setRoom(int room);
     void setExtra(Extra e);
     virtual int exec() override;
+    double fDayUseRate;
 
 private slots:
     void on_btnCancel_clicked();

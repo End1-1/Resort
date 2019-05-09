@@ -25,10 +25,12 @@ public:
     void removeInvalidReserveWidget(const QString &code);
     ReservationInfo *addReserveInfo(const QString &code);
     ReserveWidget *addReserveWidget(const QString &code);
+
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *e);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
+
 private:
     bool fStartReserveSelect;
     ReserveRect *fReserveRect;
@@ -43,8 +45,10 @@ private:
     int yFromRoomCode(const QString &room);
     QPointF nearestPoint(const QPointF &p);
     void changeSelection(QGraphicsItemGroup &gr, QMap<int, QGraphicsRectItem*> &sel, const QSet<int> &values);
+
 private slots:
     void editReserveRoom(const QString &r);
+
 signals:
     void editReserve(const QString  &r);
 };

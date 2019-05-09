@@ -112,6 +112,7 @@ void Login::readDatagram()
                 TrackControl::fDbDb = jObj["logdb"].toString();
                 TrackControl::fDbUser = jObj["loguser"].toString();
                 TrackControl::fDbPass = jObj["logpass"].toString();
+                TrackControl::setFirstConnection();
                 _IDGENMODE_ = jObj["idgen"].toInt();
                 db[":f_user"] = HOSTNAME + "." + fPreferences.hostUsername();
                 db.exec("select * from f_db where f_id in (select f_db from f_access where lower(f_user)=lower(:f_user) and f_right=1)");
@@ -244,6 +245,7 @@ void Login::on_btnLogin_clicked()
         TrackControl::fDbDb = __dd1Database;
         TrackControl::fDbUser = __dd1Username;
         TrackControl::fDbPass = __dd1Password;
+        TrackControl::setFirstConnection();
         BaseUIDX::fAirHost = __dd1Host;
         BaseUIDX::fAirDbName = "airwick";
         BaseUIDX::fAirUser = __dd1Username;
@@ -258,6 +260,15 @@ void Login::on_btnLogin_clicked()
         __dd2Database = dbParams[1];
         __dd2Username = dbParams[2];
         __dd2Password = dbParams[3];
+        TrackControl::fDbHost = __dd2Host;
+        TrackControl::fDbDb = __dd2Database;
+        TrackControl::fDbUser = __dd2Username;
+        TrackControl::fDbPass = __dd2Password;
+        TrackControl::fDbHostReserve = __dd1Host;
+        TrackControl::fDbDbReserve = __dd1Database;
+        TrackControl::fDbUserReserve = __dd1Username;
+        TrackControl::fDbPassReserve = __dd1Password;
+        TrackControl::setFirstConnection();
         fDD.setDatabase(__dd2Host, __dd2Database, __dd2Username, __dd2Password, 2);
         doubleDatabase = secondDb && true;
     }  else {

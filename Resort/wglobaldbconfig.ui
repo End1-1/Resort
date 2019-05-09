@@ -1753,6 +1753,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1761,14 +1766,9 @@
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQTextEdit</class>
-   <extends>QTextEdit</extends>
-   <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
+   <class>EQDateEdit</class>
+   <extends>QDateEdit</extends>
+   <header location="global">eqdateedit.h</header>
   </customwidget>
   <customwidget>
    <class>EQCheckBox</class>
@@ -1776,14 +1776,14 @@
    <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
-   <class>EQDateEdit</class>
-   <extends>QDateEdit</extends>
-   <header location="global">eqdateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQTimeEdit</class>
    <extends>QTimeEdit</extends>
    <header location="global">eqtimeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header location="global">eqtextedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

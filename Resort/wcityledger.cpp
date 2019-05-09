@@ -74,9 +74,11 @@ void WCityLedger::setBalance()
     dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
              where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ");
 #else
-    dd.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-             m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) from m_register m \
-             where f_cityLedger=:f_cityLedger and f_canceled=0 and f_finance=1 ");
+    if (!dd.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+             m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as f_amountamd from m_register m \
+            where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ")) {
+        message_error(dd.fLastError);
+    }
 #endif
     if (dd.nextRow()) {
         ui->leBalance->setDouble(dd.getDouble(0));

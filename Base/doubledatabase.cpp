@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QDate>
 #include <QDebug>
+#include <QSqlDriver>
 #include <QSqlField>
 
 int DoubleDatabase::fCounter = 0;
@@ -17,7 +18,7 @@ bool DoubleDatabase::fDoNotUse2 = false;
 
 #ifdef _RESORT_
 #include "mainwindow.h"
-MainWindow *__mainWindow = 0;
+MainWindow *__mainWindow = nullptr;
 #endif
 
 #ifdef _RESTAURANT_
@@ -25,7 +26,7 @@ MainWindow *__mainWindow = 0;
 RFace *__rface;
 #endif
 
-QMutex fMutex;
+static QMutex fMutex;
 QString __dd1Host;
 QString __dd1Database;
 QString __dd1Username;
@@ -148,27 +149,45 @@ bool DoubleDatabase::open(bool db1, bool db2)
 
 bool DoubleDatabase::startTransaction()
 {
-    fDb1.transaction();
-    if (fExecFlagSlave) {
-        fDb2.transaction();
+
+//    qDebug() << "Opened" << fDb1.isOpen();
+//    qDebug() << "Futures" << fDb1.driver()->hasFeature(QSqlDriver::Transactions);
+//    qDebug() << "TRansaction" << fDb1.transaction();
+//    if (fExecFlagSlave) {
+//        fDb2.transaction();
+//    }
+    QSqlQuery q(fDb1);
+    bool result = q.exec("start transaction");
+    if (result && fExecFlagSlave) {
+        QSqlQuery q2(fDb2);
+        result = result && q2.exec("start transaction");
     }
-    return true;
+    return result;
 }
 
 bool DoubleDatabase::commit()
 {
-    fDb1.commit();
-    if (fExecFlagSlave) {
-        fDb2.commit();
+//    fDb1.commit();
+//    if (fExecFlagSlave) {
+//        fDb2.commit();
+//    }
+//    return true;
+    QSqlQuery q1(fDb1);
+    bool result = q1.exec("commit");
+    if (result && fExecFlagSlave) {
+        QSqlQuery q2(fDb2);
+        result = result && q2.exec("commit");
     }
-    return true;
+    return result;
 }
 
 void DoubleDatabase::rollback()
 {
-    fDb1.rollback();
-    if (fExecFlagSlave) {
-        fDb2.rollback();
+    QSqlQuery q1(fDb1);
+    bool result = q1.exec("rollback");
+    if (result && fExecFlagSlave) {
+        QSqlQuery q2(fDb2);
+        result = result && q2.exec("rollback");
     }
 }
 

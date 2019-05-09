@@ -3,6 +3,7 @@
 #include "cacheinvoiceitem.h"
 #include "paymentmode.h"
 #include "message.h"
+#include "cachetaxmap.h"
 #include "dlgprinttaxsm.h"
 
 DlgSinglePrintTax::DlgSinglePrintTax(QWidget *parent) :
@@ -16,6 +17,7 @@ DlgSinglePrintTax::DlgSinglePrintTax(QWidget *parent) :
         w += ui->tbl->columnWidth(i);
     }
     setMinimumWidth(w);
+    fTaxCode = 0;
 }
 
 DlgSinglePrintTax::~DlgSinglePrintTax()
@@ -29,7 +31,12 @@ void DlgSinglePrintTax::callback(int sel, const QString &code)
     CacheInvoiceItem c;
     if (c.get(code)) {
         ui->tbl->lineEdit(sel, 3)->setText(c.fTaxName());
-        ui->tbl->comboBox(sel, 5)->setCurrentText(c.fVatDept());
+        CacheTaxMap tm;
+        if (!tm.get(code)) {
+            message_error(tr("No tax department defined for ") + c.fName());
+            return;
+        }
+        ui->tbl->comboBox(sel, 5)->setCurrentIndex(ui->tbl->comboBox(sel, 5)->findText(tm.fName()));
         ui->tbl->setItemWithValue(sel, 8, c.fAdgt());
     }
 }
@@ -47,10 +54,27 @@ int DlgSinglePrintTax::addItem(const QString &itemCode, double amount, int modeO
     cdept->addItem("1");
     cdept->addItem("2");
     cdept->addItem("3");
-    cdept->setCurrentIndex(0);
+    cdept->addItem("4");
+    cdept->addItem("6");
+    cdept->addItem("7");
+    cdept->addItem("8");
+    cdept->addItem("9");
+    cdept->addItem("10");
+    cdept->setCurrentIndex(-1);
     EQLineEdit *lcode = ui->tbl->addLineEdit(row, 1, false);
     lcode->setSelector(this, cache(cid_invoice_item), lname, row + 1);
     lcode->setInitialValue(itemCode);
+    CacheInvoiceItem ii;
+    if (!ii.get(itemCode)) {
+        message_error(tr("No valid invoice item code"));
+        return -1;
+    }
+    CacheTaxMap tm;
+    if (!tm.get(itemCode)) {
+        message_error(tr("No tax department defined for ") + ii.fName());
+        return -1;
+    }
+    cdept->setCurrentIndex(cdept->findText(tm.fName()));
     EQLineEdit *lqty = ui->tbl->addLineEdit(row, 4, false);
     lqty->setDouble(1);
     EQLineEdit *lamount = ui->tbl->addLineEdit(row, 6, false);
@@ -132,6 +156,7 @@ void DlgSinglePrintTax::on_btnPrint_clicked()
                 dd[":f_id"] = ui->tbl->itemValue(r.toInt(), 9).toString();
                 dd.exec("update m_register set f_fiscal=:f_fiscal where f_id=:f_id");
             }
+            fTaxCode = d->fTaxCode;
             accept();
         }
     } else {

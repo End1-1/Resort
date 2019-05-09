@@ -100,7 +100,11 @@ void DlgPrintTaxSM::load()
     v[":f_replyText"] = err;
     v[":f_replyTaxCode"] = "-";
     int id = v.insert("tax_print", true);
-
+#ifdef QT_DEBUG
+    qDebug() << outJson << err;
+    result = pt_err_ok;
+    outJson = "{\"rseq\":77,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}";
+#endif
     if (result == pt_err_ok) {
         QJsonDocument jd = QJsonDocument::fromJson(outJson.toUtf8());
         QJsonObject jo = jd.object();
@@ -143,7 +147,11 @@ void DlgPrintTaxSM::loadAdvance()
     v[":f_replyText"] = err;
     v[":f_replyTaxCode"] = "-";
     int id = v.insert("tax_print", true);
-
+#ifdef QT_DEBUG
+    qDebug() << outJson << err;
+    result = pt_err_ok;
+    outJson = "{\"rseq\":77,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}";
+#endif
     if (result == pt_err_ok) {
         QJsonDocument jd = QJsonDocument::fromJson(outJson.toUtf8());
         QJsonObject jo = jd.object();

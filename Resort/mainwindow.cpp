@@ -21,6 +21,7 @@
 #include "dlgquickroomassignment.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
+#include "dlgtransferlog.h"
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
 #include "wwelcome.h"
@@ -423,11 +424,13 @@ void MainWindow::timeout()
             delete d;
         }
     }
-    db[":f_app"] = _APPLICATION_;
-    db.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
-    if (db.nextRow()) {
-        if (Utils::getVersionString(qApp->applicationFilePath()) != db.getString(0)) {
-            DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), db.getString(0));
+    if (!DO_NOT_CHECK_VERSION) {
+        db[":f_app"] = _APPLICATION_;
+        db.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
+        if (db.nextRow()) {
+            if (Utils::getVersionString(qApp->applicationFilePath()) != db.getString(0)) {
+                DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), db.getString(0));
+            }
         }
     }
     db.close();
@@ -675,6 +678,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionWeb->setVisible(false);
     ui->actionExecute_failed_sql->setVisible(r__(cr__exec_failed_sql_queries));
     ui->actionRecover_invoice->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__super_correction));
+    ui->actionTransfer_log->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
 
     ui->menuBar->actions().at(12)->setVisible(r__(cr__storehouse_all_items)); // Storehouse
 
@@ -2196,4 +2200,11 @@ void MainWindow::on_actionRecover_invoice_triggered()
     DlgRecoverInvoice *d = new DlgRecoverInvoice(this);
     d->exec();
     d->deleteLater();
+}
+
+void MainWindow::on_actionTransfer_log_triggered()
+{
+    DlgTransferLog *d = new DlgTransferLog(this);
+    d->exec();
+    delete d;
 }

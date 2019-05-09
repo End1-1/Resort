@@ -16,6 +16,15 @@ DlgPrintVoucherAsInvoice::DlgPrintVoucherAsInvoice(QWidget *parent) :
     ui->tblTotal->addRow();
     Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 100, 100, 300, 100, 100, 200, 0);
     Utils::tableSetColumnWidths(ui->tblTotal, ui->tblTotal->columnCount(), 100, 100, 300, 100, 100, 100, 200, 0);
+    ui->tblTotal->addLineEdit(0, 3, false);
+    ui->tblTotal->addLineEdit(0, 4, false);
+    ui->tblTotal->addLineEdit(0, 5, false);
+    fInvoice.setleInvoice(ui->leInvoice);
+    fInvoice.setleDate(ui->deDate);
+    fInvoice.setleCityLedger(ui->leCL, ui->leCLName);
+    fInvoice.setleDebit(ui->tblTotal->lineEdit(0, 3));
+    fInvoice.setleCredit(ui->tblTotal->lineEdit(0, 4));
+    fInvoice.setleBalance(ui->tblTotal->lineEdit(0, 5));
 }
 
 DlgPrintVoucherAsInvoice::~DlgPrintVoucherAsInvoice()
@@ -23,23 +32,62 @@ DlgPrintVoucherAsInvoice::~DlgPrintVoucherAsInvoice()
     delete ui;
 }
 
+DlgPrintVoucherAsInvoice *DlgPrintVoucherAsInvoice::openInvoiceWindow(const QString &id)
+{
+    DlgPrintVoucherAsInvoice *w = nullptr;
+    for (int i = 0; i < fMainWindow->fTab->count(); i++) {
+        w = dynamic_cast<DlgPrintVoucherAsInvoice*>(fMainWindow->fTab->widget(i));
+        if (w) {
+            if (w->invoice() == id) {
+                fMainWindow->fTab->setCurrentIndex(i);
+                return w;
+            }
+        }
+    }
+    w = addTab<DlgPrintVoucherAsInvoice>();
+    w->openInvoice(id);
+    return w;
+}
+
+QString DlgPrintVoucherAsInvoice::invoice() const
+{
+    return ui->leInvoice->text();
+}
+
 void DlgPrintVoucherAsInvoice::setup()
 {
     setupTabTextAndIcon(tr("Voucher invoice"), ":/images/invoice.png");
+}
+
+void DlgPrintVoucherAsInvoice::openInvoice(const QString &id)
+{
+    if (id.isEmpty()) {
+        return;
+    }
+    DoubleDatabase d(true, false);
+    if (!fInvoice.open(d, id)) {
+        message_error(fInvoice.fError);
+        return;
+    }
+    for (int i = 0; i < fInvoice.vouchersCount(); i++) {
+        DBMRegister &r = fInvoice.voucher(i);
+        addRow(r, false);
+    }
 }
 
 void DlgPrintVoucherAsInvoice::addVoucher(const QString &id)
 {
     DoubleDatabase dd(true, false);
     dd[":f_id"] = id;
-    dd.exec("select m.f_id, m.f_wdate, m.f_finalname, m.f_amountamd, cl.f_name, m.f_sign, pm.f_en, m.f_remarks, m.f_paymentMode "
-            "from m_register m "
-            "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
-            "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
-            " where m.f_id=:f_id");
+    dd.exec(DBMRegister::voucherQuery() + " where m.f_id=:f_id");
     if (dd.nextRow()) {
-        addRow(dd.fDbRows.at(0));
-        countTotal();
+        DBMRegister r;
+        r.fetchData(dd);
+        addRow(r, true);
+        if (r.fCityLedger > 0) {
+            ui->leCL->setUInt(r.fCityLedger);
+            ui->leCLName->setText(r.fCityLedgerName);
+        }
     } else {
         message_error(tr("Incorrect voucher id") + "<BR>" + id);
     }
@@ -47,8 +95,9 @@ void DlgPrintVoucherAsInvoice::addVoucher(const QString &id)
 
 void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
 {
-    on_btnSave_clicked();
-
+    if (!save()) {
+        return;
+    }
     int vatMode = 1;
     CacheVatMode cv;
     if (!cv.get(1)) {
@@ -62,16 +111,19 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
     QString inv = QString("%1 #%2").arg(tr("S/N")).arg(ui->leInvoice->text());
-
     PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, nullptr, QFont(qApp->font().family(), 30, 75));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
     trInvoice->setBorders(false, false, false, false);
+    PTextRect *trCL = new PTextRect(20, trHeader->textHeight() + 85, 2100, 80, ui->leCLName->text(), nullptr, QFont(qApp->font().family(), 30, 75));
+    trCL->setTextAlignment(Qt::AlignHCenter);
+    trCL->setBorders(false, false, false, false);
     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
                                       nullptr, QFont(qApp->font().family(), 25));
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
     trInfo->setWrapMode(QTextOption::WordWrap);
     trInfo->setBorders(false, false, false, false);
     ps->addItem(trInfo);
+    ps->addItem(trCL);
     ps->addItem(trInvoice);
     ps->addItem(trHeader);
     PImage *logo = new PImage("logo_print.png");
@@ -85,7 +137,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     f.setBold(true);
     th.setFont(f);
     th.setRectPen(pline);
-    int top = 310;
+    int top = 340;
     int rowHeight = 60;
     //table header
     th.setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -149,9 +201,9 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
         totalCredit += credit;
         totalDebet += debet;
         lastBalance -= -1 * ((debet) - credit);
-        ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(debet), &th, f));
-        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(credit), &th, f));
-        ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance), &th, f));
+        ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(debet), &th, f));
+        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(credit), &th, f));
+        ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
         top += rowHeight;
         if (top > 2800) {
             top = 30;
@@ -164,9 +216,9 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total amount"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalDebet), &th, f));
-    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalCredit), &th, f));
-    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet), &th, f));
+    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit), &th, f));
+    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
     top += rowHeight;
     if (top > 2800) {
         top = 30;
@@ -178,7 +230,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cash"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalCash), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalCash), &th, f));
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
@@ -190,7 +242,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cashless"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalCard + totalOther), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalCard + totalOther), &th, f));
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
@@ -202,9 +254,9 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of USD"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_printout(totalDebet / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalCredit / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_printout(lastBalance / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance / def_usd), &th, f));
     top += rowHeight;
     if (top > 2800) {
         top = 30;
@@ -215,7 +267,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
         ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("VAT 20%"), &th, f));
         th.setTextAlignment(Qt::AlignLeft);
         ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, "", &th, f));
-        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_printout(totalVat), &th, f));
+        ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalVat), &th, f));
         ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     }
     top += rowHeight;
@@ -257,64 +309,69 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     delete pp;
 }
 
-void DlgPrintVoucherAsInvoice::countTotal()
+void DlgPrintVoucherAsInvoice::addRow(const DBMRegister &r, bool appendToInvoice)
 {
-    ui->tblTotal->setItemWithValue(0, 3, ui->tbl->sumOfColumn(3));
-    ui->tblTotal->setItemWithValue(0, 4, ui->tbl->sumOfColumn(4));
-    ui->tblTotal->setItemWithValue(0, 5, ui->tblTotal->toDouble(0, 3) - ui->tblTotal->toDouble(0, 4));
-}
-
-void DlgPrintVoucherAsInvoice::addRow(const QList<QVariant> &v)
-{
-    if (v.at(5).toInt() == 0) {
+    if (r.fFinance == 0) {
         message_error(tr("This is not valid finance voucher"));
         return;
     }
+    if (appendToInvoice) {
+        if (!fInvoice.addVoucher(r)) {
+            message_error(tr("This voucher already in invoice"));
+            return;
+        }
+    }
     int row = ui->tbl->addRow();
-    ui->tbl->setItemWithValue(row, 0, v.at(0));
-    ui->tbl->setItemWithValue(row, 1, v.at(1));
-    ui->tbl->setItemWithValue(row, 2, v.at(2));
-    switch (v.at(5).toInt()) {
+    ui->tbl->setItemWithValue(row, 0, r.fId);
+    ui->tbl->setItemWithValue(row, 1, r.fWDate);
+    ui->tbl->setItemWithValue(row, 2, r.fFinalName);
+    switch (r.fSign) {
     case -1:
-        ui->tbl->setItemWithValue(row, 3,v.at(3));
+        ui->tbl->setItemWithValue(row, 3, r.fAmountAMD);
         ui->tbl->setItemWithValue(row, 4, 0);
         break;
     case 1:
         ui->tbl->setItemWithValue(row, 3, 0);
-        ui->tbl->setItemWithValue(row, 4, v.at(3));
+        ui->tbl->setItemWithValue(row, 4, r.fAmountAMD);
         break;
     }
-    ui->tbl->setItemWithValue(row, 5, v.at(6));
-    ui->tbl->setItemWithValue(row, 6, v.at(7));
-    ui->tbl->setItemWithValue(row, 7, v.at(8));
+    ui->tbl->setItemWithValue(row, 5, r.fPaymentModeName);
+    ui->tbl->setItemWithValue(row, 6, r.fRemarks);
+    ui->tbl->setItemWithValue(row, 7, r.fPaymentMode);
+}
+
+bool DlgPrintVoucherAsInvoice::save()
+{
+    if (ui->leInvoice->isEmpty()) {
+        ui->leInvoice->setText(uuidx("IN"));
+    }
+    DoubleDatabase dd(true, doubleDatabase);
+    if (!fInvoice.save(dd)) {
+        message_error(fInvoice.fError);
+        return false;
+    }
+    return true;
 }
 
 void DlgPrintVoucherAsInvoice::on_btnAddVoucher_clicked()
 {
     DlgSeachFromDatabase *d = new DlgSeachFromDatabase(this);
-    d->fQuery = "select m.f_id, m.f_wdate, m.f_finalname, m.f_amountamd, cl.f_name, m.f_sign, pm.f_en, m.f_remarks, m.f_paymentMode "
-            "from m_register m "
-            "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
-            "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
-            "where f_canceled=0 and f_finance=1 and (f_inv is null or f_inv='')";
-    d->fField = " and m.f_id like '%%1%' or f_finalname like '%%1%' or f_amountamd like '%%1%' or cl.f_name like '%%1%' and m.f_source='RV'";
+    d->setTemplate(DlgSeachFromDatabase::stVoucher);
+    d->fField = " where (m.f_id like '%%1%' or f_finalname like '%%1%' or f_amountamd like '%%1%') " + (ui->leCL->isEmpty() ? "" : " and cl.f_id=" + ui->leCL->text());
     if (d->exec() == QDialog::Accepted) {
         DoubleDatabase dd(true, false);
-        addRow(d->fResult);
-        countTotal();
+        dd[":f_id"] = d->fResult.at(0);
+        dd.exec(DBMRegister::voucherQuery() + " where m.f_id=:f_id");
+        if (dd.nextRow()) {
+            DBMRegister r;
+            r.fetchData(dd);
+            addRow(r, true);
+        }
     }
     delete d;
 }
 
 void DlgPrintVoucherAsInvoice::on_btnSave_clicked()
 {
-    if (ui->leInvoice->isEmpty()) {
-        ui->leInvoice->setText(uuidx("IN"));
-    }
-    DoubleDatabase dd(true, doubleDatabase);
-    for (int i = 0; i < ui->tbl->rowCount(); i++) {
-        dd[":f_id"] = ui->tbl->toString(i, 0);
-        dd[":f_inv"] = ui->leInvoice->text();
-        dd.exec("update m_register set f_inv=:f_inv where f_id=:f_id");
-    }
+    save();
 }

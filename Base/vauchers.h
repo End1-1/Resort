@@ -38,6 +38,7 @@
 #define VAUCHER_TRANSFER_CL_N "TC"
 #define VAUCHER_CL_INIT_N "CR"
 #define VOUCHER_CHECKIN_N "CI"
+#define VAUCHER_INVOICE_N "IN"
 #define VOUCHER_ADVANCE_TRANSFER_N "AT"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode);

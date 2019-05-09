@@ -106,7 +106,6 @@ WMainDesk::WMainDesk(QWidget *parent) :
     ui->btnGroupReservation->setVisible(r__(cr__reservation_group_reservation));
     ui->tblDay->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     ui->tblDay->horizontalHeader()->setDefaultSectionSize(COLUMN_WIDTH);
-    qDebug() << ui->tblDay->horizontalHeader()->defaultSectionSize();
 }
 
 WMainDesk::~WMainDesk()

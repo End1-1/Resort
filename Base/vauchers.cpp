@@ -11,6 +11,7 @@
 #include "dlgdiscount.h"
 #include "paymentmode.h"
 #include "dbmregister.h"
+#include "dlgprintvoucherasinvoice.h"
 #include "dlgpostcharge.h"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode) {
@@ -198,6 +199,12 @@ bool openInvoiceWithId(const QString &invoice)
     db[":f_invoice"] = invoice;
     db.exec("select f_state from f_reservation where f_invoice=:f_invoice");
     if (!db.nextRow()) {
+        db[":f_id"] = invoice;
+        db.exec("select f_id from m_register where f_id=:f_id");
+        if (db.nextRow()) {
+            DlgPrintVoucherAsInvoice::openInvoiceWindow(invoice);
+            return true;
+        }
         message_error(QObject::tr("Cannot open invoice"));
         return false;
     }

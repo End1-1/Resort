@@ -7,11 +7,12 @@
 #include "cacheusers.h"
 #include <QApplication>
 
-PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids, QWidget *parent) :
+PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids, bool noPreview, QWidget *parent) :
     BaseWidget(parent)
 {
     fId = id;
     fSide = side;
+    fNoPreview = noPreview;
     bool first = true;
     foreach (QString s, ids) {
         if (first) {
@@ -376,6 +377,6 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(20, top, 2000, rowHeight * 3, fPreferences.getDb(def_vouchers_invoice_footer).toString(), &th, f));
     TrackControl tc(0);
     tc.insert("Print invoice request", fId, "");
-    pp->exec();
+    pp->exec(fNoPreview);
     delete pp;
 }

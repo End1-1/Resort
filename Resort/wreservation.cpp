@@ -419,7 +419,6 @@ void WReservation::on_btnCheckIn_clicked()
         if (ui->tab->count() == 1) {
             removeFromTabWidget();
         }
-        message_info(tr("Checkin completed"));
     } else {
         message_error(tr("Checkin failed") + "<br>" + errorString);
     }

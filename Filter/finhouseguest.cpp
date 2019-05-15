@@ -138,7 +138,11 @@ void FInHouseGuest::on_chTime_clicked(bool checked)
 
 void FInHouseGuest::on_chAll_clicked(bool checked)
 {
-    ui->chDisplayName->setChecked(checked);
-    ui->chDisplayRate->setChecked(checked);
-    ui->chDisplayCardex->setChecked(checked);
+    Q_UNUSED(checked);
+    ui->chDisplayName->setChecked(false);
+    ui->chDisplayRate->setChecked(false);
+    ui->chDisplayCardex->setChecked(false);
+    ui->chDisplayName->click();
+    ui->chDisplayRate->click();
+    ui->chDisplayCardex->click();
 }

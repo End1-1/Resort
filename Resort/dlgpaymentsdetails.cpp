@@ -532,9 +532,9 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                 modeName = "BANK";
                 break;
             case PAYMENT_CL:
-//#ifdef _METROPOL_
-//                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, C/L %2").arg(ui->leGuest->text()).arg(lineEdit(t, i, 4)->text()));
-//#endif
+#ifdef _METROPOL_
+                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, C/L %2").arg(ui->leGuest->text()).arg(lineEdit(t, i, 4)->text()));
+#endif
                 clCode = lineEdit(t, i, 4)->text().toInt();
                 modeName = lineEdit(t, i, 7)->text();
                 break;

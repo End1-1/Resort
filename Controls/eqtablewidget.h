@@ -28,11 +28,13 @@ class EQTableWidget : public QTableWidget
     Q_OBJECT
 public:
     EQTableWidget(QWidget *parent = nullptr);
+    void fitToColumns();
     void setValue(int row, int column, const QVariant &data, int role = Qt::DisplayRole);
     inline QVariant itemValue(int row, int column, int role = Qt::DisplayRole) { return item(row, column)->data(role);}
     double sumOfColumn(int column);
     double sumOfColumn(int column, int columnCond, int cond);
     QString toString(int row, int column);
+    QDate toDate(int row, int column);
     inline double toDouble(int row, int column) {return item(row, column)->data(Qt::EditRole).toDouble();}
     C5TableWidgetItem *item(int row, int column);
     void setItem(int row, int column, C5TableWidgetItem *i);

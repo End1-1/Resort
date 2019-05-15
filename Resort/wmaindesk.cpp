@@ -14,7 +14,7 @@
 #include "logging.h"
 #include "cachereservationcardex.h"
 #include "roomstate.h"
-#include "dlgpostingcharges.h"
+#include "dlgpostcharge.h"
 #include "dlgtransferanyamount.h"
 #include "dlgpaymentsdetails.h"
 #include "eqtablewidget.h"
@@ -753,7 +753,7 @@ void WMainDesk::on_btnInvoice_clicked()
 
 void WMainDesk::on_btnPostCharge_clicked()
 {
-    DlgPostingCharges *d = new DlgPostingCharges(this);
+    auto *d = new DlgPostCharge(this);
     d->exec();
     delete d;
 }

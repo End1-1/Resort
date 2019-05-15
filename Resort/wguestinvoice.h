@@ -18,6 +18,7 @@ public:
     ~WGuestInvoice();
     virtual void callback(int sel, const QString &code);
     void setReservationMode(const QString reserveId);
+    void setInvoice(const QString &invoice);
     void initRoom(int room);
     void setBalance();
     void setRoom(int room);
@@ -37,6 +38,7 @@ private slots:
 
 private:
     Ui::WGuestInvoice *ui;
+    void fillFields(DoubleDatabase &dd);
 };
 
 #endif // WGUESTINVOICE_H

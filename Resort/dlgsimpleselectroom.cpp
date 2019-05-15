@@ -157,7 +157,7 @@ void DlgSimpleSelectRoom::filter()
             it++;
             continue;
         }
-        if (ui->lbCat->text().length() > 0 && croom.fCategoryShort() != ui->lbCat->text()) {
+        if (ui->lbCat->text() != tr("Category") && ui->lbCat->text().length() > 0 && croom.fCategoryShort() != ui->lbCat->text()) {
             it++;
             continue;
         }

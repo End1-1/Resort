@@ -1625,6 +1625,13 @@
                 </property>
                </spacer>
               </item>
+              <item>
+               <widget class="QCheckBox" name="chDailyPrintCanceled">
+                <property name="text">
+                 <string>Always print canceled</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -1758,6 +1765,11 @@
    <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1769,11 +1781,6 @@
    <class>EQDateEdit</class>
    <extends>QDateEdit</extends>
    <header location="global">eqdateedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
    <class>EQTimeEdit</class>

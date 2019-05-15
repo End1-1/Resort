@@ -333,6 +333,7 @@ void TableModel::clearProxyRows()
     if (rowCount() == 0) {
         return;
     }
+    fBackgroundColors.clear();
     if (int c = rowCount() > 0) {
         beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
         fRows.clear();

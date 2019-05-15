@@ -192,7 +192,7 @@ CacheInstance *CacheOne::getCache(int id)
         cbs = new CacheReservation();
         break;
     case cid_reservation_cardex:
-        cbs = new CacheReservationCardex();
+        cbs = new   CacheReservationCardex();
         break;
     case cid_reserve_group:
         cbs = new CacheReserveGroup();

@@ -16,7 +16,9 @@ class DlgCreateGroupReservation : public BaseExtendedDialog
 public:
     explicit DlgCreateGroupReservation(QWidget *parent = nullptr);
     ~DlgCreateGroupReservation();
+    QString fCode;
     void loadRooms();
+    void setDates(const QDate &d1, const QDate &d2);
     void setSingleMode(bool mode);
     void setReservationTab(WReservationRoomTab *t);
 

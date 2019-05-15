@@ -19,7 +19,7 @@ PPrintCheckin::PPrintCheckin() :
 
 }
 
-void PPrintCheckin::print(const QString &id)
+void PPrintCheckin::print(const QString &id, bool noPreview)
 {
     PPrintCheckin p;
     PPrintPreview pv(fMainWindow->fPreferences.getDefaultParentForMessage());
@@ -165,5 +165,5 @@ void PPrintCheckin::print(const QString &id)
     top += ps->addTextRect(20, top, 2100, 80, tr("REMARKS"), &trData)->textHeight();
     top += ps->addTextRect(20, top, 2100, 80, fDD.getString("f_remarks"), &trData)->textHeight();
 
-    pv.exec();
+    pv.exec(noPreview);
 }

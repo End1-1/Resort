@@ -16,7 +16,7 @@ public:
     explicit PPrintPreview(QWidget *parent = nullptr);
     ~PPrintPreview();
     PPrintScene *addScene(int tmpl, PrintOrientation po);
-    virtual int exec();
+    int exec(bool noPreview = false);
     QList<PPrintScene*> fPrintScene;
 
 protected:

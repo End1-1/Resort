@@ -6,7 +6,7 @@
 #include "cachecardex.h"
 #include "cachecityledger.h"
 #include "dlgadvanceentry.h"
-#include "dlgpostingcharges.h"
+#include "dlgpostcharge.h"
 #include "dlgdiscount.h"
 #include "wreservation.h"
 #include "dlgreceiptvaucher.h"
@@ -209,7 +209,7 @@ void WWelcome::on_btnAdvance_clicked()
 
 void WWelcome::on_btnPostCharge_clicked()
 {
-    DlgPostingCharges *p = new DlgPostingCharges(this);
+    auto *p = new DlgPostCharge(this);
     p->exec();
     delete p;
 }

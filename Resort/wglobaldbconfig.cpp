@@ -211,6 +211,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leExtraRooming->setText(fPreferences.getDb(def_extrarooming_id).toString());
     ui->chOfferDayUse->setChecked(fPreferences.getDb(def_offer_dayuse).toInt() == 1);
     ui->chOfferExtraRooming->setChecked(fPreferences.getDb(def_offer_extrarooming).toInt() == 1);
+    ui->chDailyPrintCanceled->setChecked(fPreferences.getDb(def_daily_report_print_canceled) == 1);
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -256,6 +257,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->leExtraRooming, "Extran rooming id")
             .addWidget(ui->chOfferDayUse, "Offer day use")
             .addWidget(ui->chOfferExtraRooming, "Offer extra rooming")
+            .addWidget(ui->chDailyPrintCanceled, "Daily: always print canceled")
             ;
 
     getCompSettings();
@@ -346,6 +348,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_extrarooming_id, ui->leExtraRooming->text());
     values.insert(def_offer_dayuse, ui->chOfferDayUse->isChecked() ? "1" : "0");
     values.insert(def_offer_extrarooming, ui->chOfferExtraRooming->isChecked() ? "1" : "0");
+    values.insert(def_daily_report_print_canceled, ui->chDailyPrintCanceled->isChecked() ? "1" : "0");
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;

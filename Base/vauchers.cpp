@@ -1,6 +1,5 @@
 #include "vauchers.h"
 #include "preferences.h"
-#include "dlgpostingcharges.h"
 #include "basewidget.h"
 #include "dlggposorderinfo.h"
 #include "dlgreceiptvaucher.h"

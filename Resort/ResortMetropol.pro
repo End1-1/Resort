@@ -19,6 +19,7 @@ DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
     ../Base/stringutils.cpp \
+    ../Controls/edoubleedit.cpp \
     dbminvoice.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
@@ -36,6 +37,10 @@ SOURCES += main.cpp\
     wcityledger.cpp \
     wmaindesk.cpp \
     wpaymentdetails.cpp \
+    wquickreservations.cpp \
+    wquickreservationscheckin.cpp \
+    wquickreservationsguests.cpp \
+    wquickreservationspax.cpp \
     wreservation.cpp \
     wguest.cpp \
     winvoice.cpp \
@@ -74,7 +79,6 @@ SOURCES += main.cpp\
     dwmaindeskhint.cpp \
     ../Base/command.cpp \
     broadcastthread.cpp \
-    dlgpostingcharges.cpp \
     ../Cache/cacheinvoiceitem.cpp \
     ../Cache/cacheactiveroom.cpp \
     dlgpaymentsdetails.cpp \
@@ -411,6 +415,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ../Base/stringutils.h \
+    ../Controls/edoubleedit.h \
     dbminvoice.h \
     dlginvoicepaymentoptions.h \
     dlgprintvoucherasinvoice.h \
@@ -427,6 +432,10 @@ HEADERS  += mainwindow.h \
     wcityledger.h \
     wmaindesk.h \
     wpaymentdetails.h \
+    wquickreservations.h \
+    wquickreservationscheckin.h \
+    wquickreservationsguests.h \
+    wquickreservationspax.h \
     wreservation.h \
     wguest.h \
     winvoice.h \
@@ -466,7 +475,6 @@ HEADERS  += mainwindow.h \
     dwmaindeskhint.h \
     ../Base/command.h \
     broadcastthread.h \
-    dlgpostingcharges.h \
     ../Cache/cacheinvoiceitem.h \
     ../Cache/cacheactiveroom.h \
     dlgpaymentsdetails.h \
@@ -823,6 +831,10 @@ FORMS    += mainwindow.ui \
     wcityledger.ui \
     wmaindesk.ui \
     wpaymentdetails.ui \
+    wquickreservations.ui \
+    wquickreservationscheckin.ui \
+    wquickreservationsguests.ui \
+    wquickreservationspax.ui \
     wreservation.ui \
     wguest.ui \
     winvoice.ui \
@@ -841,7 +853,6 @@ FORMS    += mainwindow.ui \
     dlgendofday.ui \
     dlgcardex.ui \
     dwmaindeskhint.ui \
-    dlgpostingcharges.ui \
     dlgpaymentsdetails.ui \
     ../RowEditor/reresthall.ui \
     ../RowEditor/reresttable.ui \

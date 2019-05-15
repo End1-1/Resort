@@ -8,7 +8,7 @@ class PPrintCheckin : public QObject, public Base
     Q_OBJECT
 public:
     PPrintCheckin();
-    static void print(const QString &id);
+    static void print(const QString &id, bool noPreview);
 };
 
 #endif // PPRINTCHECKIN_H

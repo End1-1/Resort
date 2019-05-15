@@ -204,6 +204,7 @@
     <property name="title">
      <string>Reception</string>
     </property>
+    <addaction name="actionQuick_reservations"/>
     <addaction name="actionIn_house_guest"/>
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
@@ -1466,6 +1467,15 @@
    </property>
    <property name="text">
     <string>Transfer log</string>
+   </property>
+  </action>
+  <action name="actionQuick_reservations">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/bedroom.png</normaloff>:/images/bedroom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quick reservations</string>
    </property>
   </action>
  </widget>

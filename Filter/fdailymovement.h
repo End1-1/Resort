@@ -28,7 +28,7 @@ private:
     Ui::FDailyMovement *ui;
     void setupTab();
     void processPayments(QList<QVariant> &emptyRow);
-    void processItems(QString items);
+    void processItems(QString items, bool canceled);
 
 private slots:
     void openInvoice();

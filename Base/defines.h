@@ -77,6 +77,7 @@
 #define def_extrarooming_id "Extra rooming id"
 #define def_offer_extrarooming "Offer extra rooming"
 #define def_offer_dayuse "Offer day use"
+#define def_daily_report_print_canceled "Daily report print canceled"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

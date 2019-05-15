@@ -7,11 +7,12 @@ class PPrintInvoice : BaseWidget
 {
     Q_OBJECT
 public:
-    PPrintInvoice(const QString &id, int side, const QStringList &ids, QWidget *parent = nullptr);
+    PPrintInvoice(const QString &id, int side, const QStringList &ids, bool noPreview, QWidget *parent = nullptr);
 private:
     QString fId;
     int fSide;
     QString fSelection;
+    bool fNoPreview;
     void previewInvoice();
 };
 

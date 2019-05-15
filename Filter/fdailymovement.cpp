@@ -22,7 +22,7 @@ FDailyMovement::FDailyMovement(QWidget *parent) :
     QString query = "select u.f_username, m.f_rdate, m.f_time, m.f_room, m.f_itemCode, "
             "m.f_id, m.f_inv, left(m.f_dc, 1), m.f_finalName, p.f_en, m.f_paymentComment, "
             "m.f_amountAmd, m.f_amountVat, m.f_amountAmd / m.f_amountUsd as f_amountUsd, m.f_guest, m.f_source, "
-            "uc.f_username as f_username2, m.f_id as f_id2, m.f_paymentMode "
+            "uc.f_username as f_username2, m.f_id as f_id2, m.f_paymentMode, m.f_canceled "
             "from m_register m "
             "left join users u on u.f_id=m.f_user "
             "left join f_payment_type p on p.f_id=m.f_paymentMode "
@@ -70,13 +70,23 @@ void FDailyMovement::apply(WReportGrid *rg)
             .setColumn((ui->chCanceled->isChecked() ? 100 : 0), "", tr("Cancel by")) //17
             .setColumn(0, "", tr("RecId")) //18
             .setColumn(0, "", tr("Payment mode")) // 19
+            .setColumn(0, "", tr("Canceled")) //20
             ;
     QStringList items = fPreferences.getDb(def_daily_movement_items).toString().split(";", QString::SkipEmptyParts);
     if (ui->leSale->fHiddenText.length() > 0) {
-        processItems(ui->leSale->fHiddenText);
+        processItems(ui->leSale->fHiddenText, ui->chCanceled->isChecked());
     } else {
         foreach (QString s, items) {
-            processItems(s);
+            processItems(s, ui->chCanceled->isChecked());
+        }
+    }
+    if (fPreferences.getDb(def_daily_report_print_canceled).toInt() == 1 && !ui->chCanceled->isChecked()) {
+        if (ui->leSale->fHiddenText.length() > 0) {
+            processItems(ui->leSale->fHiddenText, true);
+        } else {
+            foreach (QString s, items) {
+                processItems(s, true);
+            }
         }
     }
     rg->fModel->apply(nullptr);
@@ -105,6 +115,11 @@ void FDailyMovement::apply(WReportGrid *rg)
             rg->fModel->setFont(i, 11, f);
             rg->fModel->setFont(i, 12, f);
             rg->fModel->setFont(i, 13, f);
+        }
+    }
+    for (int i = 0; i < rg->fModel->rowCount(); i++) {
+        if (rg->fModel->data(i, 19).toInt() == 1) {
+            rg->fModel->setBackgroundColor(i, Qt::gray);
         }
     }
 }
@@ -202,7 +217,7 @@ void FDailyMovement::processPayments(QList<QVariant> &emptyRow)
     }
 }
 
-void FDailyMovement::processItems(QString items)
+void FDailyMovement::processItems(QString items, bool canceled)
 {
     DoubleDatabase fDD(true, doubleDatabase);
     bool totalRowSeparate = items.contains("+");
@@ -212,7 +227,7 @@ void FDailyMovement::processItems(QString items)
     
     QString query = fReportGrid->fStaticQuery;
     query.replace(":f_wdate", ui->deStart->dateMySql());
-    query.replace(":f_canceled", ui->chCanceled->isChecked() ? "1" : "0");
+    query.replace(":f_canceled", canceled ? "1" : "0");
     query.replace(":where", QString(" and f_itemCode in (%1)").arg(items));
     query.replace(":order", GODaily::value("sort order", "Daily movement").toString());
     fDD.exec(query);
@@ -220,8 +235,8 @@ void FDailyMovement::processItems(QString items)
         return;
     }
     QList<QVariant> emptyRow;
-           //.  1      2     3     4     5    6    7     8      9    10    11    12    13    14    15    16    17    18    19
-    emptyRow << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "";
+           //.  1      2     3     4     5    6    7     8      9    10    11    12    13    14    15    16    17    18    19     20
+    emptyRow << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "";
     QList<QList<QVariant> > rows;
     QMap<int, double> payment;
     for (int i = 0; i < fDD.rowCount(); i++) {

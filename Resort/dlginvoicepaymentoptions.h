@@ -16,10 +16,10 @@ public:
     ~DlgInvoicePaymentOptions();
     static bool doNotPrintVoucher();
     static bool closeAfterSaveCheckout();
+    static bool printInvoiceImmediately();
 
 private slots:
     void on_btnCancel_clicked();
-
     void on_bntSave_clicked();
 
 private:

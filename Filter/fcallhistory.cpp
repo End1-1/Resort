@@ -12,11 +12,6 @@ FCallHistory::FCallHistory(QWidget *parent) :
     ui->chInt->setVisible(r__(cr__call_int));
     ui->chTIn->setVisible(r__(cr__call_tin));
     ui->chTOut->setVisible(r__(cr__call_tout));
-    ui->chIn->setChecked(r__(cr__call_in));
-    ui->chOut->setChecked(r__(cr__call_out));
-    ui->chInt->setChecked(r__(cr__call_int));
-    ui->chTIn->setChecked(r__(cr__call_tin));
-    ui->chTOut->setChecked(r__(cr__call_tout));
     fQuery = "select l.f_local, f_u1, f_date, l.f_time, t.f_name, l.f_remote, l.f_duration, l.f_cost, l.f_acc, l.f_doc \
             from f_call_log l \
             left join f_call_type t on t.f_id=l.f_ident \

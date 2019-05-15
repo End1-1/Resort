@@ -17,6 +17,7 @@ public:
     ~DlgPostCharge();
     virtual void callback(int sel, const QString &code);
     void setVoucher(const QString &id);
+    void setInvoice(const QString &invoice);
     void setRoom(int room);
     void setItem(int item);
     void setAmount(double amount);

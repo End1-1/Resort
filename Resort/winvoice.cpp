@@ -1,6 +1,6 @@
 #include "winvoice.h"
 #include "ui_winvoice.h"
-#include "dlgpostingcharges.h"
+#include "dlgpostcharge.h"
 #include "dlgpaymentsdetails.h"
 #include "cachereservation.h"
 #include "epushbutton.h"
@@ -13,6 +13,7 @@
 #include "pprintinvoice.h"
 #include "printtaxd.h"
 #include "dlginvoiceprintoption.h"
+#include "dlginvoicepaymentoptions.h"
 #include "wreservation.h"
 #include "dlgtaxback2.h"
 #include "cachetaxmap.h"
@@ -516,8 +517,8 @@ void WInvoice::on_tblInvLeft_clicked(const QModelIndex &index)
 
 void WInvoice::on_btnPostingCharges_clicked()
 {
-    DlgPostingCharges *p = new DlgPostingCharges(this);
-    p->setRoom(ui->leRoomCode->text());
+    auto *p = new DlgPostCharge(this);
+    p->setRoom(ui->leRoomCode->asInt());
     p->exec();
     delete p;
     loadInvoice(ui->leInvoice->text());
@@ -716,10 +717,10 @@ void WInvoice::on_btnCheckout_clicked()
         fDD.commit();
 
         if (ui->tblInvLeft->rowCount() > 0) {
-            PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), this);
+            PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
         }
         if (ui->tblInvRight->rowCount() > 0) {
-            PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), this);
+            PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
         }
         CacheReservation r;
         if (r.get(ui->leReserveID->text())) {
@@ -1050,17 +1051,17 @@ void WInvoice::on_btnPrintInvoice_clicked()
     case pio_none:
         break;
     case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), this);
+        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, this);
         break;
     case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), this);
+        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, this);
         break;
     case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), this);
-        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), this);
+        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, this);
         break;
     case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, QStringList(), this);
+        PPrintInvoice(ui->leInvoice->text(), -1, QStringList(), false, this);
         break;
     }
 }

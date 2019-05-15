@@ -13,6 +13,8 @@ WGuest::WGuest(QList<QVariant> &values, QWidget *parent) :
 
     ui->leTitle->setSelector(this, cache(cid_guest_title), ui->leTitle);
     ui->leNationalityCode->setSelector(this, cache(cid_nation), ui->leNationality);
+    ui->cbSex->setCurrentIndex(-1);
+    ui->deBirth->clear();
 
     addWidget(ui->leGuestCode, "Code")
             .addWidget(ui->leTitle, "Title")

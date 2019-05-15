@@ -3,7 +3,7 @@
 
 #include "cachebasestruct.h"
 
-#define cid_nation 53
+static const int cid_nation = 53;
 
 class CacheNation : public CacheBaseStruct
 {

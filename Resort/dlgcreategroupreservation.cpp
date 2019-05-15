@@ -14,7 +14,7 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
 {
     ui->setupUi(this);
     loadRooms();
-
+    fTab = nullptr;
     C5TableWidgetItem *i1 = new C5TableWidgetItem(tr("Any"));
     i1->setData(Qt::UserRole, 0);
     C5TableWidgetItem *i2 = new C5TableWidgetItem(tr("Yes"));
@@ -101,6 +101,13 @@ void DlgCreateGroupReservation::loadRooms()
     makeRooms();
 }
 
+void DlgCreateGroupReservation::setDates(const QDate &d1, const QDate &d2)
+{
+    ui->deArrival->setDate(d1);
+    ui->deDeparture->setDate(d2);
+    makeRooms();
+}
+
 void DlgCreateGroupReservation::setSingleMode(bool mode)
 {
     fSingleMode = mode;
@@ -142,7 +149,6 @@ void DlgCreateGroupReservation::singleHandle(bool v)
         }
     }
 }
-
 
 void DlgCreateGroupReservation::makeRooms()
 {
@@ -211,12 +217,15 @@ void DlgCreateGroupReservation::on_btnCreate_clicked()
                     if (gr->isEnabled()) {
                         if (gr->checked()) {
                             code = gr->code();
+                            fCode = code;
                         }
                     }
                 }
             }
         }
-        fTab->setBaseData(ui->deArrival->date(), ui->deDeparture->date(), code);
+        if (fTab) {
+            fTab->setBaseData(ui->deArrival->date(), ui->deDeparture->date(), code);
+        }
     }
     if (noReservation) {
         message_error(tr("Nothing was selected"));

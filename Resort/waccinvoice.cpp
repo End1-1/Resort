@@ -18,7 +18,7 @@
 #include "pexportinvoicetoexcel.h"
 #include "dlgchartdaterange.h"
 #include "dlgreservationguests.h"
-#include "dlgpostingcharges.h"
+#include "dlgpostcharge.h"
 #include "dlgcl.h"
 #include "wreservation.h"
 #include "dlgremotinvoices.h"
@@ -478,17 +478,17 @@ void WAccInvoice::on_btnPrint_clicked()
     case pio_none:
         break;
     case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, this);
         break;
     case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, this);
         break;
     case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, this);
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, this);
         break;
     case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, ids, this);
+        PPrintInvoice(ui->leInvoice->text(), -1, ids, false, this);
         break;
     }
 }
@@ -788,7 +788,7 @@ void WAccInvoice::on_deEntry_userDateChanged(const QDate &date)
 
 void WAccInvoice::on_btnPostingCharges_clicked()
 {
-    DlgPostingCharges *p = new DlgPostingCharges(this);
+    auto *p = new DlgPostCharge(this);
     p->setInvoice(ui->leInvoice->text());
     p->exec();
     delete p;

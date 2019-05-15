@@ -20,6 +20,7 @@ public:
     void getRoomsList(QStringList &rooms);
     bool fSingleSelection;
     QString fRoomCode;
+
 private slots:
     void on_tblData_doubleClicked(const QModelIndex &index);
     void on_tblSmoke_clicked(const QModelIndex &index);
@@ -28,7 +29,6 @@ private slots:
     void on_btnClearRoomFilter_clicked();
     void on_btnMultiSelect_clicked();
     void on_tblData_clicked(const QModelIndex &index);
-
     void on_tblCategory_clicked(const QModelIndex &index);
 
 private:

@@ -21,7 +21,6 @@ private slots:
     void tblLineEditTextChanged(const QString &text);
     void on_btnRefresh_clicked();
     void on_btnSave_clicked();
-
     void on_tbl_doubleClicked(const QModelIndex &index);
 
 private:

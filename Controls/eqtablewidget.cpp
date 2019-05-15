@@ -28,6 +28,16 @@ EQTableWidget::EQTableWidget(QWidget *parent) :
     QTableWidget(parent)
 {
     setItemDelegate(new TableDelegate());
+    setWordWrap(false);
+}
+
+void EQTableWidget::fitToColumns()
+{
+    int w = 40;
+    for (int i = 0; i < columnCount(); i++) {
+        w += columnWidth(i);
+    }
+    setMinimumSize(w, 0);
 }
 
 void EQTableWidget::setValue(int row, int column, const QVariant &data, int role)
@@ -78,6 +88,15 @@ QString EQTableWidget::toString(int row, int column)
     default:
         return v.toString();
     }
+}
+
+QDate EQTableWidget::toDate(int row, int column)
+{
+    C5TableWidgetItem *i = item(row, column);
+    if (!i) {
+        return QDate();
+    }
+    return i->data(Qt::EditRole).toDate();
 }
 
 C5TableWidgetItem *EQTableWidget::item(int row, int column)

@@ -103,6 +103,19 @@ WReservationRoomTab::~WReservationRoomTab()
 
 bool WReservationRoomTab::check(int room, const QDate &start, const QDate &end, const QString &rid, QString &errorMsg)
 {
+    if (start < WORKING_DATE) {
+        CacheReservation cr;
+        if (cr.get(rid)) {
+            if (cr.fState() == RESERVE_RESERVE) {
+                errorMsg = tr("Invalid entry date");
+                return false;
+            }
+        }
+    }
+    if (start > end) {
+        errorMsg = tr("Date of entry cannot be greater than date of departure");
+        return false;
+    }
     DoubleDatabase fDD(true, doubleDatabase);
     if (room == 0) {
         return true;
@@ -1111,7 +1124,7 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
         BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
         BroadcastThread::cmdRefreshCache(cid_active_room, ui->leRoomCode->text());
-        PPrintCheckin::print(ui->leReservId->text());
+        PPrintCheckin::print(ui->leReservId->text(), false);
     } else {
         fDD.rollback();
     }

@@ -53,7 +53,7 @@ PPrintScene *PPrintPreview::addScene(int tmpl, PrintOrientation po)
     return ps;
 }
 
-int PPrintPreview::exec()
+int PPrintPreview::exec(bool noPreview)
 {
     if (fPrintScene.count() > 0) {
         setPage();
@@ -65,7 +65,12 @@ int PPrintPreview::exec()
     ui->btnLast->setEnabled(multiPage);
     ui->btnFirst->setEnabled(multiPage);
     ui->btnNext->setEnabled(multiPage);
-    return  QDialog::exec();
+    if (noPreview) {
+        on_btnPrint_clicked();
+        return QDialog::Accepted;
+    } else {
+        return  QDialog::exec();
+    }
 }
 
 void PPrintPreview::showEvent(QShowEvent *e)

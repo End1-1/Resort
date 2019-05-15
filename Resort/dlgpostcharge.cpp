@@ -98,6 +98,11 @@ void DlgPostCharge::setVoucher(const QString &id)
     ui->leAmount->setReadOnly(!r__(cr__super_correction));
 }
 
+void DlgPostCharge::setInvoice(const QString &invoice)
+{
+    ui->wRoom->setInvoice(invoice);
+}
+
 void DlgPostCharge::setRoom(int room)
 {
     ui->tabWidget->setTabEnabled(2, false);

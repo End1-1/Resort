@@ -35,15 +35,15 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
 {
     PPrintPreview *pp = new PPrintPreview();
     PPrintScene *ps = pp->addScene(0, Portrait);
-    PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, tr("RESERVATION CONFIRMATION"), 0, QFont("Arial", 50));
+    PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, tr("RESERVATION CONFIRMATION"), nullptr, QFont("Arial", 50));
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
     QString inv = QString("S/N %1").arg(fSource->valueForWidget("Doc number"));
-    PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, 0, QFont("Arial", 20));
+    PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, nullptr, QFont("Arial", 20));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
     trInvoice->setBorders(false, false, false, false);
     PTextRect *trInfo = new PTextRect(1500, 20, 600, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
-                                      0, QFont("Arial", 25));
+                                      nullptr, QFont("Arial", 25));
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
     trInfo->setBorders(false, false, false, false);
     ps->addItem(trInfo);
@@ -54,7 +54,7 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     logo->setRect(QRectF(20, 10, 500, 300));
     PTextRect th;
     th.setBorders(false, false, false, false);
-    PTextRect *r = 0;
+    PTextRect *r = nullptr;
     QFont f(QFont("Arial", 25));
     f.setBold(true);
     th.setFont(f);
@@ -251,5 +251,5 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
 
 void DlgPrintReservation::on_btnPrintRegistrationCard_clicked()
 {
-    PPrintCheckin::print(fSource->reserveId());
+    PPrintCheckin::print(fSource->reserveId(), false);
 }

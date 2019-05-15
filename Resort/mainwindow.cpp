@@ -24,6 +24,7 @@
 #include "dlgtransferlog.h"
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
+#include "wquickreservations.h"
 #include "wwelcome.h"
 #include "fhouseitems.h"
 #include "fwakeupcall.h"
@@ -134,7 +135,6 @@
 #include "fexpectedarrivalsimple.h"
 #include "finhouseguest.h"
 #include "fexpectedarrivals.h"
-#include "dlgpostingcharges.h"
 #include "dlgdiscount.h"
 #include "wrecheckin.h"
 #include "fcashreportsummary.h"
@@ -562,6 +562,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
 
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
+    ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
     ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
     ui->actionExpected_arrivals->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->actionExpected_arrivals_departures_2->setVisible(r__(cr__expected_arrivals_deparutures));
@@ -2207,4 +2208,9 @@ void MainWindow::on_actionTransfer_log_triggered()
     DlgTransferLog *d = new DlgTransferLog(this);
     d->exec();
     delete d;
+}
+
+void MainWindow::on_actionQuick_reservations_triggered()
+{
+    addTab<WQuickReservations>();
 }

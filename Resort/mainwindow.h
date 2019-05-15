@@ -179,8 +179,8 @@ private slots:
     void on_actionTemporary_receipts_triggered();
     void on_actionGuest_Tray_Ledger_By_Date_triggered();
     void on_actionRecover_invoice_triggered();
-
     void on_actionTransfer_log_triggered();
+    void on_actionQuick_reservations_triggered();
 
 private:
     Ui::MainWindow *ui;

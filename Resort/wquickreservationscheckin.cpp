@@ -369,9 +369,11 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
 
 void WQuickReservationsCheckin::timeout()
 {
+    fTimer.stop();
     DoubleDatabase dd(true, doubleDatabase);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         ui->tbl->setCurrentCell(i, 0);
         checkIn(i, dd);
+        qApp->processEvents();
     }
 }

@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -330,14 +330,14 @@
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

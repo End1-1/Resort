@@ -60,11 +60,11 @@ WInvoice::WInvoice(QWidget *parent) :
 
     ui->leRoomCode->setSelector(this, cache(cid_active_room), ui->leRoom, HINT_ACTIVE_ROOM);
 
-    ui->btnPostingCharges->setEnabled(r__(cr__postchage_vaucher));
-    ui->btnPaymentsDetails->setEnabled(r__(cr__receipt_vaucher));
-    ui->btnDiscount->setEnabled(r__(cr__discount_vaucher));
-    ui->btnTransfer->setEnabled(r__(cr__transfer_vaucher));
-    ui->btnTransferAmount->setEnabled(r__(cr__transfer_vaucher));
+    ui->btnPostingCharges->setVisible(r__(cr__postchage_vaucher));
+    ui->btnPaymentsDetails->setVisible(r__(cr__receipt_vaucher));
+    ui->btnDiscount->setVisible(r__(cr__discount_vaucher));
+    ui->btnTransfer->setVisible(r__(cr__transfer_vaucher));
+    ui->btnTransferAmount->setVisible(r__(cr__transfer_vaucher));
     ui->btnWakeup->setVisible(r__(cr__wakeupcall));
     ui->btnAdvance->setVisible(r__(cr__advance_voucher_invoice));
     connect(cache(cid_active_room), SIGNAL(updated(int,QString)), this, SLOT(cacheUpdated(int, QString)));
@@ -159,9 +159,11 @@ void WInvoice::loadInvoice(const QString &id)
             "where rs.f_invoice=" + ap(id);
     fDD.exec(query);
     if (fDD.rowCount() == 0) {
+        enableButtons(false);
         message_error(tr("Invoice number wrong"));
         return;
     }
+    enableButtons(true);
     QList<QVariant> &row = fDD.fDbRows[0];
     int c = 0;
     c++; //Skip invoice id
@@ -274,14 +276,6 @@ void WInvoice::loadInvoice(const QString &id)
     fTrackControl->saveChanges();
     ui->teRemark->setReadOnly(false);
     setupTabTextAndIcon(tr("Invoice for room") + " #" + ui->leRoomCode->text(), ":/images/invoice.png");
-    QListIterator<QObject*> it(ui->wBtn->children());
-    while (it.hasNext()) {
-        QWidget *w = dynamic_cast<QWidget*>(it.next());
-        if (w) {
-            w->setEnabled(true);
-        }
-    }
-    ui->btnTaxPrint->setEnabled(true);
 }
 
 void WInvoice::loadReservation(const QString &id)
@@ -478,6 +472,17 @@ double WInvoice::countTotal(QTableWidget *t)
         result += amount * sign;
     }
     return result;
+}
+
+void WInvoice::enableButtons(bool v)
+{
+    QObjectList ol = ui->wBtn->children();
+    for (QObject *o: ol) {
+       QWidget *w = dynamic_cast<QWidget*>(o);
+       if (w) {
+           w->setEnabled(v);
+       }
+    }
 }
 
 void WInvoice::on_btnDoubleRight_clicked()
@@ -931,6 +936,7 @@ void WInvoice::on_btnCancel_clicked()
 
 void WInvoice::clearInvoice()
 {
+    enableButtons(false);
     ui->leArrangement->clear();
     ui->leRoomCode->clear();
     ui->leRoom->clear();
@@ -977,8 +983,8 @@ void WInvoice::on_btnTransfer_clicked()
         QList<QVariant> row;
         row << ui->tblInvLeft->item(t1.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvLeft->item(t1.at(i).row(), 2)->data(Qt::DisplayRole);
+        row << ui->tblInvLeft->item(t1.at(i).row(), 3)->data(Qt::DisplayRole);
         row << ui->tblInvLeft->item(t1.at(i).row(), 4)->data(Qt::DisplayRole);
-        row << ui->tblInvLeft->item(t1.at(i).row(), 5)->data(Qt::DisplayRole);
         d->addRow(row);
     }
     for (int i = 0; i < t2.count(); i++) {
@@ -988,8 +994,8 @@ void WInvoice::on_btnTransfer_clicked()
         QList<QVariant> row;
         row << ui->tblInvRight->item(t2.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvRight->item(t2.at(i).row(), 2)->data(Qt::DisplayRole);
+        row << ui->tblInvRight->item(t2.at(i).row(), 3)->data(Qt::DisplayRole);
         row << ui->tblInvRight->item(t2.at(i).row(), 4)->data(Qt::DisplayRole);
-        row << ui->tblInvRight->item(t2.at(i).row(), 5)->data(Qt::DisplayRole);
         d->addRow(row);
     }
     d->setRoomByCode(ui->leRoomCode->text());

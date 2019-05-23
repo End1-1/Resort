@@ -9,6 +9,9 @@ DlgPrintTaxSM::DlgPrintTaxSM(QWidget *parent) :
 {
     ui->setupUi(this);
     fTaxCode = 0;
+    fCashAmount = 0;
+    fCardAmount = 0;
+    fPrepaid = 0;
 }
 
 DlgPrintTaxSM::~DlgPrintTaxSM()
@@ -18,7 +21,7 @@ DlgPrintTaxSM::~DlgPrintTaxSM()
 
 void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty)
 {
-    fPrintTax.addGoods(dep, adgt, code, name, price, qty, 0);
+    fPrintTax.addGoods(dep, adgt, code, name, price, qty, 0.00);
 }
 
 int DlgPrintTaxSM::exec()
@@ -51,7 +54,7 @@ int DlgPrintTaxSM::execTaxback()
     return BaseExtendedDialog::exec();
 }
 
-bool DlgPrintTaxSM::printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode)
+bool DlgPrintTaxSM::printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json)
 {
     DlgPrintTaxSM *d = new DlgPrintTaxSM(fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(tr("Printing advance") + " " + vaucher);
@@ -60,6 +63,7 @@ bool DlgPrintTaxSM::printAdvance(double amountCash, double amountCard, const QSt
     d->fCardAmount = amountCard;
     bool result = d->execAdvance() == TAX_OK;
     taxCode = d->fTaxCode;
+    json = d->fJson;
     delete d;
     return result;
 }
@@ -106,9 +110,10 @@ void DlgPrintTaxSM::load()
     outJson = "{\"rseq\":77,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}";
 #endif
     if (result == pt_err_ok) {
-        QJsonDocument jd = QJsonDocument::fromJson(outJson.toUtf8());
-        QJsonObject jo = jd.object();
-        fTaxCode = jo["rseq"].toInt();
+        fJson = inJson;
+        QString ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime;
+        PrintTaxN::parseResponse(outJson, ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime);
+        fTaxCode = onumber.toInt();
         v[":f_replyTaxCode"] = QString::number(fTaxCode);
         v[":f_id"] = id;
         v.exec("update tax_print set f_replyTaxCode=:f_replyTaxCode where f_id=:f_id");
@@ -153,10 +158,10 @@ void DlgPrintTaxSM::loadAdvance()
     outJson = "{\"rseq\":77,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}";
 #endif
     if (result == pt_err_ok) {
-        QJsonDocument jd = QJsonDocument::fromJson(outJson.toUtf8());
-        QJsonObject jo = jd.object();
-        fTaxCode = jo["rseq"].toInt();
-        v[":f_replyTaxCode"] = QString::number(fTaxCode);
+        fJson = inJson;
+        QString ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime;
+        PrintTaxN::parseResponse(outJson, ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime);
+        v[":f_replyTaxCode"] = QString::number(onumber.toInt());
         v[":f_id"] = id;
         v.exec("update tax_print set f_replyTaxCode=:f_replyTaxCode where f_id=:f_id");
         DoubleDatabase fDD(true, doubleDatabase);

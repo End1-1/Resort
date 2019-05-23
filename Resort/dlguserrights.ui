@@ -274,10 +274,20 @@
        <item>
         <widget class="EQCheckBox" name="chQuickReservations">
          <property name="text">
-          <string>Quick reservations </string>
+          <string>Quick checkin </string>
          </property>
          <property name="Tag" stdset="0">
           <number>132</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chQuickCheckout">
+         <property name="text">
+          <string>Quick checkout</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>133</number>
          </property>
         </widget>
        </item>

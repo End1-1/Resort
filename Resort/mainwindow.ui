@@ -158,10 +158,17 @@
     <property name="title">
      <string>Application</string>
     </property>
+    <widget class="QMenu" name="menuPreferences">
+     <property name="title">
+      <string>Preferences</string>
+     </property>
+     <addaction name="actionTax_server"/>
+    </widget>
     <addaction name="actionUsers_groups"/>
     <addaction name="actionUsers"/>
     <addaction name="actionTrack_changes"/>
     <addaction name="actionGlobal_config"/>
+    <addaction name="menuPreferences"/>
     <addaction name="actionReport_buillder"/>
     <addaction name="actionExport_invoices"/>
     <addaction name="actionExport_active_reservations"/>
@@ -205,6 +212,7 @@
      <string>Reception</string>
     </property>
     <addaction name="actionQuick_reservations"/>
+    <addaction name="actionQuick_checkout"/>
     <addaction name="actionIn_house_guest"/>
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
@@ -1475,7 +1483,21 @@
      <normaloff>:/images/bedroom.png</normaloff>:/images/bedroom.png</iconset>
    </property>
    <property name="text">
-    <string>Quick reservations</string>
+    <string>Quick checkin</string>
+   </property>
+  </action>
+  <action name="actionTax_server">
+   <property name="text">
+    <string>Tax server</string>
+   </property>
+  </action>
+  <action name="actionQuick_checkout">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/departure.png</normaloff>:/images/departure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quick checkout</string>
    </property>
   </action>
  </widget>

@@ -128,6 +128,11 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
     }
 }
 
+void DlgReceiptVaucher::setSide(quint32 side)
+{
+    fDoc.fSide = side;
+}
+
 void DlgReceiptVaucher::on_btnSave_clicked()
 {
     QString errors;

@@ -1009,6 +1009,7 @@ bool WReservationRoomTab::checkIn(QString &errorString)
                 fDD[":f_paymentMode"] = PAYMENT_CREDIT;
                 fDD[":f_creditCard"] = 0;
                 fDD[":f_cityLedger"] = 0;
+                fDD[":f_vatmode"] = ui->cbVAT->currentData();
                 fDD[":f_paymentComment"] = "";
                 fDD[":f_dc"] = "CREDIT";
                 fDD[":f_sign"] = 1;
@@ -1052,6 +1053,7 @@ bool WReservationRoomTab::checkIn(QString &errorString)
                 fDD[":f_amountUsd"] = def_usd;
                 fDD[":f_fiscal"] = 0;
                 fDD[":f_paymentMode"] = PAYMENT_CREDIT;
+                fDD[":f_vatmode"] = ui->cbVAT->currentData();
                 fDD[":f_creditCard"] = 0;
                 fDD[":f_cityLedger"] = 0;
                 fDD[":f_paymentComment"] = "";

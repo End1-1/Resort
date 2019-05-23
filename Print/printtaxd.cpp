@@ -30,7 +30,7 @@ void PrintTaxD::build()
     QSet<QString> depts;
     ui->tblData->clearContents();
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
-                                     0, 0, 200, 100, 30, 0, 0, 0);
+                                     0, 0, 200, 100, 30, 0, 0, 70, 100);
     ui->tblData->setRowCount(fRecList.count());
     for (int i = 0; i < fRecList.count(); i++) {
         depts << fDept.at(i);
@@ -43,6 +43,7 @@ void PrintTaxD::build()
         ui->tblData->setItem(i, 5, new C5TableWidgetItem(fAdgCode.at(i)));
         ui->tblData->setItem(i, 6, new C5TableWidgetItem(fTaxNameList.at(i)));
         ui->tblData->setItem(i, 7, new C5TableWidgetItem(fQtyList.at(i)));
+        ui->tblData->setItem(i, 8, new C5TableWidgetItem(QString::number(fQtyList.at(i).toDouble() * fPriceList.at(i).toDouble())));
     }
     countAmount();
     int col = 0;

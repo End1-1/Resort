@@ -139,7 +139,7 @@
 #define cr__print_partial_invoice 130
 #define cr__change_postcharge_wdate 131
 #define cr__quick_reservations 132
-#define cr__1
+#define cr__quick_checkout 133
 #define cr__1
 #define cr__1
 #define cr__1

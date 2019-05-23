@@ -50,11 +50,12 @@ void DlgPreTax::on_tblData_clicked(const QModelIndex &index)
 
 void DlgPreTax::on_btnOk_clicked()
 {
+    QString out;
     for (int  i = 0; i < ui->tblData->rowCount(); i++) {
         C5TableWidgetItem *item = ui->tblData->item(i, 3);
         if (item->checkState() == Qt::Checked) {
             int tc;
-            if (DlgPrintTaxSM::printAdvance(ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc)) {
+            if (DlgPrintTaxSM::printAdvance(ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc, out)) {
                 DoubleDatabase fDD(true, doubleDatabase);
                 fDD[":f_fiscal"] = tc;
                 fDD.update("m_register", where_id(ap(ui->tblData->toInt(i, 0))));

@@ -232,7 +232,7 @@ RDesk::RDesk(QWidget *parent) :
     ui->tblComplex->setVisible(false);
     fCanClose = false;
     fShowRemoved = false;
-    fTable  = 0;
+    fTable  = nullptr;
     fCloseTimeout = 0;
     ui->tblPart->setItemDelegate(new PartItemDelegate());
     ui->tblType->setItemDelegate(new TypeItemDelegate());
@@ -524,7 +524,7 @@ void RDesk::recover()
     fDD.update("r_table", where_id(table));
     fDD[":f_state"] = ORDER_STATE_OPENED;
     fDD.update("o_header", where_id(ap(ordNum)));
-    QString rrId = uuid(VAUCHER_RECOVER_N);
+    QString rrId = uuidx(VAUCHER_RECOVER_N);
     fDD[":f_id1"] = rrId;
     fDD[":f_source1"] = VAUCHER_RECOVER_N;
     fDD[":f_itemCode"] = 41;
@@ -586,7 +586,7 @@ void RDesk::setComplexMode()
         fDD[":f_complex"] = dc->fId;
         fDD[":f_complexId"] = dc->fId;
         fDD[":f_adgt"] = dc->fAdgt;
-        dc->fRecId = uuid("DR");
+        dc->fRecId = uuidx("DR");
         fDD.insertId("o_dish", dc->fRecId);
         if (dc->fRecId.isEmpty()) {
             message_error("Application will quit due an program error.");
@@ -1209,7 +1209,7 @@ void RDesk::addDishToOrder(DishStruct *d, bool dontCheckTable)
     od->fSvcValue = d->fSvcValue;
 
     countDish(od);
-    od->fRecId = uuid("DR");
+    od->fRecId = uuidx("DR");
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.insertId("o_dish", od->fRecId);
     fDD[":f_header"] = fTable->fOrder;
@@ -1445,7 +1445,7 @@ void RDesk::checkOrderHeader(TableStruct *t, DishStruct *od, bool skipService)
         QString query = QString("select f_id from r_table where f_id='%1' for update")
                 .arg(t->fId);
         fDD.exec(query);
-        t->fOrder = uuid(VAUCHER_POINT_SALE_N + Hall::getHallById(fTable->fHall)->fPrefix);
+        t->fOrder = uuidx(VAUCHER_POINT_SALE_N + Hall::getHallById(fTable->fHall)->fPrefix);
         fDD.insertId("o_header", t->fOrder);
         fDD[":f_state"] = ORDER_STATE_OPENED;
         fDD[":f_table"] = t->fId;
@@ -1834,7 +1834,7 @@ void RDesk::printReceipt(bool printModePayment)
     ui->tblOrder->viewport()->update();
 
     DoubleDatabase drTax;
-    drTax.setDatabase(BaseUID::fAirHost, "airwick", BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    drTax.setDatabase(BaseUIDX::fAirHost, "airwick", BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     drTax.open(true, false);
     drTax[":f_order"] = fTable->fOrder;
     drTax.exec("select f_replyTaxCode from tax_print where f_order=:f_order and f_replyResult=0");
@@ -2288,7 +2288,7 @@ void RDesk::on_btnTrash_clicked()
                             r->fState = reason.toInt();
                             r->fQty = num;
                             r->fQtyPrint = num;
-                            r->fRecId = uuid("DR");
+                            r->fRecId = uuidx("DR");
                             fDD.insertId("o_dish", r->fRecId);
                             fDD[":f_header"] = fTable->fOrder;
                             fDD[":f_state"] = r->fState;
@@ -2743,7 +2743,7 @@ void RDesk::on_btnTransfer_clicked()
         fDD[":f_complexId"] = 0;
         fDD[":f_adgt"] = od.fAdgt;
         fDD[":f_complexRec"] = od.fComplexRecId;
-        od.fRecId = uuid("DR");
+        od.fRecId = uuidx("DR");
         fDD[":f_id"] = od.fRecId;
         fDD.insert("o_dish", false);
         if (od.fRecId.isEmpty()) {

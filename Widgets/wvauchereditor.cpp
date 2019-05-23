@@ -67,7 +67,6 @@ WVaucherEditor::WVaucherEditor(QWidget *parent) :
     ui->leVATCode->setInitialValue(VAT_INCLUDED);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName, HINT_CL);
-    ui->leInvoice->setSelector(this, cache(cid_checkout_invoice), 0, HINT_INVOICE);
 
     fFlagNew = false;
 }
@@ -217,6 +216,9 @@ void WVaucherEditor::loadVaucher(const QString &id)
     ui->teRemarks->setPlainText(fDD.getValue("f_remarks").toString());
     ui->leRb->setText(fDD.getString("f_rb"));
     fTc->resetChanges();
+    fTc->fReservation = ui->leReservation->text();
+    fTc->fInvoice = ui->leInvoice->text();
+    fTc->fRecord = ui->leCode->text();
 }
 
 bool WVaucherEditor::errorCheck()

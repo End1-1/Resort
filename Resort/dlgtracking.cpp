@@ -41,6 +41,9 @@ void DlgTracking::showTracking(int trackId, const QString &windowId)
 
 void DlgTracking::showTracking(const QString &windowId)
 {
+    if (windowId.isEmpty()) {
+        return;
+    }
     if (!r__(cr__tracking_chnages_individual)) {
         message_error(tr("Access denied"));
         return;

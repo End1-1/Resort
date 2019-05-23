@@ -533,10 +533,10 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                 break;
             case PAYMENT_CL:
 #ifdef _METROPOL_
-                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, C/L %2").arg(ui->leGuest->text()).arg(lineEdit(t, i, 4)->text()));
+                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, %2").arg(ui->leRoomCode->text()).arg(ui->leGuest->text()));
 #endif
                 clCode = lineEdit(t, i, 4)->text().toInt();
-                modeName = lineEdit(t, i, 7)->text();
+                modeName = "CHECKOUT " + lineEdit(t, i, 7)->text();
                 break;
             }
 
@@ -591,7 +591,8 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             if (t->item(i, 10)->text() == "AV") {
                 if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i, 5)->text() + " AMD") == QDialog::Accepted) {
                     int tc;
-                    if (DlgPrintTaxSM::printAdvance(lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(), rid, tc)) {
+                    QString outJson;
+                    if (DlgPrintTaxSM::printAdvance(lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(), rid, tc, outJson)) {
                         fDD[":f_prepaid"] = lineEdit(t, i, 5)->text().toDouble();
                         fDD[":f_id"] = ui->leInvoice->text();
                         fDD.exec("update m_v_invoice set f_prepaid=f_prepaid+:f_prepaid where f_id=:f_id");

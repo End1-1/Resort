@@ -17,17 +17,15 @@ public:
     virtual void setupTab();
 
 private slots:
-    void cancelRow();
-    void applyRow();
-    void on_btnPrint_clicked();
-    void on_btnJustAppend_clicked();
-    void on_leCard_textChanged(const QString &arg1);
-    void on_leCash_textChanged(const QString &arg1);
+    void on_btnNew_clicked();
 
 private:
     Ui::DlgQuickAdvance *ui;
-    void appendRow(const QString &tax);
-    void countTotal();
+
+private slots:
+    void refresh();
+    void on_btnRefresh_clicked();
+    void on_tbl_doubleClicked(const QModelIndex &index);
 };
 
 #endif // DLGQUICKADVANCE_H

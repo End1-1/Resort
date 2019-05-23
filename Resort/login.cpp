@@ -20,7 +20,7 @@ Login::Login(QWidget *parent) :
     ui(new Ui::Login)
 {
     ui->setupUi(this);    
-    connect(ui->cbDatabase, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {fPreferences.set(def_last_db_combo_index, index);});
+    connect(ui->cbDatabase, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [](int index) {fPreferences.set(def_last_db_combo_index, index);});
     ui->leUsername->setText(__s.value("_last_login_user_name").toString());
     if (ui->leUsername->text().length() > 0) {
         ui->lePassword->setFocus();
@@ -108,11 +108,11 @@ void Login::readDatagram()
                     DoubleDatabase::logEvent("Base::fAirHost" + BaseUIDX::fAirHost);
 
                 }
-                TrackControl::fDbHost = jObj["loghost"].toString();
-                TrackControl::fDbDb = jObj["logdb"].toString();
-                TrackControl::fDbUser = jObj["loguser"].toString();
-                TrackControl::fDbPass = jObj["logpass"].toString();
-                TrackControl::setFirstConnection();
+//                TrackControl::fDbHost = jObj["loghost"].toString();
+//                TrackControl::fDbDb = jObj["logdb"].toString();
+//                TrackControl::fDbUser = jObj["loguser"].toString();
+//                TrackControl::fDbPass = jObj["logpass"].toString();
+//                TrackControl::setFirstConnection();
                 _IDGENMODE_ = jObj["idgen"].toInt();
                 db[":f_user"] = HOSTNAME + "." + fPreferences.hostUsername();
                 db.exec("select * from f_db where f_id in (select f_db from f_access where lower(f_user)=lower(:f_user) and f_right=1)");
@@ -260,20 +260,26 @@ void Login::on_btnLogin_clicked()
         __dd2Database = dbParams[1];
         __dd2Username = dbParams[2];
         __dd2Password = dbParams[3];
-        TrackControl::fDbHost = __dd2Host;
-        TrackControl::fDbDb = __dd2Database;
-        TrackControl::fDbUser = __dd2Username;
-        TrackControl::fDbPass = __dd2Password;
-        TrackControl::fDbHostReserve = __dd1Host;
-        TrackControl::fDbDbReserve = __dd1Database;
-        TrackControl::fDbUserReserve = __dd1Username;
-        TrackControl::fDbPassReserve = __dd1Password;
-        TrackControl::setFirstConnection();
         fDD.setDatabase(__dd2Host, __dd2Database, __dd2Username, __dd2Password, 2);
         doubleDatabase = secondDb && true;
     }  else {
         doubleDatabase = false;
     }
+    QStringList log = fPreferences.getDb(def_log_main_db).toString().split(";", QString::SkipEmptyParts);
+    if (log.count() == 4) {
+        TrackControl::fDbHost = log.at(0);
+        TrackControl::fDbDb = log.at(1);
+        TrackControl::fDbUser = log.at(2);
+        TrackControl::fDbPass = log.at(3);
+    }
+    log = fPreferences.getDb(def_log_reserve_db).toString().split(";", QString::SkipEmptyParts);
+    if (log.count() == 4) {
+        TrackControl::fDbHostReserve = log.at(0);
+        TrackControl::fDbDbReserve = log.at(1);
+        TrackControl::fDbUserReserve = log.at(2);
+        TrackControl::fDbPassReserve = log.at(3);
+    }
+    TrackControl::setFirstConnection();
 
     fDD.close();
     fDD.resetDoNotUse();

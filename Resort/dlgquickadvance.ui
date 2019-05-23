@@ -23,110 +23,40 @@
    <item>
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="WDate2" name="wDate" native="true"/>
+      </item>
+      <item>
+       <widget class="QToolButton" name="btnRefresh">
         <property name="text">
-         <string>Room</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="EQLineEdit" name="leRoom">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QPushButton" name="btnNew">
         <property name="text">
-         <string>Qty</string>
+         <string>New</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leQty">
-        <property name="maximumSize">
-         <size>
-          <width>50</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Amount cash</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leCash">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Amount card</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leCard">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Card type</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leCardType">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leCardTypeName">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/plus.png</normaloff>:/images/plus.png</iconset>
         </property>
        </widget>
       </item>
@@ -142,20 +72,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnPrint">
-        <property name="text">
-         <string>Print tax</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnJustAppend">
-        <property name="text">
-         <string>Just append</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -194,12 +110,12 @@
      </column>
      <column>
       <property name="text">
-       <string>Operator</string>
+       <string>Type</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Room</string>
+       <string>Operator</string>
       </property>
      </column>
      <column>
@@ -214,32 +130,17 @@
      </column>
      <column>
       <property name="text">
-       <string>Card</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Credit card</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string>Tax</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Cancel</string>
+       <string>Json</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Move to room</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Qty</string>
+       <string>Remarks</string>
       </property>
      </column>
     </widget>
@@ -354,17 +255,15 @@
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
   </customwidget>
+  <customwidget>
+   <class>WDate2</class>
+   <extends>QWidget</extends>
+   <header location="global">wdate2.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>leRoom</tabstop>
-  <tabstop>leQty</tabstop>
-  <tabstop>leCash</tabstop>
-  <tabstop>leCard</tabstop>
-  <tabstop>leCardType</tabstop>
-  <tabstop>leCardTypeName</tabstop>
-  <tabstop>btnPrint</tabstop>
-  <tabstop>btnJustAppend</tabstop>
- </tabstops>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

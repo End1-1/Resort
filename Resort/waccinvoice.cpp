@@ -168,6 +168,7 @@ void WAccInvoice::load(const QString &id)
     ui->leInvoice->setText(id);
     ui->leInvoice->fHiddenText = id;
     fDb[":f_id"] = id;
+#ifdef _METROPOL_
     QString query = "select r.f_startDate, r.f_endDate, r.f_checkInDate, r.f_checkInTime, "
             "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
             "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
@@ -184,6 +185,24 @@ void WAccInvoice::load(const QString &id)
             "left join users u2 on u2.f_id=r.f_checkOutUser "
             "left join f_cardex c on r.f_cardex=c.f_cardex "
             "where r.f_invoice=:f_id";
+#else
+    QString query = "select r.f_startDate, r.f_endDate, r.f_checkInDate, r.f_checkInTime, "
+            "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
+            "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
+            "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
+            "r.f_cardex,  "
+            "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
+            "from f_reservation r "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "left join users u1 on u1.f_id=r.f_checkInUser "
+            "left join users u2 on u2.f_id=r.f_checkOutUser "
+            "left join f_cardex c on r.f_cardex=c.f_cardex "
+            "where r.f_invoice=:f_id";
+#endif
     fDb.exec(query);
     if (!fDb.nextRow()) {
         message_error(tr("Incorrect invoice number, or end reached"));
@@ -226,13 +245,21 @@ void WAccInvoice::load(const QString &id)
     if (v.get(ui->leVATMode->fHiddenText)) {
         ui->leVATMode->setText(v.fName());
     }
-
+#ifdef _METROPOL_
+    query = "select m.f_id, m.f_sign, m.f_wdate, m.f_itemcode, if(m.f_cityledger>0, m.f_paymentcomment, m.f_finalName), "
+            "m.f_amountAmd, m.f_amountVat, m.f_fiscal, if(m.f_side=0,'G', 'C'), m.f_source, m.f_id "
+            "from m_register m "
+            "where m.f_inv=" + ap(ui->leInvoice->text()) + " " +
+            "and m.f_canceled=0 and m.f_finance in (:fin) "
+            "order by m.f_wdate, m.f_time ";
+#else
     query = "select m.f_id, m.f_sign, m.f_wdate, m.f_itemcode, m.f_finalName, "
             "m.f_amountAmd, m.f_amountVat, m.f_fiscal, if(m.f_side=0,'G', 'C'), m.f_source, m.f_id "
             "from m_register m "
             "where m.f_inv=" + ap(ui->leInvoice->text()) + " " +
             "and m.f_canceled=0 and m.f_finance in (:fin) "
             "order by m.f_wdate, m.f_time ";
+#endif
     if (ui->chViewAllVauchers->isChecked()) {
         query.replace(":fin", "0,1");
     } else {

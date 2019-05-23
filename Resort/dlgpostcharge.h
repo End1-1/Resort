@@ -23,6 +23,7 @@ public:
     void setAmount(double amount);
 
 private slots:
+    void roomChanged();
     void on_tabWidget_currentChanged(int index);
     void on_btnCancel_clicked();
     void on_btnSave_clicked();

@@ -20,6 +20,12 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 
+private slots:
+    void on_btnAddGuest_clicked();
+    void on_btnRemoveGuest_clicked();
+    void on_btnFullInfo_clicked();
+    void on_btnChangeGuest_clicked();
+
 private:
     Ui::WQuickReservationsGuests *ui;
     QString fReserve;

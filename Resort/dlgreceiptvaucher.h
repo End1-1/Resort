@@ -17,6 +17,7 @@ public:
     ~DlgReceiptVaucher();
     void setVoucher(const QString &id);
     virtual void callback(int sel, const QString &code);
+    void setSide(quint32 side);
 
 private slots:
     void on_btnSave_clicked();

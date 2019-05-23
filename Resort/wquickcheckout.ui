@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WQuickCheckout</class>
+ <widget class="QWidget" name="WQuickCheckout">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1075</width>
+    <height>598</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTreeWidget" name="tw">
+     <column>
+      <property name="text">
+       <string>Room</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Guest</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Invoice</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Amount</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Amount</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Guest balance</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Company balance</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Total balance</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Departure</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string/>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

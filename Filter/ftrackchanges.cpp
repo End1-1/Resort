@@ -42,6 +42,7 @@ void FTrackChanges::apply(WReportGrid *rg)
         where += " and c.f_table in (" + ui->leType->fHiddenText + ") ";
     }
     where += " order by f_date desc, f_time desc ";
+    rg->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
     buildQuery(rg, where);
 }
 

@@ -71,6 +71,7 @@ private:
     void clearInvoice();
     void countTotals();
     double countTotal(QTableWidget *t);
+    void enableButtons(bool v);
 };
 
 #endif // WINVOICE_H

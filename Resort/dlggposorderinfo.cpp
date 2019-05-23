@@ -203,8 +203,8 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
     fDD.exec("update m_register set f_fiscal=1 where f_id=:f_id");
     pt->fInvoice = ui->leOrder->text();
     pt->build();
-    pt->fAmountCash = float_str(ui->leTotal->asDouble() - ui->leCardAmount->asDouble(), 2);
-    pt->fAmountCard = float_str(ui->leCardAmount->asDouble(), 2);
+    pt->fAmountCash = QString::number(ui->leTotal->asDouble() - ui->leCardAmount->asDouble(), 'f', 2);
+    pt->fAmountCard = QString::number(ui->leCardAmount->asDouble(), 'f',  2);
     pt->print();
     delete pt;
 }

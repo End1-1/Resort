@@ -20,9 +20,14 @@ DEFINES += _METROPOL_
 SOURCES += main.cpp\
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Server2/datahandler.cpp \
+    ../Server2/listener.cpp \
+    ../Server2/socketconnection.cpp \
     dbminvoice.cpp \
+    dlgconfigtaxserver.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
+    dlgquickadvanceaction.cpp \
     dlgrecoverinvoice.cpp \
     dlgseachfromdatabase.cpp \
     dlgsingleprinttax.cpp \
@@ -37,6 +42,7 @@ SOURCES += main.cpp\
     wcityledger.cpp \
     wmaindesk.cpp \
     wpaymentdetails.cpp \
+    wquickcheckout.cpp \
     wquickreservations.cpp \
     wquickreservationscheckin.cpp \
     wquickreservationsguests.cpp \
@@ -416,9 +422,14 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
+    ../Server2/datahandler.h \
+    ../Server2/listener.h \
+    ../Server2/socketconnection.h \
     dbminvoice.h \
+    dlgconfigtaxserver.h \
     dlginvoicepaymentoptions.h \
     dlgprintvoucherasinvoice.h \
+    dlgquickadvanceaction.h \
     dlgrecoverinvoice.h \
     dlgseachfromdatabase.h \
     dlgsingleprinttax.h \
@@ -432,6 +443,7 @@ HEADERS  += mainwindow.h \
     wcityledger.h \
     wmaindesk.h \
     wpaymentdetails.h \
+    wquickcheckout.h \
     wquickreservations.h \
     wquickreservationscheckin.h \
     wquickreservationsguests.h \
@@ -816,8 +828,10 @@ HEADERS  += mainwindow.h \
     wguestinvoice.h
 
 FORMS    += mainwindow.ui \
+    dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgprintvoucherasinvoice.ui \
+    dlgquickadvanceaction.ui \
     dlgrecoverinvoice.ui \
     dlgseachfromdatabase.ui \
     dlgsingleprinttax.ui \
@@ -831,6 +845,7 @@ FORMS    += mainwindow.ui \
     wcityledger.ui \
     wmaindesk.ui \
     wpaymentdetails.ui \
+    wquickcheckout.ui \
     wquickreservations.ui \
     wquickreservationscheckin.ui \
     wquickreservationsguests.ui \
@@ -1076,6 +1091,7 @@ INCLUDEPATH += $$PWD/../Widgets
 INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
+INCLUDEPATH += $$PWD/../Server2
 INCLUDEPATH += C:/OpenSSL-Win32/include
 INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src

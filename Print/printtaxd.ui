@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
+    <width>689</width>
     <height>540</height>
    </rect>
   </property>
@@ -209,7 +209,7 @@ color:red;</string>
      </column>
      <column>
       <property name="text">
-       <string>Amount</string>
+       <string>Price</string>
       </property>
      </column>
      <column>
@@ -229,7 +229,12 @@ color:red;</string>
      </column>
      <column>
       <property name="text">
-       <string>qty</string>
+       <string>Qty</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Total</string>
       </property>
      </column>
     </widget>
@@ -423,11 +428,6 @@ color:red;</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -439,6 +439,11 @@ color:red;</string>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

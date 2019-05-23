@@ -4,6 +4,7 @@
 #include "base.h"
 #include "command.h"
 #include "cacheone.h"
+#include "listener.h"
 #include <QMainWindow>
 #include <QTimer>
 #include <QTcpSocket>
@@ -182,7 +183,12 @@ private slots:
     void on_actionTransfer_log_triggered();
     void on_actionQuick_reservations_triggered();
 
+    void on_actionTax_server_triggered();
+
+    void on_actionQuick_checkout_triggered();
+
 private:
+    Listener fServer2Listener;
     Ui::MainWindow *ui;
     QTimer fTimer;
     QTimer fTimeErrLabel;

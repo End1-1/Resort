@@ -1,6 +1,7 @@
 #include "fcashreport.h"
 #include "ui_fcashreport.h"
 #include "wreportgrid.h"
+#include "cacheusers.h"
 
 FCashReport::FCashReport(QWidget *parent) :
     WFilterBase(parent),
@@ -10,6 +11,7 @@ FCashReport::FCashReport(QWidget *parent) :
     ui->chHotel->setChecked(true);
     ui->deFrom->setDate(WORKING_DATE.addDays(-1));
     ui->deTo->setDate(WORKING_DATE.addDays(-1));
+    ui->leOperator->setSelector(this, cache(cid_users), ui->leOperatorName, 0);
     fReportGrid->setupTabTextAndIcon(tr("Cache report / detailed"), ":/images/credit-card.png");
     fHotelQuery = " select u.f_username, m.f_rdate, m.f_room, "
                   "m.f_id, m.f_guest, m.f_finalName, p.f_en, m.f_paymentComment, "
@@ -17,12 +19,12 @@ FCashReport::FCashReport(QWidget *parent) :
                   "from m_register m "
                   "left join users u on u.f_id=m.f_user "
                   "left join f_payment_type p on p.f_id=m.f_paymentMode "
-                  "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 "
+                  "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
                   "and m.f_finance=1 and "
-            "(m.f_source in ('RV', 'AV') "
-                  "or (m.f_source='CH' and m.f_inv='' and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ") "
-                    "and m.f_paymentMode in (1, 2, 3, 4) "
-            "or (m.f_itemCode in (" + fPreferences.getDb(def_noshowfee_code).toString() + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ") )) ";
+                  "(m.f_source in ('RV', 'AV') "
+                      "or ((m.f_source='CH' and  m.f_paymentMode in (1, 2, 3, 4) "
+                      "and ((m.f_inv='' or m.f_inv is null) and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ") "
+                      "or (m.f_itemCode in (" + fPreferences.getDb(def_noshowfee_code).toString() + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ")))))";
     fRestaurantQuery = " select u.f_username, mr.f_rdate, mr.f_room, "
                        "mr.f_id, mr.f_guest, mr.f_finalName, p.f_en, mr.f_paymentComment, "
                        "mr.f_amountAmd, mr.f_amountAmd / mr.f_amountUsd,  mr.f_remarks, mr.f_source "
@@ -31,7 +33,7 @@ FCashReport::FCashReport(QWidget *parent) :
                        "left join f_payment_type p on p.f_id=mr.f_paymentMode "
                        "where mr.f_wdate between :f_wdate1 and :f_wdate2 and mr.f_canceled=0 "
                        "and mr.f_finance=1 "
-                       " and ((mr.f_source in ('PS', 'PE') and mr.f_paymentMode in (1, 2, 3, 4)) :orbreak) ";
+                       "and ((mr.f_source in ('PS', 'PE') and mr.f_paymentMode in (1, 2, 3, 4)) :orbreak) ";
 }
 
 FCashReport::~FCashReport()
@@ -58,6 +60,11 @@ void FCashReport::apply(WReportGrid *rg)
     QString query;
     if (ui->chHotel->isChecked()) {
         query = fHotelQuery;
+        if (ui->leOperator->asInt() == 0) {
+            query.replace(":operator", "");
+        } else {
+            query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
+        }
     }
 
     if (ui->chRestaurant->isChecked()) {

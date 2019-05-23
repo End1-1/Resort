@@ -54,9 +54,10 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Debit"))
             .setColumn(80, "", tr("Credit"))
             .setColumn(140, "", tr("Payment"))
-            .setColumn(150, "", tr("Comment"));
+            .setColumn(150, "", tr("Comment"))
+            .setColumn(100, "", tr("Tax"));
     QString query = "select r.f_invoice, r.f_room, g.guest, m.f_finalName, if (m.f_sign=1, m.f_amountAmd, 0), if (m.f_sign=-1, m.f_amountAmd, 0), pm.f_" + def_lang + ", "
-            "m.f_paymentComment "
+            "m.f_paymentComment, m.f_fiscal "
             "from m_register m "
             "inner join f_reservation r on m.f_inv=r.f_invoice "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -69,7 +70,7 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
     query = "select m.f_inv, m.f_room, m.f_guest, m.f_finalName, 0, m.f_amountAmd, pm.f_" + def_lang + ", "
-            "m.f_paymentComment "
+            "m.f_paymentComment, m.f_fiscal "
             "from m_register m "
             "left join f_payment_type pm on pm.f_id=m.f_paymentMode "
             "where f_source='AV' and m.f_wdate=:date and m.f_canceled=0 and m.f_finance=1 ";

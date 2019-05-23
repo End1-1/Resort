@@ -98,6 +98,30 @@
      </property>
     </spacer>
    </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Operator</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="EQLineEdit" name="leOperator">
+     <property name="maximumSize">
+      <size>
+       <width>80</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="EQLineEdit" name="leOperatorName">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -105,6 +129,11 @@
    <class>EDateEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">eqlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

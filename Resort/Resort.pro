@@ -19,11 +19,16 @@ DEFINES += _HOTEL_
 SOURCES += main.cpp\
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Server2/datahandler.cpp \
+    ../Server2/listener.cpp \
+    ../Server2/socketconnection.cpp \
     dbminvoice.cpp \
+    dlgconfigtaxserver.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgofferinvoiceextra.cpp \
     dlgpostcharge.cpp \
     dlgprintvoucherasinvoice.cpp \
+    dlgquickadvanceaction.cpp \
     dlgrecoverinvoice.cpp \
     dlgseachfromdatabase.cpp \
     dlgsingleprinttax.cpp \
@@ -39,7 +44,9 @@ SOURCES += main.cpp\
     wguestinvoice.cpp \
     wmaindesk.cpp \
     wpaymentdetails.cpp \
+    wquickcheckout.cpp \
     wquickreservations.cpp \
+    wquickreservationscheckin.cpp \
     wquickreservationsguests.cpp \
     wquickreservationspax.cpp \
     wreservation.cpp \
@@ -414,11 +421,16 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
+    ../Server2/datahandler.h \
+    ../Server2/listener.h \
+    ../Server2/socketconnection.h \
     dbminvoice.h \
+    dlgconfigtaxserver.h \
     dlginvoicepaymentoptions.h \
     dlgofferinvoiceextra.h \
     dlgpostcharge.h \
     dlgprintvoucherasinvoice.h \
+    dlgquickadvanceaction.h \
     dlgrecoverinvoice.h \
     dlgseachfromdatabase.h \
     dlgsingleprinttax.h \
@@ -433,7 +445,9 @@ HEADERS  += mainwindow.h \
     wguestinvoice.h \
     wmaindesk.h \
     wpaymentdetails.h \
+    wquickcheckout.h \
     wquickreservations.h \
+    wquickreservationscheckin.h \
     wquickreservationsguests.h \
     wquickreservationspax.h \
     wreservation.h \
@@ -813,10 +827,12 @@ HEADERS  += mainwindow.h \
     ../Filter/fcitytrayledger2.h
 
 FORMS    += mainwindow.ui \
+    dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \
     dlgpostcharge.ui \
     dlgprintvoucherasinvoice.ui \
+    dlgquickadvanceaction.ui \
     dlgrecoverinvoice.ui \
     dlgseachfromdatabase.ui \
     dlgsingleprinttax.ui \
@@ -831,7 +847,9 @@ FORMS    += mainwindow.ui \
     wguestinvoice.ui \
     wmaindesk.ui \
     wpaymentdetails.ui \
+    wquickcheckout.ui \
     wquickreservations.ui \
+    wquickreservationscheckin.ui \
     wquickreservationsguests.ui \
     wquickreservationspax.ui \
     wreservation.ui \
@@ -1072,6 +1090,7 @@ INCLUDEPATH += $$PWD/../Widgets
 INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
+INCLUDEPATH += $$PWD/../Server2
 INCLUDEPATH += C:/OpenSSL-Win32/include
 INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src

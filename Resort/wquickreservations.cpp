@@ -30,6 +30,7 @@ static const int col_pax = 7;
 static const int col_first_name = 8;
 static const int col_last_name = 9;
 static const int col_nat = 11;
+static const int col_cardex = 12;
 static const int col_invoice = 14;
 static const int col_guest_code = 15;
 
@@ -101,6 +102,11 @@ QDate WQuickReservations::dateEntry(int row)
 QDate WQuickReservations::dateDeparture(int row)
 {
     return ui->tbl->toDate(row, col_date_departure);
+}
+
+QString WQuickReservations::cardex(int row)
+{
+    return ui->tbl->toString(row, col_cardex);
 }
 
 QAbstractItemModel *WQuickReservations::model()
@@ -389,6 +395,21 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         }
         break;
     }
+    case col_cardex: {
+        auto *c = cache(cid_cardex);
+        QStringList codes, names;
+        if (c->selector(codes, names, false)) {
+            DoubleDatabase dd(true, doubleDatabase);
+            dd[":f_cardex"] = codes.at(0);
+            dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
+            QModelIndex mc = fSrc->model()->index(index.row(), col_cardex);
+            if (fSrc->cardex(index.row()) != names.at(0)) {
+                TrackControl::insert(TRACK_RESERVATION, "Cardex ", fSrc->model()->data(mc).toString(), names.at(0), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
+            }
+            fSrc->model()->setData(mc, names.at(0));
+        }
+        break;
+    }
     default:
         w = new QWidget(parent);
         break;
@@ -462,6 +483,10 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
         DoubleDatabase dd(true, doubleDatabase);
         dd[":f_roomfee"] = l->getDouble();
         dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
+        dd[":f_id"] = fSrc->reservationCode(index.row());
+        dd.exec("update f_reservation set f_pricepernight=coalesce(f_roomfee, 0)+coalesce(f_extrabedfee, 0)+coalesce(f_mealprice, 0) where f_id=:f_id");
+        dd[":f_id"] = fSrc->reservationCode(index.row());
+        dd.exec("update f_reservation set f_grandtotal=f_pricepernight* datediff(f_enddate, f_startdate) where f_id=:f_id");
         TrackControl::insert(TRACK_RESERVATION, "Room rate", model->data(index).toString(), l->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
         model->setData(index, l->getDouble());
         break;
@@ -531,7 +556,7 @@ void WQuickReservations::on_btnCheckinSelected_clicked()
 {
     QStringList codes;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
-        if (ui->tbl->itemValue(i, 0, Qt::UserRole).toInt() == 0) {
+        if (ui->tbl->itemValue(i, 0, Qt::UserRole).toInt() == 1) {
             codes << ui->tbl->toString(i, col_reservation);
         }
     }

@@ -55,6 +55,7 @@ DlgPostCharge::DlgPostCharge(QWidget *parent) :
         ui->leItem->fCodeExcludeFilter << dd.getString(0);
     }
     on_tabWidget_currentChanged(0);
+    connect(ui->wRoom, SIGNAL(roomChanged()), this, SLOT(roomChanged()));
 }
 
 DlgPostCharge::~DlgPostCharge()
@@ -122,6 +123,11 @@ void DlgPostCharge::setAmount(double amount)
     ui->leAmount->setDouble(amount);
 }
 
+void DlgPostCharge::roomChanged()
+{
+    ui->leVAT->setInitialValue(ui->wRoom->vatMode());
+}
+
 void DlgPostCharge::on_tabWidget_currentChanged(int index)
 {
     ui->wRoom->clear();
@@ -176,12 +182,25 @@ void DlgPostCharge::on_btnSave_clicked()
         message_error(tr("Mode of VAT is not selected"));
         return;
     }
-    if (ui->lePayment->asInt() == PAYMENT_CARD) {
+    QString paymentComment;
+    switch (ui->lePayment->asInt()) {
+    case PAYMENT_CASH:
+        paymentComment = "CASH";
+        break;
+    case PAYMENT_CARD:
         if (ui->leCard->asInt() == 0) {
             message_error(tr("Card is not selected"));
             return;
         }
+        paymentComment = ui->leCardName->text();
+        break;
+    case PAYMENT_BANK:
+        paymentComment = "BANK";
+        break;
+    case PAYMENT_CL:
+        break;
     }
+
     DoubleDatabase dd(true, doubleDatabase);
     if (ii.fVaucher() == VAUCHER_ROOMING_N) {
         QString appendix;
@@ -222,6 +241,7 @@ void DlgPostCharge::on_btnSave_clicked()
     fDoc.fItemCode = ui->leItem->asUInt();
     fDoc.fAmountVAT = Utils::countVATAmount(ui->leAmount->asDouble(), ui->leVAT->asInt());
     fDoc.fRb = ui->tabWidget->currentIndex();
+    fDoc.fPaymentComment = paymentComment;
     if (!fDoc.save(dd)) {
         message_error(fDoc.fError);
         return;
@@ -231,7 +251,9 @@ void DlgPostCharge::on_btnSave_clicked()
     ui->btnPrintTax->setEnabled(true);
     clearSelectors();
     setBalance();
-    PPrintVaucher::printVaucher(ui->leVoucher->text());
+    if (fPreferences.getDb(def_print_voucher_after_save).toInt() == 1) {
+        PPrintVaucher::printVaucher(ui->leVoucher->text());
+    }
 }
 
 void DlgPostCharge::on_leAmount_textChanged(const QString &arg1)

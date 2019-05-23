@@ -31,6 +31,23 @@ void PPrintInvoice::previewInvoice()
     int numNights = 0;
     fDD[":f_invoice"] = fId;
     QString query;
+#ifdef _METROPOL_
+    if (fSide > -1) {
+        fDD[":f_side"] = fSide;
+        query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, if (ic.f_cityledger>0, ic.f_paymentComment, ic.f_finalName), "
+                "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
+                "from m_register ic "
+                "where ic.f_inv=:f_invoice and ic.f_side=:f_side "
+                "and ic.f_canceled=0 and ic.f_finance=1 :sel "
+                "order by ic.f_wdate, ic.f_id ";
+    } else {
+        query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, if (ic.f_cityledger>0, ic.f_paymentComment, ic.f_finalName), "
+                "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
+                "from m_register ic "
+                "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 :sel "
+                "order by ic.f_wdate, ic.f_id ";
+    }
+#else
     if (fSide > -1) {
         fDD[":f_side"] = fSide;
         query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, ic.f_finalName, "
@@ -46,6 +63,7 @@ void PPrintInvoice::previewInvoice()
                 "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 :sel "
                 "order by ic.f_wdate, ic.f_id ";
     }
+#endif
     if (fSelection.isEmpty()) {
         query.replace(":sel", "");
     } else {

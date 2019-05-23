@@ -19,8 +19,9 @@ INCLUDEPATH += $$PWD/../Cache
 INCLUDEPATH += $$PWD/../Print
 INCLUDEPATH += $$PWD/../Resort
 INCLUDEPATH += $$PWD/../Selector
-INCLUDEPATH += C:/Qt/projects/NewTax
+INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += C:/OpenSSL-Win32/include
+INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
 
 DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
 DEFINES += _APPLICATION_=\\\"Restaurant\\\"
@@ -122,7 +123,7 @@ SOURCES += main.cpp\
     ../Cache/cachetaxmap.cpp \
     ../Cache/cachedocpayment.cpp \
     dlgprinttax.cpp \
-    ../../NewTax/printtaxn.cpp \
+    ../../NewTax/Src/printtaxn.cpp \
     ../Cache/cachedish.cpp \
     ../Base/paymentmode.cpp \
     ../Base/appconfig.cpp \
@@ -257,7 +258,7 @@ HEADERS  += rface.h \
     ../Cache/cachetaxmap.h \
     ../Cache/cachedocpayment.h \
     dlgprinttax.h \
-    ../../NewTax/printtaxn.h \
+    ../../NewTax/Src/printtaxn.h \
     ../Cache/cachedish.h \
     ../Base/paymentmode.h \
     ../Base/appconfig.h \

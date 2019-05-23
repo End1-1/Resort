@@ -33,7 +33,8 @@ DlgDiscount::DlgDiscount(QWidget *parent) :
             .addWidget(ui->leFinalAmount, "Final amount")
             .addWidget(ui->leGuest, "Guest")
             .addWidget(ui->leRoomCode, "Room")
-            .addWidget(ui->rbGuest, "Guest/Company");
+            .addWidget(ui->rbGuest, "Guest/Company")
+            .addWidget(ui->peRemarks, "Remarks");
 }
 
 DlgDiscount::~DlgDiscount()
@@ -109,6 +110,7 @@ void DlgDiscount::openVaucher(const QString &id)
     d->ui->leValue->setText(fDD.getValue("f_amountAmd").toString());
     d->ui->leRoomCode->setInitialValue(fDD.getValue("f_room").toString());
     d->ui->rbGuest->setChecked(fDD.getValue("f_rb").toInt() == 0);
+    d->ui->peRemarks->setPlainText(fDD.getValue("f_remarks").toString());
     d->fTrackControl->resetChanges();
     d->on_leValue_textChanged(d->ui->leValue->text());
     d->exec();
@@ -188,7 +190,7 @@ void DlgDiscount::on_btnOk_clicked()
     fDD[":f_room"] = ui->rbGuest->isChecked() ?  ui->leRoomCode->text() : ui->leCLCode->text();
     fDD[":f_guest"] = ui->rbGuest->isChecked() ? ui->leGuest->text() : ui->leCLName->text();
     fDD[":f_itemCode"] = fPreferences.getDb(def_invoice_default_discount_id);
-    fDD[":f_finalName"] = tr("DISCOUNT S/N ") + ui->leVaucher->text();
+    fDD[":f_finalName"] = tr("DISCOUNT S/N ") + ui->leVaucher->text() + " " + QString("%1AMD").arg(ui->leValue->asDouble());
     fDD[":f_amountAmd"] = ui->leValue->asDouble();
     fDD[":f_amountVat"] = 0;
     fDD[":f_amountUsd"] = def_usd;
@@ -205,7 +207,7 @@ void DlgDiscount::on_btnOk_clicked()
     fDD[":f_finance"] = 1;
     fDD[":f_canceled"] = 0;
     fDD[":f_cancelReason"] = "";
-    fDD[":f_remarks"] = QString("Discount, %1AMD").arg(ui->leValue->asDouble());
+    fDD[":f_remarks"] = ui->peRemarks->toPlainText();
     fDD[":f_side"] = 0;
     fDD.update("m_register", where_id(ap(ui->leVaucher->text())));
     fDD.commit();

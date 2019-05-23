@@ -13,6 +13,7 @@
 #include "wreportgrid.h"
 #include "fcallrates.h"
 #include "fcanceledreservations.h"
+#include "dlgconfigtaxserver.h"
 #include "freportbypayment.h"
 #include "fexpectedarrivals2.h"
 #include "wquickroomassignment.h"
@@ -28,6 +29,7 @@
 #include "wwelcome.h"
 #include "fhouseitems.h"
 #include "fwakeupcall.h"
+#include "wquickcheckout.h"
 #include "dlgtransferanyamount.h"
 #include "favailablerooms.h"
 #include "fbreakfast.h"
@@ -667,6 +669,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionUsers->setVisible(r__(cr__users));
     ui->actionTrack_changes->setVisible(r__(cr_trackin_changes));
     ui->actionGlobal_config->setVisible(r__(cr__global_config));
+    ui->actionPreferences->setVisible(r__(cr__global_config));
     ui->actionUpdate_program->setVisible(r__(cr__update_program));
     ui->actionReport_buillder->setVisible(WORKING_USERGROUP == 1);
     ui->actionExport_invoices->setVisible(r__(cr__bookkeeper_sync) && fPreferences.getDb("HC").toInt() > 0);
@@ -2213,4 +2216,16 @@ void MainWindow::on_actionTransfer_log_triggered()
 void MainWindow::on_actionQuick_reservations_triggered()
 {
     addTab<WQuickReservations>();
+}
+
+void MainWindow::on_actionTax_server_triggered()
+{
+    DlgConfigTaxServer *d = new DlgConfigTaxServer(this);
+    d->exec();
+    delete d;
+}
+
+void MainWindow::on_actionQuick_checkout_triggered()
+{
+    addTab<WQuickCheckout>();
 }

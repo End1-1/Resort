@@ -41,6 +41,7 @@ public:
     QString guestFullName(int row);
     QDate dateEntry(int row);
     QDate dateDeparture(int row);
+    QString cardex(int row);
     QAbstractItemModel *model();
     void updateTable();
     void broadcast(int row);

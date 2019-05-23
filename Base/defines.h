@@ -78,6 +78,9 @@
 #define def_offer_extrarooming "Offer extra rooming"
 #define def_offer_dayuse "Offer day use"
 #define def_daily_report_print_canceled "Daily report print canceled"
+#define def_log_main_db "Logs main database"
+#define def_log_reserve_db "Logs reserve database"
+#define def_print_voucher_after_save "Print vouchers after save"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

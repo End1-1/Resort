@@ -28,6 +28,7 @@ public:
     void clearSelector();
     void initSelector();
     int room();
+    int vatMode();
     QString guest() const;
     QString invoice() const;
     QString reserve() const;
@@ -38,7 +39,11 @@ private slots:
 
 private:
     Ui::WGuestInvoice *ui;
+    int fVATMode;
     void fillFields(DoubleDatabase &dd);
+
+signals:
+    void roomChanged();
 };
 
 #endif // WGUESTINVOICE_H

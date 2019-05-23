@@ -20,7 +20,7 @@ FDailyMovement::FDailyMovement(QWidget *parent) :
             ->setFocusPolicy(Qt::ClickFocus);
 
     QString query = "select u.f_username, m.f_rdate, m.f_time, m.f_room, m.f_itemCode, "
-            "m.f_id, m.f_inv, left(m.f_dc, 1), m.f_finalName, p.f_en, m.f_paymentComment, "
+            "m.f_id, m.f_inv, left(m.f_dc, 1), concat(m.f_finalName, ' ', coalesce(m.f_remarks, '')), p.f_en, m.f_paymentComment, "
             "m.f_amountAmd, m.f_amountVat, m.f_amountAmd / m.f_amountUsd as f_amountUsd, m.f_guest, m.f_source, "
             "uc.f_username as f_username2, m.f_id as f_id2, m.f_paymentMode, m.f_canceled "
             "from m_register m "

@@ -29,6 +29,7 @@ void WGuestInvoice::callback(int sel, const QString &code)
         CacheActiveRoom c;
         if (c.get(code)) {
             initRoom(code.toInt());
+            emit roomChanged();
         }
         break;
     }
@@ -108,7 +109,8 @@ void WGuestInvoice::initRoom(int room)
     DoubleDatabase dd(true, false);
     dd[":f_room"] = room;
     dd[":f_state"] = RESERVE_CHECKIN;
-    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, r.f_room, rm.f_short "
+    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, r.f_room, rm.f_short, "
+            "r.f_vatMode "
             "from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -181,6 +183,11 @@ int WGuestInvoice::room()
     return ui->leRoom->asInt();
 }
 
+int WGuestInvoice::vatMode()
+{
+    return fVATMode;
+}
+
 QString WGuestInvoice::guest() const
 {
     return ui->leGuest->text();
@@ -220,4 +227,5 @@ void WGuestInvoice::fillFields(DoubleDatabase &dd)
     ui->leReserve->setText(dd.getString("f_id"));
     ui->deEntry->setDate(dd.getDate("f_startdate"));
     ui->deDeparture->setDate(dd.getDate("f_enddate"));
+    fVATMode = dd.getInt("f_vatmode");
 }

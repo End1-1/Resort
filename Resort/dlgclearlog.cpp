@@ -1,13 +1,14 @@
 #include "dlgclearlog.h"
 #include "ui_dlgclearlog.h"
 #include "message.h"
+#include "trackcontrol.h"
 
 DlgClearLog::DlgClearLog(QWidget *parent) :
     BaseDialog(parent),
     ui(new Ui::DlgClearLog)
 {
     ui->setupUi(this);
-    DoubleDatabase db;
+    DoubleDatabase db(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
     db.open(true, false);
     db.exec("select distinct(f_user) from airlog.log order by 1");
     while (db.nextRow()) {
@@ -25,7 +26,7 @@ void DlgClearLog::on_btnClear_clicked()
     if (message_confirm(tr("Confirm to delete history for") + ui->cbUser->currentText()) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase db(true, false);
+    DoubleDatabase db(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
     if (ui->cbUser->currentText() == "") {
         db.exec("delete from airlog.log where f_user is null or f_user=''");
     } else {

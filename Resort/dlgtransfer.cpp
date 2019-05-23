@@ -96,6 +96,8 @@ void DlgTransfer::on_btnOk_clicked()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
+    fTrackControl->fReservation = ui->leReserveFrom->text();
+    fTrackControl->fInvoice = ui->leInvoiceFrom->text();
     for (int i = 0, count = ui->tblData->rowCount(); i < count; i++) {
         fDD[":f_inv"] = ui->leInvoiceTo->text();
         fDD[":f_res"] = ui->leReserveTo->text();
@@ -119,6 +121,8 @@ void DlgTransfer::on_btnOk_clicked()
     }
     fTrackControl->saveChanges();
     fTrackControl->resetChanges();
+    fTrackControl->fReservation = ui->leReserveTo->text();
+    fTrackControl->fInvoice = ui->leInvoiceTo->text();
     for (int i = 0, count = ui->tblData->rowCount(); i < count; i++) {
         fTrackControl->insert("Move into invoice", QString("%1 / %2 / %3 / %4")
                                   .arg(ui->leInvoiceTo->text())

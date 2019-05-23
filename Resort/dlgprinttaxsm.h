@@ -32,9 +32,10 @@ public:
     double fCashAmount;
     double fCardAmount;
     double fPrepaid;
+    QString fJson;
     int fTaxCode;
     int fTaxback;
-    static bool printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode);
+    static bool printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json);
     static int printTaxback(int number, const QString &vaucher, int &taxCode);
 
 private slots:

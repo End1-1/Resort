@@ -154,7 +154,8 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     double card = ui->wPayment->paymentCode() == PAYMENT_CARD ? ui->wPayment->amount() : 0;
     int taxCode = 0;
     if (ui->rbAdvance->isChecked()) {
-        if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode)) {
+        QString outJson;
+        if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode, outJson)) {
             return;
         }
         ui->leTax->setInt(taxCode);

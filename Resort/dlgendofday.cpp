@@ -97,6 +97,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         fDD[":f_amountVat"] = vatAmount;
         fDD[":f_amountUsd"] = def_usd;
         fDD[":f_fiscal"] = 0;
+        fDD[":f_vatmode"] = vat;
         fDD[":f_paymentMode"] = PAYMENT_CREDIT;
         fDD[":f_creditCard"] = 0;
         fDD[":f_cityLedger"] = 0;

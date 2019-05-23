@@ -46,7 +46,7 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
         return;
     }
     trHeader.setFontSize(30);
-    ps->addTextRect(0, top, 2100, 80, fDD.getValue("f_id").toString(), &trHeader);
+    ps->addTextRect(0, top, 2100, 80, QString("%1 / %2").arg(fDD.getValue("f_id").toString()).arg(fDD.getValue("f_invoice").toString()), &trHeader);
 
     top = 300;
     PTextRect trData;

@@ -169,7 +169,8 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chPartnersRemove, "Remove cardex")
             .addWidget(ui->chPrintInvoicePartialy, "Print invoice partialy")
             .addWidget(ui->chChangePostChargeWorkingDate, "Change post charge working date")
-            .addWidget(ui->chQuickReservations, "Quick reservations")
+            .addWidget(ui->chQuickReservations, "Quick checkin")
+            .addWidget(ui->chQuickCheckout, "Quick checkout")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

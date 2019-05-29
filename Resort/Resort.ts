@@ -1398,6 +1398,41 @@ name</source>
     </message>
 </context>
 <context>
+    <name>DlgConfigTaxServer</name>
+    <message>
+        <source>Tax server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>###.###.###.###</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IPv4 address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>####</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation type="unfinished">Գախտնաբառ</translation>
+    </message>
+    <message>
+        <source>Remote server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DlgContact</name>
     <message>
         <source>Contact</source>
@@ -1744,6 +1779,10 @@ rooms</source>
         <source>Discount amount</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgDishHistory</name>
@@ -1910,6 +1949,10 @@ rooms</source>
     </message>
     <message>
         <source>Error in query, automatic charging not complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cityledger</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2760,6 +2803,10 @@ rooms</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Print invoice immediately</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3616,168 +3663,64 @@ rooms</source>
         <source>The date will append to the name.&lt;br&gt;Click YES to use current working date&lt;br&gt;Click NO - to use previouse working date</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Tax number</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgPostingCharges</name>
     <message>
-        <source>Posting charges</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Invoice</source>
-        <translation type="unfinished">ՀԱ</translation>
-    </message>
-    <message>
-        <source>VAT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Guest</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ՀԱ</translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished">Նոր</translation>
+        <translation type="obsolete">Նոր</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Պահպանել</translation>
+        <translation type="obsolete">Պահպանել</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished">Տպել</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Company</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Տպել</translation>
     </message>
     <message>
         <source>Amount</source>
-        <translation type="unfinished">Գումար</translation>
-    </message>
-    <message>
-        <source>Remarks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Payment by</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Գումար</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished">Տեսակ</translation>
-    </message>
-    <message>
-        <source>Room</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Direct billing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>City Ledger</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Տեսակ</translation>
     </message>
     <message>
         <source>Tax</source>
-        <translation type="unfinished">ՀԴՄ</translation>
-    </message>
-    <message>
-        <source>Prepaid</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ՀԴՄ</translation>
     </message>
     <message>
         <source>Card</source>
-        <translation type="unfinished">Քարտ</translation>
+        <translation type="obsolete">Քարտ</translation>
     </message>
     <message>
         <source>Cash</source>
-        <translation type="unfinished">Կանխիկ</translation>
-    </message>
-    <message>
-        <source>Print Tax</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Կանխիկ</translation>
     </message>
     <message>
         <source>Date</source>
-        <translation type="unfinished">Ամսաթիվ</translation>
+        <translation type="obsolete">Ամսաթիվ</translation>
     </message>
     <message>
         <source>City ledger</source>
-        <translation type="unfinished">Պարքատեր</translation>
-    </message>
-    <message>
-        <source>Type of sale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Item with code %1 not exist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The date will append to the name.&lt;br&gt;Click YES to use current working date&lt;br&gt;Click NO - to use previouse working date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HH:mm:ss</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Voucher</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Պարքատեր</translation>
     </message>
     <message>
         <source>Tax code</source>
-        <translation type="unfinished">ՀՎՀՀ</translation>
-    </message>
-    <message>
-        <source>Save first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Already printed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Application error. Contact to developer. Message DlgPostCharge invoice item = 0</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ՀՎՀՀ</translation>
     </message>
     <message>
         <source>Payment mode</source>
-        <translation type="unfinished">Վճարման տեսակ</translation>
-    </message>
-    <message>
-        <source>The mode of payment not selected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The name of credit card not selected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The mode of payment not selected. Contact to Administrator</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You cannot use this name for manual charge</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid vaucher id. Please, contact to application developer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cannot set invoice</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Voucher code is missing. Contact with administrator.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Վճարման տեսակ</translation>
     </message>
 </context>
 <context>
@@ -4346,12 +4289,8 @@ rooms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Room</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Qty</source>
-        <translation type="unfinished">Քնկ</translation>
+        <translation type="obsolete">Քնկ</translation>
     </message>
     <message>
         <source>Amount cash</source>
@@ -4359,18 +4298,6 @@ rooms</source>
     </message>
     <message>
         <source>Amount card</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Card type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Print tax</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Just append</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4391,11 +4318,7 @@ rooms</source>
     </message>
     <message>
         <source>Card</source>
-        <translation type="unfinished">Քարտ</translation>
-    </message>
-    <message>
-        <source>Credit card</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Քարտ</translation>
     </message>
     <message>
         <source>Tax</source>
@@ -4403,11 +4326,7 @@ rooms</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Հրաժարվել</translation>
-    </message>
-    <message>
-        <source>Move to room</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Հրաժարվել</translation>
     </message>
     <message>
         <source>Total cash</source>
@@ -4426,23 +4345,98 @@ rooms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Confirm to remove selected receipt</source>
+        <source>New</source>
+        <translation type="unfinished">Նոր</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished">Տեսակ</translation>
+    </message>
+    <message>
+        <source>Json</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Confirm to apply selected receipt</source>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DlgQuickAdvanceAction</name>
+    <message>
+        <source>Temporary tax</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Type of card is not selected</source>
+        <source>Receipt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Quantiry cannot be equal to zero</source>
+        <source>Item code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No item for tax defined</source>
+        <source>Item name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qty</source>
+        <translation type="unfinished">Քնկ</translation>
+    </message>
+    <message>
+        <source>Price</source>
+        <translation type="unfinished">Գին</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Անվանում</translation>
+    </message>
+    <message>
+        <source>Grand total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Card</source>
+        <translation type="unfinished">Քարտ</translation>
+    </message>
+    <message>
+        <source>Advance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished">Տպել</translation>
+    </message>
+    <message>
+        <source>Check the parametrs</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5355,6 +5349,10 @@ for this operation</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished">Թարմացնել</translation>
     </message>
 </context>
 <context>
@@ -6646,6 +6644,14 @@ for this operation</source>
         <source>126</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Quick checkin </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -7735,6 +7741,10 @@ ee</source>
         <source>No report type was selected</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Operator</source>
+        <translation type="unfinished">Օպերատոր</translation>
+    </message>
 </context>
 <context>
     <name>FCashReportSummary</name>
@@ -7789,6 +7799,10 @@ ee</source>
     <message>
         <source>No report type is selected</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operator</source>
+        <translation type="unfinished">Օպերատոր</translation>
     </message>
 </context>
 <context>
@@ -9450,6 +9464,10 @@ ee</source>
     <message>
         <source>CHECKOUT</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax</source>
+        <translation type="unfinished">ՀԴՄ</translation>
     </message>
 </context>
 <context>
@@ -12988,6 +13006,18 @@ or contact to administrator</source>
         <source>Last run night</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Quick checkin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quick checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>
@@ -13495,7 +13525,7 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Amount</source>
-        <translation type="unfinished">Գումար</translation>
+        <translation type="obsolete">Գումար</translation>
     </message>
     <message>
         <source>Print</source>
@@ -13507,10 +13537,6 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>qty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -13532,6 +13558,14 @@ or contact to administrator</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Price</source>
+        <translation type="unfinished">Գին</translation>
+    </message>
+    <message>
+        <source>Qty</source>
+        <translation type="unfinished">Քնկ</translation>
     </message>
 </context>
 <context>
@@ -17418,6 +17452,22 @@ Reserve</source>
         <source>Done</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Print voucher after save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Log 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always print canceled</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -18405,6 +18455,324 @@ reservation</source>
     </message>
 </context>
 <context>
+    <name>WQuickCheckout</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Գումար</translation>
+    </message>
+    <message>
+        <source>Guest balance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Company balance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total balance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WQuickReservations</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>01/01/2019</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation type="unfinished">Թարմացնել</translation>
+    </message>
+    <message>
+        <source>Check in selected reservations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open reservation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First name</source>
+        <translation type="unfinished">Անուն</translation>
+    </message>
+    <message>
+        <source>Last name</source>
+        <translation type="unfinished">Ազգանուն</translation>
+    </message>
+    <message>
+        <source>Passport</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cityledger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Guest code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reservations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No reservations was selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WQuickReservationsCheckin</name>
+    <message>
+        <source>Check in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>No room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests count cannot be equal to zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No passport record found for registered guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check nations for all guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The entry date is not equal to working date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Airport pickup id not defined in the config. Contact to administrator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Early checkin id is not defined. Contact to administrator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room is not vacant ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TRANSFER FROM </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CHECKIN #</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">Այո</translation>
+    </message>
+</context>
+<context>
+    <name>WQuickReservationsDelegate</name>
+    <message>
+        <source>Access denied</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WQuickReservationsGuests</name>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ROOM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Append guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Same nations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First name</source>
+        <translation type="unfinished">Անուն</translation>
+    </message>
+    <message>
+        <source>Last name</source>
+        <translation type="unfinished">Ազգանուն</translation>
+    </message>
+    <message>
+        <source>Nation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid reservation code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get guest info</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WQuickReservationsPax</name>
+    <message>
+        <source>Pax</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ROOM</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WQuickRoomAssignment</name>
     <message>
         <source>Form</source>
@@ -19126,10 +19494,6 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Checkin completed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Access denied</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19566,6 +19930,14 @@ commission</source>
     </message>
     <message>
         <source>TRANSFER FROM </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid entry date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date of entry cannot be greater than date of departure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

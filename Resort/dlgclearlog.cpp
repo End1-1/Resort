@@ -27,6 +27,7 @@ void DlgClearLog::on_btnClear_clicked()
         return;
     }
     DoubleDatabase db(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
+    db.open(true, false);
     if (ui->cbUser->currentText() == "") {
         db.exec("delete from airlog.log where f_user is null or f_user=''");
     } else {

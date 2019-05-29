@@ -202,6 +202,15 @@ void FVauchers::eliminateVoucher()
     l.open(true, false);
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = out.at(0);
+    fDD.exec("select * from m_register where f_id=:f_id");
+    QString id, invoice, reserve, name;
+    if (fDD.nextRow()) {
+        id = out.at(0).toString();
+        name = fDD.getString("f_finalName");
+        invoice = fDD.getString("f_inv");
+        reserve = fDD.getString("f_res");
+    }
+    fDD[":f_id"] = out.at(0);
     fDD.exec("delete from m_register where f_id=:f_id");
     if (out.at(1).toString() == VAUCHER_POINT_SALE_N) {
         fDD[":f_id"] = out.at(0);
@@ -222,6 +231,7 @@ void FVauchers::eliminateVoucher()
     }
     l[":f_rec"] = out.at(0);
     l.exec("delete from log where f_rec=:f_rec");
+    TrackControl::insert(TRACK_RESERVATION, "ELIMINATE VOUCHER", name, "", id, invoice, reserve);
     fReportGrid->fModel->removeRow(row);
 }
 

@@ -203,8 +203,11 @@ void PPrintInvoice::previewInvoice()
     //row 6
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Operator in"), &th, f));
     CacheUsers cu;
-    cu.get(dh.getString("f_checkInUser"));
-    ps->addTextRect(new PTextRect(400, top, 700, rowHeight, cu.fFull(), &th, f));
+    QString checkinUser = "-";
+    if (cu.get(dh.getString("f_checkInUser"))) {
+        checkinUser = cu.fFull();
+    }
+    ps->addTextRect(new PTextRect(400, top, 700, rowHeight, checkinUser, &th, f));
     ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut time"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getTime("f_checkOutTime").toString(def_time_format), &th,f));
     top += r->textHeight();

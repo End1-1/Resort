@@ -8,7 +8,7 @@
 class ERadioButton : public QRadioButton
 {
 public:
-    ERadioButton(QWidget *parent =0);
+    ERadioButton(QWidget *parent = nullptr);
     QMap<QString, QVariant> fData;
 };
 

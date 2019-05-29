@@ -229,6 +229,9 @@ void WReportGrid::setupTabTextAndIcon(const QString &name, const QString &image)
             ui->btnPrint->setVisible(false);
             ui->btnPrint2->setVisible(true);
         }
+        if (r.fRowHeight < 10) {
+            r.fRowHeight = 21;
+        }
         ui->tblMain->verticalHeader()->setDefaultSectionSize(r.fRowHeight);
         QFont font(r.fFontName, r.fFontSize);
         font.setBold(r.fFontBold);

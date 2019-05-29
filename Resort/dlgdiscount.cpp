@@ -8,6 +8,7 @@
 #include "dlgtracking.h"
 
 #define HINT_ROOM 1
+#define HINT_CL 2
 
 DlgDiscount::DlgDiscount(QWidget *parent) :
     BaseExtendedDialog(parent),
@@ -23,7 +24,7 @@ DlgDiscount::DlgDiscount(QWidget *parent) :
     ui->leTypeCode->fFieldFilter["f_group"] << "4";
 
     ui->leRoomCode->setSelector(this, cache(cid_active_room), ui->leRoomCode, HINT_ROOM);
-    ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName);
+    ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName, HINT_CL);
 
     sideChanged(true);
     fTrackControl = new TrackControl(TRACK_RESERVATION);
@@ -62,6 +63,26 @@ void DlgDiscount::callback(int sel, const QString &code)
             } else {
                 message_error(tr("No active invoice for this room"));
             }
+        }
+        break;
+    }
+    case HINT_CL: {
+        DoubleDatabase dd(true, false);
+        dd[":f_cityledger"] = ui->leCLCode->asInt();
+#ifdef _METROPOL_
+        dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
+                 where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ");
+#else
+        if (!dd.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+                 m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as f_amountamd from m_register m \
+                where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ")) {
+            message_error(dd.fLastError);
+        }
+#endif
+        if (dd.nextRow()) {
+            ui->leAmount->setDouble(dd.getDouble(0));
+        } else {
+            ui->leAmount->setDouble(0);
         }
         break;
     }

@@ -1,6 +1,7 @@
 #include "finhouseguest.h"
 #include "ui_finhouseguest.h"
 #include "wreportgrid.h"
+#include "cachecardex.h"
 
 FInHouseGuest::FInHouseGuest(QWidget *parent) :
     WFilterBase(parent),
@@ -11,6 +12,7 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui->chDate->setVisible(r__(cr__inhouse_anytime));
     ui->teTime->setVisible(r__(cr__inhouse_anytime));
     ui->chTime->setVisible(r__(cr__inhouse_anytime));
+    ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
     ui->chDisplayName->click();
 }
 
@@ -33,7 +35,12 @@ void FInHouseGuest::apply(WReportGrid *rg)
     if (ui->chTime->isChecked()) {
         where += QString(" and ADDTIME(CONVERT(%1, DATETIME), '%2') "
                          "between ADDTIME(CONVERT(r.f_startDate, DATETIME), r.f_checkintime) "
-                         "and ADDTIME(CONVERT(r.f_endDate, DATETIME), if(r.f_checkouttime is null, '12:00:00', r.f_checkouttime))").arg(ui->deDate->dateMySql()).arg(ui->teTime->time().toString("HH:mm:ss"));
+                         "and ADDTIME(CONVERT(r.f_endDate, DATETIME), if(r.f_checkouttime is null, '12:00:00', r.f_checkouttime))")
+                .arg(ui->deDate->dateMySql())
+                .arg(ui->teTime->time().toString("HH:mm:ss"));
+    }
+    if (!ui->leCardex->isEmpty()) {
+        where += QString(" and r.f_cardex='%1' ").arg(ui->leCardex->text());
     }
     where += "order by r.f_room ";
     buildQuery(rg, where);

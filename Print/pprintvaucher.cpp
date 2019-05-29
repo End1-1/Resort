@@ -166,8 +166,11 @@ void PPrintVaucher::printVaucher(const QString &id)
         }
         case PAYMENT_CL: {
             CacheCityLedger ccl;
-            ccl.get(fDbRows.at(0).at(11).toString());
-            pmInfo = ccl.fName();
+            if (ccl.get(fDbRows.at(0).at(11).toString())) {
+                pmInfo = ccl.fName();
+            } else {
+                pmInfo = "-";
+            }
             break;
         }
         }

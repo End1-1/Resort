@@ -76,6 +76,8 @@ private slots:
     void on_btnFilterCardex_clicked();
     void on_btnColors_clicked();
 
+    void on_btnRefreshChart_clicked();
+
 private:
     Ui::WMainDesk *ui;
     QTimer fTimer;

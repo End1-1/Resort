@@ -8,6 +8,6 @@ const QSize sizeLandscape(2970, 2100);
 
 #define side_proportion 1.4100
 #define column_scale 1.2500
-#define resize_factor 2.000
+#define resize_factor 2.350
 
 #endif // PDEFAULTS_H

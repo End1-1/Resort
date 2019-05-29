@@ -59,7 +59,7 @@ void FCanceledReservations::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Room"))
             .setColumn(250, "", tr("OP"))
             .setColumn(250, "", tr("Cancel by"));
-    QString query = QString("select r.f_id, r.f_startDate, r.f_cancelDate, r.f_endDate, g.guest, "
+    QString query = QString("select r.f_id, r.f_startDate, r.f_endDate, r.f_cancelDate, g.guest, "
             "r.f_room, concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName) "
             "from f_reservation r   "
             "left join guests g on g.f_id=r.f_guest "

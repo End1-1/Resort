@@ -18,6 +18,10 @@ public:
     void setVoucher(const QString &id);
     virtual void callback(int sel, const QString &code);
     void setSide(quint32 side);
+    void setInvoice(const QString &invoice);
+    void setRoom(int room);
+    void setPaymentMode(int mode, int cl);
+    void setAmount(double amount);
 
 private slots:
     void on_btnSave_clicked();
@@ -32,6 +36,7 @@ private slots:
 private:
     Ui::DlgReceiptVaucher *ui;
     void cardVisible(bool v);
+    void clVisible(bool v);
     void clearSelectors();
     void fixTabWidget();
     void setBalance();

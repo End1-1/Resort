@@ -215,6 +215,9 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leLog1->setText(fPreferences.getDb(def_log_main_db).toString());
     ui->leLog2->setText(fPreferences.getDb(def_log_reserve_db).toString());
     ui->chPrintVoucherAfterSave->setChecked(fPreferences.getDb(def_print_voucher_after_save).toInt() == 1);
+    ui->lePenaltyList->setText(fPreferences.getDb(def_penalty_list).toString());
+    ui->leRoomMoveVoucher->setText(fPreferences.getDb(def_room_move_voucher).toString());
+    ui->leCheckoutVoucherId->setText(fPreferences.getDb(def_checkout_voucher_id).toString());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -264,6 +267,9 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->leLog1, "Log 1")
             .addWidget(ui->leLog2, "Log 2")
             .addWidget(ui->chPrintVoucherAfterSave, "Print voucher after save")
+            .addWidget(ui->lePenaltyList, "Penalty list")
+            .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
+            .addWidget(ui->leCheckoutVoucherId, "Checkout voucher id")
             ;
 
     getCompSettings();
@@ -358,6 +364,9 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_log_main_db, ui->leLog1->text());
     values.insert(def_log_reserve_db, ui->leLog2->text());
     values.insert(def_print_voucher_after_save, ui->chPrintVoucherAfterSave->isChecked() ? "1" : "0");
+    values.insert(def_penalty_list, ui->lePenaltyList->text());
+    values.insert(def_room_move_voucher, ui->leRoomMoveVoucher->text());
+    values.insert(def_checkout_voucher_id, ui->leCheckoutVoucherId->text());
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;

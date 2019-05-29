@@ -149,7 +149,7 @@ void WGuestInvoice::setBalance()
 
 void WGuestInvoice::setRoom(int room)
 {
-    ui->leRoom->setInt(room);
+    ui->leRoom->setInitialValue(room);
 }
 
 void WGuestInvoice::setRoomCategory(const QString &category)

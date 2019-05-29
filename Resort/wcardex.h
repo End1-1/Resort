@@ -1,14 +1,24 @@
 #ifndef WCARDEX_H
 #define WCARDEX_H
 
-#include "wreportgrid.h"
+#include "basewidget.h"
 
-class WCardex : public WReportGrid
+namespace Ui {
+class WCardex;
+}
+
+class WCardex : public BaseWidget
 {
     Q_OBJECT
+
 public:
-    WCardex(QWidget *parent = nullptr);
-    virtual void setupTab();
+    explicit WCardex(QWidget *parent = nullptr);
+    ~WCardex();
+    bool empty();
+    QString cardex();
+
+private:
+    Ui::WCardex *ui;
 };
 
 #endif // WCARDEX_H

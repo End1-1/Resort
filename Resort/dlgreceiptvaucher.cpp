@@ -28,6 +28,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->leOpcode->setInitialValue(WORKING_USERID);
     ui->leFinalName->setReadOnly(!r__(cr__super_correction));
     ui->deDate->setDate(WORKING_DATE);
+    ui->leCL->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->lePaymentCode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName, HINT_PAYMENT_MODE);
     ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
                                      << QString::number(PAYMENT_CARD)
@@ -35,6 +36,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
                                      << QString::number(PAYMENT_BARTER);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
+    clVisible(false);
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fDoc.setleID(ui->leVaucher);
     fDoc.fSource = VAUCHER_RECEIPT_N;
@@ -110,8 +112,13 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
                 cardVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT BANK"));
                 break;
+            case PAYMENT_CL:
+                clVisible(true);
+                ui->leFinalName->setText(QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest()));
+                break;
             default:
                 cardVisible(false);
+                clVisible(false);
                 ui->leFinalName->setText("PAYMENT " + c.fName());
                 break;
             }
@@ -131,6 +138,41 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
 void DlgReceiptVaucher::setSide(quint32 side)
 {
     fDoc.fSide = side;
+    if (side == 1) {
+        ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
+                                         << QString::number(PAYMENT_CARD)
+                                         << QString::number(PAYMENT_BANK)
+                                         << QString::number(PAYMENT_BARTER)
+                                         << QString::number(PAYMENT_CL);
+    }
+}
+
+void DlgReceiptVaucher::setInvoice(const QString &invoice)
+{
+    DoubleDatabase dd(true, false);
+    dd[":f_invoice"] = invoice;
+    dd.exec("select f_room from f_reservation where f_invoice=:f_invoice");
+    if (dd.nextRow()) {
+        setRoom(dd.getInt("f_room"));
+    }
+}
+
+void DlgReceiptVaucher::setRoom(int room)
+{
+    ui->wRoom->setRoom(room);
+}
+
+void DlgReceiptVaucher::setPaymentMode(int mode, int cl)
+{
+    ui->lePaymentCode->setInitialValue(mode);
+    if (cl > 0) {
+        ui->leCL->setInitialValue(cl);
+    }
+}
+
+void DlgReceiptVaucher::setAmount(double amount)
+{
+    ui->leAmountAMD->setDouble(amount);
 }
 
 void DlgReceiptVaucher::on_btnSave_clicked()
@@ -161,13 +203,16 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             finalName += ui->leCardName->text();
             break;
         case PAYMENT_CL:
-            finalName += "C/L " + ui->wRoom->guest();
+            if (ui->leCL->asInt() == 0) {
+                errors += tr("City ledger is not defined");
+            }
+            finalName = QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest());
             break;
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wRoom->guest();
             break;
         default:
-            errors += tr("Selected payment mode is not allowed here") + "<br>";
+            errors += tr("Selected mode of payment is not allowed here") + "<br>";
             break;
         }
         break;
@@ -239,6 +284,17 @@ void DlgReceiptVaucher::cardVisible(bool v)
     if (!v) {
         ui->leCardCode->clear();
         ui->leCardName->clear();
+    }
+}
+
+void DlgReceiptVaucher::clVisible(bool v)
+{
+    ui->lbCL->setVisible(v);
+    ui->leCL->setVisible(v);
+    ui->leCLName->setVisible(v);
+    if (!v) {
+        ui->leCL->clear();
+        ui->leCLName->clear();
     }
 }
 

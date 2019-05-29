@@ -41,11 +41,6 @@ void FCashReportSummary::apply(WReportGrid *rg)
     QString r = "'PS', 'PE'";
     QString t;
     if (ui->chHotel->isChecked()) {
-        if (ui->leOperator->asInt() == 0) {
-            query.replace(":operator", "");
-        } else {
-            query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
-        }
         t += h;
         query = query.replace(":orch",
         " or (m.f_source='CH' and (m.f_inv='' or m.f_inv is null) and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ")"
@@ -63,6 +58,11 @@ void FCashReportSummary::apply(WReportGrid *rg)
         query = query.replace(":orbr", QString(" or m.f_itemCode=%1 ").arg(fPreferences.getDb(def_auto_breakfast_id).toInt()));
     } else {
         query = query.replace(":orbr", "");
+    }
+    if (ui->leOperator->asInt() == 0) {
+        query.replace(":operator", "");
+    } else {
+        query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
     }
     if (t.isEmpty()) {
         message_error(tr("No report type is selected"));

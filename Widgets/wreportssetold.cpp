@@ -3,6 +3,8 @@
 #include "wreportgrid.h"
 #include "edateedit.h"
 #include "ecomboboxcompleter.h"
+#include "paymentmode.h"
+#include "doubleutils.h"
 
 WReportsSetOld::WReportsSetOld(QWidget *parent) :
     BaseWidget(parent),
@@ -10,34 +12,6 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
-
-    fBtnMonth.addButton(ui->rbJanuary);
-    fBtnMonth.addButton(ui->rbFebrary);
-    fBtnMonth.addButton(ui->rbMarch);
-    fBtnMonth.addButton(ui->rbApril);
-    fBtnMonth.addButton(ui->rbMay);
-    fBtnMonth.addButton(ui->rbJune);
-    fBtnMonth.addButton(ui->rbJuly);
-    fBtnMonth.addButton(ui->rbAugust);
-    fBtnMonth.addButton(ui->rbSeptember);
-    fBtnMonth.addButton(ui->rbOctober);
-    fBtnMonth.addButton(ui->rbNovember);
-    fBtnMonth.addButton(ui->rbDecember);
-    fBtnMonth.addButton(ui->rbYear);
-
-    ui->rbJanuary->fData["month"] = 1;
-    ui->rbFebrary->fData["month"] = 2;
-    ui->rbMarch->fData["month"] = 3;
-    ui->rbApril->fData["month"] = 4;
-    ui->rbMay->fData["month"] = 5;
-    ui->rbJune->fData["month"] = 6;
-    ui->rbJuly->fData["month"] = 7;
-    ui->rbAugust->fData["month"] = 8;
-    ui->rbSeptember->fData["month"] = 9;
-    ui->rbOctober->fData["month"] = 10;
-    ui->rbNovember->fData["month"] = 11;
-    ui->rbDecember->fData["month"] = 12;
-    ui->rbYear->fData["month"] = 0;
 
     int month = QDate::currentDate().month();
     QList<QAbstractButton*> e = fBtnMonth.buttons();
@@ -49,7 +23,6 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
         }
     }
 
-
     fBtnGroup.addButton(ui->rbrCategory);
     fBtnGroup.addButton(ui->rbrCategoryYearly);
     fBtnGroup.addButton(ui->rbrOccupancyCategory);
@@ -57,7 +30,6 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     fBtnGroup.addButton(ui->rbrCardex);
     fBtnGroup.addButton(ui->rbrCardexYearly);
     fBtnGroup.addButton(ui->rbrNatYearly);
-    fBtnGroup.addButton(ui->rbrNationalityPax);
     fBtnGroup.addButton(ui->rbrSalesMan);
     fBtnGroup.addButton(ui->rbrSalesManYearly);
     fBtnGroup.addButton(ui->rbrArrangement);
@@ -72,7 +44,6 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     ui->rbrCardex->fData["rep"] = 9;
     ui->rbrCardexYearly->fData["rep"] = 10;
     ui->rbrNatYearly->fData["rep"] = 11;
-    ui->rbrNationalityPax->fData["rep"] = 120;
 
     ui->rbrSalesMan->fData["rep"] = 12;
     ui->rbrSalesManYearly->fData["rep"] = 13;
@@ -134,7 +105,7 @@ void WReportsSetOld::rbClicked()
         QLabel *l = new QLabel(f.at(1));
         fFilterWidgets.append(l);
         ui->hlFilter->addWidget(l);
-        QWidget *wdt = 0;
+        QWidget *wdt = nullptr;
         if (f.at(2).toLower() == "date") {
             wdt = new EDateEdit();
         } else if (f.at(2).toLower() == "integer") {
@@ -180,64 +151,615 @@ void WReportsSetOld::on_btnGo_clicked()
     if (!eb) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD[":f_id"] = eb->fData["rep"];    
-    fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum, f_name from serv_reports where f_id=:f_id");
-    if (!fDD.nextRow()) {
-        message_error(tr("Cannot load report data."));
+    QList<QCheckBox*> chl = ui->wCh->checked();
+    if (chl.count() == 0) {
+        message_info(tr("No month selected"));
         return;
     }
-
-    QString fFilterSQL = fDD.getValue("f_sql").toString();
-    QString reportTitle = QString("%1 %2%3")
-            .arg(fDD.getValue("f_name").toString())
-            .arg(ui->cbYear->currentText())
-            .arg(static_cast<ERadioButton*>(fBtnMonth.checkedButton())->fData["month"].toInt() > 0 ? "-" + static_cast<ERadioButton*>(fBtnMonth.checkedButton())->fData["month"].toString() : "");
-
-    WReportGrid *rg = new WReportGrid(this);
-    ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
-    rg->setTab(ui->tabWidget, ui->tabWidget->count() - 1);
-    rg->setupTabTextAndIcon(reportTitle, ":/images/report.png");
-
-    rg->fModel->clearColumns();
-    QStringList widths = fDD.getValue("f_widths").toString().split(";", QString::SkipEmptyParts);
-    QStringList titles = fDD.getValue("f_titles_en").toString().split(";", QString::SkipEmptyParts);
-    for (int i = 0; i < widths.count(); i++) {
-        rg->fModel->setColumn(widths.at(i).toInt(), "", titles.at(i));
-    }
-
-    QString query = fFilterSQL;
-    query.replace(":year", ui->cbYear->currentText())
-            .replace(":month", static_cast<ERadioButton*>(fBtnMonth.checkedButton())->fData["month"].toString());
-
-    for (QMap<QWidget*, QString>::const_iterator it = fFilterFields.begin(); it != fFilterFields.end(); it++) {
-       if (isEDateEdit(it.key())) {
-           EDateEdit *e = static_cast<EDateEdit*>(it.key());
-           query.replace(it.value(), e->dateMySql());
-       } else if (isComboCompleter(it.key()) || isComboMonth(it.key())) {
-           EComboBoxCompleter *c = static_cast<EComboBoxCompleter*>(it.key());
-           if (c->currentData().toString().isEmpty()) {
-               query.replace(it.value(),  fFilterDefExpr[c] );
-           } else {
-               QString repStr = fFilterBuilds[c];
-               query.replace(it.value(), repStr.replace(it.value(), c->currentData().toString()) );
-           }
-       }
-    }
-
-
-    rg->fModel->apply(query.split(";", QString::SkipEmptyParts));
-    ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
-
-    rg->setTblNoTotalData();
-    QStringList sums = fDD.getValue("f_sum").toString().split(";", QString::SkipEmptyParts);
-    QList<int> cols;
-    QList<double> vals;
-    if (sums.count() > 0) {
-        foreach (QString s, sums) {
-            cols << s.toInt();
+    QString months;
+    for (QCheckBox *c: chl) {
+        if (months.length() > 0) {
+            months += ",";
         }
-        rg->fModel->sumOfColumns(cols, vals);
-        rg->setTblTotalData(cols, vals);
+        months += c->property("M").toString();
     }
+    int month = chl.at(0)->property("M").toInt();
+    QStringList mn = months.split(",", QString::SkipEmptyParts);
+    QMap<int, QString> ms;
+    for (const QString &s: mn) {
+        ms[s.toInt()] = s;
+    }
+    months = ms.values().join(",");
+    QString reportTitle;
+    if (month == 0) {
+        reportTitle = ", " + ui->cbYear->currentText();
+    } else {
+        reportTitle = ", " + ui->cbYear->currentText() + "/" + months;
+        reportTitle.replace("0,1,", "1,");
+    }
+    if (eb->fData["rep"].toInt() == 5 || eb->fData["rep"].toInt() == 7
+            || eb->fData["rep"].toInt() == 8
+            || eb->fData["rep"].toInt() == 11 || eb->fData["rep"].toInt() == 14) {
+        QList<QList<QVariant> > rows;
+        QList<int> widths;
+        QStringList titles;
+        QList<int> sumCols;
+        QList<double> sumVals;
+        switch (eb->fData["rep"].toInt()) {
+        case 5:
+            reportTitle = "Category" + reportTitle;
+            widths << 130 << 80 << 80 << 80 << 80 << 80 << 100 << 130 << 80;
+            titles << "CATEGORY" << "GUESTS" << "NIGHTS" << "FREE PAX" << "FREE NIGHTS" << "ROOMING" << "PENALTY" << "LENGTH OF STAY" << "AVG.ROOM";
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6;
+            category(rows, months);
+            break;
+        case 7:
+            reportTitle = "Occupancy " + reportTitle;
+            widths << 130
+                   << 100 << 100 << 100 << 100
+                   << 100 << 100 << 100 << 100
+                   << 100 << 100 << 100 << 100
+                   << 130;
+            titles << "CATEGORY"
+                   << "JAN" << "FEB" << "MAR" << "APR" << "MAY"
+                   << "JUN" << "JUL" << "AUG" << "SEP" << "OCT"
+                   << "NOV" << "DEC" << "TOTAL";
+            occupancy(rows, months);
+            break;
+        case 8:
+            reportTitle = "Nationality " + reportTitle;
+            widths << 150
+                   << 100 << 100 << 100 << 100
+                   << 100 << 120 << 100;
+            titles << "NATIONALITY"
+                   << "PAX" << "NIGHTS" << "FREE PAX" << "FREE NIGHTS"
+                   << "ROOMING" << "LENGTH OF STAY" << "AVG. ROOMING";
+            sumCols << 1 << 2 << 3 << 4 << 5;
+            nationality(rows, months);
+            break;
+        case 11:
+            reportTitle = "Nationality Yearly " + reportTitle;
+            widths << 130
+                   << 100 << 100 << 100 << 100
+                   << 100 << 100 << 100 << 100
+                   << 100 << 100 << 100 << 100
+                   << 130;
+            titles << "CATEGORY"
+                   << "JAN" << "FEB" << "MAR" << "APR" << "MAY"
+                   << "JUN" << "JUL" << "AUG" << "SEP" << "OCT"
+                   << "NOV" << "DEC" << "TOTAL";
+            nationalityYearly(rows, months);
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13;
+            break;
+        case 14:
+            reportTitle = "Room arrangement" + reportTitle;
+            widths << 130
+                   << 100 << 100 << 100 << 100
+                   << 100 << 100;
+            titles << "CATEGORY"
+                   << "NIGHTS B/O" << "NIGHTS B/B" << "PAX B/O" << "PAX B/B"
+                   << "ROOMING B/O" << "ROOMIN B/B";
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6;
+            roomArrangement(rows, months);
+            break;
+        }
+        WReportGrid *rg = new WReportGrid(this);
+        ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
+        rg->setTab(ui->tabWidget, ui->tabWidget->count() - 1);
+        rg->setupTabTextAndIcon(reportTitle, ":/images/report.png");
+        for (int i = 0; i < widths.count(); i++) {
+            rg->fModel->setColumn(widths.at(i), "", titles.at(i));
+        }
+        rg->fModel->fDD.fDbRows = rows;
+        rg->fModel->apply(rg);
+        rg->fModel->sumOfColumns(sumCols, sumVals);
+        rg->setTblTotalData(sumCols, sumVals);
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+        switch (eb->fData["rep"].toInt()) {
+        case 5:
+            rg->fTableView->setSpan(rg->fModel->rowCount() - 1, 0, 1, 6);
+            break;
+        case 7:
+            rg->fTableView->setSpan(rg->fModel->rowCount() - 1, 0, 1, 14);
+            rg->fTableView->setSpan(rg->fModel->rowCount() - 2, 0, 1, 14);
+            rg->fTableView->setSpan(rg->fModel->rowCount() - 3, 0, 1, 14);
+            rg->setTblNoTotalData();
+            break;
+        }
+    } else {
+        DoubleDatabase fDD(true, doubleDatabase);
+        fDD[":f_id"] = eb->fData["rep"];
+        fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum, f_name from serv_reports where f_id=:f_id");
+        if (!fDD.nextRow()) {
+            message_error(tr("Cannot load report data."));
+            return;
+        }
+
+        QString fFilterSQL = fDD.getValue("f_sql").toString();
+        WReportGrid *rg = new WReportGrid(this);
+        ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
+        rg->setTab(ui->tabWidget, ui->tabWidget->count() - 1);
+        rg->setupTabTextAndIcon(reportTitle, ":/images/report.png");
+
+        rg->fModel->clearColumns();
+        QStringList widths = fDD.getValue("f_widths").toString().split(";", QString::SkipEmptyParts);
+        QStringList titles = fDD.getValue("f_titles_en").toString().split(";", QString::SkipEmptyParts);
+        for (int i = 0; i < widths.count(); i++) {
+            rg->fModel->setColumn(widths.at(i).toInt(), "", titles.at(i));
+        }
+
+        QString query = fFilterSQL;
+        reportTitle = QString("%1 %2/%3")
+                    .arg(fDD.getString("f_name"))
+                    .arg(ui->cbYear->currentText())
+                    .arg(months);
+        query.replace(":year", ui->cbYear->currentText())
+                .replace(":month", months);
+
+        for (QMap<QWidget*, QString>::const_iterator it = fFilterFields.begin(); it != fFilterFields.end(); it++) {
+           if (isEDateEdit(it.key())) {
+               EDateEdit *e = static_cast<EDateEdit*>(it.key());
+               query.replace(it.value(), e->dateMySql());
+           } else if (isComboCompleter(it.key()) || isComboMonth(it.key())) {
+               EComboBoxCompleter *c = static_cast<EComboBoxCompleter*>(it.key());
+               if (c->currentData().toString().isEmpty()) {
+                   query.replace(it.value(),  fFilterDefExpr[c] );
+               } else {
+                   QString repStr = fFilterBuilds[c];
+                   query.replace(it.value(), repStr.replace(it.value(), c->currentData().toString()) );
+               }
+           }
+        }
+
+        rg->fModel->apply(query.split(";", QString::SkipEmptyParts));
+        ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
+
+        rg->setTblNoTotalData();
+        QStringList sums = fDD.getValue("f_sum").toString().split(";", QString::SkipEmptyParts);
+        QList<int> cols;
+        QList<double> vals;
+        if (sums.count() > 0) {
+            foreach (QString s, sums) {
+                cols << s.toInt();
+            }
+            rg->fModel->sumOfColumns(cols, vals);
+            rg->setTblTotalData(cols, vals);
+        }
+    }
+}
+
+void WReportsSetOld::category(QList<QList<QVariant> > &rows, const QString &month)
+{
+    QList<QVariant> er;
+    // category << pax << nights << free pax << free nights << rooming << noshow << length of stay << avg room
+    er << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_description from f_room_classes");
+    QMap<QString, int> catMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        catMap[dd.getString(0)] = rows.count() - 1;
+        rows[catMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query = "select rc.f_description, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+            "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+            "group by 1;";
+    query.replace(":monthlist", month);
+    query.replace(":year", ui->cbYear->currentText());
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][1] = dd.getInt(1);
+        rows[row][2] = dd.getDouble(2);
+    }
+
+    query = "select rc.f_description, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_room rm on rm.f_id=r.f_room "
+                "left join f_room_classes rc on rc.f_id=rm.f_class "
+                "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                "and r.f_state in (1,2,3,6) and m.f_amountAmd<0.01 "
+                "group by 1;";
+    query.replace(":monthlist", month);
+    query.replace(":year", ui->cbYear->currentText());
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][3] = dd.getInt(1);
+        rows[row][4] = dd.getDouble(2);
+    }
+
+    query = "select rc.f_description, sum(m.f_amountAmd) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+            "and r.f_state in (1,2,3,6) "
+            "group by 1";
+    query.replace(":monthlist", month);
+    query.replace(":year", ui->cbYear->currentText());
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][5] = dd.getDouble(1);
+    }
+
+    query = "select rc.f_description, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_room rm on rm.f_id=r.f_room "
+                "left join f_room_classes rc on rc.f_id=rm.f_class "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+    query.replace(":monthlist", month);
+    query.replace(":year", ui->cbYear->currentText());
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][6] = dd.getDouble(1);
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][1].toDouble() + rows[i][3].toDouble() > 0.01) {
+            rows[i][7] =  (rows[i][1].toDouble() + rows[i][3].toDouble()) / (rows[i][2].toDouble() + rows[i][4].toDouble());
+        } else {
+            rows[i][7] = 0;
+        }
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][2].toDouble() > 0) {
+            rows[i][8] = rows[i][5].toDouble() / rows[i][2].toDouble();
+        } else {
+            rows[i][8] = 0;
+        }
+    }
+    rows.append(er);
+    rows[rows.count() - 1][0] = QString("ROOMING: %1").arg(rooming);
+}
+
+void WReportsSetOld::occupancy(QList<QList<QVariant> > &rows, const QString &month)
+{
+    Q_UNUSED(month);
+    QList<QVariant> er;
+    // category << jan << feb << mar << apr << may << jun << jul << aug << sep << oct << nov << dec << total
+    er <<QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_description from f_room_classes");
+    QMap<QString, int> catMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        catMap[dd.getString(0)] = rows.count() - 1;
+        rows[catMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    dd.exec("select rc.f_description, count(rm.f_id) "
+            "from f_room rm "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "group by 1");
+    QMap<QString, int> countMap;
+    while (dd.nextRow()) {
+        countMap[dd.getString(0)] = dd.getInt(1);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query = "select rc.f_description, extract(month from m.f_wdate), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "inner join f_room rm on rm.f_id=r.f_room "
+            "inner join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_canceled=0 and m.f_finance=1 and m.f_itemCode in (" + rooming + ") "
+            "and extract(year from m.f_wdate)=:year "
+            "group by 1, 2";
+    query.replace(":year", ui->cbYear->currentText());
+    dd.exec(query);
+    QMap<int, QList<int> > totalDown;
+    QMap<QString, QList<int> > totalLeft;
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        int col = dd.getInt(1);
+        QString dateStr = QString("01/%1/%2").arg(dd.getInt(1), 2, 10, QChar('0')).arg(ui->cbYear->currentText());
+        int t = QDate::fromString(dateStr, "dd/MM/yyyy").daysInMonth();
+        t *= countMap[dd.getString(0)];
+        if (!totalDown.contains(dd.getInt(1))) {
+            QList<int> ti;
+            ti << 0 << 0 << 0;
+            totalDown[dd.getInt(1)] = ti;
+        }
+        totalDown[dd.getInt(1)][0] = totalDown[dd.getInt(1)][0] + t;
+        totalDown[dd.getInt(1)][1] = totalDown[dd.getInt(1)][1] + dd.getInt(2);
+        if (totalDown[dd.getInt(1)][0] > 0) {
+            totalDown[dd.getInt(1)][2] = totalDown[dd.getInt(1)][1] * 100 / totalDown[dd.getInt(1)][0];
+        } else {
+            totalDown[dd.getInt(1)][2] = 0;
+        }
+        if (!totalLeft.contains(dd.getString(0))) {
+            QList<int> ti;
+            ti << 0 << 0 << 0;
+            totalLeft[dd.getString(0)] = ti;
+        }
+        totalLeft[dd.getString(0)][0] = totalLeft[dd.getString(0)][0] + t;
+        totalLeft[dd.getString(0)][1] = totalLeft[dd.getString(0)][1] + dd.getInt(2);
+        if (totalLeft[dd.getString(0)][0] > 0) {
+            totalLeft[dd.getString(0)][2] = totalLeft[dd.getString(0)][1] * 100 / totalLeft[dd.getString(0)][0];
+        } else {
+            totalLeft[dd.getString(0)][2] = 0;
+        }
+        QString prc = (t == 0 ? "0" : QString::number(dd.getInt(2) * 100 / t, 'f', 0));
+        rows[row][col] = QString("%1").arg(t).rightJustified(4 + (4 - QString("%1").arg(t).length()))
+                + dd.getString(2).rightJustified(5 + (5 - dd.getString(2).length()))
+                + prc.rightJustified(3 + (3 - prc.length()));
+    }
+
+    rows.append(er);
+    rows[rows.count() - 1][0] = "TOTAL";
+    for (QMap<int, QList<int> >::const_iterator it = totalDown.begin(); it != totalDown.end(); it++) {
+        rows[rows.count() - 1][it.key()] = QString("%1%2%3")
+                .arg(it.value()[0], 4, 10, QChar(' '))
+                .arg(it.value()[1], 5, 10, QChar(' '))
+                .arg(it.value()[2], 3, 10, QChar(' '));
+    }
+    int a = 0, c = 0, p = 0;
+    for (QMap<QString, QList<int> >::const_iterator it = totalLeft.begin(); it != totalLeft.end(); it++) {
+        a += it.value()[0];
+        c += it.value()[1];
+        int row = catMap[it.key()];
+        rows[row][13] = QString("%1").arg(it.value()[0]).rightJustified(5 + (5 - QString::number(it.value()[0]).length()))
+                + QString::number(it.value()[1]).rightJustified(6 + (6 - QString::number(it.value()[1]).length()))
+                + QString::number(it.value()[2]).rightJustified(3 + (3 - QString::number(it.value()[2]).length()));
+    }
+    if (a == 0) {
+        p = 0;
+    } else {
+        p = c * 100 / a;
+    }
+    rows[rows.count() - 1][13] = QString("%1").arg(a).rightJustified(5 + (5 - QString::number(a).length()))
+            + QString::number(c).rightJustified(6 + (6 - QString::number(c).length()))
+            + QString::number(p).rightJustified(3 + (3 - QString::number(p).length()));
+    rows.append(er);
+    rows.append(er);
+    rows[rows.count() - 1][0] = "ROMMING :" + rooming;
+    rows.append(er);
+    rows[rows.count() - 1][0] = "EXPLANATION OF CONTENT: 1ST - AVAILABLE ROOMS FOR PERIOD, 2ND - COUNT OF CHARGES OF ROOMING, 3RD - COUNT OF CHARGES OF ROOMING * 100 / AVAILABLE ROOMS";
+}
+
+void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QString &month)
+{
+    // category << B/O << B/B << Pax B/O << Pax B/B << Rooming B/O << Romming B/B
+    QList<QVariant> er;
+    er <<QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_description from f_room_classes");
+    QMap<QString, int> catMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        catMap[dd.getString(0)] = rows.count() - 1;
+        rows[catMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
+            "from m_register m "
+            "inner join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year "
+            "and extract(month from m.f_wdate) in (:monthlist)"
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd "
+            "group by 1, 2 ";
+    query.replace(":year", ui->cbYear->currentText());
+    query.replace(":monthlist", month);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int col = 1;
+        switch (dd.getInt(1)) {
+        case 1:
+            break;
+        case 2:
+            col = 2;
+            break;
+        }
+        int row = catMap[dd.getString(0)];
+        rows[row][col] = dd.getInt(2);
+        rows[row][col + 2] = dd.getInt(3);
+        rows[row][col + 4] = dd.getDouble(4);
+    }
+}
+
+void WReportsSetOld::nationality(QList<QList<QVariant> > &rows, const QString &month)
+{
+    // Nationality << guest << nights << free guests << free nights << Rooming << lenght of stay << avg room
+    QList<QVariant> er;
+    er <<QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_name from f_nationality order by 1");
+    QMap<QString, int> natMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        natMap[dd.getString(0)] = rows.count() - 1;
+        rows[natMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query = "select n.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year "
+            "and extract(month from m.f_wdate) in (:monthlist) "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+            "group by 1 ";
+    query.replace(":year", ui->cbYear->currentText());
+    query.replace(":monthlist", month);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = natMap[dd.getString(0)];
+        rows[row][1] = dd.getInt(1);
+        rows[row][2] = dd.getInt(2);
+    }
+    query = "select n.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year "
+            "and extract(month from m.f_wdate) in (:monthlist) "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd <0.01 "
+            "group by 1 ";
+    query.replace(":year", ui->cbYear->currentText());
+    query.replace(":monthlist", month);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = natMap[dd.getString(0)];
+        rows[row][3] = dd.getInt(1);
+        rows[row][4] = dd.getInt(2);
+    }
+    query = "select n.f_name, sum(m.f_amountAmd) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year "
+            "and extract(month from m.f_wdate) in (:monthlist) and r.f_state in (1,2,3,6) "
+            "group by 1";
+    query.replace(":year", ui->cbYear->currentText());
+    query.replace(":monthlist", month);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = natMap[dd.getString(0)];
+        rows[row][5] = dd.getDouble(1);
+    }
+    for (int i = rows.count() - 1; i > -1; i--) {
+        if (rows[i][1].toInt() == 0
+                && rows[i][2].toInt() == 0
+                && rows[i][3].toInt() == 0
+                && rows[i][4].toInt() == 0
+                && zerodouble(rows[i][5].toDouble())) {
+            rows.removeAt(i);
+        } else {
+            if (rows[i][2].toInt() + rows[i][4].toInt() > 0) {
+                rows[i][6] = (rows[i][1].toDouble() + rows[i][3].toDouble()) / (rows[i][2].toDouble() + rows[i][4].toDouble());
+            } else {
+                rows[i][6] = 0;
+            }
+            if (rows[i][2].toInt() + rows[i][4].toInt() > 0) {
+                rows[i][7] = rows[i][5].toDouble() / (rows[i][2].toDouble() + rows[i][4].toDouble());
+            } else {
+                rows[i][6] = 0;
+            }
+        }
+    }
+}
+
+void WReportsSetOld::nationalityYearly(QList<QList<QVariant> > &rows, const QString &month)
+{
+    // Nationality << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << total
+    QList<QVariant> er;
+    er <<QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_name from f_nationality order by 1");
+    QMap<QString, int> natMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        natMap[dd.getString(0)] = rows.count() - 1;
+        rows[natMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query = "select n.f_name, extract(month from m.f_wdate), sum(m.f_amountAmd) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "where m.f_canceled=0 and m.f_finance=1 and m.f_itemCode in (" + rooming + ") "
+            "and extract(month from m.f_wdate) in (:monthlist) "
+            "and extract(year from m.f_wdate)=:year and r.f_state in(1,2,3,6) "
+            "group by 1, 2";
+    query.replace(":year", ui->cbYear->currentText());
+    query.replace(":monthlist", month);
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = natMap[dd.getString(0)];
+        int col = dd.getInt(1);
+        rows[row][col] = dd.getDouble(2);
+    }
+    for (int i = rows.count() - 1; i > -1; i--) {
+            if (rows[i][1].toInt() == 0
+                    && zerodouble(rows[i][1].toDouble())
+                    && zerodouble(rows[i][2].toDouble())
+                    && zerodouble(rows[i][3].toDouble())
+                    && zerodouble(rows[i][4].toDouble())
+                    && zerodouble(rows[i][5].toDouble())
+                    && zerodouble(rows[i][6].toDouble())
+                    && zerodouble(rows[i][7].toDouble())
+                    && zerodouble(rows[i][8].toDouble())
+                    && zerodouble(rows[i][9].toDouble())
+                    && zerodouble(rows[i][10].toDouble())
+                    && zerodouble(rows[i][11].toDouble())
+                    && zerodouble(rows[i][12].toDouble())) {
+                rows.removeAt(i);
+            } else {
+                rows[i][13] = rows[i][1].toDouble()
+                        + rows[i][2].toDouble()
+                        + rows[i][3].toDouble()
+                        + rows[i][4].toDouble()
+                        + rows[i][5].toDouble()
+                        + rows[i][6].toDouble()
+                        + rows[i][7].toDouble()
+                        + rows[i][8].toDouble()
+                        + rows[i][9].toDouble()
+                        + rows[i][10].toDouble()
+                        + rows[i][11].toDouble()
+                        + rows[i][12].toDouble();
+            }
+        }
+}
+
+void WReportsSetOld::on_chYear_clicked(bool checked)
+{
+    ui->wCh->checkAll(checked);
 }

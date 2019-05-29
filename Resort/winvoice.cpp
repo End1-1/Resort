@@ -638,6 +638,7 @@ void WInvoice::on_btnCheckout_clicked()
     fDD[":f_sign"] = 1;
     fDD[":f_doc"] = "";
     fDD[":f_rec"] = "";
+    fDD[":f_res"] = ui->leReserveID->text();
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_finance"] = 0;
     fDD[":f_remarks"] = "";

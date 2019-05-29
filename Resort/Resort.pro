@@ -17,6 +17,7 @@ DEFINES += _RESORT_
 DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
+    ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
     ../Server2/datahandler.cpp \
@@ -40,11 +41,14 @@ SOURCES += main.cpp\
     databasesconnections.cpp \
     databaseconnection.cpp \
     databasepasswordchange.cpp \
+    wcheckboxgroup.cpp \
     wcityledger.cpp \
     wguestinvoice.cpp \
     wmaindesk.cpp \
     wpaymentdetails.cpp \
     wquickcheckout.cpp \
+    wquickcheckoutbalance.cpp \
+    wquickcheckoutprocess.cpp \
     wquickreservations.cpp \
     wquickreservationscheckin.cpp \
     wquickreservationsguests.cpp \
@@ -419,6 +423,7 @@ SOURCES += main.cpp\
     ../Filter/fcitytrayledger2.cpp
 
 HEADERS  += mainwindow.h \
+    ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
     ../Server2/datahandler.h \
@@ -441,11 +446,14 @@ HEADERS  += mainwindow.h \
     databasesconnections.h \
     databaseconnection.h \
     databasepasswordchange.h \
+    wcheckboxgroup.h \
     wcityledger.h \
     wguestinvoice.h \
     wmaindesk.h \
     wpaymentdetails.h \
     wquickcheckout.h \
+    wquickcheckoutbalance.h \
+    wquickcheckoutprocess.h \
     wquickreservations.h \
     wquickreservationscheckin.h \
     wquickreservationsguests.h \
@@ -843,11 +851,14 @@ FORMS    += mainwindow.ui \
     databasesconnections.ui \
     databaseconnection.ui \
     databasepasswordchange.ui \
+    wcardex.ui \
     wcityledger.ui \
     wguestinvoice.ui \
     wmaindesk.ui \
     wpaymentdetails.ui \
     wquickcheckout.ui \
+    wquickcheckoutbalance.ui \
+    wquickcheckoutprocess.ui \
     wquickreservations.ui \
     wquickreservationscheckin.ui \
     wquickreservationsguests.ui \

@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
         QMessageBox::information(nullptr, "Logging", "Logging is enabled into " + d.homePath() + "/" + _APPLICATION_ + "/log.txt");
     }
     if (params.contains("noversion")) {
+        QMessageBox::information(nullptr, "No version", "No check version mode");
         DO_NOT_CHECK_VERSION = true;
     }
 #ifdef QT_DEBUG

@@ -30,6 +30,8 @@
 #define def_minibar_default_dish "default dish for minibar"
 #define def_passport_required "default passport required"
 #define def_rooming_list "rooming_list"
+#define def_penalty_list "penalty_list"
+#define def_room_move_voucher "room move voucher"
 #define def_invoice_header_mode "invoice header mode"
 #define def_external_rest_db "external restaurant db"
 
@@ -47,6 +49,7 @@
 #define def_late_checkout_id "Late checkout id"
 #define def_airport_pickup_id "Airport pickup id"
 #define def_day_use_id "Day use id"
+#define def_checkout_voucher_id "Checkout voucher id"
 #define def_vouchers_digits "Vouchers number digits"
 #define def_vouchers_right_header "Vouchers right header"
 #define def_vouchers_invoice_footer "Vouchers invoice footer"

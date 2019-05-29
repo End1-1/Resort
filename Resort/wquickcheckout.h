@@ -9,13 +9,15 @@ namespace Ui {
 class WQuickCheckout;
 }
 
-class CheckoutItemDelegate : public QItemDelegate {
+class WQuickCheckout;
+
+class WQuickCheckoutItemDelegate : public QItemDelegate {
 public:
-    CheckoutItemDelegate(QTreeWidget *parent = nullptr);
+    WQuickCheckoutItemDelegate(WQuickCheckout *w);
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 private:
-    QTreeWidget *fParent;
+    WQuickCheckout *fParent;
 };
 
 class WQuickCheckout : public BaseWidget
@@ -25,11 +27,23 @@ class WQuickCheckout : public BaseWidget
 public:
     explicit WQuickCheckout(QWidget *parent = nullptr);
     ~WQuickCheckout();
+    bool selected(int row);
     virtual void setup();
+    bool eventFilter(QObject *watched, QEvent *event);
+
+private slots:
+    void on_chAllInvoices_clicked(bool checked);
+    void on_btnRefresh_clicked();
+
+    void on_tbl_doubleClicked(const QModelIndex &index);
+
+    void on_btnCheckout_clicked();
 
 private:
     Ui::WQuickCheckout *ui;
-    void buildTree();
+    void refresh();
+    void setRowSelected(int flag);
+    void updateRow(int row);
 };
 
 #endif // WQUICKCHECKOUT_H

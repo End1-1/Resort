@@ -3,6 +3,7 @@
 #include "message.h"
 #include "cacheusers.h"
 #include "paymentmode.h"
+#include <QApplication>
 
 PExportInvoiceToExcel::PExportInvoiceToExcel() :
     QObject(),
@@ -79,116 +80,109 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
     drh.nextRow();
     numNights = drheader.getValue("ntotal").toInt();
 
-    /*
-    QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") : tr ("PROFORMA INVOICE");
-    e.setValue(invHeader, 1, 1);
-    e.mergeCells("A1", "E1", true);
-    e.setHorizontalAlignment("A1", "E1", Excel::hCenter);
-
-    e.setValue(fPreferences.getDb(def_vouchers_right_header).toString(), 1, 6);
+    int row = 1;
+    QFont fontHeader(qApp->font());
+    fontHeader.setBold(true);
+    d.style()->addHAlignment("header", xls_alignment_center);
+    d.style()->addFont("header", fontHeader);
+    XlsxCell *c = s->addCell(row++, 1, drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") : tr ("PROFORMA INVOICE"), d.style()->styleNum("header"));
+    s->setSpan("A1:E1");
+    s->addCell(1, 6, fPreferences.getDb(def_vouchers_right_header).toString());
     QString inv = QString("%1 #%2")
             .arg(tr("ROOM"))
             .arg(QString("%1").arg(drheader.getValue("f_room").toString()));
-    e.setValue(inv, 2, 1);
-    e.mergeCells("A2", "G2", true);
-    e.setHorizontalAlignment("A2", "G2", Excel::hCenter);
-
-    e.setValue(drheader.getValue("guest").toString(), 3, 1);
-    e.mergeCells("A3", "G3", true);
-    int row = 4;
+    s->addCell(row++, 1, inv, d.style()->styleNum("header"));
+    s->setSpan("A2:E2");
+    c = s->addCell(row++, 1, drheader.getValue("guest").toString());
+    s->setSpan("A3:E3");
     if (!drheader.getValue("f_address").toString().isEmpty()) {
-        e.setValue(tr("Address: ") + drheader.getValue("f_address").toString(), row, 1);
-        e.mergeCells("A4", "G4", true);
-        row++;
+        s->addCell(row++, 1, tr("Address: ") + drheader.getValue("f_address").toString());
+        s->setSpan("A4:E4");
     }
+
+    s->addCell(row, 1, tr("Nationality"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_nation").toString());
+    s->setSpan("C", "D", row);
     row++;
 
-    e.setValue(tr("Nationality"), row, 1);
-    e.setValue(drheader.getValue("f_nation").toString(), row, 3);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    //row 1
-    e.setValue(tr("Arrival date"), row, 4);
-    e.setValue(drheader.getValue("f_startDate").toString(), row, 6);
+    s->addCell(row, 4, tr("Arrival date"));
+    s->addCell(row, 6, drheader.getValue("f_startDate").toString());
     row++;
     //row 2
-    e.setValue(tr("Room category"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_description").toString(), row, 3);
-    e.setValue(tr("Departure date"), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_endDate").toString(), row, 6);
+    s->addCell(row, 1, tr("Room category"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_description").toString());
+    s->addCell(row, 4, tr("Departure date"));
+    s->setSpan("D", "E", row);
+    s->addCell(row, 6, drheader.getValue("f_endDate").toString());
     row++;
     //row 3
     QString room = drheader.getValue("f_room").toString();
     if (drheader.getValue("f_upgradeFrom").toInt() > 0) {
         room += "           " + drheader.getValue("f_upgradeFrom").toString();
     }
-    e.setValue(tr("S/N "), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(invoice, row, 3);
-    e.setValue(tr("Number of nights"), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
-    e.setValue(QString::number(numNights), row, 6);
+    s->addCell(row, 1, tr("S/N "));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, invoice);
+    s->addCell(row, 4, tr("Number of nights"));
+    s->setSpan("D", "E", row);
+    s->addCell(row, 6, numNights);
     row++;
     //row 4
-    e.setValue(tr("CheckIn"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_checkInDate").toString(), row, 3);
-    e.setValue(tr("Number of guests"), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
-    e.setValue(drheader.getValue("guest_qty").toString(), row, 6);
+    s->addCell(row, 1, tr("CheckIn"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_checkInDate").toString());
+    s->addCell(row, 4, tr("Number of guests"));
+    s->setSpan("D", "E", row);
+    s->addCell(row, 6, drheader.getValue("guest_qty").toInt());
     row++;
     //row 5
-    e.setValue(tr("CheckIn time"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_checkinTime").toString(), row, 3);
-    e.setValue(tr("CheckOut date"), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_checkOutTime").toString(), row, 6);
+    s->addCell(row, 1, tr("CheckIn time"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_checkinTime").toString());
+    s->addCell(row, 4, tr("CheckOut date"));
+    s->setSpan("D", "E", row);
+    s->addCell(row, 6, drheader.getValue("f_checkOutTime").toString());
     row++;
     //row 6
-    e.setValue(tr("Operator in"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_checkinUser").toString(), row, 3);
-    e.setValue(tr("CheckOut time"), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_checkOutTime").toString(), row, 6);
+    s->addCell(row, 1, tr("Operator in"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_checkinUser").toString());
+    s->addCell(row, 4, tr("CheckOut time"));
+    s->setSpan("D", "E", row);
+    s->addCell(row, 6, drheader.getValue("f_checkOutTime").toString());
     row++;
     //row 7
-    e.setValue(tr("Arrangement"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_arr").toString(), row, 3);
-    e.setValue(tr("CheckOut Op."), row, 4);
-    e.mergeCells("D" + QString::number(row), "E" + QString::number(row), true);
+    s->addCell(row, 1, tr("Arrangement"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_arr").toString());
+    s->addCell(row, 4, tr("CheckOut Op."));
+    s->setSpan("D", "E", row);
     CacheUsers u;
     if (u.get(drheader.getValue("f_checkOutUser").toString())) {
-        e.setValue(u.fFull(), row, 6);
+        s->addCell(row, 6, u.fFull());
     } else {
-        e.setValue("-", row, 6);
+        s->addCell(row, 6, "-");
     }
     row++;
     //row 8
-    e.setValue(tr("Cardex"), row, 1);
-    e.mergeCells("A" + QString::number(row), "B" + QString::number(row), true);
-    e.setValue(drheader.getValue("f_cardex").toString() + "/" + drheader.getValue("cardexname").toString(), row, 3);
-    e.setHorizontalAlignment("C5", "C13", Excel::hLeft);
-    e.setHorizontalAlignment("F5", "F13", Excel::hRight);
+    s->addCell(row, 1, tr("Cardex"));
+    s->setSpan("A", "B", row);
+    s->addCell(row, 3, drheader.getValue("f_cardex").toString() + "/" + drheader.getValue("cardexname").toString());
     row++;
     row++;
 
 
     //table header
     int r1 = row;
-    e.setValue(tr("*"), row, 1);
-    e.setValue(tr("Date"), row, 2);
-    e.setValue(tr("Description"), row, 3);
-    e.setValue(tr("Cur"), row, 4);
-    e.setValue(tr("Debit\n") + " " + drheader.getValue("vatmode").toString(), row, 5);
-    e.setValue(tr("Credit"), row, 6);
-    e.setValue(tr("Balance"), row, 7);
-    e.setHorizontalAlignment("A" + QString::number(row), "G" + QString::number(row), Excel::hCenter);
-    e.setVerticalAlignment("A" + QString::number(row), "G" + QString::number(row), Excel::vCenter);
-    e.setFontBold("A" + QString::number(row), "G" + QString::number(row), true);
+    s->addCell(row, 1, tr("*"));
+    s->addCell(row, 2, tr("Date"));
+    s->addCell(row, 3, tr("Description"));
+    s->addCell(row, 4, tr("Cur"));
+    s->addCell(row, 6, tr("Debit\n") + " " + drheader.getValue("vatmode").toString());
+    s->addCell(row, 6, tr("Credit"));
+    s->addCell(row, 7, tr("Balance"));
     row++;
 
     //table data
@@ -211,10 +205,10 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
             credit = drvoucher.getValue(i, "f_amountAmd").toDouble();
         }
 
-        e.setValue(QString::number(rowNum++), row, 1);
-        e.setValue(drvoucher.getValue(i, "f_wdate").toString(), row, 2);
-        e.setValue(drvoucher.getValue(i, "f_finalName").toString() + " " + drvoucher.getValue(i, "f_remarks").toString(), row, 3);
-        e.setValue("AMD", row, 4);
+        s->addCell(row, 1, QString::number(rowNum++));
+        s->addCell(row, 2, drvoucher.getValue(i, "f_wdate").toString());
+        s->addCell(row, 3, drvoucher.getValue(i, "f_finalName").toString() + " " + drvoucher.getValue(i, "f_remarks").toString());
+        s->addCell(row, 4, "AMD");
 
         int pMode = drvoucher.getValue(i, "f_paymentMode").toInt();
         if (drvoucher.getValue(i, "f_sign").toInt() <0 ) {
@@ -234,58 +228,59 @@ void PExportInvoiceToExcel::run(const QString &invoice, int fSide)
         totalCredit += credit;
         totalDebet += debet;
         lastBalance -= -1 * ((debet) - credit);
-        e.setValue(float_printout(debet), row, 5);
-        e.setValue(float_printout(credit), row, 6);
-        e.setValue(float_printout(lastBalance), row, 7);
+        s->addCell(row, 5, debet);
+        s->addCell(row, 6, credit);
+        s->addCell(row, 7, lastBalance);
         row++;
     }
-    e.setBorder("A" + QString::number(r1), "G" + QString::number(row - 1), 1);
+   // e.setBorder("A" + QString::number(r1), "G" + QString::number(row - 1), 1);
     row++;
 
     //Footer
     r1 = row;
-    e.setValue(tr("Total amount"), row, 3);
-    e.mergeCells("C" + QString::number(row), "D" + QString::number(row), true);
-    e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
-    e.setValue(float_printout(totalDebet), row, 5);
-    e.setValue(float_printout(totalCredit), row, 6);
-    e.setValue(float_printout(lastBalance), row, 7);
+    s->addCell(row, 3, tr("Total amount"));
+    s->setSpan("C", "D", row);
+   // e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
+    s->addCell(row, 5, totalDebet);
+    s->addCell(row, 6, totalCredit);
+    s->addCell(row, 7, lastBalance);
     row++;
-    e.setValue(tr("Total cash"), row, 3);
-    e.mergeCells("C" + QString::number(row), "D" + QString::number(row), true);
-    e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
-    e.setValue(float_printout(totalCash), row, 5);
+    s->addCell(row, 3, tr("Total cash"));
+    s->setSpan("C", "D", row);
+  //  e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
+    s->addCell(row, 5, totalCash);
     row++;
-    e.setValue(tr("Total cashless"), row, 3);
-    e.mergeCells("C" + QString::number(row), "D" + QString::number(row), true);
-    e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
-    e.setValue(float_printout(totalCard + totalOther), row, 5);
+    s->addCell(row, 3, tr("Total cashless"));
+    s->setSpan("C", "D", row);
+  //  e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
+    s->addCell(row, 5, totalCard + totalOther);
     row++;
-    e.setValue(tr("Being the equivalent of USD"), row, 3);
-    e.mergeCells("C" + QString::number(row), "D" + QString::number(row), true);
-    e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
-    e.setValue(float_printout(totalDebet / def_usd), row, 5);
-    e.setValue(float_printout(totalCredit / def_usd), row, 6);
-    e.setValue(float_printout(lastBalance / def_usd), row, 7);
+    s->addCell(row, 3, tr("Being the equivalent of USD"));
+    s->setSpan("C", "D", row);
+  //  e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
+    s->addCell(row, 5, totalDebet / def_usd);
+    s->addCell(row, 6, totalCredit / def_usd);
+    s->addCell(row, 7, lastBalance / def_usd);
     row++;
 
     if (drheader.getValue("vatmode").toInt() == VAT_INCLUDED) {
-        e.setValue(tr("VAT 20%"), row, 3);
-        e.mergeCells("C" + QString::number(row), "D" + QString::number(row), true);
-        e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
-        e.setValue(float_printout(totalVat), row, 5);
+        s->addCell(row, 3, tr("VAT 20%"));
+        s->setSpan("C", "D", row);
+   //     e.setHorizontalAlignment("C" + QString::number(row), "D" + QString::number(row), Excel::hRight);
+        s->addCell(row, 5, totalVat);
         row++;;
     }
-    e.setBorder("C" + QString::number(r1), "G" + QString::number(row - 1), 1);
+   // e.setBorder("C" + QString::number(r1), "G" + QString::number(row - 1), 1);
     row++;
 
-    e.setValue(tr("Guest signature"), row, 1);
+    s->addCell(row, 1, tr("Guest signature"));
     row++;
-    e.setValue(tr("The sum of only ") + Utils::numberToWords(totalCredit), row, 1);
-    e.mergeCells("A" + QString::number(row), "G" + QString::number(row), true);
+    s->addCell(row, 1, tr("The sum of only ") + Utils::numberToWords(totalCredit));
+  //  e.mergeCells("A" + QString::number(row), "G" + QString::number(row), true);
     row++;
-    e.setValue(fPreferences.getDb(def_vouchers_invoice_footer).toString(), row, 1);
-    e.mergeCells("A" + QString::number(row), "G" + QString::number(row), true);
-    e.show();
-    */
+    s->addCell(row, 1, fPreferences.getDb(def_vouchers_invoice_footer).toString());
+  //  e.mergeCells("A" + QString::number(row), "G" + QString::number(row), true);
+
+    QString err;
+    d.save(err, true);
 }

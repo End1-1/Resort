@@ -243,9 +243,21 @@ bool WReservationRoomTab::save()
         ui->deCreated->setDate(WORKING_DATE);
         createUser = WORKING_USERID;
     }
-    QString oldRoom = fTrackControl->oldValue(ui->leRoomCode);;
+    QString oldRoom = fTrackControl->oldValue(ui->leRoomCode);
     if (ui->leReservId->notEmpty() && changeRoom) {
         if (fTrackControl->isValueChanged(ui->leRoomCode)) {
+            if (ui->leReserveCode->asInt() == RESERVE_CHECKIN) {
+                DBMRegister drrc;
+                drrc.fSource = VOUCHER_MOVE_ROOM_N;
+                drrc.fInvoice = ui->leInvoice->text();
+                drrc.fReserve = ui->leReservId->text();
+                drrc.fItemCode = fPreferences.getDb(def_room_move_voucher).toUInt();
+                drrc.fFinalName = QString("MOVE ROOM (%1)%2 -> %3")
+                        .arg(ui->leInvoice->text())
+                        .arg(fTrackControl->oldValue(ui->leRoomCode))
+                        .arg(ui->leRoomCode->text());
+                drrc.save(fDD);
+            }
             /*------------- BEGIN CHANGE ROOM ------------------*/
             fDD[":f_upgradeFrom"] = fTrackControl->oldValue(ui->leRoomCode).toInt();
             result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));

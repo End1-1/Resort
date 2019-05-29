@@ -832,3 +832,9 @@ void WMainDesk::on_btnColors_clicked()
     d->exec();
     delete d;
 }
+
+void WMainDesk::on_btnRefreshChart_clicked()
+{
+    CacheOne::clearAll();
+    on_btnClearFilter_clicked();
+}

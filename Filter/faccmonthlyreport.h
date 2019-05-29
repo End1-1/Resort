@@ -30,6 +30,10 @@ private:
     void setTabText();
     void setDateRange();
     void getInvoiceContent(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap, int col, const QString &item);
+    void getAvailableRoom(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap);
+    void getNights(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap);
+    void getFreeNights(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap);
+    void getGuest(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap);
     void getGPOSContent(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap, int col, const QString &store);
 };
 

@@ -49,6 +49,116 @@ void FAccMonthlyReport::getInvoiceContent(QList<QList<QVariant> > &rows, QMap<QS
     }
 }
 
+void FAccMonthlyReport::getAvailableRoom(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap)
+{
+    QString date = "date_format(d.f_date, '%d/%m/%Y')";
+    if (ui->rbWeek->isChecked()) {
+        date = "date_format(d.f_date, '%v, %m/%Y')";
+    }
+    if (ui->rbMonth->isChecked()) {
+        date = "date_format(d.f_date, '%m/%Y')";
+    }
+    if (ui->rbYear->isChecked()) {
+        date = "date_format(d.f_date, '%Y')";
+    }
+    DoubleDatabase dd(true, false);
+    dd[":f_date1"] = ui->deStart->date();
+    dd[":f_date2"] = ui->deEnd->date();
+    dd.exec("select " + date + ", count(rm.f_id) from f_room rm, s_days d where d.f_date between :f_date1 and :f_date2 group by 1");
+    while (dd.nextRow()) {
+        int destRow = dateMap[dd.getString(0)];
+        rows[destRow][15] = dd.getValue(1);
+    }
+}
+
+void FAccMonthlyReport::getNights(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap)
+{
+    QString date = "date_format(m.f_wdate, '%d/%m/%Y')";
+    if (ui->rbWeek->isChecked()) {
+        date = "date_format(m.f_wdate, '%v, %m/%Y')";
+    }
+    if (ui->rbMonth->isChecked()) {
+        date = "date_format(m.f_wdate, '%m/%Y')";
+    }
+    if (ui->rbYear->isChecked()) {
+        date = "date_format(m.f_wdate, '%Y')";
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    DoubleDatabase dd(true, false);
+    dd[":f_date1"] = ui->deStart->date();
+    dd[":f_date2"] = ui->deEnd->date();
+    dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
+    dd.exec("select " + date + ", count(m.f_id) "
+               "from m_register m "
+               "where m.f_canceled=:f_canceled and m.f_wdate between :f_date1 and :f_date2 and m.f_amountamd>0.1 and m.f_finance=1 "
+               "and m.f_itemCode in (" + rooming + ") and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+               "group by 1");
+    while (dd.nextRow()) {
+        int destRow = dateMap[dd.getString(0)];
+        rows[destRow][16] = dd.getValue(1);
+    }
+}
+
+void FAccMonthlyReport::getFreeNights(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap)
+{
+    QString date = "date_format(m.f_wdate, '%d/%m/%Y')";
+    if (ui->rbWeek->isChecked()) {
+        date = "date_format(m.f_wdate, '%v, %m/%Y')";
+    }
+    if (ui->rbMonth->isChecked()) {
+        date = "date_format(m.f_wdate, '%m/%Y')";
+    }
+    if (ui->rbYear->isChecked()) {
+        date = "date_format(m.f_wdate, '%Y')";
+    }
+    DoubleDatabase dd(true, false);
+    dd[":f_date1"] = ui->deStart->date();
+    dd[":f_date2"] = ui->deEnd->date();
+    dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
+    dd.exec("select " + date + ", count(m.f_id) "
+               "from m_register m "
+               "where m.f_canceled=:f_canceled and m.f_wdate between :f_date1 and :f_date2 and m.f_amountamd<0.01 and m.f_finance=1 "
+               "and m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+               "group by 1");
+    while (dd.nextRow()) {
+        int destRow = dateMap[dd.getString(0)];
+        rows[destRow][17] = dd.getValue(1);
+    }
+}
+
+void FAccMonthlyReport::getGuest(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap)
+{
+    QString date = "date_format(m.f_wdate, '%d/%m/%Y')";
+    if (ui->rbWeek->isChecked()) {
+        date = "date_format(m.f_wdate, '%v, %m/%Y')";
+    }
+    if (ui->rbMonth->isChecked()) {
+        date = "date_format(m.f_wdate, '%m/%Y')";
+    }
+    if (ui->rbYear->isChecked()) {
+        date = "date_format(m.f_wdate, '%Y')";
+    }
+    DoubleDatabase dd(true, false);
+    dd[":f_date1"] = ui->deStart->date();
+    dd[":f_date2"] = ui->deEnd->date();
+    dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
+    dd.exec("select " + date + ", sum(r.f_man+r.f_woman+r.f_child) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "where m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=:f_canceled and f_finance=1 "
+            "and r.f_state in(1, 3) "
+            "and m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") "
+            "group by 1");
+    while (dd.nextRow()) {
+        int destRow = dateMap[dd.getString(0)];
+        rows[destRow][19] = dd.getValue(1);
+    }
+
+}
+
 void FAccMonthlyReport::getGPOSContent(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap, int col, const QString &store)
 {
     DoubleDatabase fDD(true, doubleDatabase);
@@ -152,18 +262,7 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     for (int i = 0; i < fDD.rowCount(); i++) {
         getInvoiceContent(rows, dateMap, i + 2, fDD.getValue(i, "f_items").toString());
     }
-//    getInvoiceContent(rows, dateMap, 2, "1,66,69,11,12,14,15,65"); //rooming all rm
-//    getInvoiceContent(rows, dateMap, 3, "13"); //extrabed
-//    getInvoiceContent(rows, dateMap, 4, "16"); //minibar
-//    getInvoiceContent(rows, dateMap, 5, "5"); //laundry
-//    getInvoiceContent(rows, dateMap, 6, "2,3,4"); //Phone, fax
-//    getInvoiceContent(rows, dateMap, 7, "7"); //Conf
-//    getInvoiceContent(rows, dateMap, 8, "10,6"); // other, massage
-//    getInvoiceContent(rows, dateMap, 9, "19"); //roscafe
-//    getInvoiceContent(rows, dateMap, 10, "18"); //rest
-//    getInvoiceContent(rows, dateMap, 11, "9"); //airport
-//    getInvoiceContent(rows, dateMap, 12, "68,73"); //bank/events
-//    getInvoiceContent(rows, dateMap, 13, "17"); //break
+
 //    Total
     for (int i = 0; i < rows.count(); i++) {
         rows[i][14] = 0.0;
@@ -191,21 +290,23 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     if (ui->rbYear->isChecked()) {
         date = "date_format(f_date, '%x')";
     }
-
-    //Occupied date, av room rooms, rate, free room, pax
-    fDD[":date1"] = ui->deStart->date();
-    fDD[":date2"] = ui->deEnd->date();
-    fDD.exec("call occupied_room_in_range(:date1, :date2)");
-    fDD.exec("select " + date + ", sum(f_avroom), sum(f_room), sum(f_rate), sum(f_free), sum(f_pax) from map group by 1");
-    while (fDD.nextRow()) {
-        int destRow = dateMap[fDD.getString(0)];
-        rows[destRow][15] = fDD.getValue(1);
-        rows[destRow][16] = fDD.getValue(2);
-        rows[destRow][17] = fDD.getValue(4);
-        rows[destRow][18] = fDD.getValue(3);
-        rows[destRow][19] = fDD.getValue(5);
-    }
-    fDD.exec("drop temporary table map");
+    getAvailableRoom(rows, dateMap);
+    getNights(rows, dateMap);
+    getFreeNights(rows, dateMap);
+    getGuest(rows, dateMap);
+//    //Occupied date, av room rooms, rate, free room, pax
+//    fDD[":date1"] = ui->deStart->date();
+//    fDD[":date2"] = ui->deEnd->date();
+//    fDD.exec("call occupied_room_in_range(:date1, :date2)");
+//    fDD.exec("select " + date + ", sum(f_avroom), sum(f_room), sum(f_rate), sum(f_free), sum(f_pax) from map group by 1");
+//    while (fDD.nextRow()) {
+//        int destRow = dateMap[fDD.getString(0)];
+//        rows[destRow][16] = fDD.getValue(2);
+//        rows[destRow][17] = fDD.getValue(4);
+//        rows[destRow][18] = fDD.getValue(3);
+//        rows[destRow][19] = fDD.getValue(5);
+//    }
+//    fDD.exec("drop temporary table map");
 
     for (int i = 0; i < rows.count(); i++) {
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>905</width>
-    <height>470</height>
+    <height>731</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -42,17 +45,7 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Year</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
+          <item row="1" column="1">
            <widget class="QComboBox" name="cbYear">
             <property name="maximumSize">
              <size>
@@ -77,7 +70,7 @@
             </item>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="1" column="3">
            <widget class="QPushButton" name="btnGo">
             <property name="maximumSize">
              <size>
@@ -100,116 +93,181 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QWidget" name="widget_2" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>2</verstretch>
-             </sizepolicy>
+          <item row="1" column="2">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="minimumSize">
+            <property name="sizeHint" stdset="0">
              <size>
-              <width>0</width>
-              <height>0</height>
+              <width>40</width>
+              <height>20</height>
              </size>
             </property>
-            <property name="styleSheet">
-             <string notr="true">background:rgb(200, 200, 200)</string>
+           </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Year</string>
             </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="1" column="1">
-              <widget class="ERadioButton" name="rbFebrary">
-               <property name="text">
-                <string>February</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="ERadioButton" name="rbJanuary">
-               <property name="text">
-                <string>January</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="4">
-              <widget class="ERadioButton" name="rbNovember">
-               <property name="text">
-                <string>November</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="ERadioButton" name="rbApril">
-               <property name="text">
-                <string>April</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="5">
-              <widget class="ERadioButton" name="rbJune">
-               <property name="text">
-                <string>June</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="4">
-              <widget class="ERadioButton" name="rbMay">
-               <property name="text">
-                <string>May</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="ERadioButton" name="rbJuly">
-               <property name="text">
-                <string>July</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="ERadioButton" name="rbAugust">
-               <property name="text">
-                <string>August</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3">
-              <widget class="ERadioButton" name="rbOctober">
-               <property name="text">
-                <string>October</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="ERadioButton" name="rbSeptember">
-               <property name="text">
-                <string>September</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="ERadioButton" name="rbMarch">
-               <property name="text">
-                <string>March</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="5">
-              <widget class="ERadioButton" name="rbDecember">
-               <property name="text">
-                <string>December</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="ERadioButton" name="rbYear">
-               <property name="text">
-                <string>Yearly</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="WCheckBoxGroup" name="wCh" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item row="1" column="4">
+           <widget class="QCheckBox" name="checkBox_7">
+            <property name="text">
+             <string>April</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>4</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QCheckBox" name="checkBox_9">
+            <property name="text">
+             <string>August</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>8</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>March</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="5">
+           <widget class="QCheckBox" name="checkBox_11">
+            <property name="text">
+             <string>November</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>11</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="QCheckBox" name="checkBox_5">
+            <property name="text">
+             <string>June</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>6</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QCheckBox" name="checkBox_6">
+            <property name="text">
+             <string>May</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QCheckBox" name="checkBox_10">
+            <property name="text">
+             <string>October</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>10</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QCheckBox" name="checkBox_3">
+            <property name="text">
+             <string>February</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>2</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBox_4">
+            <property name="text">
+             <string>January</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="6">
+           <widget class="QCheckBox" name="checkBox_12">
+            <property name="text">
+             <string>December</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>12</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QCheckBox" name="checkBox_8">
+            <property name="text">
+             <string>September</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>9</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="checkBox_2">
+            <property name="text">
+             <string>Jule</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>7</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="chYear">
+            <property name="text">
+             <string>Year</string>
+            </property>
+            <property name="M" stdset="0">
+             <number>0</number>
+            </property>
            </widget>
           </item>
          </layout>
@@ -241,13 +299,6 @@
               <widget class="ERadioButton" name="rbrNatYearly">
                <property name="text">
                 <string>Nationality Yearly</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="ERadioButton" name="rbrNationalityPax">
-               <property name="text">
-                <string>Nationaliy / Pax</string>
                </property>
               </widget>
              </item>
@@ -493,6 +544,19 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -505,7 +569,44 @@
    <extends>QRadioButton</extends>
    <header location="global">eradiobutton.h</header>
   </customwidget>
+  <customwidget>
+   <class>WCheckBoxGroup</class>
+   <extends>QWidget</extends>
+   <header location="global">wcheckboxgroup.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>cbYear</tabstop>
+  <tabstop>checkBox_4</tabstop>
+  <tabstop>checkBox_3</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>checkBox_7</tabstop>
+  <tabstop>checkBox_6</tabstop>
+  <tabstop>checkBox_5</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>checkBox_9</tabstop>
+  <tabstop>checkBox_8</tabstop>
+  <tabstop>checkBox_10</tabstop>
+  <tabstop>checkBox_11</tabstop>
+  <tabstop>checkBox_12</tabstop>
+  <tabstop>chYear</tabstop>
+  <tabstop>rbrCategory</tabstop>
+  <tabstop>rbrCategoryYearly</tabstop>
+  <tabstop>rbrOccupancyCategory</tabstop>
+  <tabstop>rbrNationality</tabstop>
+  <tabstop>rbrNatYearly</tabstop>
+  <tabstop>rbrMarketSigment</tabstop>
+  <tabstop>rbrMarketSigmentYearly</tabstop>
+  <tabstop>rbrCardex</tabstop>
+  <tabstop>rbrCardexYearly</tabstop>
+  <tabstop>rbrSalesMan</tabstop>
+  <tabstop>rbrSalesManYearly</tabstop>
+  <tabstop>rbrArrangement</tabstop>
+  <tabstop>rbrPax</tabstop>
+  <tabstop>btnGo</tabstop>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
  <resources>
   <include location="../Resort/res.qrc"/>
  </resources>
@@ -587,22 +688,6 @@
     <hint type="destinationlabel">
      <x>382</x>
      <y>466</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbrNationalityPax</sender>
-   <signal>clicked()</signal>
-   <receiver>WReportsSetOld</receiver>
-   <slot>rbClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>338</x>
-     <y>242</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>102</x>
-     <y>463</y>
     </hint>
    </hints>
   </connection>

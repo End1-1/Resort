@@ -329,6 +329,15 @@ void DlgEndOfDay::on_btnOk_clicked()
         fDD.insert("f_room_state_change", false);
     }
 
+    /* ADD DAY TO S_DAYS SYSTEM TABLE */
+    fDD[":f_date"] = WORKING_DATE.addDays(1);
+    fDD.exec("select f_id from s_days where f_date=:f_date");
+    if (!fDD.nextRow()) {
+        fDD[":f_date"] = WORKING_DATE.addDays(1);
+        fDD.insert("s_days");
+    }
+    /* END OF ADD DAY TO S_DAYS SYSTEM TABLE */
+
     if (result) {
         fDD.exec("insert into f_eod (f_date) values (current_timestamp())");
         fDD.commit();

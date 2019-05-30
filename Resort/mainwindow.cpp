@@ -22,9 +22,11 @@
 #include "dlgquickroomassignment.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
+#include "wcardexlist.h"
 #include "dlgtransferlog.h"
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
+#include "fcashreportbyitem.h"
 #include "wquickreservations.h"
 #include "wwelcome.h"
 #include "fhouseitems.h"
@@ -592,6 +594,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionTransfer_amount->setVisible(r__(cr__discount_vaucher));
     ui->actionCash_report_total->setVisible(r__(cr__report_cash));
     ui->actionCash_repoort_detailed->setVisible(r__(cr__report_cash));
+    ui->actionCash_report_items->setVisible(r__(cr__report_cash));
     ui->actionAdvance_report->setVisible(r__(cr__cashier_advance_report));
     ui->actionCancelation_No_show_fee->setVisible(r__(cr__reservation_cancelation_no_show));
     ui->actionRefund_voucher->setVisible(r__(cr__cashier_refund));
@@ -771,7 +774,7 @@ void MainWindow::on_actionInvoices_triggered()
 
 void MainWindow::on_actionPartners_triggered()
 {
-    addTab<WCardex>();
+    addTab<WCardexList>();
 }
 
 void MainWindow::on_actionHakk_triggered()
@@ -2228,4 +2231,9 @@ void MainWindow::on_actionTax_server_triggered()
 void MainWindow::on_actionQuick_checkout_triggered()
 {
     addTab<WQuickCheckout>();
+}
+
+void MainWindow::on_actionCash_report_items_triggered()
+{
+    FCashReportByItem::openFilterReport<FCashReportByItem, WReportGrid>();
 }

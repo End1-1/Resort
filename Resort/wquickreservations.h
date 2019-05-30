@@ -54,6 +54,7 @@ private slots:
     void on_btnOpenReservation_clicked();
     void on_btnGuests_clicked();
     void on_btnCheckinSelected_clicked();
+    void on_btnClearSelectedRooms_clicked();
 
 private:
     Ui::WQuickReservations *ui;

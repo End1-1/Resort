@@ -2,7 +2,13 @@
 #include "ui_wquickcheckout.h"
 #include "dlgreceiptvaucher.h"
 #include "paymentmode.h"
+#include "printtaxd.h"
 #include "winvoice.h"
+#include "cacheguest.h"
+#include "vauchers.h"
+#include "dlgpostcharge.h"
+#include "cacheinvoiceitem.h"
+#include "cachetaxmap.h"
 #include "wquickcheckoutprocess.h"
 #include <QPainter>
 
@@ -210,6 +216,7 @@ void WQuickCheckout::on_tbl_doubleClicked(const QModelIndex &index)
     }
     DoubleDatabase dd(true, false);
     auto *rv = new DlgReceiptVaucher(this);
+    auto *pt =  new PrintTaxD(this);
     rv->setRoom(ui->tbl->toInt(index.row(), 0));
     rv->setRoom(ui->tbl->toInt(index.row(), 0));
     switch (index.column()) {
@@ -239,10 +246,80 @@ void WQuickCheckout::on_tbl_doubleClicked(const QModelIndex &index)
             rv->exec();
         }
         break;
-    case 6:
+    case 6: {
+        pt->fInvoice = ui->tbl->toString(index.row(), 1);
+        dd[":f_inv"] = pt->fInvoice;
+        dd.exec("select m.f_id, m.f_source, m.f_itemcode, m.f_amountamd, m.f_vatmode "
+                "from m_register m "
+                "where m.f_inv=:f_inv and m.f_finance=1 and m.f_canceled=0 "
+                "and m.f_source<>'RV' and m.f_fiscal=0 ");
+        while (dd.nextRow()) {
+            if (dd.getString("f_source") == VAUCHER_POINT_SALE_N) {
+                QString orderId = dd.getString("f_id");
+                CacheInvoiceItem c;
+                if (!c.get(dd.getString("f_itemcode"))) {
+                    message_error(tr("Error in tax print. c == 0, case 2."));
+                    continue;
+                }
+                CacheTaxMap ci;
+                if (!ci.get(c.fCode())) {
+                    message_error(tr("Tax department undefined for ") + c.fName());
+                    return;
+                }
+                DoubleDatabase fDD(true, doubleDatabase);
+                fDD[":f_header"] = orderId;
+                fDD[":f_state"] = DISH_STATE_READY;
+                fDD.exec("select d.f_id, d.f_am, d.f_adgt, od.f_qty, od.f_price "
+                           "from o_dish od "
+                           "inner join r_dish d on d.f_id=od.f_dish "
+                           "where od.f_header=:f_header and od.f_state=:f_state "
+                           "and (od.f_complex=0 or (od.f_complex>0 and od.f_complexId>0)) ");
+                while (fDD.nextRow()) {
+                    QString vatReception = c.fVatDept();
+                    if (!c.fVatReception().isEmpty()) {
+                        vatReception = c.fVatReception();
+                    }
+                    pt->fDept.append(dd.getInt("f_vatmode") == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+                    pt->fRecList.append(dd.getString("f_id"));
+                    pt->fCodeList.append(fDD.getString(0));
+                    pt->fNameList.append(fDD.getString(1));
+                    pt->fPriceList.append(fDD.getString(4));
+                    pt->fQtyList.append(fDD.getString(3));
+                    pt->fAdgCode.append(fDD.getString(2));
+                    pt->fTaxNameList.append(fDD.getString(1));
+                }
+            } else  {
+                CacheInvoiceItem c;
+                if (!c.get(dd.getString("f_itemcode"))) {
+                    message_error(tr("Error in tax print. c == 0, case 1."));
+                    continue;
+                }
+                CacheTaxMap ci;
+                if (!ci.get(c.fCode())) {
+                    message_error(tr("Tax department undefined for ") + c.fName());
+                    return;
+                }
+                pt->fDept.append(dd.getInt("f_vatmode") == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+                pt->fRecList.append(dd.getString("f_id"));
+                pt->fCodeList.append(c.fCode());
+                pt->fNameList.append(c.fTaxName());
+                pt->fPriceList.append(dd.getString("f_amountamd"));
+                pt->fQtyList.append("1");
+                pt->fAdgCode.append(c.fAdgt());
+                pt->fTaxNameList.append(c.fTaxName());
+            }
+        }
+        pt->build();
+        if (pt->fRecList.count() > 0) {
+            pt->exec();
+        } else {
+            message_info(tr("Nothing to print"));
+        }
         break;
     }
+    }
     delete rv;
+    delete pt;
     updateRow(index.row());
 }
 
@@ -254,11 +331,69 @@ void WQuickCheckout::on_btnCheckout_clicked()
             invoices << ui->tbl->toString(i, 1);
         }
     }
-    if (invoices.count() > 0) {
+    if (invoices.count() == 0) {
+        message_info(tr("Nothing was selected"));
+        return;
+    } else {
+        if (message_confirm(tr("Confirm to checkout")) != QDialog::Accepted) {
+            return;
+        }
         WQuickCheckoutProcess *wp = new WQuickCheckoutProcess(this);
         wp->setListOfInvoices(invoices);
         wp->exec();
         delete wp;
         refresh();
     }
+}
+
+void WQuickCheckout::on_btnCommonPostCharge_clicked()
+{
+    QStringList invoices;
+    for (int i = 0; i < ui->tbl->rowCount(); i++) {
+        if (ui->tbl->item(i, 0)->data(Qt::UserRole).toInt() == 1) {
+            invoices << ui->tbl->toString(i, 1);
+        }
+    }
+    if (invoices.count() == 0) {
+        message_info(tr("Nothing was selected"));
+        return;
+    } else {
+        auto *pc = new DlgPostCharge(this);
+        pc->setInvoice(invoices.at(0));
+        pc->exec();
+        QString doc = pc->voucher();
+        delete pc;
+        if (doc.isEmpty()) {
+            message_info(tr("Nothing was charged"));
+            return;
+        }
+        invoices.removeAt(0);
+        DoubleDatabase dd(true, doubleDatabase);
+        for (const QString &s: invoices) {
+            dd[":f_invoice"] = s;
+            dd.exec("select * from f_reservation where f_invoice=:f_invoice");
+            if (!dd.nextRow()) {
+                message_error(tr("Invoice no exists: ") + s);
+                return;
+            }
+            QString res = dd.getString("f_id");
+            CacheGuest cg;
+            QString guest = "UNKNOWN";
+            if (cg.get(dd.getInt("f_guest"))) {
+                guest = cg.fFullName();
+            }
+            DBMRegister d;
+            d.open(dd, doc);
+            d.fId.clear();
+            d.fInvoice = s;
+            d.fReserve = res;
+            d.fGuest = guest;
+            if (!d.save(dd)) {
+                message_error(d.fError);
+                return;
+            }
+        }
+    }
+    refresh();
+    message_info(tr("Done"));
 }

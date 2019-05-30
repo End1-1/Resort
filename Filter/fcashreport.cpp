@@ -89,7 +89,7 @@ void FCashReport::apply(WReportGrid *rg)
     fReportGrid->fModel->sumOfColumns(cols, vals);
     fReportGrid->setTblTotalData(cols, vals);
     QList<int> subtotalCols;
-    subtotalCols <<  8 << 9;
+    subtotalCols << 8 << 9;
     fReportGrid->fModel->insertSubTotals(6, subtotalCols);
 }
 

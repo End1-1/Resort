@@ -206,7 +206,7 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             if (ui->leCL->asInt() == 0) {
                 errors += tr("City ledger is not defined");
             }
-            finalName = QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest());
+            finalName = QString("CHECKOUT %1").arg(ui->leCLName->text());
             break;
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wRoom->guest();
@@ -258,12 +258,37 @@ void DlgReceiptVaucher::on_btnSave_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     fDoc.fDC = dc;
     fDoc.fSign = sign;
-    fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
+    if (ui->tabWidget->currentIndex() == 0) {
+        if (ui->lePaymentCode->asInt() == PAYMENT_CL) {
+            fDoc.fCityLedger = ui->leCL->asUInt();
+        }
+        fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), ui->leCL->text());
+    } else {
+        fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
+    }
     fDoc.fRb = ui->tabWidget->currentIndex();
     if(!fDoc.save(fDD)) {
         message_error(fDoc.fError);
         return;
-    }
+    } /*
+    if (ui->tabWidget->currentIndex() == 0) {
+        if (ui->lePaymentCode->asInt() == PAYMENT_CL) {
+            DBMRegister fDoc2;
+            fDoc2 = fDoc;
+            fDoc2.fId.clear();
+            fDoc2.fDoc = fDoc.fId;
+            fDoc2.fCityLedger = ui->leCL->asUInt();
+            fDoc2.fFinalName = QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest());
+            fDoc2.fReserve = "";
+            fDoc2.fInvoice = "";
+            if (!fDoc2.save(fDD)) {
+                message_error(fDoc2.fError);
+                return;
+            }
+            fDoc.fDoc = fDoc2.fId;
+            fDoc.save(fDD);
+        }
+    } */
     clearSelectors();
     setBalance();
     fixTabWidget();

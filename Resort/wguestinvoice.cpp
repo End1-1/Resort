@@ -86,12 +86,14 @@ void WGuestInvoice::setInvoice(const QString &invoice)
     ui->leRoom->setReadOnly(true);
     DoubleDatabase dd(true, false);
     dd[":f_invoice"] = invoice;
-    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, rm.f_short "
+    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, rm.f_short, r.f_room "
             "from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
             "left join f_room rm on rm.f_id=r.f_room "
             "where r.f_invoice=:f_invoice");
-    fillFields(dd);
+    if (dd.nextRow()) {
+        fillFields(dd);
+    }
     setBalance();
 }
 

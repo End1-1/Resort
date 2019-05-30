@@ -71,6 +71,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnCommonPostCharge">
+        <property name="toolTip">
+         <string>Checkout selected invoices</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/charge.png</normaloff>:/images/charge.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

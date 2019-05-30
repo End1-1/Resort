@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>397</width>
-    <height>412</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -193,54 +193,18 @@
       <string>Payment</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="3">
-       <widget class="EQLineEdit" name="leAmountUSD">
+      <item row="1" column="2" colspan="2">
+       <widget class="EQLineEdit" name="leCLName">
         <property name="maximumSize">
          <size>
-          <width>5252</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="EQLineEdit" name="leCardName">
-        <property name="readOnly">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="0" column="2" colspan="2">
        <widget class="EQLineEdit" name="lePaymentName">
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="EQLineEdit" name="leAmountAMD">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="3">
-       <widget class="EQLineEdit" name="leFinalName">
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
@@ -263,13 +227,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Amount, AMD</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="EQLineEdit" name="lePaymentCode">
         <property name="maximumSize">
@@ -280,20 +237,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Amount, USD</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="lbCardType">
-        <property name="text">
-         <string>Card type</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="EQLineEdit" name="leCardCode">
         <property name="maximumSize">
@@ -301,6 +244,42 @@
           <width>100</width>
           <height>16777215</height>
          </size>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="EQLineEdit" name="leAmountUSD">
+        <property name="maximumSize">
+         <size>
+          <width>5252</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="EQLineEdit" name="leAmountAMD">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Amount, AMD</string>
         </property>
        </widget>
       </item>
@@ -324,13 +303,34 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2" colspan="2">
-       <widget class="EQLineEdit" name="leCLName">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbCardType">
+        <property name="text">
+         <string>Card type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="EQLineEdit" name="leCardName">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="3">
+       <widget class="EQLineEdit" name="leFinalName">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Amount, USD</string>
         </property>
        </widget>
       </item>

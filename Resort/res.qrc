@@ -143,5 +143,6 @@
         <file>images/sticky.png</file>
         <file>images/folder.png</file>
         <file>images/upward.png</file>
+        <file>images/clean.png</file>
     </qresource>
 </RCC>

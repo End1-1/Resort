@@ -275,6 +275,7 @@ void DBMRegister::fetchData(DoubleDatabase &d)
     fRec = d.getString("f_rec");
     fFinance = d.getUInt("f_finance");
     fRemarks = d.getString("f_remarks");
+    fSide = d.getUInt("f_side");
     fCanceled = d.getUInt("f_canceled");
     fCancelUser = d.getUInt("f_canceluser");
     fCancelDate = d.getDateTime("f_canceldate");

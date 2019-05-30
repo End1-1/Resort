@@ -141,6 +141,29 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnClearSelectedRooms">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>Check in selected reservations</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/clean.png</normaloff>:/images/clean.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnTrackControl">
         <property name="maximumSize">
          <size>
@@ -414,14 +437,14 @@ border-right: 1px solid grey;</string>
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>EDateEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

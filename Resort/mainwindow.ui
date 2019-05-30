@@ -242,6 +242,7 @@
     <addaction name="actionRefund_voucher"/>
     <addaction name="actionCash_report_total"/>
     <addaction name="actionCash_repoort_detailed"/>
+    <addaction name="actionCash_report_items"/>
     <addaction name="actionAdvance_report"/>
     <addaction name="actionCurrencies"/>
     <addaction name="actionTemporary_receipts"/>
@@ -1498,6 +1499,11 @@
    </property>
    <property name="text">
     <string>Quick checkout</string>
+   </property>
+  </action>
+  <action name="actionCash_report_items">
+   <property name="text">
+    <string>Cash report / items</string>
    </property>
   </action>
  </widget>

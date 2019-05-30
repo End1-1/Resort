@@ -34,10 +34,9 @@ public:
 private slots:
     void on_chAllInvoices_clicked(bool checked);
     void on_btnRefresh_clicked();
-
     void on_tbl_doubleClicked(const QModelIndex &index);
-
     void on_btnCheckout_clicked();
+    void on_btnCommonPostCharge_clicked();
 
 private:
     Ui::WQuickCheckout *ui;

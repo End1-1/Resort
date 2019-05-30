@@ -123,6 +123,11 @@ void DlgPostCharge::setAmount(double amount)
     ui->leAmount->setDouble(amount);
 }
 
+QString DlgPostCharge::voucher() const
+{
+    return ui->leVoucher->text();
+}
+
 void DlgPostCharge::roomChanged()
 {
     ui->leVAT->setInitialValue(ui->wRoom->vatMode());
@@ -242,6 +247,9 @@ void DlgPostCharge::on_btnSave_clicked()
     fDoc.fAmountVAT = Utils::countVATAmount(ui->leAmount->asDouble(), ui->leVAT->asInt());
     fDoc.fRb = ui->tabWidget->currentIndex();
     fDoc.fPaymentComment = paymentComment;
+    if (ui->rbCompany->isChecked()) {
+        fDoc.fSide = 1;
+    }
     if (!fDoc.save(dd)) {
         message_error(fDoc.fError);
         return;

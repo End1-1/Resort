@@ -21,6 +21,7 @@ public:
     void setRoom(int room);
     void setItem(int item);
     void setAmount(double amount);
+    QString voucher() const;
 
 private slots:
     void roomChanged();

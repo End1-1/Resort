@@ -57,6 +57,8 @@ WVaucherEditor::WVaucherEditor(QWidget *parent) :
             .addWidget(ui->teRemarks, "Remarks")
             .addWidget(ui->leVATCode, "Vat mode")
             .addWidget(ui->leRb, "RB")
+            .addWidget(ui->leDoc, "Doc")
+            .addWidget(ui->leRec, "Rec")
             ;
     ui->leUserCode->setSelector(this, cache(cid_users), ui->leUserName);
     ui->leCancelUserCode->setSelector(this, cache(cid_users), ui->leCancelUserName);
@@ -215,6 +217,8 @@ void WVaucherEditor::loadVaucher(const QString &id)
     ui->leGuestCompany->setText(fDD.getValue("f_side").toString());
     ui->teRemarks->setPlainText(fDD.getValue("f_remarks").toString());
     ui->leRb->setText(fDD.getString("f_rb"));
+    ui->leDoc->setText(fDD.getString("f_doc"));
+    ui->leRec->setText(fDD.getString("f_rec"));
     fTc->resetChanges();
     fTc->fReservation = ui->leReservation->text();
     fTc->fInvoice = ui->leInvoice->text();
@@ -341,6 +345,8 @@ void WVaucherEditor::on_btnSave_clicked()
     fDD[":f_sign"] = ui->leSign->asInt();
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_res"] = ui->leReservation->text();
+    fDD[":f_doc"] = ui->leDoc->text();
+    fDD[":f_rec"] = ui->leRec->text();
     fDD[":f_finance"] = ui->leFinFlag->asInt();
     fDD[":f_canceled"] = ui->leCancelFlag->asInt();
     fDD[":f_cancelUser"] = ui->leCancelUserCode->asInt();

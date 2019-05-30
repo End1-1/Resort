@@ -146,7 +146,7 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("3- YOU WILL FIND A PRESONAL SAFETY DEPOSIT BOX IN YOUR ROOM FOR YOUR CONVEIENCE."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("SHOULD YOU WISH TO USE THE HOTEL'S SAFETY DEPOSIT BOXES AT THE FRON OFFICE, US $10 PER DAY WILL APPLY."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("SHOULD YOU WISH TO USE THE HOTEL'S SAFETY DEPOSIT BOXES AT THE FRONT OFFICE."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("4- FOR YOUR SAFETY, KINDLY NOTE THAT WATER PIPE AND ANY OTHER RELATE ITEMS TO IT ARE NOT ALLOWED IN THE ROOMS."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));

@@ -545,83 +545,17 @@
           </size>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
+          <item row="10" column="3">
+           <widget class="EQLineEdit" name="leCancelUserName">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
           <item row="9" column="2" colspan="2">
-           <widget class="QDateTimeEdit" name="deCancelDate">
-            <property name="displayFormat">
-             <string>dd.MM.yyyy HH:mm:ss</string>
-            </property>
-           </widget>
+           <widget class="EQLineEdit" name="leCancelFlag"/>
           </item>
-          <item row="10" column="2" colspan="2">
-           <widget class="EQLineEdit" name="leCancelReason"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_20">
-            <property name="text">
-             <string>Debit/Credit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2" colspan="2">
-           <widget class="EQLineEdit" name="leFinFlag"/>
-          </item>
-          <item row="2" column="2">
-           <widget class="EQLineEdit" name="leUSD">
-            <property name="minimumSize">
-             <size>
-              <width>80</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>USD Rate</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>Fiscal</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2" colspan="2">
-           <widget class="EQLineEdit" name="leSign"/>
-          </item>
-          <item row="8" column="2">
-           <widget class="EQLineEdit" name="leCancelUserCode">
-            <property name="minimumSize">
-             <size>
-              <width>80</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>80</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0" colspan="2">
-           <widget class="QLabel" name="label_26">
-            <property name="text">
-             <string>Remarks</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
+          <item row="5" column="2">
            <widget class="EQLineEdit" name="leFiscal">
             <property name="minimumSize">
              <size>
@@ -637,62 +571,106 @@
             </property>
            </widget>
           </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_27">
-            <property name="text">
-             <string>Cancel date</string>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="2" colspan="2">
-           <widget class="EQLineEdit" name="leGuestCompany"/>
-          </item>
-          <item row="8" column="3">
-           <widget class="EQLineEdit" name="leCancelUserName">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="2" colspan="2">
-           <widget class="QPlainTextEdit" name="teRemarks"/>
-          </item>
-          <item row="11" column="0">
+          <item row="13" column="0">
            <widget class="QLabel" name="label_29">
             <property name="text">
              <string>Guest/Company (0/1)</string>
             </property>
            </widget>
           </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_23">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_31">
             <property name="text">
-             <string>Cancel user</string>
+             <string>Doc</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="14" column="0" colspan="2">
+           <widget class="QLabel" name="label_26">
+            <property name="text">
+             <string>Remarks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_20">
+            <property name="text">
+             <string>Debit/Credit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
            <widget class="QLabel" name="label_22">
             <property name="text">
              <string>Cancel flag</string>
             </property>
            </widget>
           </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_25">
+            <property name="text">
+             <string>Finance flag</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Fiscal</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>USD Rate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>RB</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="EQLineEdit" name="leDoc">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="2" colspan="2">
+           <widget class="EQLineEdit" name="leCancelReason"/>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Sign</string>
+            </property>
+           </widget>
+          </item>
+          <item row="15" column="2">
+           <widget class="EQLineEdit" name="leRb"/>
+          </item>
           <item row="10" column="0">
-           <widget class="QLabel" name="label_28">
+           <widget class="QLabel" name="label_23">
             <property name="text">
-             <string>Cancel reason</string>
+             <string>Cancel user</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Used prepaid</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
+          <item row="3" column="2">
            <widget class="EQLineEdit" name="lePrepaid">
             <property name="minimumSize">
              <size>
@@ -708,35 +686,103 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_25">
-            <property name="text">
-             <string>Finance flag</string>
+          <item row="4" column="2">
+           <widget class="EQLineEdit" name="leUSD">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
             </property>
            </widget>
           </item>
-          <item row="7" column="2" colspan="2">
-           <widget class="EQLineEdit" name="leCancelFlag"/>
+          <item row="14" column="2" colspan="2">
+           <widget class="QPlainTextEdit" name="teRemarks"/>
           </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QLabel" name="label_21">
+          <item row="11" column="0">
+           <widget class="QLabel" name="label_27">
             <property name="text">
-             <string>Sign</string>
+             <string>Cancel date</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="2" colspan="2">
+          <item row="13" column="2" colspan="2">
+           <widget class="EQLineEdit" name="leGuestCompany"/>
+          </item>
+          <item row="6" column="2" colspan="2">
+           <widget class="EQLineEdit" name="leSign"/>
+          </item>
+          <item row="12" column="0">
+           <widget class="QLabel" name="label_28">
+            <property name="text">
+             <string>Cancel reason</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2" colspan="2">
            <widget class="EQLineEdit" name="leDC"/>
           </item>
-          <item row="13" column="0">
-           <widget class="QLabel" name="label_12">
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_11">
             <property name="text">
-             <string>RB</string>
+             <string>Used prepaid</string>
             </property>
            </widget>
           </item>
-          <item row="13" column="2">
-           <widget class="EQLineEdit" name="leRb"/>
+          <item row="8" column="2" colspan="2">
+           <widget class="EQLineEdit" name="leFinFlag"/>
+          </item>
+          <item row="11" column="2" colspan="2">
+           <widget class="QDateTimeEdit" name="deCancelDate">
+            <property name="displayFormat">
+             <string>dd.MM.yyyy HH:mm:ss</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="EQLineEdit" name="leCancelUserCode">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_32">
+            <property name="text">
+             <string>Rec</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="EQLineEdit" name="leRec">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -757,14 +803,14 @@
    </slots>
   </customwidget>
   <customwidget>
-   <class>EQTimeEdit</class>
-   <extends>QTimeEdit</extends>
-   <header location="global">eqtimeedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EDateEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQTimeEdit</class>
+   <extends>QTimeEdit</extends>
+   <header location="global">eqtimeedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

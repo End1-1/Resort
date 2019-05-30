@@ -18,8 +18,10 @@ DEFINES += _HOTEL_
 DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
+    ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Filter/fcashreportbyitem.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -420,11 +422,14 @@ SOURCES += main.cpp\
     ../Filter/fcitytrayledger2.cpp \
     dlgofferinvoiceextra.cpp \
     dlgpostcharge.cpp \
-    wguestinvoice.cpp
+    wguestinvoice.cpp \
+    ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
+    ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
+    ../Filter/fcashreportbyitem.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -831,9 +836,11 @@ HEADERS  += mainwindow.h \
     ../Filter/fcitytrayledger2.h \
     dlgofferinvoiceextra.h \
     dlgpostcharge.h \
-    wguestinvoice.h
+    wguestinvoice.h \
+    ../Filter/wcardexlist.h
 
 FORMS    += mainwindow.ui \
+    ../Filter/fcashreportbyitem.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgprintvoucherasinvoice.ui \

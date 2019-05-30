@@ -20,6 +20,7 @@ SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Filter/fcashreportbyitem.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -420,12 +421,14 @@ SOURCES += main.cpp\
     ../Controls/radiogroupwidget.cpp \
     ../Filter/fexpectedarrivals2.cpp \
     ../Filter/fcitytrayledger2.cpp \
-    ../Filter/fcitytrayledger2.cpp
+    ../Filter/fcitytrayledger2.cpp \
+    ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
     ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
+    ../Filter/fcashreportbyitem.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -832,9 +835,11 @@ HEADERS  += mainwindow.h \
     ../Controls/radiogroupwidget.h \
     ../Filter/fexpectedarrivals2.h \
     ../Filter/fcitytrayledger2.h \
-    ../Filter/fcitytrayledger2.h
+    ../Filter/fcitytrayledger2.h \
+    ../Filter/wcardexlist.h
 
 FORMS    += mainwindow.ui \
+    ../Filter/fcashreportbyitem.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \

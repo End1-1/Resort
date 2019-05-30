@@ -570,3 +570,32 @@ void WQuickReservations::on_btnCheckinSelected_clicked()
     delete w;
     refresh();
 }
+
+void WQuickReservations::on_btnClearSelectedRooms_clicked()
+{
+    if (message_confirm(tr("Confirm to clean the selected rooms")) != QDialog::Accepted) {
+        return;
+    }
+    DoubleDatabase dd(true, doubleDatabase);
+    TrackControl tc(TRACK_ROOM_STATE);
+    for (int i = 0; i < ui->tbl->rowCount(); i++) {
+        if (roomState(i) != ROOM_STATE_DIRTY) {
+            continue;
+        }
+        dd[":f_id"] = ui->tbl->toInt(i, 2);
+        dd[":f_state"] = ROOM_STATE_NONE;
+        dd.exec("update f_room set f_state=:f_state where f_id=:f_id");
+        dd[":f_date"] = QDate::currentDate();
+        dd[":f_wdate"] = WORKING_DATE;
+        dd[":f_time"] = QTime::currentTime();
+        dd[":f_oldState"] = ROOM_STATE_DIRTY;
+        dd[":f_newState"] = ROOM_STATE_NONE;
+        dd[":f_user"] = WORKING_USERID;
+        dd[":f_comment"] = "CLEAN FROM QUICK CHECKIN";
+        dd.insert("f_room_state_change");
+        tc.insert("Room state changed", QString("%1, Dirty").arg(ui->tbl->toInt(i, 2)), QString("%1, Clean").arg(ui->tbl->toInt(i, 2)));
+        BroadcastThread::cmdRefreshCache(cid_room, ui->tbl->toString(i, 2));
+    }
+    refresh();
+    message_info(tr("Done"));
+}

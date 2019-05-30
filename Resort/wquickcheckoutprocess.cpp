@@ -119,34 +119,42 @@ void WQuickCheckoutProcess::timeout()
         if (result) {
             dd[":f_inv"] = ui->tbl->toString(i, 1);
             dd[":f_source"] = VAUCHER_RECEIPT_N;
-            dd.exec("select f_cityLedger, sum(f_amountAmd*f_sign) from m_register where f_cityLedger>0 and f_inv=:f_inv and f_source=:f_source and f_canceled=0");
-            double cityAmount =0;
-            int cityCode = 0;
-            if (dd.nextRow()) {
-                cityCode = dd.getInt(0);
-                cityAmount = dd.getDouble(1);
+            dd.exec("select f_id, sum(f_amountAmd) "
+                    "from m_register "
+                    "where f_paymentmode=4 and f_inv=:f_inv and f_source=:f_source and f_canceled=0 "
+                    "group by 1");
+            QMap<QString, double> clOut;
+            while (dd.nextRow()) {
+                clOut[dd.getString(0)] = dd.getDouble(1);
             }
-            if (cityAmount > 0.1 || cityAmount < -0.1) {
-                DBMRegister mr;
-                mr.fSource = VAUCHER_CHECKOUT_N;
-                mr.fInvoice = ui->tbl->toString(i, 1);
-                mr.fReserve = ui->tbl->toString(i, 2);
-                mr.fRoom = ui->tbl->toInt(i, 0);
-                mr.fGuest = ui->tbl->toString(i, 3);
-                mr.fItemCode = fPreferences.getDb(def_checkout_voucher_id).toInt();
-                mr.fFinalName = QString("CHECKOUT %1, %2").arg(ui->tbl->toInt(i, 0)).arg(ui->tbl->toString(i, 3));
-                mr.fAmountAMD = cityAmount;
-                mr.fAmountUSD = def_usd;
-                mr.fDC = PAY_CREDIT;
-                mr.fSign = 1;
-                mr.fCityLedger = cityCode;
-                CacheCityLedger cc;
-                if (cc.get(cityCode)) {
-                    mr.fPaymentComment = cc.fName();
-                }
-                result = result && mr.save(dd);
-                if (!result) {
-                    tc.insert("Checkout error", mr.fError, "");
+            for (QMap<QString, double>::const_iterator it = clOut.begin(); it != clOut.end(); it++) {
+                dd[":f_id"] = it.key();
+                dd.exec("select * from m_register where f_id=:f_id");
+                if (dd.nextRow()) {
+                    DBMRegister mr;
+                    mr.fSource = VAUCHER_CHECKOUT_N;
+                    mr.fInvoice = ui->tbl->toString(i, 1);
+                    mr.fReserve = ui->tbl->toString(i, 2);
+                    mr.fRoom = ui->tbl->toInt(i, 0);
+                    mr.fGuest = ui->tbl->toString(i, 3);
+                    mr.fItemCode = fPreferences.getDb(def_checkout_voucher_id).toInt();
+                    mr.fFinalName = QString("CHECKOUT %1, %2").arg(ui->tbl->toInt(i, 0)).arg(ui->tbl->toString(i, 3));
+                    mr.fAmountAMD = it.value() * -1;
+                    mr.fAmountUSD = def_usd;
+                    mr.fDC = PAY_CREDIT;
+                    mr.fSign = 1;
+                    mr.fCityLedger = dd.getUInt("f_cityledger");
+                    CacheCityLedger cc;
+                    if (cc.get(mr.fCityLedger)) {
+                        mr.fPaymentComment = cc.fName();
+                        mr.fFinalName = QString("CHECKOUT %1").arg(cc.fName());
+                    } else {
+                        mr.fPaymentComment = QString("UNKNOWN C/L %1").arg(mr.fCityLedger);
+                    }
+                    result = result && mr.save(dd);
+                    if (!result) {
+                        tc.insert("Checkout error", mr.fError, "");
+                    }
                 }
             }
         }

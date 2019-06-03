@@ -69,7 +69,7 @@ bool CacheReservation::hasNext()
 
 bool CacheReservation::hasPrev(CacheReservation &c, bool fill)
 {
-    CacheReservation *ci = (CacheReservation*)fInstance->fStruct;
+    CacheReservation *ci = static_cast<CacheReservation*>(fInstance->fStruct);
     QString id = fData.at(pos_id).toString();
     int room = fData.at(pos_room).toInt();
     QDate startDate = fData.at(pos_datestart).toDate();

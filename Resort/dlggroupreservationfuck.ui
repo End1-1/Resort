@@ -989,6 +989,16 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -997,19 +1007,9 @@
    </slots>
   </customwidget>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
    <class>EQComboBox</class>
@@ -1018,20 +1018,28 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>leGroupCode</tabstop>
+  <tabstop>leGroupName</tabstop>
+  <tabstop>leExtraname</tabstop>
+  <tabstop>deArrival</tabstop>
+  <tabstop>deDeparture</tabstop>
+  <tabstop>cbArr</tabstop>
+  <tabstop>cbModeOfPayment</tabstop>
+  <tabstop>lePrice</tabstop>
+  <tabstop>cbCat</tabstop>
+  <tabstop>cbBed</tabstop>
   <tabstop>leCardexCode</tabstop>
   <tabstop>leCardexName</tabstop>
   <tabstop>leCLCode</tabstop>
   <tabstop>leCardCode</tabstop>
   <tabstop>leGuest</tabstop>
-  <tabstop>btnRemarksToAll_2</tabstop>
-  <tabstop>btnRemarksToAll</tabstop>
-  <tabstop>btnArrangeToAll_2</tabstop>
-  <tabstop>btnSave</tabstop>
-  <tabstop>leCLName</tabstop>
-  <tabstop>btnAllCL</tabstop>
+  <tabstop>teCommonRemark</tabstop>
+  <tabstop>lePreQty</tabstop>
+  <tabstop>lePreAmount</tabstop>
   <tabstop>btnClear</tabstop>
-  <tabstop>leCardName</tabstop>
-  <tabstop>btnAllCard</tabstop>
+  <tabstop>btnClearFilter</tabstop>
+  <tabstop>btnReviveReservations</tabstop>
+  <tabstop>btnCancelGroup</tabstop>
  </tabstops>
  <resources>
   <include location="res.qrc"/>

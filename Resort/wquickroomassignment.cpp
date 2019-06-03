@@ -153,6 +153,7 @@ void WQuickRoomAssignment::on_btnSave_clicked()
         tc.insert("Room moved", ui->tbl->toString(i, 1), l->text());
     }
     on_btnRefresh_clicked();
+    message_info(tr("Saved"));
 }
 
 void WQuickRoomAssignment::on_tbl_doubleClicked(const QModelIndex &index)

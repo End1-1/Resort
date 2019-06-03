@@ -232,6 +232,21 @@ void DlgSimpleSelectRoom::filter2()
 
 void DlgSimpleSelectRoom::on_btnMultiSelect_clicked()
 {
+    if (fSingleSelection) {
+        for (int r = 0; r < ui->tblData->rowCount(); r++) {
+            for (int c = 0; c < ui->tblData->columnCount(); c++) {
+                C5TableWidgetItem *item = ui->tblData->item(r, c);
+                if (!item) {
+                    continue;
+                }
+                if (item->checkState() == Qt::Checked) {
+                    fRoomCode = item->data(Qt::UserRole).toString();
+                    accept();
+                    return;
+                }
+            }
+        }
+    }
     accept();
 }
 

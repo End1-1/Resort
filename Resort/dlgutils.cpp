@@ -1,6 +1,7 @@
 #include "dlgutils.h"
 #include "ui_dlgutils.h"
 #include "base.h"
+#include "doubleutils.h"
 #include <QFile>
 
 DlgUtils::DlgUtils(QWidget *parent) :
@@ -27,4 +28,39 @@ void DlgUtils::on_btnGenNumbers_clicked()
     }
     f.close();
     message_info(tr("Done."));
+}
+
+void DlgUtils::on_btnCorrectReservGrantTotal_clicked()
+{
+    DoubleDatabase dd(true, false);
+    QMap<QString, double> invoices;
+    if (!dd.exec("select r.f_invoice, r.f_grandtotal, sum(m.f_amountamd) as f_amountamd "
+            "from f_reservation r "
+            "inner join m_register m on m.f_inv=r.f_invoice "
+            "where r.f_state=3 and m.f_sign=1 and m.f_finance=1 "
+            "and m.f_canceled=0 "
+            "group by 1, 2")) {
+        message_error(dd.fLastError);
+        return;
+    }
+    while (dd.nextRow()) {
+        if (!equaldouble(dd.getDouble("f_grandtotal"), dd.getDouble("f_amountamd"))) {
+            invoices[dd.getString("f_invoice")] = dd.getDouble("f_amountamd");
+        }
+    }
+    int done = 0;
+    for (auto v = invoices.begin(); v != invoices.end(); v++) {
+        dd[":f_invoice"] = v.key();
+        dd[":f_grandtotal"] = v.value();
+        if (!dd.exec("update f_reservation set f_grandtotal=:f_grandtotal where f_invoice=:f_invoice")) {
+            message_error(dd.fLastError);
+            return;
+        }
+        ui->lbInfo->setText(QString("%1 of %2").arg(++done).arg(invoices.count()));
+        qApp->processEvents();
+    }
+    if (invoices.count() == 0) {
+        ui->lbInfo->setText("All clear");
+    }
+    message_info(tr("Done"));
 }

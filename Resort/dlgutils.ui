@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>540</width>
-    <height>93</height>
+    <height>141</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,8 +21,22 @@
      </property>
     </widget>
    </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QPushButton" name="btnGenNumbers">
+     <property name="text">
+      <string>Gen UUID</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QLineEdit" name="lePrefix"/>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QPushButton" name="btnCorrectReservGrantTotal">
+     <property name="text">
+      <string>Correct reservation grand totals</string>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
@@ -34,10 +48,10 @@
    <item row="1" column="1">
     <widget class="QLineEdit" name="leCount"/>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QPushButton" name="btnGenNumbers">
+   <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="lbInfo">
      <property name="text">
-      <string>Gen UUID</string>
+      <string>Progress</string>
      </property>
     </widget>
    </item>

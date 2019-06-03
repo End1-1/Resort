@@ -46,17 +46,18 @@ void FDailyTransaction::apply(WReportGrid *rg)
             .setColumn(100, "", tr("Entry"))
             .setColumn(100, "", tr("Depature"))
             .setColumn(70, "", tr("Pax"))
-            .setColumn(100, "", tr("Cardex"))
+            .setColumn(200, "", tr("Cardex"))
             .setColumn(80, "", tr("Rate"))
             .setColumn(100, "", tr("Total"));
     QString query = "select m.f_source, m.f_user, m.f_wdate, m.f_time, m.f_id, "
             "m.f_room, m.f_guest, r.f_startdate, r.f_enddate, r.f_man+r.f_woman+r.f_child as f_pax, "
-            "r.f_cardex, r.f_pricePerNight, a.f_amountAmd "
+            "c.f_name, r.f_pricePerNight, a.f_amountAmd "
             "from m_register m "
             "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_cardex c on c.f_cardex=r.f_cardex "
             "left join (select f_inv, sum(f_amountAmd*f_sign) as f_amountamd from m_register where f_canceled=0 and f_finance=1) a on a.f_inv=m.f_inv "
             "where m.f_wdate between :date1 and :date2 and m.f_canceled=0 and m.f_source in (:sources) and m.f_cityledger=0 "
-            "order by field(f_source, 'CI', 'RS', 'CO') ";
+            "order by field(f_source, 'CI', 'RS', 'CO'), m.f_wdate, m.f_time";
     query.replace(":date1", ui->wd->ds1()).replace(":date2", ui->wd->ds2());
     query.replace(":sources", "'CI', 'CO', 'RS'");
     rg->fModel->setSqlQuery(query);

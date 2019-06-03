@@ -18,6 +18,8 @@ public:
 private slots:
     void on_btnGenNumbers_clicked();
 
+    void on_btnCorrectReservGrantTotal_clicked();
+
 private:
     Ui::DlgUtils *ui;
 };

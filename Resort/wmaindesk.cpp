@@ -281,7 +281,7 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
             return;
         }
     }
-    if (!fRoomList.contains(r.fRoom()) && r.fRoom().toInt() > 0) {
+    if (!fRoomList.contains(r.fRoom())) {
         return;
     }
 
@@ -344,8 +344,9 @@ void WMainDesk::changeDate()
 
 void WMainDesk::filterRoom()
 {
-
-    writelog("Start filter room");
+    QElapsedTimer et;
+    et.start();
+    qDebug() << "Start filter room";
     fRoomList.clear();
     QModelIndexList selCat = ui->tblClasses->selectionModel()->selectedIndexes();
     QString category = "";
@@ -365,6 +366,9 @@ void WMainDesk::filterRoom()
     CacheRoom room;
     room.fInstance = c;
     QMap<QString, QList<QVariant> >::iterator it = roomRows.begin();
+
+    qDebug() << et.elapsed() << "Cache loaded. Start filter";
+    et.restart();
 
     while (it != roomRows.end()) {
         room.fData = it.value();
@@ -413,6 +417,9 @@ void WMainDesk::filterRoom()
         it++;
     }
 
+    qDebug() << et.elapsed() << "End filter. Init background";
+    et.restart();
+
     DoubleDatabase ddr(true, false);
     ddr.exec("select f_id from f_room order by f_building, f_id");
     QStringList tmpRoom = fRoomList;
@@ -424,6 +431,9 @@ void WMainDesk::filterRoom()
     }
 
     fScene->initBackgroung(fDateStart.daysTo(fDateEnd) + 1, fRoomList);
+    qDebug() << et.elapsed() << "End init background. Init rooms";
+    et.restart();
+
     ui->tblRoom->clear();
     ui->tblRoom->setRowCount(fRoomList.count());
     ui->tblRoom->setColumnCount(1);
@@ -432,7 +442,7 @@ void WMainDesk::filterRoom()
         item->setData(Qt::UserRole, fRoomList.at(i));
         ui->tblRoom->setItem(i, 0, item);
     }
-    writelog("Room list complte");
+
     int minimumHeight = ui->saRoom->height();
     int height = fRoomList.count() * ROW_HEIGHT;
     minimumHeight = minimumHeight < height ? height : minimumHeight;
@@ -443,6 +453,8 @@ void WMainDesk::filterRoom()
     ui->g->setMaximumHeight(minimumHeight);
 
 
+    qDebug() << et.elapsed() << "End init rooms. Add reservations to chart";
+    et.restart();
     it = reserveRows.begin();
     while (it != reserveRows.end()) {
         if (fReserveStatus > 0) {
@@ -477,7 +489,8 @@ void WMainDesk::filterRoom()
         }
         it++;
     }
-    writelog("End of filter log");
+    qDebug() << et.elapsed() << "All done. Start working";
+    et.restart();
 }
 
 void WMainDesk::dockHint(const QString &filter)
@@ -604,6 +617,10 @@ void WMainDesk::on_btnCheckin_clicked()
 
 void WMainDesk::loadReservationList()
 {
+    QElapsedTimer et;
+    et.start();
+    qDebug() << "Start load reservation list";
+
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":state1"] = RESERVE_CHECKIN;
     fDD[":state2"] = RESERVE_RESERVE;
@@ -622,10 +639,16 @@ void WMainDesk::loadReservationList()
                "where (r.f_state=:state1 or r.f_state=:state2 or r.f_state=:state3) "
                "group by r.f_id "
                "order by 1, 2 ");
+
+    qDebug() << et.elapsed() << "Query executed";
+    et.restart();
     QList<QVariant> v;
     while (fDD.nextRow(v)) {
         fReservationHint.append(v);
     }
+
+    qDebug() << et.elapsed() << "Rows loaded into reservation hints";
+    et.restart();
 
     EQTableWidget *t = fDockHint->tableWidget();
     t->setRowCount(fReservationHint.count());
@@ -671,6 +694,9 @@ void WMainDesk::loadReservationList()
     }
     t->setRowCount(row);
     ui->tblRoom->viewport()->update();
+
+    qDebug() << et.elapsed() << "Rows loaded table widget. All done.";
+    et.restart();
 }
 
 void WMainDesk::on_btnShowDockHint_clicked()

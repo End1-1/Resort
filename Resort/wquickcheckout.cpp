@@ -376,6 +376,7 @@ void WQuickCheckout::on_btnCommonPostCharge_clicked()
                 message_error(tr("Invoice no exists: ") + s);
                 return;
             }
+            int room = dd.getInt("f_room");
             QString res = dd.getString("f_id");
             CacheGuest cg;
             QString guest = "UNKNOWN";
@@ -385,6 +386,7 @@ void WQuickCheckout::on_btnCommonPostCharge_clicked()
             DBMRegister d;
             d.open(dd, doc);
             d.fId.clear();
+            d.fRoom = room;
             d.fInvoice = s;
             d.fReserve = res;
             d.fGuest = guest;

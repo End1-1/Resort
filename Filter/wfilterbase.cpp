@@ -8,6 +8,7 @@ WFilterBase::WFilterBase(QWidget *parent) :
     fReportGrid = static_cast<WReportGrid*>(parent);
     fTrackControl = new TrackControl(TRACK_REPORT);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    fDec =0;
 }
 
 WFilterBase::~WFilterBase()

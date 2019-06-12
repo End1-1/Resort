@@ -4,7 +4,7 @@
 #include "base.h"
 #include <QDockWidget>
 
-class QTableWidget;
+class TableModel;
 
 namespace Ui {
 class DWMainDeskHint;
@@ -22,17 +22,21 @@ public:
     void checkOutFilter();
     void airFilter();
     void hide();
-    EQTableWidget *tableWidget();
     void show();
+    void reset();
 
 private:
+    bool fLoaded;
     Ui::DWMainDeskHint *ui;
     bool fCheckInFilter;
+    TableModel *fTableModel;
+    void load();
 
 private slots:
     void tblHeaderSectionClicked(int logicalIndex);
     void thisVisibilityChanged(bool v);
     void on_btnCheckIn_clicked();
+    void on_tbl_clicked(const QModelIndex &index);
 };
 
 #endif // DWMAINDESKHINT_H

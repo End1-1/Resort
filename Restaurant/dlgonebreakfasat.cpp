@@ -474,7 +474,7 @@ void DlgOneBreakfasat::on_btnPrePrint_clicked()
     fDD[":f_room"] = ui->leRoom->text().toInt();
     fDD[":f_open"] = QDateTime::currentDateTime();
 
-    fBreakfastId = uuid(cb.fVaucher());
+    fBreakfastId = uuidx(cb.fVaucher());
     fDD.insertId("o_breakfast", fBreakfastId);
     fDD.update("o_breakfast", where_id(ap(fBreakfastId)));
 

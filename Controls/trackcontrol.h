@@ -96,6 +96,7 @@ public:
     static QStringList currentDb();
     int fTable;
     TrackControl(int table);
+    bool contains(QWidget *w);
     QString fRecord;
     QString fInvoice;
     QString fReservation;

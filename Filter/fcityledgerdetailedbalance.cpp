@@ -400,7 +400,7 @@ void FCityLedgerDetailedBalance::applyNorm(WReportGrid *rg)
             "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
             "and f_wdate < :d1 "
             "union "
-            "select f_id, f_wdate, f_finalname, f_amountamd*f_sign*-1, '0' as dd, '0' as cc, f_room, f_id, f_inv, f_time "
+            "select f_id, f_wdate, concat(f_finalname, ' ', coalesce(f_remarks, '')), f_amountamd*f_sign*-1, '0' as dd, '0' as cc, f_room, f_id, f_inv, f_time "
             "from m_register "
             "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
             "and f_wdate between :d1 and :d2 "

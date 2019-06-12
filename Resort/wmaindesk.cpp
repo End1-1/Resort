@@ -118,7 +118,6 @@ void WMainDesk::setup()
     fScene = new RoomScene(this);
     connect(fScene, SIGNAL(editReserve(QString)), this, SLOT(editReserveRoom(QString)));
     ui->g->setScene(fScene);
-    loadReservationList();
     filterRoom();
     int x = xFromDate(WORKING_DATE);
     ui->saMain->horizontalScrollBar()->setValue(x);
@@ -204,23 +203,8 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
     if (cacheId != cid_reservation) {
         return;
     }
+    fDockHint->reset();
 
-    for (int i = 0; i < fReservationHint.count(); i++) {
-        if (fReservationHint[i][1].toString() == id) {
-            writelog("found old reservation id in reservationchachgeupdated");
-            fReservationHint[i][0] = -1;
-            fReservationHint[i][1] = -1;
-            //break;
-        }
-    }
-    EQTableWidget *t = static_cast<EQTableWidget*>(fDockHint->tableWidget());
-    for (int i = 0; i < t->rowCount(); i++) {
-        if (t->toString(i, 1) == id) {
-            t->setValue(i, 0, -1);
-            t->setRowHidden(i, true);
-            //break;
-        }
-    }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":state1"] = RESERVE_CHECKIN;
     fDD[":state2"] = RESERVE_RESERVE;
@@ -238,38 +222,6 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
                "and r.f_id=" + ap(id) + " "
                "order by 1, 2 ");
     QList<QVariant> v;
-    while (fDD.nextRow(v)) {
-        fReservationHint.append(v);
-        int row = t->rowCount();
-        t->setRowCount(row + 1);
-        for (int i = 0; i < v.count(); i++) {
-           t->setItem(row, i, new C5TableWidgetItem(Utils::variantToString(v.at(i))));
-        }
-        C5TableWidgetItem *item = t->item(row, 0);
-        item->setData(Qt::UserRole, item->text());
-        item->setText("");
-        QString pixmapName;
-        switch (v.at(0).toInt()) {
-        case RESERVE_CHECKIN:
-            pixmapName = ":/images/ball-blue.png";
-            break;
-        case RESERVE_RESERVE:
-            pixmapName = ":/images/ball-red.png";
-            break;
-        default:
-            pixmapName = ":/images/ball-gray.png";
-            break;
-        }
-        item->setData(Qt::DecorationRole, QPixmap(pixmapName));
-        EPushButton *b = new EPushButton(this);
-        b->setMinimumSize(25, 25);
-        b->setMaximumSize(25, 25);
-        b->setText("");
-        b->setIcon(QIcon(":/images/goto.png"));
-        b->setTag(row);
-        connect(b, SIGNAL(clickedWithTag(int)), this, SLOT(btnDockHintGoToClicked(int)));
-        t->setCellWidget(row, 8, b);
-    }
 
     fScene->removeInvalidReserveWidget(id);
     CacheReservation r;
@@ -305,24 +257,6 @@ void WMainDesk::roomCacheUpdated(int cacheId, const QString &id)
     Q_UNUSED(cacheId)
     Q_UNUSED(id)
     ui->tblRoom->viewport()->update();
-}
-
-void WMainDesk::btnDockHintGoToClicked(int tag)
-{
-    int reserveState = fReservationHint.at(tag).at(0).toInt();
-    switch (reserveState) {
-    case RESERVE_RESERVE:
-        WReservation::openReserveWindows(fReservationHint.at(tag).at(1).toString());
-        break;
-    case RESERVE_CHECKIN:
-        WInvoice::openInvoiceWindow(fReservationHint.at(tag).at(9).toString());
-        break;
-    case -1:
-        break;
-    default:
-        message_info(tr("This reservation is not editable"));
-        break;
-    }
 }
 
 void WMainDesk::dockHintVisibilityChanged(bool v)
@@ -603,7 +537,7 @@ void WMainDesk::on_btnEndOfDay_clicked()
 {
     DlgEndOfDay *d = new DlgEndOfDay(this);
     if (d->exec() == QDialog::Accepted)  {
-        loadReservationList();
+
     }
     delete d;
 }
@@ -615,93 +549,9 @@ void WMainDesk::on_btnCheckin_clicked()
     fDockHint->raise();
 }
 
-void WMainDesk::loadReservationList()
-{
-    QElapsedTimer et;
-    et.start();
-    qDebug() << "Start load reservation list";
-
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD[":state1"] = RESERVE_CHECKIN;
-    fDD[":state2"] = RESERVE_RESERVE;
-    fDD[":state3"] = RESERVE_SERVICE;
-    fReservationHint.clear();
-    //"left join f_nationality n on n.f_short=g.f_nation "
-    fDD.exec("select r.f_state, r.f_id, r.f_room, group_concat(g1.gname separator ', '), "
-               "r.f_startDate, r.f_endDate, concat(r.f_cardex, '-', cdx.f_name), '', '', r.f_invoice, "
-               "concat(u.f_firstName, ' ', u.f_lastName), r.f_booking "
-               "from f_reservation r "
-               "left join (select f_reservation, concat(g.f_firstName, ' ' , g.f_lastName) as gname "
-                    "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
-
-               "left join f_cardex cdx on cdx.f_cardex=r.f_cardex "
-               "inner join users u on u.f_id=r.f_author "
-               "where (r.f_state=:state1 or r.f_state=:state2 or r.f_state=:state3) "
-               "group by r.f_id "
-               "order by 1, 2 ");
-
-    qDebug() << et.elapsed() << "Query executed";
-    et.restart();
-    QList<QVariant> v;
-    while (fDD.nextRow(v)) {
-        fReservationHint.append(v);
-    }
-
-    qDebug() << et.elapsed() << "Rows loaded into reservation hints";
-    et.restart();
-
-    EQTableWidget *t = fDockHint->tableWidget();
-    t->setRowCount(fReservationHint.count());
-    Utils::tableSetColumnWidths(t, 12,
-                                30, 0, 60, 250, 120, 120, 70, 70, 30, 0, 200, 0);
-    QStringList ht;
-    ht << QString() << QString() << tr("Room") << tr("Guest") << tr("Arrival") << tr("Departure") << tr("Cardex") << tr("Nat.")
-       << QString() << QString() << tr("Author") << tr("Booking");
-    t->setHorizontalHeaderLabels(ht);
-    int row = 0;
-    for (QList<QList<QVariant> >::const_iterator it = fReservationHint.begin(); it != fReservationHint.end(); it++) {
-        if (it->at(0).toInt() == -1) {
-            continue;
-        }
-        for (int i = 0; i < it->count(); i++) {
-           t->setItem(row, i, new C5TableWidgetItem(Utils::variantToString(it->at(i))));
-        }
-        C5TableWidgetItem *item = t->item(row, 0);
-        item->setData(Qt::UserRole, item->text());
-        item->setText("");
-        QString pixmapName;
-        switch (it->at(0).toInt()) {
-        case RESERVE_CHECKIN:
-            pixmapName = ":/images/ball-blue.png";
-            break;
-        case RESERVE_RESERVE:
-            pixmapName = ":/images/ball-red.png";
-            break;
-        default:
-            pixmapName = ":/images/ball-gray.png";
-            break;
-        }
-        item->setData(Qt::DecorationRole, QPixmap(pixmapName));
-        EPushButton *b = new EPushButton(this);
-        b->setMinimumSize(25, 25);
-        b->setMaximumSize(25, 25);
-        b->setText("");
-        b->setIcon(QIcon(":/images/goto.png"));
-        b->setTag(row);
-        connect(b, SIGNAL(clickedWithTag(int)), this, SLOT(btnDockHintGoToClicked(int)));
-        t->setCellWidget(row, 8, b);
-        row++;
-    }
-    t->setRowCount(row);
-    ui->tblRoom->viewport()->update();
-
-    qDebug() << et.elapsed() << "Rows loaded table widget. All done.";
-    et.restart();
-}
-
 void WMainDesk::on_btnShowDockHint_clicked()
 {
-    if (!fDockHint->isVisible()) {
+    if (!fDockHint->isVisible() || !fDockHint->hasFocus()) {
         dockHint("");
     }
 }
@@ -862,5 +712,7 @@ void WMainDesk::on_btnColors_clicked()
 void WMainDesk::on_btnRefreshChart_clicked()
 {
     CacheOne::clearAll();
+    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
+    connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomCacheUpdated(int, QString)));
     on_btnClearFilter_clicked();
 }

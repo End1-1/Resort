@@ -13,7 +13,9 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui->teTime->setVisible(r__(cr__inhouse_anytime));
     ui->chTime->setVisible(r__(cr__inhouse_anytime));
     ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
-    ui->chDisplayName->click();
+    ui->chAll->click();
+    ui->chDisplayRate->click();
+    setupTabTextAndIcon(tr("In house guests"), ":/images/bed.png");
 }
 
 FInHouseGuest::~FInHouseGuest()
@@ -23,6 +25,56 @@ FInHouseGuest::~FInHouseGuest()
 
 void FInHouseGuest::apply(WReportGrid *rg)
 {
+    rg->fModel->clearColumns();
+    rg->fModel->setColumn(0, "", tr("Date"))
+            .setColumn(70, "", tr("Room"))
+            .setColumn(70, "", tr("Cat"));
+    if (ui->chDisplayName->isChecked()) {
+        rg->fModel->setColumn(250, "", tr("Guests"));
+    }
+    rg->fModel->setColumn(60, "", tr("Adults"))
+            .setColumn(60, "", tr("Childs"))
+            .setColumn(50, "", tr("Acc."))
+            .setColumn(100, "", tr("Arrival"))
+            .setColumn(100, "", tr("Departure"))
+            .setColumn(120, "", tr("Nation"));
+    if (ui->chDisplayRate->isChecked()) {
+        rg->fModel->setColumn(80, "", tr("Room rate"))
+            .setColumn(60, "", tr("Extra bed"))
+            .setColumn(60, "", tr("Meal plan"));
+    }
+    rg->fModel->setColumn(30, "", tr("VAT"));
+    if (ui->chDisplayCardex->isChecked()) {
+        rg->fModel->setColumn(300, "", tr("Cardex"));
+    }
+    rg->fModel->setColumn(200, "", tr("Operator"));
+    QString query = "select current_date(), r.f_room, c.f_short, ";
+    if (ui->chDisplayName->isChecked()) {
+        query += "group_concat(g1.gname separator ', '), ";
+    }
+    query += "r.f_man+r.f_woman, r.f_child, "
+            "ar.f_en, r.f_startdate, r.f_enddate, n.f_name, ";
+    if (ui->chDisplayRate->isChecked()) {
+        query += "r.f_pricepernight, r.f_extrabedfee, "
+            "r.f_mealprice, ";
+    }
+    query += "v.f_vat,  ";
+    if (ui->chDisplayCardex->isChecked()) {
+        query += "cx.f_name, ";
+    }
+    query += "u.f_username "
+            "from f_reservation r "
+            "left join f_guests g on g.f_id=r.f_guest "
+            "left join (select f_reservation, concat(g.f_firstName, ' ' , g.f_lastName) as gname "
+                "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes c on c.f_id=rm.f_class "
+            "left join f_room_arrangement ar on ar.f_id=r.f_arrangement "
+            "left join f_nationality n on n.f_short=g.f_nation "
+            "left join f_vat_mode v on v.f_id=r.f_vatmode "
+            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+            "left join users u on u.f_id=r.f_checkinuser ";
+
     QString where;
     if (ui->chDate->isChecked() || ui->chTime->isChecked()) {
         where += " where (r.f_state=1 or r.f_state=3) ";
@@ -42,8 +94,10 @@ void FInHouseGuest::apply(WReportGrid *rg)
     if (!ui->leCardex->isEmpty()) {
         where += QString(" and r.f_cardex='%1' ").arg(ui->leCardex->text());
     }
-    where += "order by r.f_room ";
-    buildQuery(rg, where);
+    where += "group by r.f_room order by r.f_room ";
+    query += where ;
+    rg->fModel->setSqlQuery(query);
+    rg->fModel->apply(rg);
 
     QMap<QString, int> total;
     total["B/O-Adult"] = 0;

@@ -161,6 +161,7 @@ void DlgPrintTaxSM::loadAdvance()
         fJson = inJson;
         QString ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime;
         PrintTaxN::parseResponse(outJson, ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime);
+        fTaxCode = onumber.toInt();
         v[":f_replyTaxCode"] = QString::number(onumber.toInt());
         v[":f_id"] = id;
         v.exec("update tax_print set f_replyTaxCode=:f_replyTaxCode where f_id=:f_id");

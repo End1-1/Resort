@@ -188,6 +188,16 @@ border-right: 1px solid gray;</string>
           <string>Total Balance</string>
          </property>
         </column>
+        <column>
+         <property name="text">
+          <string>Pax</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Cat</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item>

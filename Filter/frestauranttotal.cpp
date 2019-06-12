@@ -92,7 +92,7 @@ FRestaurantTotal::FRestaurantTotal(QWidget *parent) :
     fReportGrid->fIncludes["oh.f_paymentModeComment"] = false;
     fReportGrid->fIncludes["sum(od.f_qty)"] = true;
     fReportGrid->fIncludes["sum(od.f_total)"] = true;
-    fReportGrid->fIncludes["count(oh.f_id)"] = false;
+    fReportGrid->fIncludes["count(distinct(oh.f_id))"] = false;
     fReportGrid->fIncludes["sum(oh.f_total)"] = false;
 }
 
@@ -112,11 +112,9 @@ void FRestaurantTotal::apply(WReportGrid *rg)
             && ui->leStore->text().isEmpty()
             && ui->leDishType->text().isEmpty()
             && ui->leArmSoft->text().isEmpty()
-            && ui->chArmSoft->isChecked();
-    fReportGrid->fIncludes["sum(od.f_total)"] = !countAmount;
+            && !ui->chArmSoft->isChecked();
     fReportGrid->fIncludes["sum(od.f_qty)"] = !countAmount;
-    fReportGrid->fIncludes["count(oh.f_id)"] = countAmount;
-    fReportGrid->fIncludes["sum(oh.f_total)"] = countAmount;
+    fReportGrid->fIncludes["count(distinct(oh.f_id))"] = countAmount;
     rg->fFieldsWidths.clear();
     rg->fFieldsWidths << 100 //f_id
            << 0 // oh_fstate
@@ -181,12 +179,11 @@ void FRestaurantTotal::apply(WReportGrid *rg)
            << "oh.f_paymentModeComment";
     if (countAmount) {
         rg->fFields
-                << "count(oh.f_id)"
-                << "sum(oh.f_total)";
+                << "count(distinct(oh.f_id))"
+                << "sum(od.f_total)";
     } else {
-        rg->fFields
-           << "sum(od.f_qty)"
-           << "sum(od.f_total)";
+        rg->fFields.append("sum(od.f_qty)");
+        rg->fFields.append("sum(od.f_total)");
     }
     rg->fFieldTitles.clear();
     rg->fFieldTitles << tr("Order #")
@@ -290,10 +287,8 @@ void FRestaurantTotal::apply(WReportGrid *rg)
     if (!ui->leStaff->text().isEmpty()) {
         where += " and oh.f_staff in (" + ui->leStaff->fHiddenText + ") ";
     }
-    if (!countAmount) {
-        if (!ui->leDishState->text().isEmpty()) {
-            where += " and od.f_state in (" + ui->leDishState->fHiddenText + ") ";
-        }
+    if (!ui->leDishState->text().isEmpty()) {
+        where += " and od.f_state in (" + ui->leDishState->fHiddenText + ") ";
     }
     if (!ui->leStore->text().isEmpty()) {
         where += " and od.f_store in (" + ui->leStore->fHiddenText + ") ";

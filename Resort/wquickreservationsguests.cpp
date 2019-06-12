@@ -62,6 +62,16 @@ void WQuickReservationsGuests::closeEvent(QCloseEvent *event)
 {
     DoubleDatabase dd(true, doubleDatabase);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
+        if (ui->tbl->lineEdit(i, 2)->isEmpty()) {
+            message_error("Check the all names of guests");
+            event->ignore();
+            return;
+        }
+        if (ui->tbl->lineEdit(i, 3)->isEmpty()) {
+            message_error("Check the all names of guests");
+            event->ignore();
+            return;
+        }
         dd[":f_title"] = ui->tbl->lineEdit(i, 1)->text();
         dd[":f_firstname"] = ui->tbl->lineEdit(i, 2)->text();
         dd[":f_lastname"] = ui->tbl->lineEdit(i, 3)->text();
@@ -76,6 +86,10 @@ void WQuickReservationsGuests::closeEvent(QCloseEvent *event)
             dd.update("f_guests", where_id(ui->tbl->toInt(i, 0)));
         }
     }
+    for (TrackControl *tc: fTrackControls) {
+        tc->saveChanges();
+        delete tc;
+    }
     BaseDialog::closeEvent(event);
 }
 
@@ -85,7 +99,10 @@ void WQuickReservationsGuests::addRowTrack(int row)
     tc->fReservation = fReserve;
     tc->fInvoice = fInvoice;
     tc->addWidget(ui->tbl->lineEdit(row, 1), "Guest title");
-
+    tc->addWidget(ui->tbl->lineEdit(row, 2), "First name");
+    tc->addWidget(ui->tbl->lineEdit(row, 3), "Last name");
+    tc->addWidget(ui->tbl->lineEdit(row, 4), "Nation");
+    fTrackControls.append(tc);
 }
 
 void WQuickReservationsGuests::on_btnAddGuest_clicked()
@@ -108,7 +125,44 @@ void WQuickReservationsGuests::on_btnAddGuest_clicked()
 
 void WQuickReservationsGuests::on_btnRemoveGuest_clicked()
 {
-
+    int row = ui->tbl->currentRow();
+    if (row < 0) {
+        return;
+    }
+    if (row == 0 && ui->tbl->rowCount() == 1) {
+        message_info(tr("The last guest cannot be removed. You just need change the fist and last names"));
+        return;
+    }
+    if (message_confirm(tr("Confirm to remove the guest")) != QDialog::Accepted) {
+        return;
+    }
+    DoubleDatabase dd(true, doubleDatabase);
+    dd[":f_reservation"] = fReserve;
+    dd[":f_guest"] = ui->tbl->itemValue(row, 0);
+    dd.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_guest=:f_guest");
+    if (row == 0) {
+        dd[":f_guests"] = ui->tbl->itemValue(row + 1, 0);
+        dd[":f_reservation"] = fReserve;
+        dd.exec("update f_reservaiton_guests set f_first=1 where f_reservation=:f_reservation and f_guest=:f_guest");
+        dd[":f_id"] = fReserve;
+        dd[":f_guest"] = ui->tbl->itemValue(row + 1, 0);
+        dd.exec("update f_reservation set f_guest=:f_guest where f_id=:f_id");
+    }
+    QString oldGuest = QString("%1, %2 %3")
+            .arg(ui->tbl->itemValue(row, 0).toInt())
+            .arg(ui->tbl->lineEdit(row, 2)->text())
+            .arg(ui->tbl->lineEdit(row, 3)->text());
+    for (TrackControl *tc: fTrackControls) {
+        if (tc->contains(ui->tbl->lineEdit(row, 1))) {
+            fTrackControls.removeOne(tc);
+            delete tc;
+        }
+    }
+    ui->tbl->removeRow(row);
+    TrackControl tc (TRACK_RESERVATION);
+    tc.fReservation = fReserve;
+    tc.fInvoice = fInvoice;
+    tc.insert("Guest removed", oldGuest, "");
 }
 
 void WQuickReservationsGuests::on_btnFullInfo_clicked()
@@ -148,12 +202,38 @@ void WQuickReservationsGuests::on_btnChangeGuest_clicked()
     if (row < 0) {
         return;
     }
+    DoubleDatabase dd(true, doubleDatabase);
+    dd[":f_reservation"] = fReserve;
+    dd[":f_guest"] = ui->tbl->itemValue(row, 0);
+    dd.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_guest=:f_guest");
+    QString oldGuest = QString("%1, %2 %3")
+            .arg(ui->tbl->itemValue(row, 0).toInt())
+            .arg(ui->tbl->lineEdit(row, 2)->text())
+            .arg(ui->tbl->lineEdit(row, 3)->text());
     ui->tbl->setItemWithValue(row, 0, 0);
     ui->tbl->lineEdit(row, 1)->setInitialValue("");
     ui->tbl->lineEdit(row, 2)->clear();
     ui->tbl->lineEdit(row, 2)->setPlaceholderText("First name");
     ui->tbl->lineEdit(row, 3)->clear();
     ui->tbl->lineEdit(row, 3)->setPlaceholderText("Last name");
-    ui->tbl->lineEdit(row, 4)->setInitialValue("-");
+    dd[":f_title"] = ui->tbl->lineEdit(row, 1)->text();
+    dd[":f_firstname"] = ui->tbl->lineEdit(row, 2)->text();
+    dd[":f_lastname"] = ui->tbl->lineEdit(row, 3)->text();
+    dd[":f_nation"] = ui->tbl->lineEdit(row, 4)->text();
+    ui->tbl->setItemWithValue(row, 0, dd.insert("f_guests"));
+    dd[":f_reservation"] = fReserve;
+    dd[":f_guest"] = ui->tbl->toInt(row, 0);
+    dd[":f_first"] = row == 0 ? 1 : 0;
+    dd.insert("f_reservation_guests", false);
+    if (row == 0) {
+        dd[":f_guest"] = ui->tbl->itemValue(row, 0).toInt();
+        dd.update("f_reservation", where_id(ap(fReserve)));
+    }
+    TrackControl tc (TRACK_RESERVATION);
+    tc.fReservation = fReserve;
+    tc.fInvoice = fInvoice;
+    QString newGuest = QString("%1, The first name and last name is empty yet")
+            .arg(ui->tbl->itemValue(row, 0).toInt());
+    tc.insert("Change guest", oldGuest, newGuest);
     addRowTrack(row);
 }

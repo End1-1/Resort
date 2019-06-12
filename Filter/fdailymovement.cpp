@@ -54,14 +54,14 @@ void FDailyMovement::apply(WReportGrid *rg)
             setColumn(30,"", tr("Op")) //1
             .setColumn(80, "", tr("Date")) //2
             .setColumn(60, "", tr("Time")) //3
-            .setColumn(80, "", tr("Room")) //4
+            .setColumn(70, "", tr("Room")) //4
             .setColumn(0, "", tr("Sal")) //5
             .setColumn(80, "", tr("Code")) //6
             .setColumn(80, "", tr("Invoice")) //7
-            .setColumn(40, "", tr("*")) //8
-            .setColumn(300, "", tr("Remark")) //9
-            .setColumn(150, "", tr("Payment")) //10
-            .setColumn(130, "", tr("Type")) //11
+            .setColumn(20, "", tr("*")) //8
+            .setColumn(250, "", tr("Remark")) //9
+            .setColumn(120, "", tr("Payment")) //10
+            .setColumn(110, "", tr("Type")) //11
             .setColumn(100, "", tr("Amount")) //12
             .setColumn(80, "", tr("VAT")) //13
             .setColumn(80, "", tr("USD")) //14
@@ -89,7 +89,7 @@ void FDailyMovement::apply(WReportGrid *rg)
             }
         }
     }
-    rg->fModel->apply(nullptr);
+    rg->fModel->apply(rg);
     Report r;
     if (fReportGrid->fReportOptions.contains(fReportGrid->fGridClassName)) {
         r = fReportGrid->fReportOptions[fReportGrid->fGridClassName];

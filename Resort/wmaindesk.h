@@ -23,7 +23,6 @@ class WMainDesk : public BaseWidget
 public:
     explicit WMainDesk(QWidget *parent = nullptr);
     ~WMainDesk();
-    void loadReservationList();
     void filterRoom();
     virtual void setup();
     virtual void setupTab();
@@ -43,7 +42,6 @@ private slots:
     void daySelectionChanged(const QModelIndex &m1, const QModelIndex &m2);
     void reservationCacheUpdated(int cacheId, const QString &id);
     void roomCacheUpdated(int cacheId, const QString &id);
-    void btnDockHintGoToClicked(int tag);
     void dockHintVisibilityChanged(bool v);
     void changeDate();
     void on_tblClasses_clicked(const QModelIndex &index);

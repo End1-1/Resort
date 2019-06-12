@@ -326,21 +326,6 @@ void MainWindow::addTabWidget(BaseWidget *widget)
     ui->tabWidget->setCurrentIndex(ui->tabWidget->count() - 1);
 }
 
-void MainWindow::refreshReservationList()
-{
-    bool refreshed = false;
-    for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
-        WMainDesk *d = dynamic_cast<WMainDesk*>(ui->tabWidget->widget(i));
-        if (d) {
-            if (!refreshed) {
-                d->loadReservationList();
-                refreshed = true;
-            }
-            d->filterRoom();
-        }
-    }
-}
-
 void MainWindow::setCurrentWidget(QWidget *w)
 {
     ui->tabWidget->setCurrentWidget(w);
@@ -460,7 +445,8 @@ void MainWindow::parseSocketCommand(const QString &command)
     QJsonObject jObj = jDoc.object();
     QString cmd = jObj.value("command").toString();
     if (cmd == "refresh_reservations") {
-        refreshReservationList();
+//  Remove after some time
+//        refreshReservationList(); Bye, tormoz
     } else if (cmd == "update_cache") {
         int cacheId = jObj.value("cache").toInt();
         QString item = jObj.value("item").toString();
@@ -1579,115 +1565,7 @@ void MainWindow::on_actionInvoice_items_triggered()
 
 void MainWindow::on_actionIn_house_guest_triggered()
 {
-    QList<int> widths;
-    widths << 0 //date
-           << 70 //room
-           << 70 // cat
-           << 250 //guest
-           << 60 //adul
-           << 60 //child
-           << 50 //acc
-           << 100 //entry
-           << 100 //dep
-           << 120 // nat
-           << 80 // rooming
-           << 60 // extra bed
-           << 60 // meal
-           << 30 // vat
-           << 300 // cardex
-           << 200 // operator
-              ;
-    QStringList fields;
-    fields << "current_date"
-           << "r.f_room"
-           << "c.f_short"
-           << "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName)"
-           << "r.f_man+r.f_woman"
-           << "r.f_child"
-           << "ar.f_" + def_lang
-           << "r.f_startDate"
-           << "r.f_endDate"
-           << "n.f_name"
-           << "r.f_pricePerNight"
-           << "r.f_extraBedFee"
-           << "r.f_mealPrice"
-           << "v.f_vat"
-           << "cx.f_name"
-           << "concat(u.f_firstName, ' ', u.f_lastName)"
-              ;
-    QStringList titles;
-    titles << tr("Date")
-           << tr("Room")
-           << tr("Cat")
-           << tr("Guest")
-           << tr("Adults")
-           << tr("Childs")
-           << tr("Acc.")
-           << tr("Arrival date")
-           << tr("Departure date")
-           << tr("Nationality")
-           << tr("Room rate")
-           << tr("Extra bed")
-           << tr("Meal plan")
-           << tr("VAT")
-           << tr("Cardex")
-           << tr("Operator")
-              ;
-    QMap<QString, bool> includes;
-    includes["current_date"] = true;
-    includes["r.f_room"] = true;
-    includes["c.f_short"] = true;
-    includes["r.f_man+r.f_woman"] = true;
-    includes["r.f_child"] = true;
-    includes["ar.f_" + def_lang] = true;
-    includes["r.f_startDate"] = true;
-    includes["r.f_endDate"] = true;
-    includes["n.f_name"] = true;
-    includes["r.f_pricePerNight"] = false;
-    includes["r.f_extraBedFee"] = false;
-    includes["r.f_mealPrice"] = false;
-    includes["v.f_vat"] = false;
-    includes["concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName)"] = false;
-    includes["cx.f_name"] = false;
-    includes["concat(u.f_firstName, ' ', u.f_lastName)"] = true;
-    QStringList tables;
-    tables << "f_reservation r"
-           << "f_guests"
-           << "f_room rm"
-           << "f_room_classes c"
-          << "f_room_arrangement ar"
-          << "f_guests g"
-          << "f_nationality n"
-          << "f_vat_mode v"
-          << "f_cardex cx"
-          << "users u"
-             ;
-    QStringList joins;
-    joins << ""
-          << "inner"
-          << "inner"
-          << "inner"
-          << "inner"
-          << "inner"
-          << "left"
-          << "left"
-          << "left"
-          << "left";
-    QStringList joinConds;
-    joinConds << ""
-              << "g.f_id=r.f_guest"
-              << "rm.f_id=r.f_room"
-              << "c.f_id=rm.f_class"
-              << "ar.f_id=r.f_arrangement"
-              << "g.f_id=r.f_guest"
-              << "n.f_short=g.f_nation"
-              << "v.f_id=r.f_vatMode"
-              << "cx.f_cardex=r.f_cardex"
-              << "u.f_id=r.f_checkInUser";
-    QString title = tr("In house guests");
-    QString icon = ":/images/bed.png";
-    WReportGrid *rg = addTab<WReportGrid>();
-    rg->setQueryModel<FInHouseGuest>(widths, fields, titles, includes, tables, joins, joinConds, title, icon);
+    FInHouseGuest::openFilterReport<FInHouseGuest, WReportGrid>();
 }
 
 void MainWindow::on_actionExpected_arrivals_triggered()

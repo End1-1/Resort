@@ -28,7 +28,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
     ui->tblTotals->setVisible(false);
     ui->tblMain->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     ui->tblMain->setContextMenuPolicy(Qt::CustomContextMenu);
-    fModel = new TableModel(ui->tblMain);
+    fModel = new TableModel(ui->tblMain, ui->tblTotals);
     connect(fModel, SIGNAL(rowCount(int)), this, SLOT(rowCount(int)));
     fModel->fTableView = ui->tblMain;
     fTableView = ui->tblMain;
@@ -44,7 +44,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
     connect(ui->tblMain->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tblMainCustomeMenu(QPoint)));
     connect(ui->tblTotals->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(totalGridHScroll(int)));
     connect(ui->tblMain->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(tblMainGridHScroll(int)));
-    connect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(tblMainHeaderResized(int,int,int)));
+    connectHeaderResize();
     connect(ui->tblMain->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(tblMainHeaderClicked(int)));
     fGridMenu = new QMenu();
     connect(fGridMenu->addAction("Copy"), SIGNAL(triggered(bool)), this, SLOT(actionCopyGrid(bool)));
@@ -98,6 +98,16 @@ void WReportGrid::setHelp(const QString &helpFile)
 {
     fHelp = helpFile;
     ui->btnHelp->setVisible(!fHelp.isEmpty());
+}
+
+void WReportGrid::connectHeaderResize()
+{
+    connect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(tblMainHeaderResized(int,int,int)));
+}
+
+void WReportGrid::disconnectHeaderResize()
+{
+    disconnect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(tblMainHeaderResized(int,int,int)));
 }
 
 void WReportGrid::dontResizeSave(bool v)
@@ -217,6 +227,7 @@ void WReportGrid::setup()
 void WReportGrid::setupTabTextAndIcon(const QString &name, const QString &image)
 {
     fGridClassName = name;
+    fTableView->setProperty("wgridclassname", _APPLICATION_ + QString("\\Grid\\") + fGridClassName);
     BaseWidget::setupTabTextAndIcon(name, image);
     if (fReportOptions.contains(fGridClassName)) {
         Report r = fReportOptions[fGridClassName];
@@ -687,6 +698,9 @@ void WReportGrid::on_btnPrint_clicked()
         rs.fFontSize = 8;
         rs.fFontName = "Arial";
     }
+    if (fFilter) {
+        rs.fFontSize -= fFilter->fDec;
+    }
 
     QBrush b(Qt::white, Qt::SolidPattern);
     PTextRect trFooter;
@@ -782,7 +796,11 @@ void WReportGrid::on_btnPrint_clicked()
                 continue;
             }
             QFont nf = fModel->data(i, j, Qt::FontRole).value<QFont>();
-            nf.setPointSize(nf.pointSize() + font_size_print_delta);
+            int n = 0;
+            if (fFilter) {
+                n = fFilter->fDec;
+            }
+            nf.setPointSize(nf.pointSize() + font_size_print_delta - n);
             prTempl.setFont(nf);
             QBrush br(fModel->data(i, j, Qt::BackgroundColorRole).value<QColor>());
             if (br.color() == Qt::white) {
@@ -1044,7 +1062,8 @@ void WReportGrid::on_btnConfigGrid_clicked()
 
 void WReportGrid::endApply()
 {
-    QSettings s(_ORGANIZATION_, _APPLICATION_ + QString("\\Grid\\") + fGridClassName);
+    QString settingsName = fTableView->property("wgridclassname").toString();
+    QSettings s(_ORGANIZATION_, settingsName);
     QStringList cols = s.value("ColumnsWidths").toString().split(",", QString::SkipEmptyParts);
     if (cols.count() != fModel->columnCount()) {
         return;

@@ -178,17 +178,7 @@ void WQuickCheckoutProcess::timeout()
             dd[":f_id"] = ui->tbl->toString(i, 2);
             dd.exec("delete from f_reservation_chart where f_id=:f_id");
             dd[":f_reservation"] = ui->tbl->toString(i, 2);
-            dd.exec("delete from f_reservation_map where f_reservation=:f_reservation");
-            dd[":f_inv"] = ui->tbl->toString(i, 1);
-            dd.exec("select * from m_register where f_finance=1 and f_canceled=0 and f_side=0 and f_inv=:f_inv");
-            if (dd.nextRow()) {
-                PPrintInvoice(ui->tbl->toString(i, 1), 0, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
-            }
-            dd[":f_inv"] = ui->tbl->toString(i, 1);
-            dd.exec("select * from m_register where f_finance=1 and f_canceled=0 and f_side=1 and f_inv=:f_inv");
-            if (dd.nextRow()) {
-                PPrintInvoice(ui->tbl->toString(i, 1), 1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
-            }
+            dd.exec("delete from f_reservation_map where f_reservation=:f_reservation");            
             CacheReservation r;
             if (r.get(ui->tbl->toString(i, 2))) {
                 CacheReservation n;
@@ -206,6 +196,11 @@ void WQuickCheckoutProcess::timeout()
             ui->tbl->setValue(i, 5, "FAILED");
         } else {
             dd.commit();
+            dd[":f_inv"] = ui->tbl->toString(i, 1);
+            dd.exec("select * from m_register where f_finance=1 and f_canceled=0 and f_inv=:f_inv");
+            if (dd.nextRow()) {
+                PPrintInvoice(ui->tbl->toString(i, 1), -1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
+            }
             ui->tbl->setValue(i, 5, "OK");
         }
         qApp->processEvents();

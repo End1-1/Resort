@@ -68,10 +68,10 @@ void DlgConnectToServer::readDatagram()
                     return;
                 }
 
-                BaseUID::fAirHost = jObj.value("host").toString();
-                BaseUID::fAirDbName = jObj.value("database").toString();
-                BaseUID::fAirUser = jObj.value("username").toString();
-                BaseUID::fAirPass = jObj.value("password").toString();
+                BaseUIDX::fAirHost = jObj.value("host").toString();
+                BaseUIDX::fAirDbName = jObj.value("database").toString();
+                BaseUIDX::fAirUser = jObj.value("username").toString();
+                BaseUIDX::fAirPass = jObj.value("password").toString();
 
                 AppConfig::fServerAddress = jObj["host"].toString();
                 AppConfig::fServerAddress = jObj["host"].toString();

@@ -15,6 +15,7 @@ FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
     ui->cbMonth->setCurrentIndex(QDate::currentDate().month() - 1);
     ui->deStart->setDate(QDate::currentDate().addDays((QDate::currentDate().day() - 1) * -1));
     ui->deEnd->setDate(QDate::currentDate());
+    fDec = 4;
 }
 
 FAccMonthlyReport::~FAccMonthlyReport()
@@ -45,7 +46,7 @@ void FAccMonthlyReport::getInvoiceContent(QList<QList<QVariant> > &rows, QMap<QS
                "group by 1");
     while (dd.nextRow()) {
         int destRow = dateMap[dd.getString(0)];
-        rows[destRow][col] = dd.getValue(1);
+        rows[destRow][col] = trunc(dd.getValue(1).toDouble());
     }
 }
 
@@ -267,16 +268,16 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     for (int i = 0; i < rows.count(); i++) {
         rows[i][14] = 0.0;
         for (int j = 2; j < 14; j++) {
-            rows[i][14] = rows[i][14].toDouble() + rows[i][j].toDouble();
+            rows[i][14] = trunc(rows[i][14].toDouble() + rows[i][j].toDouble());
         }
         if (i > 0) {
-            rows[i][20] = rows[i - 1][20].toDouble() + rows[i][14].toDouble();
+            rows[i][20] = trunc(rows[i - 1][20].toDouble() + rows[i][14].toDouble());
         } else {
             rows[i][20] = rows[i][14];
         }
 
         if (rows[i][16].toDouble() > 0) {
-            rows[i][18] = rows[i][2].toDouble() / rows[i][16].toDouble();
+            rows[i][18] = trunc(rows[i][2].toDouble() / rows[i][16].toDouble());
         }
     }
 
@@ -311,7 +312,7 @@ void FAccMonthlyReport::apply(WReportGrid *rg)
     for (int i = 0; i < rows.count(); i++) {
 
         if (rows[i][16].toDouble() > 0) {
-            rows[i][18] = rows[i][2].toDouble() / rows[i][16].toDouble();
+            rows[i][18] = trunc(rows[i][2].toDouble() / rows[i][16].toDouble());
         }
 
     }

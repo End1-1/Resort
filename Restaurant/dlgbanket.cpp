@@ -339,8 +339,8 @@ void DlgBanket::printTax()
 
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString());
-    ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), ui->leTotal->asDouble() + ui->lePrepayment->asDouble(), 1);
+                  fPreferences.getDb(def_tax_password).toString(), "true");
+    ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), ui->leTotal->asDouble() + ui->lePrepayment->asDouble(), 1, 0);
 
     switch (ui->leModeOfPayment->fHiddenText.toInt()) {
     case PAYMENT_CASH:
@@ -356,7 +356,7 @@ void DlgBanket::printTax()
         return;
     }
     DoubleDatabase air;
-    air.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    air.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     air.open(true, false);
 
     QString in, out, err;
@@ -480,7 +480,7 @@ void DlgBanket::on_btnSave_clicked()
     fDD[":f_cityLedger"] = cityLedger;
     fDD[":f_paymentDetails"] = ui->lePaymentComment->text();
     if (fDoc.isEmpty()) {
-        fDoc = uuid(VAUCHER_EVENT_N);
+        fDoc = uuidx(VAUCHER_EVENT_N);
         fDD.insertId("o_event", fDoc);
     } else {
         fDD.update("o_event", where_id(ap(fDoc)));
@@ -627,7 +627,7 @@ void DlgBanket::on_btnDraft_clicked()
     fDD[":f_prepaymentModeComment"] = ui->leModePrepaymentComment->text();
     fDD[":f_prepaymentTax"] = ui->lePrepaymentTax->text();
     if (fDoc.isEmpty()) {
-        fDoc = uuid(VAUCHER_EVENT_N);
+        fDoc = uuidx(VAUCHER_EVENT_N);
         fDD.insertId("o_event", fDoc);
     }
     fDD.update("o_event", where_id(ap(fDoc)));
@@ -861,7 +861,7 @@ void DlgBanket::on_pushButton_2_clicked()
     }
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString());
+                  fPreferences.getDb(def_tax_password).toString(), "true");
     QString in, out, err;
     int res = ptn.printAdvanceJson(ui->leModePrepayment->fHiddenText.toInt() == PAYMENT_CASH ? ui->lePrepayment->asDouble() : 0,
                          ui->leModePrepayment->fHiddenText.toInt() == PAYMENT_CASH ? 0 : ui->lePrepayment->asDouble(), in, out, err);
@@ -872,7 +872,7 @@ void DlgBanket::on_pushButton_2_clicked()
         fDD.update("o_event", where_id(ap(fDoc)));
 
         DoubleDatabase air;
-        air.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+        air.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
         air.open(true, false);
         air[":f_order"] = fDoc;
         air[":f_queryJson"] = in;
@@ -930,8 +930,8 @@ void DlgBanket::on_btnDuplicateFiscal_clicked()
 
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString());
-    ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), fDD.getDouble("f_total"), 1);
+                  fPreferences.getDb(def_tax_password).toString(), "true");
+    ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), fDD.getDouble("f_total"), 1, 0);
 
     switch (fDD.getInt("f_paymentMode")) {
     case PAYMENT_CASH:
@@ -947,7 +947,7 @@ void DlgBanket::on_btnDuplicateFiscal_clicked()
         return;
     }
     DoubleDatabase air;
-    air.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    air.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     air.open(true, false);
 
     QString in, out, err;

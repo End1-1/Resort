@@ -144,5 +144,7 @@
         <file>images/folder.png</file>
         <file>images/upward.png</file>
         <file>images/clean.png</file>
+        <file>images/ball-fiolet.png</file>
+        <file>images/nation.png</file>
     </qresource>
 </RCC>

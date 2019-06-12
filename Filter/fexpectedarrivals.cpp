@@ -221,7 +221,10 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {
+#ifdef _METROPOL_
+#else
             rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
+#endif
         }
     }
     if (rg->fModel->rowCount() == 0) {
@@ -637,7 +640,10 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {
+#ifdef _METROPOL_
+#else
             rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
+#endif
         }
     }
 }

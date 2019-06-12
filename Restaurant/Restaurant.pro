@@ -28,6 +28,9 @@ DEFINES += _APPLICATION_=\\\"Restaurant\\\"
 DEFINES += _RESTAURANT_
 
 SOURCES += main.cpp\
+    ../Base/doubleutils.cpp \
+    ../Base/stringutils.cpp \
+    ../Cache/cachetransferfromcl.cpp \
     rface.cpp \
     rlogin.cpp \
     rmessage.cpp \
@@ -165,6 +168,9 @@ SOURCES += main.cpp\
 
 
 HEADERS  += rface.h \
+    ../Base/doubleutils.h \
+    ../Base/stringutils.h \
+    ../Cache/cachetransferfromcl.h \
     rlogin.h \
     rmessage.h \
     ../Base/base.h \

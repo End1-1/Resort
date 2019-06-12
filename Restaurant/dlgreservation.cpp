@@ -28,9 +28,15 @@ void DlgReservation::loadRoom()
     ui->tblData->setColumnCount(7);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 0, 80, 300, 200, 100, 50, 300);
-    Utils::tableSetHeaderCaptions(ui->tblData, ui->tblData->columnCount(),
-                                  tr("Reserve id"), tr("Room"), tr("Guest"),
-                                  tr("Departure"), tr("Pax"), tr("Nat"), tr("Remarks"));
+    QStringList labels;
+    labels << tr("Reserve id")
+           << tr("Room")
+           << tr("Guest")
+           << tr("Departure")
+           << tr("Pax")
+           << tr("Nat")
+           << tr("Remarks");
+    ui->tblData->setHorizontalHeaderLabels(labels);
     QString query = "select r.f_id, r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), \
             r.f_endDate, r.f_man + r.f_woman + r.f_child + r.f_baby, g.f_nation, r.f_remarks \
             from f_reservation r \
@@ -76,8 +82,10 @@ void DlgReservation::loadCL()
     ui->tblData->setColumnCount(2);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 100, 400);
-    Utils::tableSetHeaderCaptions(ui->tblData, ui->tblData->columnCount(),
-                                  tr("City ledger"), tr("Name"));
+    QStringList labels;
+    labels << tr("City ledger")
+           << tr("Name");
+    ui->tblData->setHorizontalHeaderLabels(labels);
     QString query = "select f_id, f_name from f_city_ledger ";
     //fDD[":f_dateTo"] = WORKING_DATE;
     DoubleDatabase fDD(true, doubleDatabase);
@@ -97,8 +105,10 @@ void DlgReservation::loadCars()
     ui->tblData->setColumnCount(2);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 0, 400);
-    Utils::tableSetHeaderCaptions(ui->tblData, ui->tblData->columnCount(),
-                                  tr("Code"), tr("Name"));
+    QStringList labels;
+    labels << tr("Code")
+           << tr("Name");
+    ui->tblData->setHorizontalHeaderLabels(labels);
     QString query = "select f_id, concat(f_model, ' ', f_class) from d_car_model order by 2";
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.exec(query);

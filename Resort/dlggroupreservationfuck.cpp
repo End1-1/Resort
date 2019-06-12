@@ -669,6 +669,12 @@ void DlgGroupReservationFuck::save()
             fDD[":f_created"] = QDate::currentDate();
             invId = uuidx("IN");
             fDD[":f_invoice"] = invId;
+        } else {
+            fDD[":f_id"] = ui->tblRoom->toString(i, 0);
+            fDD.exec("select f_invoice from f_reservation where f_id=:f_id");
+            if (fDD.nextRow()) {
+                invId = fDD.getString(0);
+            }
         }
         fDD[":f_state"] = RESERVE_RESERVE;
         fDD[":f_reserveState"] = CONFIRM_CONFIRM;
@@ -737,6 +743,12 @@ void DlgGroupReservationFuck::save()
 
         }
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
+        fDD[":f_id"] = ui->tblRoom->toString(i, 0);
+        fDD.exec("update f_reservation set f_pricepernight=f_roomfee+f_extrabedfee+f_mealprice where f_id=:f_id");
+        fDD[":f_id"] = ui->tblRoom->toString(i, 0);
+        fDD.exec("update f_reservation set f_total=f_pricepernight*datediff(f_enddate, f_startdate) where f_id=:f_id");
+        fDD[":f_id"] = ui->tblRoom->toString(i, 0);
+        fDD.exec("update f_reservation set f_grandtotal=f_pricepernight*datediff(f_enddate, f_startdate) where f_id=:f_id");
 
         fDD[":f_reservation"] = ui->tblRoom->toString(i, 0);
         fDD.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_first=1");
@@ -801,6 +813,11 @@ void DlgGroupReservationFuck::save()
         fDD[":f_cancelReason"] = "";
         fDD[":f_side"] = 0;
         fDD.update("m_register", where_id(ap(rid)));
+
+        fDD[":f_room"] = ui->tblRoom->lineEdit(i, 1)->asInt();
+        fDD[":f_inv"] = invId;
+        fDD.exec("update m_register set f_room=:f_room where f_inv=:f_inv");
+
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(i, 0));
         BroadcastThread::cmdRefreshCache(cid_group_reservation, ui->leGroupCode->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tblRoom->toString(i, 0));

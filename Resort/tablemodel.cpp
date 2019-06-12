@@ -2,10 +2,11 @@
 #include "wreportgrid.h"
 #include <QHeaderView>
 
-TableModel::TableModel(QTableView *tableView) :
+TableModel::TableModel(QTableView *tableView, QTableWidget *tableTotal) :
     QAbstractTableModel(tableView)
 {
     fTableView = tableView;
+    fTableTotal = tableTotal;
     fLastSortIndex = -1;
     fLastSortOrder = Qt::AscendingOrder;
 }
@@ -20,7 +21,7 @@ void TableModel::apply(WReportGrid *rg)
 {
     clearProxyRows();
     beginResetModel();
-    if (rg == 0 || fQuery.count()> 0) {
+    if (rg == nullptr || fQuery.count()> 0) {
         if (fQuery.count() > 0) {
             if(!fDD.open(true, false)) {
                 message_error("Sql error<br>" + fDD.fLastError + "<br>Additional information in the log file");
@@ -53,7 +54,7 @@ void TableModel::apply(const QStringList &queries)
         }
     }
     fDD.close();
-    applyFinal(0, false);
+    applyFinal(nullptr, false);
 }
 
 void TableModel::applyFinal(WReportGrid *rg, bool clearBefore)
@@ -73,10 +74,20 @@ void TableModel::applyFinal(WReportGrid *rg, bool clearBefore)
     if (rg) {
         rg->dontResizeSave(true);
     }
-    for (int i = 0; i < fColumns.count(); i++)
+    if (rg) {
+        rg->disconnectHeaderResize();
+    }
+    for (int i = 0; i < fColumns.count(); i++) {
         fTableView->setColumnWidth(i, fColumns.at(i)->fWidth);
+        if (fTableTotal) {
+            fTableTotal->setColumnWidth(i, fColumns.at(i)->fWidth);
+        }
+    }
     if (rg) {
         rg->dontResizeSave(false);
+    }
+    if (rg) {
+        rg->connectHeaderResize();
     }
     endResetModel();
     emit rowCount(fRows.count());
@@ -207,6 +218,14 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     }
     case Qt::EditRole:
         return fDD.fDbRows.at(fRows.at(index.row())).at(index.column());
+    case Qt::DecorationRole: {
+        if (fBackgroundImages.contains(index.column())) {
+            if (fBackgroundImages[index.column()].contains(v)) {
+                return fBackgroundImages[index.column()][v];
+            }
+        }
+        break;
+    }
     case Qt::BackgroundColorRole:
         if (fBackgroundColors.contains(index.row())) {
             return fBackgroundColors[index.row()][index.column()];
@@ -218,13 +237,13 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         }
         break;
     case Qt::FontRole: {
-            if (fFont.contains(index.row())) {
-                if (fFont[index.row()].contains(index.column())) {
-                    QFont f(fFont[index.row()][index.column()]);
-                    return f;
-                }
+        if (fFont.contains(index.row())) {
+            if (fFont[index.row()].contains(index.column())) {
+                QFont f(fFont[index.row()][index.column()]);
+                return f;
             }
-            return fTableView->font();
+        }
+        return fTableView->font();
         }
     }
     default:
@@ -318,7 +337,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
     if (fCheckBoxColumns.contains(index.column())) {
         return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
     }
-    return QAbstractTableModel::flags(index);
+    return QAbstractTableModel::flags(index) & ~Qt::ItemIsUserCheckable;
 }
 
 void TableModel::setDataFromSource(const QList<QList<QVariant> > &dataSource)
@@ -390,7 +409,7 @@ void TableModel::searchInTable(const QString &text)
                 QString cmp;
                 switch (v.type()) {
                 case QVariant::Double:
-                    cmp = float_str(v.toDouble(), 2);
+                    cmp = QString::number(v.toDouble(), 'f', 2);
                     break;
                 case QVariant::Date:
                     cmp = v.toDate().toString(def_date_format);
@@ -432,6 +451,84 @@ void TableModel::searchInTable(const QString &text)
     }
     fTableView->clearSelection();
     fTableView->selectionModel()->select(selection, QItemSelectionModel::Select);
+
+    if (fSumColumns.count() > 0) {
+        sumOfColumns(fSumColumns, fSumValues);
+        emit newSum(fSumColumns, fSumValues);
+    }
+}
+
+void TableModel::searchInTable(const QString &text, int col)
+{
+    if (col < 0) {
+        searchInTable(text);
+        return;
+    }
+    QStringList searchList = text.split("|");
+    QList<int> tempRows;
+    for (int i = 0; i < fDD.rowCount(); i++) {
+        QList<QVariant> &row = fDD.fDbRows[i];
+        const QVariant &v = row.at(col);
+        QString cmp;
+        switch (v.type()) {
+        case QVariant::Double:
+            cmp = float_str(v.toDouble(), 2);
+            break;
+        case QVariant::Date:
+            cmp = v.toDate().toString(def_date_format);
+            break;
+        case QVariant::DateTime:
+            cmp = v.toDateTime().toString(def_date_time_format);
+            break;
+        default:
+            cmp = v.toString();
+            break;
+        }
+        for (const QString &s: searchList) {
+            if (cmp.contains(s, Qt::CaseInsensitive)) {
+                tempRows.append(i);
+                break;
+            }
+        }
+    }
+    beginResetModel();
+    fRows = tempRows;
+    endResetModel();
+
+    if (fSumColumns.count() > 0) {
+        sumOfColumns(fSumColumns, fSumValues);
+        emit newSum(fSumColumns, fSumValues);
+    }
+}
+
+void TableModel::searchInTableEqual(const QString &text, int col)
+{
+    QList<int> tempRows;
+    for (int i = 0; i < fDD.rowCount(); i++) {
+        QList<QVariant> &row = fDD.fDbRows[i];
+        const QVariant &v = row.at(col);
+        QString cmp;
+        switch (v.type()) {
+        case QVariant::Double:
+            cmp = float_str(v.toDouble(), 2);
+            break;
+        case QVariant::Date:
+            cmp = v.toDate().toString(def_date_format);
+            break;
+        case QVariant::DateTime:
+            cmp = v.toDateTime().toString(def_date_time_format);
+            break;
+        default:
+            cmp = v.toString();
+            break;
+        }
+        if (cmp.compare(text, Qt::CaseInsensitive) == 0) {
+            tempRows.append(i);
+        }
+    }
+    beginResetModel();
+    fRows = tempRows;
+    endResetModel();
 
     if (fSumColumns.count() > 0) {
         sumOfColumns(fSumColumns, fSumValues);

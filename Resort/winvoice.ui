@@ -114,6 +114,9 @@ room</string>
       </item>
       <item row="0" column="9">
        <widget class="QPushButton" name="btnManualTax">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Manual
 Tax</string>
@@ -147,6 +150,9 @@ entries</string>
       </item>
       <item row="0" column="12">
        <widget class="QPushButton" name="btnTaxBack">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="text">
          <string>Tax
 back</string>
@@ -773,6 +779,9 @@ operator</string>
          </item>
          <item row="4" column="1" colspan="2">
           <widget class="QLineEdit" name="leCheckInOperator">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -871,6 +880,9 @@ operator</string>
           <height>16777215</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="5" column="1">
           <widget class="EQLineEdit" name="leVatMode">
@@ -925,6 +937,9 @@ operator</string>
          </item>
          <item row="2" column="1">
           <widget class="EQLineEdit" name="leArrangement">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -1010,6 +1025,9 @@ operator</string>
              <width>80</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
            </property>
            <property name="readOnly">
             <bool>true</bool>
@@ -1128,6 +1146,9 @@ operator</string>
          </item>
          <item row="5" column="1" colspan="2">
           <widget class="EQLineEdit" name="leBookingNo">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
@@ -1307,6 +1328,9 @@ operator</string>
             </item>
             <item>
              <widget class="EQLineEdit" name="lePrepaid">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="styleSheet">
                <string notr="true">font-size:12pt;
 font-weight:bold;
@@ -1686,6 +1710,9 @@ color:red;</string>
              <height>25</height>
             </size>
            </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -1823,6 +1850,11 @@ color:red;</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1834,11 +1866,6 @@ color:red;</string>
    <class>EQDateEdit</class>
    <extends>QDateEdit</extends>
    <header location="global">eqdateedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

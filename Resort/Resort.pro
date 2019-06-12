@@ -20,6 +20,7 @@ SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
@@ -428,6 +429,7 @@ HEADERS  += mainwindow.h \
     ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
+    ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \

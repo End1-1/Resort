@@ -51,8 +51,9 @@ void DlgUtils::on_btnCorrectReservGrantTotal_clicked()
     int done = 0;
     for (auto v = invoices.begin(); v != invoices.end(); v++) {
         dd[":f_invoice"] = v.key();
+        dd[":f_total"] = v.value();
         dd[":f_grandtotal"] = v.value();
-        if (!dd.exec("update f_reservation set f_grandtotal=:f_grandtotal where f_invoice=:f_invoice")) {
+        if (!dd.exec("update f_reservation set f_grandtotal=:f_grandtotal, f_total=:f_total where f_invoice=:f_invoice")) {
             message_error(dd.fLastError);
             return;
         }
@@ -62,5 +63,8 @@ void DlgUtils::on_btnCorrectReservGrantTotal_clicked()
     if (invoices.count() == 0) {
         ui->lbInfo->setText("All clear");
     }
+    dd.exec("update f_reservation set f_total=f_roomfee+f_extrabedfee+f_mealprice where f_state=2");
+    dd.exec("update f_reservation set f_grandtotal=datediff(f_enddate, f_startdate) * f_total where f_state=2");
+    dd.exec("update f_reservation set f_total=f_grandtotal where f_state=2");
     message_info(tr("Done"));
 }

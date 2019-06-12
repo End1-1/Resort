@@ -817,6 +817,21 @@ void WReservationRoomTab::reCheckin()
     fDD[":f_canceldate"] = QDateTime::currentDateTime();
     fDD.exec("update m_register set f_canceled=1, f_canceluser=:f_canceluser, f_canceldate=:f_canceldate "
              "where f_source=:f_source and f_canceled=0 and f_inv=:f_inv");
+    fDD[":f_source"] = VAUCHER_RECEIPT_N;
+    fDD[":f_inv"] = ui->leInvoice->text();
+    fDD.exec("select f_id from m_register where f_source=:f_source and f_inv=:f_inv and f_canceled=0 "
+             "and f_finalname like 'CHECKOUT%'");
+    QStringList mrCancel;
+    while (fDD.nextRow()) {
+        mrCancel.append(fDD.getString(0));
+    }
+    for (const QString &s: mrCancel) {
+        fDD[":f_canceled"] = 1;
+        fDD[":f_canceluser"] = WORKING_USERID;
+        fDD[":f_canceldate"] = QDateTime::currentDateTime();
+        fDD[":f_cancelreason"] = tr("RECHECKIN");
+        fDD.update("m_register", where_id(ap(s)));
+    }
     fTrackControl->insert("Recheckin", "", "");
     setGroupBoxesEnabled(true);
     save();

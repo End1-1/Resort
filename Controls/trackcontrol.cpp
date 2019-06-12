@@ -54,6 +54,16 @@ TrackControl::TrackControl(int table)
     fTable = table;
 }
 
+bool TrackControl::contains(QWidget *w)
+{
+    for (TrackWidget *tw: fTrackWidgets) {
+        if (w == tw->fWidget) {
+            return true;
+        }
+    }
+    return false;
+}
+
 TrackControl::~TrackControl()
 {
     qDeleteAll(fTrackWidgets);

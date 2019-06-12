@@ -191,10 +191,11 @@ void DlgDiscount::on_btnOk_clicked()
         message_error(tr("Discount type not defined"));
         return;
     }
-    if (ui->leFinalAmount->asDouble() < -0.001 && ui->rbGuest->isChecked()) {
-        message_error(tr("You cannot to do this :)"));
-        return;
-    }
+    // may be this is remove
+//    if (ui->leFinalAmount->asDouble() < -0.001 && ui->rbGuest->isChecked()) {
+//        message_error(tr("You cannot to do this :)"));
+//        return;
+//    }
     bool isNew = true;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();

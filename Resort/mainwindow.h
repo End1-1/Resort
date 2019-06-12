@@ -27,7 +27,6 @@ public:
     void login();
     void logout();
     void addTabWidget(BaseWidget *widget);
-    void refreshReservationList();
     void setCurrentWidget(QWidget *w);
     void configureLabels();
     QTabWidget *fTab;

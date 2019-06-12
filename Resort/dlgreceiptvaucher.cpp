@@ -206,7 +206,7 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             if (ui->leCL->asInt() == 0) {
                 errors += tr("City ledger is not defined");
             }
-            finalName = QString("CHECKOUT %1").arg(ui->leCLName->text());
+            finalName = QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest());
             break;
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wRoom->guest();
@@ -261,10 +261,12 @@ void DlgReceiptVaucher::on_btnSave_clicked()
     if (ui->tabWidget->currentIndex() == 0) {
         if (ui->lePaymentCode->asInt() == PAYMENT_CL) {
             fDoc.fCityLedger = ui->leCL->asUInt();
+            fDoc.fPaymentComment = "CHECKOUT " + ui->leCLName->text();
+        } else {
+            fDoc.fPaymentComment = "PAYMENT " + vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), ui->leCL->text());
         }
-        fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), ui->leCL->text());
     } else {
-        fDoc.fPaymentComment = vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
+        fDoc.fPaymentComment = "PAYMENT " + vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
     }
     fDoc.fRb = ui->tabWidget->currentIndex();
     if(!fDoc.save(fDD)) {

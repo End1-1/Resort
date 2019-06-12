@@ -117,8 +117,6 @@ void WInvoice::callback(int sel, const QString &code)
             if (ui->leRoomCode->asInt() > 0) {
                 message_error(tr("No active invoice on this room or wrong room number"));
             }
-            ui->leRoomCode->setFocus();
-            ui->leRoomCode->selectAll();
         }
         break;
     }

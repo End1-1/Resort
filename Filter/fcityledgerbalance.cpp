@@ -23,20 +23,20 @@ FCityLedgerBalance::FCityLedgerBalance(QWidget *parent) :
             order by 1 \
              ";
 #else
-    fReportGrid->fStaticQuery = " \
-            select m.f_cityLedger, cl.f_name,  \
-                    sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-                    m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount , \
-            truncate(sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF'), m.f_amountamd/m.f_amountusd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-                (m.f_amountAmd/m.f_amountusd)*m.f_sign*-1, (m.f_amountAmd/m.f_amountusd)*m.f_sign*1))), 1)  \
-            from m_register m \
-            inner join f_city_ledger cl on cl.f_id=m.f_cityLedger \
-            where m.f_finance=1 and  cl.f_id>0 and f_canceled=0 \
-            and m.f_wdate <= :f_wdate1  \
-            group by 1, 2 \
-            :having \
-            order by 1 \
-             ";
+    fReportGrid->fStaticQuery =
+            "select m.f_cityLedger, cl.f_name,  \
+            sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+            m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount , \
+    truncate(sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd/m.f_amountusd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+        (m.f_amountAmd/m.f_amountusd)*m.f_sign*-1, (m.f_amountAmd/m.f_amountusd)*m.f_sign*1))), 1)  \
+    from m_register m \
+    inner join f_city_ledger cl on cl.f_id=m.f_cityLedger \
+    where m.f_finance=1 and  cl.f_id>0 and f_canceled=0 \
+    and m.f_wdate <= :f_wdate1  \
+    group by 1, 2 \
+    :having \
+    order by 1 \
+     ";
 #endif
     fReportGrid->fModel->setColumn(100, "", tr("Code"))
             .setColumn(400, "", tr("Name"))

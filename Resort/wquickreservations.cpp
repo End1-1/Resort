@@ -18,6 +18,7 @@
 #include "cachecardex.h"
 #include "wquickreservationscheckin.h"
 #include <QPainter>
+#include <QInputDialog>
 
 static const int col_room_state = 0;
 static const int col_reservation = 1;
@@ -232,6 +233,13 @@ void WQuickReservationsDelegate::paint(QPainter *painter, const QStyleOptionView
         return;
     }
     painter->save();
+    QFont font(painter->font());
+    if (option.state & QStyle::State_Selected) {
+        font.setBold(true);
+    } else {
+        font.setBold(false);
+    }
+    painter->setFont(font);
     QColor bgColor = Qt::white;
     if (index.column() == 0) {
         CacheRoom r;
@@ -564,6 +572,9 @@ void WQuickReservations::on_btnCheckinSelected_clicked()
         message_info(tr("No reservations was selected"));
         return;
     }
+    if (message_confirm(tr("Confirm to check in selected reservations")) != QDialog::Accepted) {
+        return;
+    }
     WQuickReservationsCheckin *w = new WQuickReservationsCheckin(this);
     w->setReservations(codes);
     w->exec();
@@ -598,4 +609,76 @@ void WQuickReservations::on_btnClearSelectedRooms_clicked()
     }
     refresh();
     message_info(tr("Done"));
+}
+
+void WQuickReservations::on_btnDateLeft_clicked()
+{
+    ui->deDate->setDate(ui->deDate->date().addDays(-1));
+    on_btnRefresh_clicked();
+}
+
+void WQuickReservations::on_btnDateRight_clicked()
+{
+    ui->deDate->setDate(ui->deDate->date().addDays(1));
+    on_btnRefresh_clicked();
+}
+
+void WQuickReservations::on_btnMassNation_clicked()
+{
+    auto *c = cache(cid_nation);
+    QStringList codes, names;
+    if (c->selector(codes, names, false)) {
+        DoubleDatabase dd(true, doubleDatabase);
+        if (message_confirm(tr("Confirm to change the nationality of selected guests")) == QDialog::Accepted) {
+            for (int i = 0; i < ui->tbl->rowCount(); i++) {
+                if (ui->tbl->itemValue(i, 0, Qt::UserRole).toInt() != 1) {
+                    continue;
+                }
+                dd[":f_reservation"] = reservationCode(i);
+                dd.exec("select f_guest from f_reservation_guests where f_reservation=:f_reservation");
+                bool first = true;
+                QString guestCodes;
+                while (dd.nextRow()) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        guestCodes += ",";
+                    }
+                    guestCodes += dd.getString(0);
+                }
+                dd[":f_nation"] = codes.at(0);
+                dd.exec("update f_guests set f_nation=:f_nation where f_id in (" + guestCodes + ")");
+                QModelIndex mc = model()->index(i, col_nat);
+                TrackControl::insert(TRACK_RESERVATION, "Nation of " + guestFullName(i), model()->data(mc).toString(), codes.at(0), "", invoiceCode(i), reservationCode(i));
+                model()->setData(mc, names.at(0));
+            }
+            message_info(tr("Done"));
+        }
+    }
+}
+
+void WQuickReservations::on_btnRoomRate_clicked()
+{
+    DoubleDatabase dd(true, doubleDatabase);
+    if (message_confirm(tr("Confirm to change the rate of room of selection")) == QDialog::Accepted) {
+        bool ok;
+        double price = QInputDialog::getDouble(this, tr("Room rate"), tr("Rate"), 0, 0, 999999999, 0, &ok);
+        if (!ok) {
+            return;
+        }
+        for (int i = 0; i < ui->tbl->rowCount(); i++) {
+            if (ui->tbl->itemValue(i, 0, Qt::UserRole).toInt() != 1) {
+                continue;
+            }
+            dd[":f_roomfee"] = price;
+            dd[":f_id"] = reservationCode(i);
+            dd.exec("update f_reservation set f_roomfee=:f_roomfee where f_id=:f_id");
+            dd[":f_id"] = reservationCode(i);
+            dd.exec("update f_reservation set f_pricepernight=f_roomfee+f_extrabedfee+f_mealprice where f_id=:f_id");
+            QModelIndex mc = model()->index(i, col_rate);
+            TrackControl::insert(TRACK_RESERVATION, "Room rate ", float_str(mc.data(Qt::EditRole).toDouble(), 2), float_str(price, 2), invoiceCode(i), reservationCode(i));
+            model()->setData(mc, price);
+        }
+        message_info(tr("Done"));
+    }
 }

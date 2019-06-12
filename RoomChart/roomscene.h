@@ -10,6 +10,19 @@
 #include <QGraphicsScene>
 #include <QGraphicsItemGroup>
 #include <QSet>
+#include <QThread>
+
+class ClearRoomThread : public QThread {
+    Q_OBJECT
+
+public:
+    ClearRoomThread(QGraphicsItemGroup *group);
+protected:
+    virtual void run() override;
+
+private:
+    QGraphicsItemGroup *fGroup;
+};
 
 class RoomScene : public QGraphicsScene
 {
@@ -38,7 +51,7 @@ private:
     QGraphicsItemGroup fHSelGroup;
     QGraphicsItemGroup fVSelGroup;
     QGraphicsItemGroup fReserveGroup;
-    QGraphicsItemGroup fReserveInfoGroup;
+    QGraphicsItemGroup *fReserveInfoGroup;
     QMap<int, QGraphicsRectItem*> fSelectedRooms;
     QMap<int, QGraphicsRectItem*> fSelectedColumns;
     QStringList fRooms;

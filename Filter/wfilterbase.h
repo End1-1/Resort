@@ -12,6 +12,7 @@ class WFilterBase : public BaseWidget
 public:
     explicit WFilterBase(QWidget *parent = nullptr);
     ~WFilterBase();
+    int fDec;
     virtual void apply(WReportGrid *rg) = 0;
     virtual QWidget *firstElement() = 0;
     virtual QWidget *lastElement() = 0;

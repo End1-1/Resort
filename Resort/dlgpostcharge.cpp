@@ -8,6 +8,7 @@
 #include "cachevatmode.h"
 #include "utils.h"
 #include "cachecreditcard.h"
+#include "cacherights.h"
 #include "cachecityledger.h"
 #include "vauchers.h"
 #include "dlgsingleprinttax.h"
@@ -69,6 +70,13 @@ void DlgPostCharge::callback(int sel, const QString &code)
     case hint_item: {
         CacheInvoiceItem c;
         if (c.get(code)) {
+            if (!r__(cr__super_correction)) {
+                if (c.fNoManual()) {
+                    message_error(tr("This item cannot be charged"));
+                    ui->leItem->setInitialValue("");
+                    return;
+                }
+            }
             ui->leFinalName->setText(c.fName());
         }
         break;

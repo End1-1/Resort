@@ -30,7 +30,7 @@ private:
     Ui::WQuickReservationsGuests *ui;
     QString fReserve;
     QString fInvoice;
-    QMap<int, TrackControl *> fTrackWidgets;
+    QList<TrackControl*> fTrackControls;
     void addRowTrack(int row);
 
 };

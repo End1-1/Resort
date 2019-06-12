@@ -124,6 +124,8 @@ public:
     QMap<QString,bool> fIncludes;
     QString fGridClassName;
     static QMap<QString, Report> fReportOptions;
+    void connectHeaderResize();
+    void disconnectHeaderResize();
     void dontResizeSave(bool v);
     void setBtnNewVisible(bool value = true);
     virtual QWidget *gridOptionWidget();

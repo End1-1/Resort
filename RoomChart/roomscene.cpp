@@ -12,15 +12,13 @@ RoomScene::RoomScene(QObject *parent) :
     addItem(&fGridGroup);
     addItem(&fHSelGroup);
     addItem(&fVSelGroup);
-    addItem(&fReserveGroup);
-    addItem(&fReserveInfoGroup);
+    addItem(&fReserveGroup);    
     fGridGroup.setZValue(1);
     fHSelGroup.setZValue(2);
     fVSelGroup.setZValue(3);
     fReserveGroup.setZValue(6);
     fReserveGroup.setHandlesChildEvents(false);
-    fReserveInfoGroup.setZValue(5);
-    fReserveInfoGroup.setHandlesChildEvents(false);
+    fReserveInfoGroup = nullptr;
 }
 
 RoomScene::~RoomScene()
@@ -29,28 +27,51 @@ RoomScene::~RoomScene()
     qDeleteAll(fHSelGroup.childItems());
     qDeleteAll(fVSelGroup.childItems());
     qDeleteAll(fReserveGroup.childItems());
-    qDeleteAll(fReserveInfoGroup.childItems());
+    if (fReserveInfoGroup) {
+        removeItem(fReserveInfoGroup);
+        ClearRoomThread *cs = new ClearRoomThread(fReserveInfoGroup);
+        cs->start();
+    }
 }
 
 void RoomScene::initBackgroung(int columnCount, const QStringList &rooms)
 {
-    fSelectedRooms.clear();
+    QElapsedTimer et;
+    et.start();
+    qDebug() << "Start init";
+    fSelectedRooms.clear();    
     qDeleteAll(fVSelGroup.childItems());
     fVSelGroup.childItems().clear();
+
+    qDebug() << et.elapsed() << "VSel clear";
+    et.restart();
+
     qDeleteAll(fGridGroup.childItems());
     fGridGroup.childItems().clear();
-    foreach (QGraphicsItem *i, fReserveInfoGroup.childItems()) {
-        removeItem(i);
-        delete i;
+
+    qDebug() << et.elapsed() << "Grid clear";
+    et.restart();
+
+    if (fReserveInfoGroup) {
+        removeItem(fReserveInfoGroup);
+        ClearRoomThread *cs = new ClearRoomThread(fReserveInfoGroup);
+        cs->start();
     }
-    writelog("Clear fREserveGroup");
-    fReserveInfoGroup.childItems().clear();
+    fReserveInfoGroup = new QGraphicsItemGroup();
+    addItem(fReserveInfoGroup);
+    fReserveInfoGroup->setZValue(5);
+    fReserveInfoGroup->setHandlesChildEvents(false);
+
+    qDebug() << et.elapsed() << "Reserve info group clear";
+    et.restart();
+
     foreach (QGraphicsItem *i, fReserveGroup.childItems()) {
         removeItem(i);
         delete i;
     }
 
-    writelog("room scene clear. next step init grid");
+    qDebug() << et.elapsed() << "Reserve group clear";
+    et.restart();
 
     fRooms = rooms;
     int width = columnCount * COLUMN_WIDTH;
@@ -65,6 +86,10 @@ void RoomScene::initBackgroung(int columnCount, const QStringList &rooms)
         l->setPen(p);
         fGridGroup.addToGroup(l);;
     }
+
+    qDebug() << et.elapsed() << "HGroup create";
+    et.restart();
+
     QPen ph(LIGHT_GRAY);
     ph.setWidthF(1);
     ph.setColor(LIGHT_GRAY);
@@ -78,6 +103,10 @@ void RoomScene::initBackgroung(int columnCount, const QStringList &rooms)
             fHSelGroup.addToGroup(r);
         }
     }
+
+    qDebug() << et.elapsed() << "VGroup create";
+    et.restart();
+
     for (int i = 0; i < rooms.count(); i++) {
         QGraphicsLineItem *l = new QGraphicsLineItem(0, i * ROW_HEIGHT, width, i * ROW_HEIGHT);
         l->setPen(p);
@@ -91,7 +120,9 @@ void RoomScene::initBackgroung(int columnCount, const QStringList &rooms)
     QGraphicsLineItem *l = new QGraphicsLineItem(0, rooms.count() * ROW_HEIGHT, width, rooms.count() * ROW_HEIGHT);
     l->setPen(p);
     fGridGroup.addToGroup(l);
-    writelog("End of grid");
+
+    qDebug() << et.elapsed() << "Room scene initialized";
+    et.restart();
 }
 
 void RoomScene::rowsSelect(const QSet<int> &rows)
@@ -137,11 +168,11 @@ void RoomScene::removeInvalidReserveWidget(const QString &code)
         }
     }
 
-    QListIterator<QGraphicsItem*> it(fReserveInfoGroup.childItems());
+    QListIterator<QGraphicsItem*> it(fReserveInfoGroup->childItems());
     while (it.hasNext()) {
         ReservationInfo *rw = static_cast<ReservationInfo*>(it.next());
         if (rw->fReservation.fId() == code) {
-            fReserveInfoGroup.removeFromGroup(rw);
+            fReserveInfoGroup->removeFromGroup(rw);
             delete rw;
             return;
         }
@@ -156,7 +187,7 @@ ReservationInfo *RoomScene::addReserveInfo(const QString &code)
     if (rc->fReservation.fState() == RESERVE_CHECKIN) {
         rc->setZValue(3);
     }
-    fReserveInfoGroup.addToGroup(rc);
+    fReserveInfoGroup->addToGroup(rc);
     return rc;
 }
 
@@ -280,4 +311,20 @@ void RoomScene::changeSelection(QGraphicsItemGroup &gr, QMap<int, QGraphicsRectI
 void RoomScene::editReserveRoom(const QString &r)
 {
     emit editReserve(r);
+}
+
+ClearRoomThread::ClearRoomThread(QGraphicsItemGroup *group) :
+    QThread()
+{
+    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+    fGroup = group;
+}
+
+void ClearRoomThread::run()
+{
+    QList<QGraphicsItem *> ilist = fGroup->childItems();
+    for (int i = 0; i < ilist.count(); i++) {
+        delete ilist[i];
+    }
+    delete fGroup;
 }

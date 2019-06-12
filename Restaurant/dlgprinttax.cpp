@@ -43,7 +43,7 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
     fTimer.stop();
     PrintTaxN pt(fPreferences.getDb(def_tax_address).toString(),
                 fPreferences.getDb(def_tax_port).toInt(),
-                fPreferences.getDb(def_tax_password).toString());
+                fPreferences.getDb(def_tax_password).toString(), "true");
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_header"] = order;
     fDD[":f_state"] = DISH_STATE_READY;
@@ -55,13 +55,13 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
                    "and (f_complex=0 or (f_complex>0 and f_complexId=0))");
     for (int i = 0; i < fDD.rowCount(); i++) {
         pt.addGoods(dep, fDD.getValue(i, "f_adgt").toString(), fDD.getValue(i, "f_code").toString(),
-                      fDD.getValue(i, "f_am").toString(), fDD.getValue(i, "f_price").toDouble(), fDD.getValue(i, "f_qty").toDouble());
+                      fDD.getValue(i, "f_am").toString(), fDD.getValue(i, "f_price").toDouble(), fDD.getValue(i, "f_qty").toDouble(), 1);
     }
     QString inJson, outJson, err;
     int result = pt.makeJsonAndPrint(fCardAmount, 0, inJson, outJson, err);
 
     DoubleDatabase air;
-    air.setDatabase(BaseUID::fAirHost, BaseUID::fAirDbName, BaseUID::fAirUser, BaseUID::fAirPass, 1);
+    air.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     air.open(true, false);
     air[":f_date"] = QDate::currentDate();
     air[":f_time"] = QTime::currentTime();

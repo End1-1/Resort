@@ -18,20 +18,19 @@ public:
     QString fTitle;
 };
 
-class Row {
-    int fIndex;
-};
-
 class WReportGrid;
+class QTableWidget;
 
 class TableModel : public QAbstractTableModel
 {
     Q_OBJECT
+
 public:
-    TableModel(QTableView *tableView);
+    TableModel(QTableView *tableView, QTableWidget *tableTotal);
     ~TableModel();
     DoubleDatabase fDD;
     QTableView *fTableView;
+    QTableWidget *fTableTotal;
     void apply(WReportGrid *rg);
     void apply(const QStringList &queries);
     void applyFinal(WReportGrid *rg, bool clearBefore);
@@ -61,6 +60,8 @@ public:
     TableModel &setColumn(Column *column);
     void setSqlQuery(const QString &query);
     void searchInTable(const QString &text);
+    void searchInTable(const QString &text, int col);
+    void searchInTableEqual(const QString &text, int col);
     int appendRow(const QList<QVariant> &values);
     void appendColumns(int count, const QStringList &titles);
     void insertRow(int row, const QList<QVariant> &values);
@@ -71,6 +72,8 @@ public:
     void insertSubTotals(int colName, const QList<int> &totalCols);
     QList<int> fCheckBoxColumns;
     QList<int> fCheckBoxIsCheckable;
+    QMap<int, QMap<QVariant, QPixmap> > fBackgroundImages; //Based on values
+
 private:
     Qt::SortOrder fLastSortOrder;
     int fLastSortIndex;

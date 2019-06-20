@@ -15,7 +15,7 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
     ui->chAll->click();
     ui->chDisplayRate->click();
-    setupTabTextAndIcon(tr("In house guests"), ":/images/bed.png");
+    fReportGrid->setupTabTextAndIcon(tr("In house guests"), ":/images/bed.png");
 }
 
 FInHouseGuest::~FInHouseGuest()

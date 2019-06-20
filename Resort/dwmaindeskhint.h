@@ -3,12 +3,19 @@
 
 #include "base.h"
 #include <QDockWidget>
+#include <QItemDelegate>
 
 class TableModel;
 
 namespace Ui {
 class DWMainDeskHint;
 }
+
+class DeskHintItemDelegate : public QItemDelegate {
+
+public:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
 
 class DWMainDeskHint : public QDockWidget, public Base
 {

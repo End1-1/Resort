@@ -25,7 +25,7 @@ FCityLedgerBalance::FCityLedgerBalance(QWidget *parent) :
 #else
     fReportGrid->fStaticQuery =
             "select m.f_cityLedger, cl.f_name,  \
-            sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
+            sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS', 'TR'), \
             m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount , \
     truncate(sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd/m.f_amountusd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
         (m.f_amountAmd/m.f_amountusd)*m.f_sign*-1, (m.f_amountAmd/m.f_amountusd)*m.f_sign*1))), 1)  \

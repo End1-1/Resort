@@ -26,9 +26,9 @@ FCityLedgerBalanceExtended::FCityLedgerBalanceExtended(QWidget *parent) :
     from f_city_ledger cl \
     left join (select f_cityLedger, \
         sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, \
-        if(m.f_source in ('RV','CR', 'AV', 'DS'),m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount from m_register m where f_finance=1 and f_canceled=0 and f_wdate<:f_wdate1 group by 1) o on o.f_cityLedger=cl.f_id \
-    left join (select f_cityLedger, sum(f_amountAmd) as amount from m_register where f_finance=1 and f_canceled=0 and (f_sign=-1 or (f_sign=1 and f_source<>'RV' and f_source<>'DS' and f_source<>'AV' and f_source<>'RF')) and f_wdate between :f_wdate1 and :f_wdate2 group by 1) d on d.f_cityLedger=cl.f_id \
-    left join (select f_cityLedger, sum(f_amountAmd) as amount from m_register where f_finance=1 and f_canceled=0 and f_sign=1 and (f_source in ('RV', 'DS', 'AV', 'RF'))  and f_wdate between :f_wdate1 and :f_wdate2 group by 1) c on c.f_cityLedger=cl.f_id \
+        if(m.f_source in ('RV','CR', 'AV', 'DS', 'TR'),m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as amount from m_register m where f_finance=1 and f_canceled=0 and f_wdate<:f_wdate1 group by 1) o on o.f_cityLedger=cl.f_id \
+    left join (select f_cityLedger, sum(f_amountAmd) as amount from m_register where f_finance=1 and f_canceled=0 and (f_sign=-1 or (f_sign=1 and f_source<>'RV' and f_source<>'DS' and f_source<>'AV' and f_source<>'RF' and f_source<>'TR')) and f_wdate between :f_wdate1 and :f_wdate2 group by 1) d on d.f_cityLedger=cl.f_id \
+    left join (select f_cityLedger, sum(f_amountAmd) as amount from m_register where f_finance=1 and f_canceled=0 and f_sign=1 and (f_source in ('RV', 'DS', 'AV', 'RF', 'TR'))  and f_wdate between :f_wdate1 and :f_wdate2 group by 1) c on c.f_cityLedger=cl.f_id \
     where coalesce(o.amount, 0) <> 0 or coalesce(d.amount, 0) <> 0 or coalesce(c.amount, 0) <> 0 \
     order by 1 ";
 #endif

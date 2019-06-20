@@ -1,6 +1,7 @@
 #include "fexpectedarrivals2.h"
 #include "ui_fexpectedarrivals2.h"
 #include "wreportgrid.h"
+#include "wreservation.h"
 #include "cachecardex.h"
 
 FExpectedArrivals2::FExpectedArrivals2(QWidget *parent) :
@@ -13,6 +14,7 @@ FExpectedArrivals2::FExpectedArrivals2(QWidget *parent) :
     connect(ui->wd, &WDate2::changed, [this](){
         apply(fReportGrid);
     });
+    connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRow(QList<QVariant>)));
 
     GOExpextedArrivals g("Expected arrivals/depatures");
     Q_UNUSED(g);
@@ -115,7 +117,7 @@ void FExpectedArrivals2::printArrival(WReportGrid *rg)
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
             "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
             "r.f_pricePerNight, "
-            "left(s.f_en, 1), r.f_endDate, r.f_remarks "
+            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
             "from f_reservation r "
             "left join f_room rm on rm.f_id=r.f_room "
             "left join f_guests g on g.f_id=r.f_guest "
@@ -290,7 +292,7 @@ void FExpectedArrivals2::printDeparture(WReportGrid *rg)
             "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
             "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
             "bl.total, "
-            "left(s.f_en, 1), r.f_endDate, r.f_remarks "
+            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
             "from f_reservation r "
             "inner join f_room rm on rm.f_id=r.f_room "
             "inner join f_guests g on g.f_id=r.f_guest "
@@ -446,7 +448,7 @@ void FExpectedArrivals2::printBoth(WReportGrid *rg)
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
             "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
             "r.f_pricePerNight, "
-            "left(s.f_en, 1), r.f_endDate, r.f_remarks "
+            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
             "from f_reservation r "
             "left join f_room rm on rm.f_id=r.f_room "
             "left join f_guests g on g.f_id=r.f_guest "
@@ -526,7 +528,7 @@ void FExpectedArrivals2::printBoth(WReportGrid *rg)
                 "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
                 "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
                 "bl.total, "
-                "left(s.f_en, 1), r.f_endDate, r.f_remarks "
+                "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
                 "from f_reservation r "
                 "inner join f_room rm on rm.f_id=r.f_room "
                 "inner join f_guests g on g.f_id=r.f_guest "
@@ -650,4 +652,15 @@ QString FExpectedArrivals2::type2()
         type = tr("Arrivals and departures");
     }
     return type;
+}
+
+void FExpectedArrivals2::doubleClickOnRow(const QList<QVariant> &v)
+{
+    if (v.count() == 0) {
+        return;
+    }
+    if (v.at(0).toString().isEmpty()) {
+        return;
+    }
+    WReservation::openReserveWindows(v.at(0).toString());
 }

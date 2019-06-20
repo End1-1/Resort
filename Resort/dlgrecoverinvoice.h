@@ -18,7 +18,6 @@ public:
 private slots:
     void on_btnClose_clicked();
     void on_btnRecover_clicked();
-
     void on_btnRecoverRestaurant_clicked();
 
 private:

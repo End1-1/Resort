@@ -11,6 +11,7 @@
 #include "message.h"
 #include "wmaindesk.h"
 #include "wreportgrid.h"
+#include "wtaxattack.h"
 #include "fcallrates.h"
 #include "fcanceledreservations.h"
 #include "dlgconfigtaxserver.h"
@@ -585,6 +586,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCancelation_No_show_fee->setVisible(r__(cr__reservation_cancelation_no_show));
     ui->actionRefund_voucher->setVisible(r__(cr__cashier_refund));
     ui->actionTemporary_receipts->setVisible(r__(cr__temporary_receipts));
+    ui->actionPrint_tax_of_checkout_invoices->setVisible(r__(cr__tax_attack));
 
     ui->menuBar->actions().at(4)->setVisible(r__(cr__menu_cityledger)); //Cityledger
     ui->actionCity_Ledger_detailed_balance->setVisible(r__(cr__cityledger_balance));
@@ -2114,4 +2116,9 @@ void MainWindow::on_actionQuick_checkout_triggered()
 void MainWindow::on_actionCash_report_items_triggered()
 {
     FCashReportByItem::openFilterReport<FCashReportByItem, WReportGrid>();
+}
+
+void MainWindow::on_actionPrint_tax_of_checkout_invoices_triggered()
+{
+    addTab<WTaxAttack>();
 }

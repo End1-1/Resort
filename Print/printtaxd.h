@@ -2,6 +2,7 @@
 #define PRINTTAX_HD
 
 #include "baseextendeddialog.h"
+#include <QTimer>
 
 namespace Ui {
 class PrintTaxD;
@@ -29,8 +30,10 @@ public:
     void setPrepaid(const QString &amount);
     void build();
     bool print();
+    int exec2();
 
 private slots:
+    void timeout();
     void on_btnCancel_clicked();
     void on_btnPrint_clicked();
     void on_tblData_clicked(const QModelIndex &index);
@@ -44,6 +47,7 @@ private slots:
 private:
     Ui::PrintTaxD *ui;
     QString fFilter;
+    QTimer fTimer;
     void correctAmounts(EQLineEdit *l1, EQLineEdit *l2, EQLineEdit *l3);
     void countAmount();
     void filter();

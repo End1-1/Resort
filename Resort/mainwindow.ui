@@ -246,6 +246,7 @@
     <addaction name="actionAdvance_report"/>
     <addaction name="actionCurrencies"/>
     <addaction name="actionTemporary_receipts"/>
+    <addaction name="actionPrint_tax_of_checkout_invoices"/>
    </widget>
    <widget class="QMenu" name="menuAnalytics">
     <property name="title">
@@ -1504,6 +1505,11 @@
   <action name="actionCash_report_items">
    <property name="text">
     <string>Cash report / items</string>
+   </property>
+  </action>
+  <action name="actionPrint_tax_of_checkout_invoices">
+   <property name="text">
+    <string>Print tax of checkout invoices</string>
    </property>
   </action>
  </widget>

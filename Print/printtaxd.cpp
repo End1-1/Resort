@@ -93,6 +93,18 @@ bool PrintTaxD::print()
     return false;
 }
 
+int PrintTaxD::exec2()
+{
+    connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    fTimer.start(1000);
+    return exec();
+}
+
+void PrintTaxD::timeout()
+{
+    on_btnPrint_clicked();
+}
+
 void PrintTaxD::countAmount()
 {
     double total = 0;

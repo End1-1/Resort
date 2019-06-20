@@ -15,9 +15,9 @@ public:
     explicit DlgExecFailedSqls(QWidget *parent = nullptr);
     ~DlgExecFailedSqls();
     static void openDialog();
+
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnStart_clicked();
 
 private:

@@ -19,6 +19,7 @@ DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
+    ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
@@ -58,6 +59,7 @@ SOURCES += main.cpp\
     winvoice.cpp \
     wreportgrid.cpp \
     wroomcharttemprectdlg.cpp \
+    wtaxattack.cpp \
     wwelcome.cpp \
     wcontacts.cpp \
     tablemodel.cpp \
@@ -428,6 +430,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ../Base/doubleutils.h \
+    ../Base/monthnames.h \
     ../Base/stringutils.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
@@ -466,6 +469,7 @@ HEADERS  += mainwindow.h \
     winvoice.h \
     wreportgrid.h \
     wroomcharttemprectdlg.h \
+    wtaxattack.h \
     wwelcome.h \
     wcontacts.h \
     tablemodel.h \
@@ -873,6 +877,7 @@ FORMS    += mainwindow.ui \
     winvoice.ui \
     wreportgrid.ui \
     wroomcharttemprectdlg.ui \
+    wtaxattack.ui \
     wwelcome.ui \
     dlgcontact.ui \
     dlgnotes.ui \

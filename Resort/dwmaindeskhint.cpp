@@ -6,6 +6,7 @@
 #include "wreservation.h"
 #include "winvoice.h"
 #include "tablemodel.h"
+#include <QPainter>
 
 DWMainDeskHint::DWMainDeskHint(QWidget *parent) :
     QDockWidget(parent, Qt::WindowStaysOnBottomHint),
@@ -18,6 +19,7 @@ DWMainDeskHint::DWMainDeskHint(QWidget *parent) :
     connect(ui->tbl->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(tblHeaderSectionClicked(int)));
     connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(thisVisibilityChanged(bool)));
     ui->btnCheckIn->setVisible(false);
+    ui->tbl->setItemDelegate(new DeskHintItemDelegate());
     fTableModel->fBackgroundImages[0][RESERVE_CHECKIN] = QPixmap(":/images/ball-blue.png");
     fTableModel->fBackgroundImages[0][RESERVE_RESERVE] = QPixmap(":/images/ball-red.png");
     fTableModel->fBackgroundImages[0][RESERVE_OUTOFROOM] = QPixmap(":/images/ball-gray.png");
@@ -112,7 +114,7 @@ void DWMainDeskHint::reset()
 void DWMainDeskHint::load()
 {
     fTableModel->clearColumns();
-    fTableModel->setColumn(24, "", "")
+    fTableModel->setColumn(ui->tbl->verticalHeader()->defaultSectionSize(), "", "")
             .setColumn(0, "", "Code")
             .setColumn(50, "", "Room")
             .setColumn(250, "", "Guest")
@@ -207,5 +209,44 @@ void DWMainDeskHint::on_tbl_clicked(const QModelIndex &index)
             message_info(tr("This reservation is not editable"));
             break;
         }
+    }
+}
+
+
+void DeskHintItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return;
+    }
+    QColor fillColor;
+    switch (index.column()) {
+        case 0: {
+        switch (index.data(Qt::DisplayRole).toInt()) {
+        case RESERVE_CHECKIN:
+            fillColor = QColor::fromRgb(__s.value("checkincolor", -16733441).toInt());
+            break;
+        case RESERVE_RESERVE:
+            fillColor = QColor::fromRgb(__s.value("reservecolor", -42403).toInt());
+            break;
+        case RESERVE_SERVICE:
+            fillColor = Qt::magenta;
+            break;
+        case RESERVE_OUTOFINVENTORY:
+        case RESERVE_OUTOFROOM:
+            fillColor = QColor::fromRgb(88, 88, 88);
+            break;
+        default:
+            fillColor = Qt::yellow;
+            break;
+        }
+        painter->setBrush(fillColor);
+        QRectF rEllipse(option.rect);
+        rEllipse.adjust(3, 3, -3, -3);
+        painter->drawEllipse(rEllipse);
+        return;
+    }
+    default:
+        QItemDelegate::paint(painter, option, index);
+        return;
     }
 }

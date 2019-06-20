@@ -171,6 +171,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chChangePostChargeWorkingDate, QString::number(fGroupId) + ": " +  "Change post charge working date")
             .addWidget(ui->chQuickReservations, QString::number(fGroupId) + ": " +  "Quick checkin")
             .addWidget(ui->chQuickCheckout, QString::number(fGroupId) + ": " +  "Quick checkout")
+            .addWidget(ui->chTaxOfInvoices, QString::number(fGroupId) + ": " + "Tax attack")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

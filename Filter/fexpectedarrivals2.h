@@ -28,6 +28,9 @@ private:
     void printBoth(WReportGrid *rg);
     QString type();
     QString type2();
+
+private slots:
+    void doubleClickOnRow(const QList<QVariant> &v);
 };
 
 #endif // FEXPECTEDARRIVALS2_H

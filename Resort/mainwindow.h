@@ -184,6 +184,7 @@ private slots:
     void on_actionTax_server_triggered();
     void on_actionQuick_checkout_triggered();
     void on_actionCash_report_items_triggered();
+    void on_actionPrint_tax_of_checkout_invoices_triggered();
 
 private:
     Listener fServer2Listener;

@@ -189,12 +189,12 @@ bool RowEditorDialog::saveOnly()
             }
         } else if (isDateEdit(w)) {
             EQDateEdit *e = static_cast<EQDateEdit*>(w);
-            if (!e->getField().isEmpty()) {
+            if (!e->getField().isEmpty() && e->date().isValid()) {
                 fDD[":" + e->getField()] = e->date();
             }
         } else if (isTimeEdit(w)) {
             EQTimeEdit *t = static_cast<EQTimeEdit*>(w);
-            if (!t->getField().isEmpty()) {
+            if (!t->getField().isEmpty() && t->time().isValid()) {
                 fDD[":" + t->getField()] = t->time();
             }
         } else if (isCheckBox(w)) {
@@ -209,7 +209,7 @@ bool RowEditorDialog::saveOnly()
             }
         } else if (isEDateEdit(w)) {
             EDateEdit *e = static_cast<EDateEdit*>(w);
-            if (!e->getField().isEmpty()) {
+            if (!e->getField().isEmpty() && e->date().isValid()) {
                 fDD[":" + e->getField()] = e->date();
             }
         }
@@ -221,13 +221,18 @@ bool RowEditorDialog::saveOnly()
         return false;
     }
     if (id->asInt() == 0) {
-        DoubleDatabase did;
-        did.open(true, doubleDatabase);
-        did[":f_id"] = 0;
-        id->setInt(did.insert(fTable, true));
+        DoubleDatabase dd1(true, false);
+        dd1[":" + id->getField()] = 0;
+        int newid = dd1.insert(fTable, true);
+        DoubleDatabase dd2(true, doubleDatabase);
+        dd2[":" + id->getField()] = newid;
+        dd2.exec(QString("delete from %1 where %2=:%2").arg(fTable).arg(id->getField()));
+        id->setInt(newid);
+        fDD[":" + id->getField()] = newid;
+        fDD.insert(fTable, false);
+    } else {
+        fDD.update(fTable, where_id(id->text()));
     }
-
-    fDD.update(fTable, where_id(id->text()));
 
     widgetsToValues();
     if (fTrackControl->hasChanges()) {

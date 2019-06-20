@@ -125,8 +125,9 @@ bool WReservationRoomTab::check(int room, const QDate &start, const QDate &end, 
     fDD[":f_s2"] = 2;
     fDD[":f_s3"] = 9;
     fDD[":f_s4"] = 4;
+    fDD[":date"] = WORKING_DATE;
     fDD.exec("select f_id, f_startdate, f_enddate, f_state "
-             "from f_reservation where (f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s3 or f_state=:f_s4) "
+             "from f_reservation where ((f_state=:f_s1 or f_state=:f_s2) or ((f_state=:f_s3 or f_state=:f_s4) and f_enddate>=:date)) "
              " and f_room=:f_room order by f_startdate ");
     if (fDD.rowCount() == 0) {
         return true;

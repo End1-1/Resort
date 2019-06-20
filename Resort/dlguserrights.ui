@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -691,6 +691,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>128</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chTaxOfInvoices">
+         <property name="text">
+          <string>Print tax of invoices</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>135</number>
          </property>
         </widget>
        </item>

@@ -141,7 +141,7 @@
 #define cr__quick_reservations 132
 #define cr__quick_checkout 133
 #define cr__cash_report_by_items 134
-#define cr__1
+#define cr__tax_attack 135
 #define cr__1
 #define cr__1
 #define cr__1

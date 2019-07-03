@@ -975,6 +975,10 @@
            <property name="text">
             <string/>
            </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/exit.png</normaloff>:/images/exit.png</iconset>
+           </property>
           </widget>
          </item>
         </layout>

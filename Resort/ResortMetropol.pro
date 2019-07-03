@@ -30,6 +30,7 @@ SOURCES += main.cpp\
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlginvoicepaymentoptions.cpp \
+    dlgoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
     dlgquickadvanceaction.cpp \
     dlgrecoverinvoice.cpp \
@@ -46,6 +47,7 @@ SOURCES += main.cpp\
     wcheckboxgroup.cpp \
     wcityledger.cpp \
     wmaindesk.cpp \
+    wmaindeskfilterlist.cpp \
     wpaymentdetails.cpp \
     wquickcheckout.cpp \
     wquickcheckoutbalance.cpp \
@@ -441,6 +443,7 @@ HEADERS  += mainwindow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlginvoicepaymentoptions.h \
+    dlgoptions.h \
     dlgprintvoucherasinvoice.h \
     dlgquickadvanceaction.h \
     dlgrecoverinvoice.h \
@@ -456,6 +459,7 @@ HEADERS  += mainwindow.h \
     wcheckboxgroup.h \
     wcityledger.h \
     wmaindesk.h \
+    wmaindeskfilterlist.h \
     wpaymentdetails.h \
     wquickcheckout.h \
     wquickcheckoutbalance.h \
@@ -849,6 +853,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
+    dlgoptions.ui \
     dlgprintvoucherasinvoice.ui \
     dlgquickadvanceaction.ui \
     dlgrecoverinvoice.ui \
@@ -864,6 +869,7 @@ FORMS    += mainwindow.ui \
     wcardex.ui \
     wcityledger.ui \
     wmaindesk.ui \
+    wmaindeskfilterlist.ui \
     wpaymentdetails.ui \
     wquickcheckout.ui \
     wquickcheckoutbalance.ui \

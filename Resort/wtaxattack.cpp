@@ -71,7 +71,7 @@ void WTaxAttack::on_btnRefresh_clicked()
             "left join f_cardex c on c.f_cardex=r.f_cardex "
             "where r.f_state=:f_state and m.f_fiscal=0 and m.f_canceled=0 "
             "and r.f_enddate between :date1 and :date2 and m.f_finance=1 "
-            "and m.f_amountamd > 0.001 and m.f_source <>'RV' ");
+            "and m.f_amountamd > 0.001 and m.f_source <>'RV' " + where);
     Utils::fillTableWithData(ui->tbl, dd.fDbRows);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         ui->tbl->setRowHidden(i, false);
@@ -164,10 +164,12 @@ void WTaxAttack::on_btnPrintTax_clicked()
 {
     QString inv;
     PrintTaxD *pt = nullptr;
+    int totalrows = 0;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (!ui->tbl->checkBox(i, col_checkbox)->isChecked()) {
             continue;
         }
+        totalrows ++;
         if (inv.isEmpty()) {
             inv = ui->tbl->toString(i, 0);
             pt = new PrintTaxD(this);
@@ -231,6 +233,9 @@ void WTaxAttack::on_btnPrintTax_clicked()
         pt->build();
         pt->exec2();
         delete pt;
+    }
+    if (totalrows == 0) {
+        message_info(tr("Nothing were printed"));
     }
     on_btnRefresh_clicked();
 }

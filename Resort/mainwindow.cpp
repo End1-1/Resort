@@ -31,6 +31,7 @@
 #include "wquickreservations.h"
 #include "wwelcome.h"
 #include "fhouseitems.h"
+#include "dlgoptions.h"
 #include "fwakeupcall.h"
 #include "wquickcheckout.h"
 #include "dlgtransferanyamount.h"
@@ -156,8 +157,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QDir>
 #include <QShortcut>
 #include <QNetworkProxy>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -678,6 +681,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->menuBar->actions().at(12)->setVisible(r__(cr__storehouse_all_items)); // Storehouse
 
     ui->menuBar->actions().at(13)->setVisible(false); // Discount system
+
+    ui->actionOptions->setEnabled(true);
 #ifdef _HOTEL_
     ui->actionDebts->setVisible(false);
     ui->actionSales_report_by_cars->setVisible(false);
@@ -711,6 +716,7 @@ void MainWindow::disableMainMenu()
         ui->menuBar->actions()[i]->setVisible(true);
     }
     ui->actionDisable_second_database->setVisible(false);
+    ui->actionOptions->setEnabled(false);
 }
 
 void MainWindow::on_actionRoom_list_triggered()
@@ -2121,4 +2127,18 @@ void MainWindow::on_actionCash_report_items_triggered()
 void MainWindow::on_actionPrint_tax_of_checkout_invoices_triggered()
 {
     addTab<WTaxAttack>();
+}
+
+void MainWindow::on_actionHelp_triggered()
+{
+    QDir d;
+    QString fh = qApp->applicationDirPath() + "/help.html";
+    QString fn = d.tempPath() + "/help.html";
+    QFile::copy(fh, fn);
+    QDesktopServices::openUrl(QUrl(fn));
+}
+
+void MainWindow::on_actionOptions_triggered()
+{
+    DlgOptions::openWindow();
 }

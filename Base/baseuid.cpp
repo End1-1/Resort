@@ -41,12 +41,15 @@ QString BaseUIDX::ID(const QString &vaucher)
 
     int idlen = 5;
     if (vaucher == "DR") {
+        idlen = 10;
+    }
+    if (vaucher == "PS") {
         idlen = 8;
     }
 
     QString errstr;
     if (!d.open(true, false)) {
-        QMessageBox::critical(0, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL (CANNOT OPEN DB) </font></h1>")
+        QMessageBox::critical(nullptr, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL (CANNOT OPEN DB) </font></h1>")
                               + "<br>" + fAirHost + ":" + fAirDbName
                               + "<br>" + d.fLastError);
         exit(0);

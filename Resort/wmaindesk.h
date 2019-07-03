@@ -37,6 +37,7 @@ private slots:
     void scMainHScroll(int value);
     void scRoomVScroll(int value);
     void scMainVScroll(int value);
+    void catButtonClick();
     void roomSelectionChanged(const QModelIndex &m1, const QModelIndex &m2);
     void editReserveRoom(const QString &code);
     void daySelectionChanged(const QModelIndex &m1, const QModelIndex &m2);
@@ -44,8 +45,6 @@ private slots:
     void roomCacheUpdated(int cacheId, const QString &id);
     void dockHintVisibilityChanged(bool v);
     void changeDate();
-    void on_tblClasses_clicked(const QModelIndex &index);
-    void on_tblBed_clicked(const QModelIndex &index);
     void on_btnClearFilter_clicked();
     void on_btnScrollRight_clicked();
     void on_btnScrollLeft_clicked();
@@ -57,7 +56,6 @@ private slots:
     void on_btnEndOfDay_clicked();
     void on_btnCheckin_clicked();
     void on_btnShowDockHint_clicked();
-    void on_tblSmoke_clicked(const QModelIndex &index);
     void on_btnJumpToDate_clicked();
     void on_tblRoom_clicked(const QModelIndex &index);
     void on_tblDay_clicked(const QModelIndex &index);
@@ -74,6 +72,10 @@ private slots:
     void on_btnFilterCardex_clicked();
     void on_btnColors_clicked();
     void on_btnRefreshChart_clicked();
+    void on_btnFilterCategory_clicked();
+    void on_btnBedFilter_clicked();
+    void on_btnSmokeFilter_clicked();
+    void on_btnRoomStateFilter_clicked();
 
 private:
     Ui::WMainDesk *ui;
@@ -85,7 +87,16 @@ private:
     int fReserveStatus;
     QString fFilterCardex;
     QStringList fRoomList;
+    QStringList fCatList;
+    QString fCatFilter;
+    QStringList fBedList;
+    QString fBedFilter;
+    QStringList fSmokeList;
+    QString fSmokeFilter;
+    QStringList fStateFilter;
+    QString fState;
     QList<QList<QVariant> > fReservationHint;
+    void uncheckCatButtons();
     void dockHint(const QString &filter);
     int xFromDate(const QDate &date);
     void roomsRowSelectionChanged();

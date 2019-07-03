@@ -187,6 +187,9 @@ void TrackControl::insertMessage(const QString &msg, const QString &v1, const QS
 
 void TrackControl::insert(const QString &action, const QVariant &value1, const QVariant &value2)
 {
+    if (fail) {
+        return;
+    }
     if (Base::fPreferences.getDb(def_no_tracking_changes).toBool()) {
         return;
     }

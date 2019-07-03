@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>996</width>
-    <height>556</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,7 +48,7 @@
        <widget class="QGroupBox" name="grCommon">
         <property name="maximumSize">
          <size>
-          <width>400</width>
+          <width>450</width>
           <height>16777215</height>
          </size>
         </property>
@@ -59,80 +59,20 @@
          <property name="verticalSpacing">
           <number>6</number>
          </property>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_4">
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_10">
            <property name="text">
-            <string>Nights</string>
+            <string>Reservation type</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string>Reservation #</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="EQLineEdit" name="leStatusName">
+         <item row="2" column="1" colspan="4">
+          <widget class="EQLineEdit" name="leInvoice">
            <property name="focusPolicy">
             <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="4">
-          <widget class="QLabel" name="lbStartDateWarning">
-           <property name="maximumSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/warning.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_37">
-           <property name="text">
-            <string>Created</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="EQLineEdit" name="leReserveName">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="3">
-          <widget class="EQSpinBox" name="sbNights">
-           <property name="maximumSize">
-            <size>
-             <width>6666</width>
-             <height>16777215</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="EQDateEdit" name="deCreated">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
            </property>
            <property name="readOnly">
             <bool>true</bool>
@@ -152,48 +92,59 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_38">
-           <property name="text">
-            <string>Invoice #</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="3">
-          <widget class="QLabel" name="lbWolking">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>(Walkin)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="EQLineEdit" name="leInvoice">
+         <item row="4" column="2" colspan="3">
+          <widget class="EQLineEdit" name="leStatusName">
            <property name="focusPolicy">
             <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string/>
            </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="lbEntryDate">
+         <item row="7" column="5">
+          <widget class="QLabel" name="lbEndDateWarning">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Entry date</string>
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/warning.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_10">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_9">
            <property name="text">
-            <string>Reservatio
-type</string>
+            <string>Reservation #</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Nights</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" colspan="4">
+          <widget class="EQDateEdit" name="deCreated">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -216,37 +167,31 @@ type</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="lbDepartureDate">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_37">
            <property name="text">
-            <string>Expected
-departure</string>
+            <string>Created</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="4">
-          <widget class="QLabel" name="lbEndDateWarning">
-           <property name="maximumSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_38">
            <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/warning.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
+            <string>Invoice #</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="3">
-          <widget class="EDateEdit" name="deEntry"/>
+         <item row="5" column="4">
+          <widget class="QLabel" name="lbWolking">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>(Walkin)</string>
+           </property>
+          </widget>
          </item>
-         <item row="1" column="3">
+         <item row="1" column="1" colspan="4">
           <widget class="EQLineEdit" name="leReservId">
            <property name="maximumSize">
             <size>
@@ -265,7 +210,14 @@ departure</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="3">
+         <item row="4" column="0">
+          <widget class="QLabel" name="lbStatusCode">
+           <property name="text">
+            <string>Status</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="4">
           <widget class="QLabel" name="lbDayUse">
            <property name="enabled">
             <bool>false</bool>
@@ -275,13 +227,59 @@ departure</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="3">
+         <item row="5" column="0">
+          <widget class="QLabel" name="lbEntryDate">
+           <property name="text">
+            <string>Entry date</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1" colspan="2">
+          <widget class="EQSpinBox" name="sbNights">
+           <property name="maximumSize">
+            <size>
+             <width>6666</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1" colspan="3">
+          <widget class="EDateEdit" name="deEntry"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="lbDepartureDate">
+           <property name="text">
+            <string>Separture</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="5">
+          <widget class="QLabel" name="lbStartDateWarning">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/warning.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1" colspan="3">
           <widget class="EDateEdit" name="deDeparture"/>
          </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="lbStatusCode">
-           <property name="text">
-            <string>Status</string>
+         <item row="3" column="2" colspan="3">
+          <widget class="EQLineEdit" name="leReserveName">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
            </property>
           </widget>
          </item>
@@ -297,16 +295,6 @@ departure</string>
          <property name="sizeConstraint">
           <enum>QLayout::SetDefaultConstraint</enum>
          </property>
-         <item row="0" column="2" colspan="5">
-          <widget class="EQLineEdit" name="leRoomName">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="3" column="1" colspan="8">
           <widget class="EQLineEdit" name="leSearchGuest">
            <property name="AlwaysUpper" stdset="0">
@@ -314,8 +302,30 @@ departure</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="8">
-          <widget class="EQSpinBox" name="sbBaby"/>
+         <item row="0" column="9" colspan="2">
+          <widget class="QLineEdit" name="leUpgradeFrom">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
          <item row="2" column="7">
           <widget class="QLabel" name="label_22">
@@ -335,6 +345,206 @@ departure</string>
             <bool>true</bool>
            </property>
           </widget>
+         </item>
+         <item row="0" column="7">
+          <widget class="QLabel" name="lbRoom">
+           <property name="maximumSize">
+            <size>
+             <width>16</width>
+             <height>16</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/question.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2" colspan="5">
+          <widget class="EQLineEdit" name="leRoomName">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="10">
+          <widget class="QPushButton" name="btnAllNation">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Nation!</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="8">
+          <widget class="QLabel" name="label_36">
+           <property name="text">
+            <string>Upgrade
+from</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="EQComboBox" name="cbArrangment">
+           <property name="Cache" stdset="0">
+            <number>37</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2" colspan="4">
+          <widget class="EQCheckBox" name="chMealIncluded">
+           <property name="text">
+            <string>Meal included</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="label_21">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/boss.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="label_19">
+           <property name="maximumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/woman.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_29">
+           <property name="text">
+            <string>Guests</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="EQSpinBox" name="sbWoman"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbRoom_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Room</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="EQLineEdit" name="leRoomCode">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="ShowButton" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="5">
+          <widget class="QLabel" name="label_28">
+           <property name="maximumSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="res.qrc">:/images/boy.png</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="8">
+          <widget class="EQSpinBox" name="sbBaby"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_30">
+           <property name="text">
+            <string>Search guest</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="6">
+          <widget class="EQSpinBox" name="sbChild"/>
          </item>
          <item row="3" column="9">
           <widget class="QPushButton" name="btnNewGuest">
@@ -356,7 +566,24 @@ departure</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="0" colspan="10">
+         <item row="1" column="0">
+          <widget class="QLabel" name="lbArrangement">
+           <property name="text">
+            <string>Arrangement</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="EQSpinBox" name="sbMan">
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="11">
           <widget class="EQTableWidget" name="tblGuest">
            <property name="minimumSize">
             <size>
@@ -426,235 +653,6 @@ departure</string>
            </column>
           </widget>
          </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="label_21">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="layoutDirection">
-            <enum>Qt::RightToLeft</enum>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/boss.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="EQComboBox" name="cbArrangment">
-           <property name="Cache" stdset="0">
-            <number>37</number>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="label_19">
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/woman.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lbArrangement">
-           <property name="text">
-            <string>Arrangement</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5">
-          <widget class="QLabel" name="label_28">
-           <property name="maximumSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/boy.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_29">
-           <property name="text">
-            <string>Guests</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="EQSpinBox" name="sbMan">
-           <property name="minimum">
-            <number>0</number>
-           </property>
-           <property name="value">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lbRoom_2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Room</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_30">
-           <property name="text">
-            <string>Search guest</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="6">
-          <widget class="EQSpinBox" name="sbChild"/>
-         </item>
-         <item row="2" column="4">
-          <widget class="EQSpinBox" name="sbWoman"/>
-         </item>
-         <item row="0" column="7">
-          <widget class="QLabel" name="lbRoom">
-           <property name="maximumSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="res.qrc">:/images/question.png</pixmap>
-           </property>
-           <property name="scaledContents">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="EQLineEdit" name="leRoomCode">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="ShowButton" stdset="0">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2" colspan="4">
-          <widget class="EQCheckBox" name="chMealIncluded">
-           <property name="text">
-            <string>Meal included</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="8">
-          <widget class="QLabel" name="label_36">
-           <property name="text">
-            <string>Upgrade
-from</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="10">
-          <widget class="QPushButton" name="btnAllNation">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Nation!</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="9" colspan="2">
-          <widget class="QLineEdit" name="leUpgradeFrom">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
@@ -684,9 +682,6 @@ from</string>
             <string>Arrival time</string>
            </property>
           </widget>
-         </item>
-         <item row="8" column="2">
-          <widget class="EQLineEdit" name="leArrivalFee"/>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_16">
@@ -731,27 +726,10 @@ from</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
-          <widget class="EQLineEdit" name="leEarlyCheckInFee"/>
-         </item>
-         <item row="9" column="2">
-          <widget class="EQTimeEdit" name="teDepartureTime">
-           <property name="displayFormat">
-            <string>HH:mm</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="1">
           <widget class="EQCheckBox" name="chEarlyCheckIn">
            <property name="text">
             <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="2">
-          <widget class="EQTimeEdit" name="teArrivalTime">
-           <property name="displayFormat">
-            <string>HH:mm</string>
            </property>
           </widget>
          </item>
@@ -769,12 +747,6 @@ from</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
-          <widget class="EQLineEdit" name="leLateCheckoutFee"/>
-         </item>
-         <item row="5" column="2">
-          <widget class="EQTimeEdit" name="teLateChecout"/>
-         </item>
          <item row="5" column="1">
           <widget class="EQCheckBox" name="chLateCheckout">
            <property name="text">
@@ -786,6 +758,32 @@ from</string>
           <widget class="EQCheckBox" name="chPickup">
            <property name="text">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leEarlyCheckInFee"/>
+         </item>
+         <item row="5" column="2" colspan="2">
+          <widget class="EQTimeEdit" name="teLateChecout"/>
+         </item>
+         <item row="6" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leLateCheckoutFee"/>
+         </item>
+         <item row="7" column="2" colspan="2">
+          <widget class="EQTimeEdit" name="teArrivalTime">
+           <property name="displayFormat">
+            <string>HH:mm</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leArrivalFee"/>
+         </item>
+         <item row="9" column="2" colspan="2">
+          <widget class="EQTimeEdit" name="teDepartureTime">
+           <property name="displayFormat">
+            <string>HH:mm</string>
            </property>
           </widget>
          </item>
@@ -837,146 +835,170 @@ from</string>
          <string>Other</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QGroupBox" name="groupBox_7">
-           <property name="title">
-            <string/>
-           </property>
+          <widget class="QWidget" name="widget_4" native="true">
            <layout class="QGridLayout" name="gridLayout">
-            <item row="1" column="2" colspan="2">
-             <widget class="QLineEdit" name="leBooking">
-              <property name="placeholderText">
-               <string>Booking number</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="EQLineEdit" name="leCityLedgerCode">
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="ShowButton" stdset="0">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="lbCityLedger">
-              <property name="text">
-               <string>City ledger</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="EQLineEdit" name="leCardexCode">
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="ShowButton" stdset="0">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_39">
-              <property name="text">
-               <string>Cardex
-commission</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="EQLineEdit" name="leCommission">
-              <property name="maximumSize">
-               <size>
-                <width>35</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>0.00</string>
-              </property>
-              <property name="readOnly">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="lbCardex">
-              <property name="text">
-               <string>Cardex</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="4">
-             <widget class="QLabel" name="lbCLedgerError">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>16</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="res.qrc">:/images/question.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QLabel" name="lbCardexError">
-              <property name="maximumSize">
-               <size>
-                <width>16</width>
-                <height>16</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="pixmap">
-               <pixmap resource="res.qrc">:/images/question.png</pixmap>
-              </property>
-              <property name="scaledContents">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="2" colspan="2">
-             <widget class="EQLineEdit" name="leCityLedgerName">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2" colspan="2">
-             <widget class="EQLineEdit" name="leCardexname">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
-             </widget>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbCardex">
+                <property name="text">
+                 <string>Cardex</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="EQLineEdit" name="leCardexCode">
+                <property name="maximumSize">
+                 <size>
+                  <width>60</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="ShowButton" stdset="0">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="EQLineEdit" name="leCardexname">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="lbCardexError">
+                <property name="maximumSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="res.qrc">:/images/question.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_39">
+                <property name="text">
+                 <string>Cardex commission</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="EQLineEdit" name="leCommission">
+                <property name="maximumSize">
+                 <size>
+                  <width>60</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>0.00</string>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="leBooking">
+                <property name="placeholderText">
+                 <string>Booking number</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lbCityLedger">
+                <property name="text">
+                 <string>City ledger</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="EQLineEdit" name="leCityLedgerCode">
+                <property name="maximumSize">
+                 <size>
+                  <width>60</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="ShowButton" stdset="0">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="EQLineEdit" name="leCityLedgerName">
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QLabel" name="lbCLedgerError">
+                <property name="maximumSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="res.qrc">:/images/question.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -986,7 +1008,7 @@ commission</string>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>3000</height>
+             <height>100</height>
             </size>
            </property>
            <property name="placeholderText">
@@ -1124,7 +1146,7 @@ commission</string>
        <widget class="QGroupBox" name="grPayment">
         <property name="maximumSize">
          <size>
-          <width>400</width>
+          <width>300</width>
           <height>16777215</height>
          </size>
         </property>
@@ -1132,16 +1154,6 @@ commission</string>
          <string>Payment</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="3" column="2">
-          <widget class="EQLineEdit" name="leVAT">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="7" column="2">
           <widget class="EQLineEdit" name="leAdvance">
            <property name="focusPolicy">
@@ -1156,19 +1168,6 @@ commission</string>
           <widget class="QLabel" name="label_7">
            <property name="text">
             <string>Total, USD</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="EQLineEdit" name="leTotal">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="clearButtonEnabled">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -1200,16 +1199,6 @@ commission</string>
           <widget class="QLabel" name="lbPaymentMode">
            <property name="text">
             <string>Payment</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="EQLineEdit" name="leTotalUSD">
-           <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1249,20 +1238,53 @@ commission</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="2">
-          <widget class="EQComboBox" name="cbPaymentType">
-           <property name="Cache" stdset="0">
-            <number>11</number>
+         <item row="1" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leTotal">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="clearButtonEnabled">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
-         <item row="4" column="2">
+         <item row="3" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leVAT">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2" colspan="2">
           <widget class="EQLineEdit" name="leGrandTotal">
            <property name="focusPolicy">
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="readOnly">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2" colspan="2">
+          <widget class="EQLineEdit" name="leTotalUSD">
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2" colspan="2">
+          <widget class="EQComboBox" name="cbPaymentType">
+           <property name="Cache" stdset="0">
+            <number>11</number>
            </property>
           </widget>
          </item>
@@ -1281,6 +1303,11 @@ commission</string>
    <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -1292,11 +1319,6 @@ commission</string>
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
    <class>EQTableWidget</class>
@@ -1354,10 +1376,6 @@ commission</string>
   <tabstop>teArrivalTime</tabstop>
   <tabstop>leArrivalFee</tabstop>
   <tabstop>teDepartureTime</tabstop>
-  <tabstop>leCardexCode</tabstop>
-  <tabstop>leCommission</tabstop>
-  <tabstop>leBooking</tabstop>
-  <tabstop>leCityLedgerCode</tabstop>
   <tabstop>teRoomRemarks</tabstop>
  </tabstops>
  <resources>

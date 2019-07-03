@@ -94,7 +94,7 @@ void FInHouseGuest::apply(WReportGrid *rg)
     if (!ui->leCardex->isEmpty()) {
         where += QString(" and r.f_cardex='%1' ").arg(ui->leCardex->text());
     }
-    where += "group by r.f_room order by r.f_room ";
+    where += "group by r.f_room order by rm.f_building, r.f_room ";
     query += where ;
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);

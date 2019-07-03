@@ -7,6 +7,7 @@ WWeb::WWeb(QWidget *parent) :
 {
     ui->setupUi(this);
     setupTabTextAndIcon(tr("Internet"), ":/images/internet.png");
+
 }
 
 WWeb::~WWeb()
@@ -14,9 +15,22 @@ WWeb::~WWeb()
     delete ui;
 }
 
+void WWeb::navigate(const QUrl &url)
+{
+
+}
+
+void WWeb::openWeb(const QString &strUrl)
+{
+    QUrl url = QUrl(strUrl);
+    WWeb *w = new WWeb();
+    w->navigate(url);
+    w->show();
+}
+
 void WWeb::on_leAddress_returnPressed()
 {
-    ui->teWeb->setSource(ui->leAddress->text());
+    //ui->teWeb->setSource(ui->leAddress->text());
 }
 
 void WWeb::on_btnGo_clicked()

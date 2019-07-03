@@ -4,7 +4,11 @@
 #include "edateedit.h"
 #include "ecomboboxcompleter.h"
 #include "paymentmode.h"
+#include "wweb.h"
 #include "doubleutils.h"
+#include <QDir>
+#include <QDesktopServices>
+#include <QUrl>
 
 WReportsSetOld::WReportsSetOld(QWidget *parent) :
     BaseWidget(parent),
@@ -873,4 +877,13 @@ void WReportsSetOld::nationalityYearly(QList<QList<QVariant> > &rows, const QStr
 void WReportsSetOld::on_chYear_clicked(bool checked)
 {
     ui->wCh->checkAll(checked);
+}
+
+void WReportsSetOld::on_btnHelp_clicked()
+{
+    QDir d;
+    QString fh = qApp->applicationDirPath() + "/help.html";
+    QString fn = d.tempPath() + "/help.html";
+    QFile::copy(fh, fn);
+    QDesktopServices::openUrl(QUrl(fn));
 }

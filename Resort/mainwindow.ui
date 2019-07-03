@@ -113,6 +113,7 @@
      <string>About</string>
     </property>
     <addaction name="actionHelp"/>
+    <addaction name="actionOptions"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuReports">
@@ -1510,6 +1511,11 @@
   <action name="actionPrint_tax_of_checkout_invoices">
    <property name="text">
     <string>Print tax of checkout invoices</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options</string>
    </property>
   </action>
  </widget>

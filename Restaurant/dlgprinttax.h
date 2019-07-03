@@ -18,15 +18,14 @@ class DlgPrintTax : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPrintTax(QWidget *parent = 0);
+    explicit DlgPrintTax(QWidget *parent = nullptr);
     ~DlgPrintTax();
     static int printTax(const QString &dep, const QString &order, double cardAmount, int &taxCode);
     virtual int exec();
+
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnRetry_clicked();
-
     void on_btnNoNeed_clicked();
 
 private:

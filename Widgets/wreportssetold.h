@@ -24,6 +24,7 @@ private slots:
     void rbClicked();
     void on_btnGo_clicked();    
     void on_chYear_clicked(bool checked);
+    void on_btnHelp_clicked();
 
 private:
     Ui::WReportsSetOld *ui;

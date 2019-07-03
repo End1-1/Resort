@@ -14,10 +14,11 @@ class WWeb : public BaseWidget
 public:
     explicit WWeb(QWidget *parent = nullptr);
     ~WWeb();
+    void navigate(const QUrl &url);
+    static void openWeb(const QString &strUrl);
 
 private slots:
     void on_leAddress_returnPressed();
-
     void on_btnGo_clicked();
 
 private:

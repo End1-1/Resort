@@ -2220,7 +2220,10 @@ void WReservationRoomTab::on_leSearchGuest_returnPressed()
             did.open(true, doubleDatabase);
             did[":f_id"] = 0;
             int gid = did.insert("f_guests");
-            fDD.update("f_guests", where_id(gid));
+            did[":f_id"] = gid;
+            did.exec("delete from f_guests where f_id=:f_id");
+            fDD[":f_id"] = gid;
+            fDD.insert("f_guests", false);
             cache(cid_guest)->update(QString::number(gid));
             BroadcastThread::cmdRefreshCache(cid_guest, QString::number(gid));
             CacheGuest g;

@@ -55,11 +55,13 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
                    "and (f_complex=0 or (f_complex>0 and f_complexId=0))");
     for (int i = 0; i < fDD.rowCount(); i++) {
         pt.addGoods(dep, fDD.getValue(i, "f_adgt").toString(), fDD.getValue(i, "f_code").toString(),
-                      fDD.getValue(i, "f_am").toString(), fDD.getValue(i, "f_price").toDouble(), fDD.getValue(i, "f_qty").toDouble(), 1);
+                      fDD.getValue(i, "f_am").toString(), fDD.getValue(i, "f_price").toDouble(), fDD.getValue(i, "f_qty").toDouble(), 0);
     }
     QString inJson, outJson, err;
     int result = pt.makeJsonAndPrint(fCardAmount, 0, inJson, outJson, err);
 
+    QString ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime;
+    PrintTaxN::parseResponse(outJson, ofirm, ohvhh, ofiscal, onumber, osn, oaddress, odevnum, otime);
     DoubleDatabase air;
     air.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
     air.open(true, false);
@@ -73,7 +75,7 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
     air[":f_replyResult"] = result;
     air[":f_replyJson"] = outJson;
     air[":f_replyText"] = err;
-    air[":f_replyTaxCode"] = "-";
+    air[":f_replyTaxCode"] = onumber;
     int id = air.insert("tax_print");
     air.close();
 

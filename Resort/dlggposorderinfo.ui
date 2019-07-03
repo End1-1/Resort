@@ -17,6 +17,19 @@
    <item>
     <widget class="QWidget" name="widget_3" native="true">
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="6">
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>227</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -62,28 +75,47 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="6">
+      <item row="2" column="2">
+       <widget class="QLabel" name="lbComment">
+        <property name="text">
+         <string>Payment comment</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" colspan="3">
+       <widget class="QLineEdit" name="lePaymentComment">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Mode of payment</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QLineEdit" name="leStaff">
-        <property name="readOnly">
-         <bool>true</bool>
+      <item row="1" column="3">
+       <widget class="EQLineEdit" name="lePayment">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Staff</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="9">
+      <item row="0" column="7">
        <widget class="QPushButton" name="btnTracking">
         <property name="minimumSize">
          <size>
@@ -113,40 +145,27 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="7">
-       <widget class="EQLineEdit" name="lePayment">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8">
-       <spacer name="horizontalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>227</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="6">
-       <widget class="QLabel" name="lbComment">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Payment comment</string>
+         <string>Staff</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="7" colspan="2">
-       <widget class="QLineEdit" name="lePaymentComment">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="leStaff">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" colspan="2">
+       <widget class="QLineEdit" name="lePaymentName">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -221,12 +240,25 @@
       <item>
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Card</string>
+         <string>Card amount for tax</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="EQLineEdit" name="leCardAmount"/>
+       <widget class="EQLineEdit" name="leCardAmount">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label">
@@ -239,7 +271,7 @@
        <widget class="EQLineEdit" name="leTotal">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>80</width>
           <height>0</height>
          </size>
         </property>

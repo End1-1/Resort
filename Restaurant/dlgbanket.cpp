@@ -508,7 +508,7 @@ void DlgBanket::on_btnSave_clicked()
     fDD[":f_sign"] = (cityLedger == 0 ? 1 : -1);
     fDD[":f_doc"] = fDoc;
     fDD[":f_rec"] = 0;
-    fDD[":f_inv"] = ui->lePaymentComment->text();
+    fDD[":f_inv"] = ui->leModeOfPayment->fHiddenText.toInt() == PAYMENT_TRANSFER ? ui->lePaymentComment->text() : "";
     fDD[":f_finance"] = 1;
     fDD[":f_remarks"] = "";
     fDD[":f_canceled"] = 0;
@@ -527,7 +527,13 @@ void DlgBanket::on_btnSave_clicked()
         fDD.update("m_register", where_id(ap(ui->lePaymentComment->text())));
     }
 
-    fTrackControl->insert("Save event", "", "");
+    fTrackControl->insert(TRACK_REST_ORDER,"Save event", QString("%1,%2,%3,%4,%5,%6")
+                          .arg(ui->deDate->text())
+                          .arg(ui->leGuests->text())
+                          .arg(ui->lePrice->text())
+                          .arg(ui->leTotal->text())
+                          .arg(ui->leComment->text())
+                          .arg(ui->lePaymentComment->text()), "", fDoc);
     fTrackControl->saveChanges();
 
     fDD.commit();
@@ -548,7 +554,7 @@ void DlgBanket::on_btnHall_clicked()
     RChangeHall *h = new RChangeHall(this);
     h->setup(Hall::fBanketHall);
     if (h->exec() == QDialog::Accepted)  {
-        HallStruct *hs = 0;
+        HallStruct *hs = nullptr;
         for (int i = 0; i < Hall::fBanketHall.count(); i++) {
             if (h->hall() == Hall::fBanketHall.at(i)->fId) {
                 hs = Hall::fBanketHall.at(i);
@@ -677,6 +683,9 @@ void DlgBanket::on_btnOpen_clicked()
 
     CachePaymentMode pc;
     if (pc.get(fDD.getString(5))) {
+        if (fDD.getInt(5) == PAYMENT_TRANSFER) {
+
+        }
         ui->leModeOfPayment->setText(pc.fName());
         ui->leModeOfPayment->fHiddenText = pc.fCode();
     }

@@ -74,13 +74,28 @@ bool isTaxPrepay(const QString &code)
 
 bool openVaucherInvoice(const QString &vaucherId) {
     DoubleDatabase db(true, false);
+    QString inv;
+    QString doc;
     db[":f_id"] = vaucherId;
-    db.exec("select f_inv from m_register where f_id=:f_id");
+    db.exec("select f_inv, f_doc from m_register where f_id=:f_id");
     if (!db.nextRow()) {
         message_error(QObject::tr("Cannot open invoice"));
         return false;
+    } else {
+        inv = db.getString(0);
+        doc = db.getString(1);
     }
-    openInvoiceWithId(db.getString(0));
+    if (inv.isEmpty() && !doc.isEmpty()) {
+        db[":f_id"] = doc;
+        db.exec("select f_inv, f_doc from m_register where f_id=:f_id");
+        if (!db.nextRow()) {
+            message_error(QObject::tr("Cannot open invoice"));
+            return false;
+        } else {
+            inv = db.getString(0);
+        }
+    }    
+    openInvoiceWithId(inv);
     return true;
 }
 
@@ -212,11 +227,14 @@ bool openInvoiceWithId(const QString &invoice)
     case RESERVE_CHECKIN:
         WInvoice::openInvoiceWindow(invoice);
         break;
+    case RESERVE_RESERVE:
     case RESERVE_CHECKOUT:
-    case RESERVE_REMOVED: {
+    case RESERVE_REMOVED:
         WAccInvoice::openInvoice(invoice);
         break;
-    }
+    default:
+        WAccInvoice::openInvoice(invoice);
+        break;
     }
     return true;
 }

@@ -22,7 +22,7 @@ class RDesk : public BaseExtendedDialog
     friend class RTools;
     friend class DishItemDelegate;
 public:
-    explicit RDesk(QWidget *parent = 0);
+    explicit RDesk(QWidget *parent = nullptr);
     ~RDesk();
     void prepareToShow();
     bool setup(TableStruct *t);
@@ -47,9 +47,9 @@ public:
     void printVoidReport();
     void complimentary();
     void changePassword();
-    void openTools();
-protected:
+    void openTools();protected:
     virtual void closeEvent(QCloseEvent *e);
+
 private slots:
     void onBtnQtyClicked();
     void timeout();
@@ -67,25 +67,15 @@ private slots:
     void on_btnTools_clicked();
     void on_btnCheckout_clicked();
     void on_btnTransfer_clicked();
-
     void on_btnTypeUp_clicked();
-
     void on_btnTypeDown_clicked();
-
     void on_btnDishUp_clicked();
-
     void on_btnDishDown_clicked();
-
     void on_btnOrdDown_clicked();
-
     void on_btnOrdUp_clicked();
-
     void on_btnSetRoom_clicked();
-
     void on_btnComplex_clicked();
-
     void on_pushButton_clicked();
-
     void on_btnGuests_clicked();
 
 private:

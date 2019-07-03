@@ -22,6 +22,7 @@
 #include "dlgreceiptvaucher.h"
 #include "dlggroupreservationfuck.h"
 #include "dlgchartcolor.h"
+#include "wmaindeskfilterlist.h"
 #include "cacheone.h"
 #include <QScrollBar>
 #include <QDesktopWidget>
@@ -38,23 +39,26 @@ WMainDesk::WMainDesk(QWidget *parent) :
     ui->setupUi(this);
     ui->g->verticalScrollBar()->blockSignals(true);
     ui->g->horizontalScrollBar()->blockSignals(true);
-    //ui->btnEndOfDay->setEnabled(r__(cr__super_correction));
     fDD.exec("select f_short from f_room_classes order by 1");
-    ui->tblClasses->setRowCount(1);
-    ui->tblClasses->setColumnCount(fDD.rowCount());
-    int c = 0;
     while (fDD.nextRow()) {
-        ui->tblClasses->setItem(0, c++, new C5TableWidgetItem(fDD.getString(0)));
+        QPushButton *btn = new QPushButton(fDD.getString("f_short"));
+        btn->setCheckable(true);
+        btn->setMaximumWidth(25);
+        btn->setStyleSheet("QPushButton:checked{background-color:rgb(178, 250, 184);}");
+        connect(btn, SIGNAL(clicked()), this, SLOT(catButtonClick()));
+        ui->hlCatButtons->addWidget(btn);
+        fCatList.append(fDD.getString(0));
     }
     fDD.exec("select f_id from f_room_bed order by 1");
-    ui->tblBed->setRowCount(1);
-    ui->tblBed->setColumnCount(fDD.rowCount());
-    c = 0;
     while (fDD.nextRow()) {
-        ui->tblBed->setItem(0, c++, new C5TableWidgetItem(fDD.getString(0)));
+        fBedList.append(fDD.getString(0));
     }
-    ui->tblClasses->setMaximumWidth((ui->tblClasses->columnCount() * ui->tblClasses->horizontalHeader()->defaultSectionSize()) + 5);
-    ui->tblBed->setMaximumWidth((ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize()) + 5);
+    fSmokeList.append(tr("Yes"));
+    fSmokeList.append(tr("No"));
+    fStateFilter.append(tr("Vacant ready"));
+    fStateFilter.append(tr("Checkin"));
+    fStateFilter.append(tr("Dirty"));
+    fStateFilter.append(tr("O/O"));
     fDockHint = new DWMainDeskHint(this);
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
@@ -179,6 +183,15 @@ void WMainDesk::scMainVScroll(int value)
     ui->saRoom->verticalScrollBar()->setValue(value);
 }
 
+void WMainDesk::catButtonClick()
+{
+    auto *btn = static_cast<QPushButton*>(sender());
+    uncheckCatButtons();
+    btn->setChecked(true);
+    fCatFilter = btn->text();
+    filterRoom();
+}
+
 void WMainDesk::roomSelectionChanged(const QModelIndex &m1, const QModelIndex &m2)
 {
     Q_UNUSED(m1)
@@ -281,18 +294,17 @@ void WMainDesk::filterRoom()
     QElapsedTimer et;
     et.start();
     qDebug() << "Start filter room";
+    int roomStateFilter = -1;
+    if (fState == tr("Vacant ready")) {
+        roomStateFilter = ROOM_STATE_NONE;
+    } else if (fState == tr("Checkin")) {
+        roomStateFilter = ROOM_STATE_CHECKIN;
+    } else if (fState == tr("Dirty")) {
+        roomStateFilter = ROOM_STATE_DIRTY;
+    } else if (fState == tr("O/O")) {
+        roomStateFilter = ROOM_STATE_OUTOF;
+    }
     fRoomList.clear();
-    QModelIndexList selCat = ui->tblClasses->selectionModel()->selectedIndexes();
-    QString category = "";
-    if (selCat.count() > 0) {
-        category = selCat.at(0).data(Qt::DisplayRole).toString();
-    }
-    QModelIndexList selBed = ui->tblBed->selectionModel()->selectedIndexes();
-    QString bed = "";
-    QModelIndexList selSmoke = ui->tblSmoke->selectionModel()->selectedIndexes();
-    if (selBed.count() > 0) {
-        bed = selBed.at(0).data(Qt::DisplayRole).toString();
-    }
     CacheInstance *c = cache(cid_room);
     QMap<QString, QList<QVariant> > &roomRows = c->fRows;
     CacheInstance *ci = cache(cid_reservation);
@@ -317,34 +329,35 @@ void WMainDesk::filterRoom()
                 continue;
             }
         }
-        if (category.length() > 0) {
-            if (room.fCategoryShort() != category) {
+        if (roomStateFilter > -1) {
+            if (room.fState() != roomStateFilter) {
                 it++;
                 continue;
             }
         }
-        if (bed.length() > 0) {
-            if (room.fBed() != bed) {
+        if (fCatFilter.length() > 0) {
+            if (room.fCategoryShort() != fCatFilter) {
                 it++;
                 continue;
             }
         }
-        if (selSmoke.count() > 0) {
-            switch (selSmoke.at(0).column()) {
-            case 0:
-                break;
-            case 1:
-                if (room.fSmoke() == 1) {
-                    it++;
-                    continue;
-                }
-                break;
-            case 2:
+        if (fBedFilter.length() > 0) {
+            if (room.fBed() != fBedFilter) {
+                it++;
+                continue;
+            }
+        }
+        if (fSmokeFilter.length() > 0) {
+            if (fSmokeFilter == tr("Yes")) {
                 if (room.fSmoke() == 0) {
                     it++;
                     continue;
                 }
-                break;
+            } else {
+                if (room.fSmoke() == 1) {
+                    it++;
+                    continue;
+                }
             }
         }
         fRoomList.append(room.fCode());
@@ -363,6 +376,8 @@ void WMainDesk::filterRoom()
             fRoomList << ddr.getString(0);
         }
     }
+
+    ui->lbRoomsCount->setText(QString("Rooms: %1").arg(fRoomList.count()));
 
     fScene->initBackgroung(fDateStart.daysTo(fDateEnd) + 1, fRoomList);
     qDebug() << et.elapsed() << "End init background. Init rooms";
@@ -461,28 +476,17 @@ void WMainDesk::daysColumnSelectionChanged()
     fScene->columnsSelect(selectedColumns);
 }
 
-void WMainDesk::on_tblClasses_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()) {
-        return;
-    }
-    filterRoom();
-}
-
-void WMainDesk::on_tblBed_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()) {
-        return;
-    }
-    filterRoom();
-}
-
 void WMainDesk::on_btnClearFilter_clicked()
 {
     ui->leJumpToRoom->clear();
-    ui->tblBed->clearSelection();
-    ui->tblClasses->clearSelection();
-    ui->tblSmoke->clearSelection();
+    fCatFilter.clear();
+    fBedFilter.clear();
+    fSmokeFilter.clear();
+    fState.clear();
+    ui->btnFilterCategory->setText(QString("%1: %2").arg(tr("Category filter")).arg(tr("All")));
+    ui->btnBedFilter->setText(QString("%1: %2").arg(tr("Bed filter")).arg(tr("All")));
+    ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(tr("All")));
+    ui->btnRoomStateFilter->setText(QString("%1: %1").arg(tr("Room state filter")).arg(tr("All")));
     ui->leFilterGuest->clear();
     ui->tblRoom->selectionModel()->clear();
     ui->tblDay->selectionModel()->clear();
@@ -554,14 +558,6 @@ void WMainDesk::on_btnShowDockHint_clicked()
     if (!fDockHint->isVisible() || !fDockHint->hasFocus()) {
         dockHint("");
     }
-}
-
-void WMainDesk::on_tblSmoke_clicked(const QModelIndex &index)
-{
-    if (!index.isValid()) {
-        return;
-    }
-    filterRoom();
 }
 
 void WMainDesk::on_btnJumpToDate_clicked()
@@ -715,4 +711,49 @@ void WMainDesk::on_btnRefreshChart_clicked()
     connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
     connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomCacheUpdated(int, QString)));
     on_btnClearFilter_clicked();
+}
+
+void WMainDesk::on_btnFilterCategory_clicked()
+{
+    fCatFilter.clear();
+    uncheckCatButtons();
+    filterRoom();
+}
+
+void WMainDesk::on_btnBedFilter_clicked()
+{
+    if  (WMainDeskFilterList::filter(fBedList, tr("Bed"), fBedFilter)) {
+        ui->btnBedFilter->setText(QString("%1: %2").arg(tr("Bed filter")).arg(fBedFilter.isEmpty() ? tr("All") : fBedFilter));
+        qApp->processEvents();
+        filterRoom();
+    }
+}
+
+void WMainDesk::on_btnSmokeFilter_clicked()
+{
+    if  (WMainDeskFilterList::filter(fSmokeList, tr("Smoke"), fSmokeFilter)) {
+        ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(fSmokeFilter.isEmpty() ? tr("All") : fSmokeFilter));
+        qApp->processEvents();
+        filterRoom();
+    }
+}
+
+void WMainDesk::on_btnRoomStateFilter_clicked()
+{
+    if  (WMainDeskFilterList::filter(fStateFilter, tr("Room state"), fState)) {
+        ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(fState.isEmpty() ? tr("All") : fState));
+        qApp->processEvents();
+        filterRoom();
+    }
+}
+
+void WMainDesk::uncheckCatButtons()
+{
+    QObjectList ol = ui->wCatButtons->children();
+    for (QObject *o: ol) {
+        QPushButton *b = dynamic_cast<QPushButton*>(o);
+        if (b) {
+            b->setChecked(false);
+        }
+    }
 }

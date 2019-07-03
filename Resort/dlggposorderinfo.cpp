@@ -61,7 +61,10 @@ void DlgGPOSOrderInfo::setOrder(const QString &id)
     ui->leStaff->setText(fDD.fDbRows.at(0).at(1).toString());
     ui->lePaymentComment->setText(fDD.fDbRows.at(0).at(3).toString());
     ui->lePayment->setText(fDD.fDbRows.at(0).at(2).toString());
-
+    CachePaymentMode pm;
+    if (pm.get(ui->lePayment->text())) {
+        ui->lePaymentName->setText(pm.fName());
+    }
     countTotal();
 }
 
@@ -94,8 +97,8 @@ void DlgGPOSOrderInfo::selectPaymentMode(bool v)
         fDD[":f_cityLedger"] = cl;
         fDD.update("o_header", where_id(ap(ui->leOrder->text())));
         fTrackControl->insert("Payment mode changed ", oldPm, ci.fName());
-        ui->lePayment->setText(ci.fName());
-        ui->lePayment->fHiddenText = ci.fCode();
+        ui->lePayment->setText(ci.fCode());
+        ui->lePaymentName->setText(ci.fName());
     }
 }
 

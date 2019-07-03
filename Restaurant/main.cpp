@@ -2,6 +2,7 @@
 #include "preferences.h"
 #include "logging.h"
 #include "cacheone.h"
+#include "trackcontrol.h"
 #include "dlgconnecttoserver.h"
 #include <QApplication>
 #include <QLockFile>
@@ -76,6 +77,22 @@ int main(int argc, char *argv[])
         __dd2Password = dbParams[3];
         doubleDatabase = true;
     }
+
+    QStringList log = p.getDb(def_log_main_db).toString().split(";", QString::SkipEmptyParts);
+    if (log.count() == 4) {
+        TrackControl::fDbHost = log.at(0);
+        TrackControl::fDbDb = log.at(1);
+        TrackControl::fDbUser = log.at(2);
+        TrackControl::fDbPass = log.at(3);
+    }
+    log = p.getDb(def_log_reserve_db).toString().split(";", QString::SkipEmptyParts);
+    if (log.count() == 4) {
+        TrackControl::fDbHostReserve = log.at(0);
+        TrackControl::fDbDbReserve = log.at(1);
+        TrackControl::fDbUserReserve = log.at(2);
+        TrackControl::fDbPassReserve = log.at(3);
+    }
+    TrackControl::setFirstConnection();
 
     RFace w;
     if (!w.fIsConfigured) {

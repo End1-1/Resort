@@ -17,8 +17,8 @@ FForecastOccupancyCategory::~FForecastOccupancyCategory()
 
 void FForecastOccupancyCategory::apply(WReportGrid *rg)
 {
-    if (ui->deStart->date() < WORKING_DATE || ui->deEnd->date() < WORKING_DATE) {
-        message_error(tr("Invalid starting date"));
+    if (ui->deStart->date() < WORKING_DATE || ui->deEnd->date() < WORKING_DATE || ui->deStart->date() > ui->deEnd->date()) {
+        message_error(tr("Invalid date range"));
         return;
     }
     rg->fModel->clearData();
@@ -30,7 +30,9 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
                "left join f_room rm on rm.f_class=rc.f_id group by 1");
     int ind = 0;
     int totRooms = 0;
+    int catCount = 0;
     while (fDD.nextRow()) {
+        catCount++;
         cats[fDD.getString(0)] = ind++;
         catsQty[fDD.getString(0)] = fDD.getInt(1);
         totRooms += fDD.getInt(1);
@@ -53,83 +55,68 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Avg. rate"))
             .setColumn(50, "", tr("Per %"));
 
-    QString query = QString("call forecast_occupancy(%1, %2)")
-            .arg(ui->deStart->dateMySql())
-            .arg(ui->deEnd->dateMySql());
-    fDD.exec(query);
-    fDD.exec("select * from rep");
-
-    QList<QVariant> emptyRow;
+    QList<QVariant> er;
+    int row;
+    QList<QList<QVariant> > rows;
+    rows.clear();
     for (int i = 0; i < rg->fModel->columnCount(); i++) {
-        emptyRow << QVariant();
-    }
+        er.append(QVariant());
 
-    ind = 0;
-    QMap<QDate, int> dates;
+    }
     for (QDate d = ui->deStart->date(); d != ui->deEnd->date().addDays(1); d = d.addDays(1)) {
-        dates[d] = ind++;
-        emptyRow[0] = d;
-        emptyRow[1] = totRooms;
+        QString query = QString("select rc.f_short, r.f_state, count(r.f_room) as rooms, "
+                                "sum(coalesce(r.f_pricepernight, 0)) as f_amount "
+                                "from f_room rm "
+                                "left join f_reservation r on r.f_room=rm.f_id "
+                                "left join f_room_classes rc on rc.f_id=rm.f_class "
+                                "where '%1' >= r.f_startDate and '%1' <= r.f_endDate "
+                                "and r.f_state in (1,2,4,7,9) "
+                                "group by 1, 2")
+                .arg(d.toString(def_mysql_date_format));
+        QList<QVariant> nr;
+        fDD.exec(query);
+        if (fDD.rowCount() > 0) {
+            nr = er;
+            nr[0] = d.toString(def_date_format);
+            nr[1] = totRooms;
+            rows.append(nr);
+            row = rows.count() - 1;
+            while (fDD.nextRow()) {
+                int catIndex = cats[fDD.getString("f_short")] + 2;
+                //qDebug() << d << fDD.getInt("rooms") << catIndex << row << fDD.getDouble("f_amount");
+                if (fDD.getInt(1) == RESERVE_OUTOFROOM || fDD.getInt(1) == RESERVE_OUTOFINVENTORY || fDD.getInt(1) == RESERVE_SERVICE) {
+                    rows[row][totIndex] = rows[row][totIndex].toInt() + fDD.getInt("rooms");
+                    rows[row][catIndex + vacIndex - 2] = rows[row][catIndex + vacIndex - 2].toInt() - fDD.getInt("rooms");
+                } else {
+                    rows[row][catIndex] = rows[row][catIndex].toInt() + fDD.getInt("rooms");
+                    rows[row][totIndex + 1] = rows[row][totIndex + 1].toDouble() + fDD.getDouble("f_amount");
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        int totalOcc = 0;
+        int totalVac = 0;
         for (QMap<QString, int>::const_iterator it = cats.begin(); it != cats.end(); it++) {
-            emptyRow[it.value() + cats.count() + 3] = catsQty[it.key()];
+            int catIndex = it.value() + 2;
+            if (rows[i][catIndex].toInt() == 0) {
+                rows[i][catIndex] = 0;
+            }
+            qDebug() << catsQty[it.key()] << rows[i][catIndex].toInt() << rows[i][catIndex + vacIndex - 2].toInt();
+            rows[i][catIndex + vacIndex - 2] = catsQty[it.key()] - rows[i][catIndex].toInt() + rows[i][catIndex + vacIndex - 2].toInt();
+            totalOcc += rows[i][catIndex].toInt();
+            totalVac += rows[i][catIndex + vacIndex - 2].toInt();
         }
-        rg->fModel->appendRow(emptyRow);
+        rows[i][vacIndex - 1] = totalOcc;
+        rows[i][totIndex - 1] = totalVac;
+        rows[i][totIndex + 2] = rows[i][totIndex + 1].toDouble() / rows[i][vacIndex - 1].toInt();
+        rows[i][totIndex + 3] = (rows[i][vacIndex - 1].toDouble()) / totRooms * 100.0;
     }
 
-    int ooIndex = 1 + 1 + cats.count() + 1 + cats.count() + 1;
-    int amountIndex = ooIndex + 1;
-    int avgIndex = amountIndex + 1;
-    int perIndex = avgIndex + 1;
-    while (fDD.nextRow()) {
-        int dateIndex = dates[fDD.getDate(0)];
-        int catIndex = cats[fDD.getString(1)] + 2;
-        //rg->fModel->setData(dateIndex, catIndex + cats.count() + 1, it->at())
-        rg->fModel->setData(dateIndex, catIndex, fDD.getValue(4));
-        rg->fModel->setData(dateIndex, catIndex + cats.count() + 1, catsQty[fDD.getString(1)] - fDD.getInt(4) - fDD.getInt(3));
-        rg->fModel->setData(dateIndex, amountIndex, rg->fModel->data(dateIndex, amountIndex, Qt::EditRole).toDouble() + fDD.getDouble(5));
-        rg->fModel->setData(dateIndex, avgIndex, fDD.getValue(6));
-        rg->fModel->setData(dateIndex, perIndex, 0.1);
-        rg->fModel->setData(dateIndex, ooIndex, fDD.getInt(3) + rg->fModel->data(dateIndex, ooIndex, Qt::EditRole).toInt());
-    }
 
-    for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
-        int totOcc = 0;
-        int totVac = 0;
-        for (int j = 2; j < vacIndex; j++) {
-            totOcc += rg->fModel->data(i, j, Qt::EditRole).toInt();
-            totVac += rg->fModel->data(i, j + cats.count() + 1, Qt::EditRole).toInt();
-        }
-        rg->fModel->setData(i, vacIndex - 1, totOcc);
-        rg->fModel->setData(i, totIndex - 1, totVac);
-        if (totOcc > 0) {
-            rg->fModel->setData(i, avgIndex, rg->fModel->data(i, amountIndex, Qt::EditRole).toDouble() / totOcc);
-        }
-        double per = 0;
-        if (rg->fModel->data(i, 1, Qt::EditRole).toInt() > 0) {
-            per = (totOcc * 100) / rg->fModel->data(i, 1, Qt::EditRole).toInt();
-        }
-        rg->fModel->setData(i, perIndex, per);
-    }
-
-    rg->fModel->apply(0);
-
-    for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
-        rg->fModel->setBackgroundColor(i, 1, COLOR_DARK_ROW);
-        for (int j = vacIndex; j < totIndex; j++) {
-            rg->fModel->setBackgroundColor(i, j, COLOR_DARK_ROW);
-        }
-    }
-
-    QList<int> cols;
-    QList<double> vals;
-    for (int i = 1; i < avgIndex; i++) {
-        cols << i;
-    }
-    rg->fModel->sumOfColumns(cols, vals);
-    rg->setTblTotalData(cols, vals);
-    if (rg->fTableTotal->toInt(0, 1) > 0) {
-        rg->fTableTotal->setItemWithValue(0, perIndex, rg->fTableTotal->toInt(0, vacIndex) / rg->fTableTotal->toInt(0, 1));
-    }
+    rg->fModel->fDD.fDbRows = rows;
+    rg->fModel->apply(rg);
 }
 
 QWidget *FForecastOccupancyCategory::firstElement()

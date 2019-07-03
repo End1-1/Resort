@@ -318,6 +318,7 @@ void RDesk::setStaff(User *user)
 {
     fStaff = user;
     ui->lbStaff->setText(user->fName);
+    Base::fPreferences.setLocal(def_working_username, user->fName);
 }
 
 void RDesk::showHideRemovedItems()
@@ -680,23 +681,23 @@ int RDesk::printTax(int cashMode)
     CacheInvoiceItem ii;
     if (!ii.get(fHall->fItemIdForInvoice)) {
         message_error(tr("No invoice item defined for this station"));
-        return false;
+        return 0;
     }
     CacheTaxMap tm;
     if (!tm.get(ii.fCode())) {
         message_error(tr("No tax code define for ") + ii.fCode());
-        return false;
+        return 0;
     }
     //Print tax
     if (fPreferences.getDb(def_tax_port).toInt() == 0) {
         message_error(tr("Setup tax printer first"));
-        return false;
+        return 0;
     }
 
     int taxCode = 0;
     int result = DlgPrintTax::printTax(fHall->fVatDept, fTable->fOrder, (cashMode == tax_mode_cash ? 0 : fTable->fAmount.toDouble()), taxCode);
     if (result != TAX_OK) {
-        return result;
+        return 0;
     }
 
     fTable->fTaxPrint = 1;
@@ -751,7 +752,7 @@ int RDesk::printTax(int cashMode)
         int id = did.insert("m_tax_history", true);
         fDD.update("m_tax_history", where_id(id));
     }
-    return result;
+    return taxCode;
 }
 
 void RDesk::printTaxDialog()
@@ -1748,7 +1749,7 @@ void RDesk::printRemovedDish(OrderDishStruct *od, double removed, int user)
     f.setBold(true);
     th.setFont(f);
     th.setBorders(false, false, false, false);
-    PTextRect *r = 0;
+    PTextRect *r = nullptr;
     int top = 10;
     th.setTextAlignment(Qt::AlignHCenter);
     int rowHeight = 60;
@@ -1914,7 +1915,7 @@ void RDesk::printReceipt(bool printModePayment)
             lps.append(ps);
         }
     }
-    OrderDishStruct *serv = 0;
+    OrderDishStruct *serv = nullptr;
     for (int i = 0; i < ui->tblOrder->rowCount(); i++) {
         OrderDishStruct *od = ui->tblOrder->item(i, 0)->data(Qt::UserRole).value<OrderDishStruct*>();
         if (!od) {
@@ -1955,7 +1956,7 @@ void RDesk::printReceipt(bool printModePayment)
     ps->addTextRect(new PTextRect(10, top, 400, rowHeight, tr("Total, AMD"), &th, f));
     top += ps->addTextRect(new PTextRect(500, top, 200, rowHeight, ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString(), &th, f))->textHeight();
     ps->addTextRect(new PTextRect(10, top, 400, rowHeight, tr("Total, USD"), &th, f));
-    top += ps->addTextRect(new PTextRect(500, top, 200, rowHeight, float_str(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toDouble() / def_usd, 2), &th, f))->textHeight();
+    top += ps->addTextRect(new PTextRect(500, top, 200, rowHeight, float_str(QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString()) / def_usd, 2), &th, f))->textHeight();
 
     top += rowHeight;
     f.setPointSize(28);
@@ -2439,7 +2440,7 @@ void RDesk::on_btnPayment_clicked()
         }
         break;
     case 4:
-        fDD[":f_paymentMode"] = PAYMENT_CARD;
+        fTable->fPaymentMode = PAYMENT_CARD;
         fTable->fPaymentComment = "ARCA";
         switch (message_yesnocancel(tr("Print tax?"))) {
         case RESULT_YES:
@@ -2533,7 +2534,6 @@ void RDesk::on_btnPayment_clicked()
             cardName = cc.fName();
         }
     }
-
     fDD.insertId("m_register", fTable->fOrder);
     fDD[":f_source"] = VAUCHER_POINT_SALE_N;
     fDD[":f_wdate"] = WORKING_DATE;
@@ -2544,7 +2544,7 @@ void RDesk::on_btnPayment_clicked()
     fDD[":f_guest"] = guest;
     fDD[":f_itemCode"] = fHall->fItemIdForInvoice;
     fDD[":f_finalName"] = Hall::fHallMap[fTable->fHall]->fName + " " + fTable->fOrder;
-    fDD[":f_amountAmd"] = ui->tblTotal->item(1, 1)->data(Qt::EditRole).toDouble();
+    fDD[":f_amountAmd"] = QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString());
     fDD[":f_amountVat"] = Utils::countVATAmount(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toDouble(), VAT_INCLUDED);
     fDD[":f_amountUsd"] = def_usd;
     fDD[":f_fiscal"] = prnTax;
@@ -2693,7 +2693,7 @@ void RDesk::on_btnTransfer_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     /*------------------------------BEGIN SELECT TABLE-------------------*/
     RSelectTable *t = new RSelectTable(this);
-    TableStruct *table = 0;
+    TableStruct *table = nullptr;
     t->setup(fTable->fHall);
     if (t->exec() == QDialog::Accepted) {
         table = t->table();

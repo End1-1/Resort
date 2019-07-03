@@ -126,7 +126,7 @@ void CacheReservation::check(const QDate &start, const QDate &end, int room,
             it++;
             continue;
         }
-        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM) {
+        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM || cr.fState() == RESERVE_SERVICE) {
             if (start == cr.fDateEnd() || end == cr.fDateStart()) {
                 out.insert(cr.fId(), cr);
                 startOk = false;
@@ -190,6 +190,13 @@ void CacheReservation::exludeList(const QDate &start, const QDate &end, QSet<int
         int room = cr.fRoom().toInt();
         QDate s = cr.fDateStart();
         QDate e = cr.fDateEnd();
+        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM || cr.fState() == RESERVE_SERVICE) {
+            if (start == e || end == s) {
+                excludeRooms.insert(room);
+                it++;
+                continue;
+            }
+        }
         if (start <= s && end >= e) {
             if (s == e && end > e) {
                 it++;

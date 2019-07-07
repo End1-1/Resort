@@ -2354,7 +2354,11 @@ rooms</source>
     </message>
     <message>
         <source>Card</source>
-        <translation type="unfinished">Քարտ</translation>
+        <translation type="obsolete">Քարտ</translation>
+    </message>
+    <message>
+        <source>Card amount for tax</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3179,6 +3183,13 @@ rooms</source>
     </message>
     <message>
         <source>Open selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DlgOptions</name>
+    <message>
+        <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6672,6 +6683,10 @@ for this operation</source>
         <source>Quick checkout</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Print tax of invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -9107,6 +9122,10 @@ ee</source>
         <source>There are no arrivals or departures</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No rates</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FExpectedArrivals2</name>
@@ -9224,6 +9243,10 @@ ee</source>
     </message>
     <message>
         <source>Arrivals and departures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No rates</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9365,7 +9388,7 @@ ee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Invalid starting date</source>
+        <source>Invalid date range</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9902,6 +9925,14 @@ ee</source>
     <message>
         <source>Occ. percent</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Group by days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
     </message>
 </context>
 <context>
@@ -13092,6 +13123,14 @@ or contact to administrator</source>
     <message>
         <source>Cash report / items</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print tax of checkout invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Կարգավորումներ</translation>
     </message>
 </context>
 <context>
@@ -18400,46 +18439,14 @@ operator</source>
     </message>
     <message>
         <source>Class</source>
-        <translation type="unfinished">Դաս</translation>
-    </message>
-    <message>
-        <source>Filter by room categories</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Դաս</translation>
     </message>
     <message>
         <source>Bed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Filter by bed types</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Smoke</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter by smoking/no smoking</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New Row</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New Column</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>N</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -18564,6 +18571,81 @@ reservation</source>
     </message>
     <message>
         <source>Refresh chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category: All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bed filter: All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoke filter: All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room state filter: All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rooms: 0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Այո</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">Ոչ</translation>
+    </message>
+    <message>
+        <source>Vacant ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dirty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O/O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation type="unfinished">Բոլորը</translation>
+    </message>
+    <message>
+        <source>Bed filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smoke filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room state filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room state</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WMainDeskFilterList</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19763,6 +19845,22 @@ if empty</source>
         <source>No month selected</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Use date range*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nationality*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid date range</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WReservation</name>
@@ -19926,16 +20024,6 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reservatio
-type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Expected
-departure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>(Day use)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20027,11 +20115,6 @@ from</source>
     <message>
         <source>City ledger</source>
         <translation type="unfinished">Պարքատեր</translation>
-    </message>
-    <message>
-        <source>Cardex
-commission</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>0.00</source>
@@ -20327,6 +20410,18 @@ commission</source>
     </message>
     <message>
         <source>RECHECKIN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reservation type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Separture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex commission</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -20911,6 +21006,101 @@ selection</source>
     </message>
 </context>
 <context>
+    <name>WTaxAttack</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkout date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Common search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Checkout </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voucher</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purpose</source>
+        <translation type="unfinished">Նշանակություն</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Գումար</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ItemCode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode of VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New Column</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print tax of invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uncheck all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in tax print. c == 0, case 2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax department undefined for </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nothing were printed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WUsers</name>
     <message>
         <source>Code</source>
@@ -21195,19 +21385,15 @@ selection</source>
 <context>
     <name>WWeb</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>https://www.ya.ru</source>
+        <source>Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Internet</source>
+        <source>WEB</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

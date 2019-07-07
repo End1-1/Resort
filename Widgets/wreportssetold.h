@@ -39,6 +39,8 @@ private:
     void roomArrangement(QList<QList<QVariant> > &rows, const QString &month);
     void nationality(QList<QList<QVariant> > &rows, const QString &month);
     void nationalityYearly(QList<QList<QVariant> > &rows, const QString &month);
+    void cardex(QList<QList<QVariant> > &rows, const QString &month);
+    void marketsigment(QList<QList<QVariant> > &rows, const QString &month);
 };
 
 #endif // WREPORTSSETOLD_H

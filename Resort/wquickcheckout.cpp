@@ -77,7 +77,7 @@ void WQuickCheckout::refresh()
                     "left join f_room_classes rc on rc.f_id=rm.f_class "
                     "left join guests g on g.f_id=r.f_guest "
                     "left join f_cardex c on c.f_cardex=r.f_cardex "
-                    "where r.f_state=:f_state :date :cardex "
+                    "where r.f_state=:f_state :date :cardex :group "
                     "order by r.f_room ";
     if (ui->chAllInvoices->isChecked()) {
         query.replace(":date", "");
@@ -88,6 +88,11 @@ void WQuickCheckout::refresh()
         query.replace(":cardex", "");
     } else {
         query.replace(":cardex", QString(" and r.f_cardex='%1'").arg(ui->wCardex->cardex()));
+    }
+    if (ui->wGroup->group() == 0) {
+        query.replace(":group", "");
+    } else {
+        query.replace(":group", QString(" and r.f_group=%1").arg(ui->wGroup->group()));
     }
     DoubleDatabase dd(true, false);
     dd[":f_state"] = RESERVE_CHECKIN;

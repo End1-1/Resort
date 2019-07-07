@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql network xml printsupport
+QT       += core gui sql network xml printsupport charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,9 +20,11 @@ SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
+    ../Cache/cacheactivegroup.cpp \
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
+    ../Filter/finhouseguestfuture.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -45,6 +47,8 @@ SOURCES += main.cpp\
     databasesconnections.cpp \
     databaseconnection.cpp \
     databasepasswordchange.cpp \
+    wactivegroup.cpp \
+    wchart.cpp \
     wcheckboxgroup.cpp \
     wcityledger.cpp \
     wguestinvoice.cpp \
@@ -433,9 +437,11 @@ HEADERS  += mainwindow.h \
     ../Base/doubleutils.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
+    ../Cache/cacheactivegroup.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
+    ../Filter/finhouseguestfuture.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -457,6 +463,8 @@ HEADERS  += mainwindow.h \
     databasesconnections.h \
     databaseconnection.h \
     databasepasswordchange.h \
+    wactivegroup.h \
+    wchart.h \
     wcheckboxgroup.h \
     wcityledger.h \
     wguestinvoice.h \
@@ -850,6 +858,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
+    ../Filter/finhouseguestfuture.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \
@@ -867,7 +876,9 @@ FORMS    += mainwindow.ui \
     databasesconnections.ui \
     databaseconnection.ui \
     databasepasswordchange.ui \
+    wactivegroup.ui \
     wcardex.ui \
+    wchart.ui \
     wcityledger.ui \
     wguestinvoice.ui \
     wmaindesk.ui \

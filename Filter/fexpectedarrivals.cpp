@@ -111,16 +111,20 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
         where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
     }
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
-            "r.f_pricePerNight, "
-            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
+            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
+    if (ui->chWithoutRates->isChecked()) {
+        query += "'0',";
+    } else {
+        query += "r.f_pricePerNight, ";
+    }
+    query += "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
             "from f_reservation r "
             "left join f_room rm on rm.f_id=r.f_room "
             "left join f_guests g on g.f_id=r.f_guest "
             "left join f_cardex cx on cx.f_cardex=r.f_cardex "
             "left join f_reservation_status s on s.f_id=r.f_reserveState "
-            "left join (select a.f_res, sum(f_amountAmd) as total "
-                "from m_register a where f_canceled=0 and f_source='AV' group by 1) adv on adv.f_res=r.f_id "
+            "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
+                "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
             + where +
             "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
             ;
@@ -452,16 +456,20 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
         where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
     }
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
-            "r.f_pricePerNight, "
-            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
+            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
+    if (ui->chWithoutRates->isChecked()) {
+        query += "'0',";
+    } else {
+        query += "r.f_pricePerNight, ";
+    }
+    query += "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
             "from f_reservation r "
             "left join f_room rm on rm.f_id=r.f_room "
             "left join f_guests g on g.f_id=r.f_guest "
             "left join f_cardex cx on cx.f_cardex=r.f_cardex "
             "left join f_reservation_status s on s.f_id=r.f_reserveState "
-            "left join (select a.f_res, sum(f_amountAmd) as total "
-                "from m_register a where f_canceled=0 and f_source='AV' group by 1) adv on adv.f_res=r.f_id "
+            "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
+                "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
             + where +
             "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
             ;

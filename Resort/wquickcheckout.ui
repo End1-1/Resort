@@ -43,6 +43,9 @@
        <widget class="WCardex" name="wCardex" native="true"/>
       </item>
       <item>
+       <widget class="WActiveGroup" name="wGroup" native="true"/>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnRefresh">
         <property name="toolTip">
          <string>Refresh</string>
@@ -279,6 +282,12 @@ border-right: 1px solid gray;</string>
    <class>WCardex</class>
    <extends>QWidget</extends>
    <header location="global">wcardex.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>WActiveGroup</class>
+   <extends>QWidget</extends>
+   <header location="global">wactivegroup.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

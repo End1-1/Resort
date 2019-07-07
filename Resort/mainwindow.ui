@@ -215,6 +215,7 @@
     <addaction name="actionQuick_reservations"/>
     <addaction name="actionQuick_checkout"/>
     <addaction name="actionIn_house_guest"/>
+    <addaction name="actionInhouse_guest_future"/>
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
     <addaction name="actionExpected_arrivals"/>
@@ -1516,6 +1517,15 @@
   <action name="actionOptions">
    <property name="text">
     <string>Options</string>
+   </property>
+  </action>
+  <action name="actionInhouse_guest_future">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/bed.png</normaloff>:/images/bed.png</iconset>
+   </property>
+   <property name="text">
+    <string>Inhouse guest, future</string>
    </property>
   </action>
  </widget>

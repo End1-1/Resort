@@ -207,7 +207,10 @@ void WReportsSetOld::on_btnGo_clicked()
     }
     if (eb->fData["rep"].toInt() == 5 || eb->fData["rep"].toInt() == 7
             || eb->fData["rep"].toInt() == 8
-            || eb->fData["rep"].toInt() == 11 || eb->fData["rep"].toInt() == 14) {
+            || eb->fData["rep"].toInt() == 11
+            || eb->fData["rep"].toInt() == 14
+            || eb->fData["rep"].toInt() == 9
+            || eb->fData["rep"].toInt() == 16) {
         QList<QList<QVariant> > rows;
         QList<int> widths;
         QStringList titles;
@@ -245,6 +248,13 @@ void WReportsSetOld::on_btnGo_clicked()
             sumCols << 1 << 2 << 3 << 4 << 5;
             nationality(rows, months);
             break;
+        case 9:
+            reportTitle = "Cardex" + reportTitle;
+            widths << 200 << 80 << 80 << 80 << 80 << 80 << 100 << 130 << 80;
+            titles << "Cardex" << "GUESTS" << "NIGHTS" << "FREE PAX" << "FREE NIGHTS" << "ROOMING" << "PENALTY" << "LENGTH OF STAY" << "AVG.ROOM";
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6;
+            cardex(rows, months);
+            break;
         case 11:
             reportTitle = "Nationality Yearly " + reportTitle;
             widths << 130
@@ -269,6 +279,13 @@ void WReportsSetOld::on_btnGo_clicked()
                    << "ROOMING B/O" << "ROOMIN B/B";
             sumCols << 1 << 2 << 3 << 4 << 5 << 6;
             roomArrangement(rows, months);
+            break;
+        case 16:
+            reportTitle = "Market sigment" + reportTitle;
+            widths << 200 << 80 << 80 << 80 << 80 << 80 << 100 << 130 << 80;
+            titles << "Sigment" << "GUESTS" << "NIGHTS" << "FREE PAX" << "FREE NIGHTS" << "ROOMING" << "PENALTY" << "LENGTH OF STAY" << "AVG.ROOM";
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6;
+            marketsigment(rows, months);
             break;
         }
         WReportGrid *rg = new WReportGrid(this);
@@ -474,7 +491,20 @@ void WReportsSetOld::category(QList<QList<QVariant> > &rows, const QString &mont
         rows[row][5] = dd.getDouble(1);
     }
 
-    query = "select rc.f_description, sum(m.f_amountAmd) "
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select rc.f_description, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_room rm on rm.f_id=r.f_room "
+                "left join f_room_classes rc on rc.f_id=rm.f_class "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select rc.f_description, sum(m.f_amountAmd) "
                 "from m_register m "
                 "left join f_reservation r on r.f_invoice=m.f_inv "
                 "left join f_room rm on rm.f_id=r.f_room "
@@ -483,8 +513,9 @@ void WReportsSetOld::category(QList<QList<QVariant> > &rows, const QString &mont
                 "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
                 "and r.f_state in (1,2,3,6) "
                 "group by 1";
-    query.replace(":monthlist", month);
-    query.replace(":year", ui->cbYear->currentText());
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
     dd.exec(query);
     while (dd.nextRow()) {
         int row = catMap[dd.getString(0)];
@@ -639,7 +670,21 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
     if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
         rooming += "," + fPreferences.getDb(def_penalty_list).toString();
     }
-    QString query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
+    QString query;
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
+            "from m_register m "
+            "inner join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and m.f_wdate between :date1 and :date2 "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd "
+            "group by 1, 2 ";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
             "from m_register m "
             "inner join f_reservation r on r.f_invoice=m.f_inv "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -649,8 +694,9 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
             "and extract(month from m.f_wdate) in (:monthlist)"
             "and r.f_state in (1,2,3,6) and m.f_amountAmd "
             "group by 1, 2 ";
-    query.replace(":year", ui->cbYear->currentText());
-    query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+        query.replace(":monthlist", month);
+    }
     dd.exec(query);
     while (dd.nextRow()) {
         int col = 1;
@@ -871,7 +917,347 @@ void WReportsSetOld::nationalityYearly(QList<QList<QVariant> > &rows, const QStr
                         + rows[i][11].toDouble()
                         + rows[i][12].toDouble();
             }
+    }
+}
+
+void WReportsSetOld::cardex(QList<QList<QVariant> > &rows, const QString &month)
+{
+    QList<QVariant> er;
+    // cardex << pax << nights << free pax << free nights << rooming << noshow << length of stay << avg room
+    er << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_name from f_cardex");
+    QMap<QString, int> catMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        catMap[dd.getString(0)] = rows.count() - 1;
+        rows[catMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query;
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+                "group by 1;";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+            "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+            "group by 1;";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][1] = dd.getInt(1);
+        rows[row][2] = dd.getDouble(2);
+    }
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                    "from m_register m "
+                    "left join f_reservation r on r.f_invoice=m.f_inv "
+                    "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                    "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                    "and m.f_wdate between :date1 and :date2 "
+                    "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                    "and r.f_state in (1,2,3,6) and m.f_amountAmd<0.01 "
+                    "group by 1;";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_name, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                    "from m_register m "
+                    "left join f_reservation r on r.f_invoice=m.f_inv "
+                    "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                    "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                    "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                    "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                    "and r.f_state in (1,2,3,6) and m.f_amountAmd<0.01 "
+                    "group by 1;";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][3] = dd.getInt(1);
+        rows[row][4] = dd.getDouble(2);
+    }
+
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_name, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_name, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][5] = dd.getDouble(1);
+    }
+
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_name, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_name, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][6] = dd.getDouble(1);
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][1].toDouble() + rows[i][3].toDouble() > 0.01) {
+            rows[i][7] =  (rows[i][1].toDouble() + rows[i][3].toDouble()) / (rows[i][2].toDouble() + rows[i][4].toDouble());
+        } else {
+            rows[i][7] = 0;
         }
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][2].toDouble() > 0) {
+            rows[i][8] = rows[i][5].toDouble() / rows[i][2].toDouble();
+        } else {
+            rows[i][8] = 0;
+        }
+    }
+    for (int i = rows.count() - 1; i > -1; i--) {
+            if (rows[i][1].toInt() == 0
+                    && zerodouble(rows[i][1].toDouble())
+                    && zerodouble(rows[i][2].toDouble())
+                    && zerodouble(rows[i][3].toDouble())
+                    && zerodouble(rows[i][4].toDouble())
+                    && zerodouble(rows[i][5].toDouble())) {
+                rows.removeAt(i);
+            }
+    }
+    rows.append(er);
+    rows[rows.count() - 1][0] = QString("ROOMING: %1").arg(rooming);
+}
+
+void WReportsSetOld::marketsigment(QList<QList<QVariant> > &rows, const QString &month)
+{
+    QList<QVariant> er;
+    // cardex << pax << nights << free pax << free nights << rooming << noshow << length of stay << avg room
+    er << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant();
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_group from f_cardex");
+    QMap<QString, int> catMap;
+    while (dd.nextRow()) {
+        rows.append(er);
+        catMap[dd.getString(0)] = rows.count() - 1;
+        rows[catMap[dd.getString(0)]][0] = dd.getString(0);
+    }
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    QString query;
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_group, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+                "group by 1;";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_group, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+            "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+            "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+            "and r.f_state in (1,2,3,6) and m.f_amountAmd>0.01 "
+            "group by 1;";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][1] = dd.getInt(1);
+        rows[row][2] = dd.getDouble(2);
+    }
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_group, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                    "from m_register m "
+                    "left join f_reservation r on r.f_invoice=m.f_inv "
+                    "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                    "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                    "and m.f_wdate between :date1 and :date2 "
+                    "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                    "and r.f_state in (1,2,3,6) and m.f_amountAmd<0.01 "
+                    "group by 1;";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_group, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+                    "from m_register m "
+                    "left join f_reservation r on r.f_invoice=m.f_inv "
+                    "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                    "where m.f_itemCode in (" + rooming + ") and m.f_canceled=0 and m.f_finance=1 "
+                    "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                    "and m.f_paymentMode<> " + QString::number(PAYMENT_COMPLIMENTARY) + " "
+                    "and r.f_state in (1,2,3,6) and m.f_amountAmd<0.01 "
+                    "group by 1;";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][3] = dd.getInt(1);
+        rows[row][4] = dd.getDouble(2);
+    }
+
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_group, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_group, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][5] = dd.getDouble(1);
+    }
+
+    if (ui->chUseDateRange->isChecked()) {
+        query = "select cx.f_group, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and m.f_wdate between :date1 and :date2 "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query = "select cx.f_group, sum(m.f_amountAmd) "
+                "from m_register m "
+                "left join f_reservation r on r.f_invoice=m.f_inv "
+                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                "where m.f_itemCode in (" + fPreferences.getDb(def_penalty_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+                "and extract(year from m.f_wdate)=:year and extract(month from m.f_wdate) in (:monthlist) "
+                "and r.f_state in (1,2,3,6) "
+                "group by 1";
+        query.replace(":monthlist", month);
+        query.replace(":year", ui->cbYear->currentText());
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = catMap[dd.getString(0)];
+        rows[row][6] = dd.getDouble(1);
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][1].toDouble() + rows[i][3].toDouble() > 0.01) {
+            rows[i][7] =  (rows[i][1].toDouble() + rows[i][3].toDouble()) / (rows[i][2].toDouble() + rows[i][4].toDouble());
+        } else {
+            rows[i][7] = 0;
+        }
+    }
+
+    for (int i = 0; i < rows.count(); i++) {
+        if (rows[i][2].toDouble() > 0) {
+            rows[i][8] = rows[i][5].toDouble() / rows[i][2].toDouble();
+        } else {
+            rows[i][8] = 0;
+        }
+    }
+    for (int i = rows.count() - 1; i > -1; i--) {
+            if (rows[i][1].toInt() == 0
+                    && zerodouble(rows[i][1].toDouble())
+                    && zerodouble(rows[i][2].toDouble())
+                    && zerodouble(rows[i][3].toDouble())
+                    && zerodouble(rows[i][4].toDouble())
+                    && zerodouble(rows[i][5].toDouble())) {
+                rows.removeAt(i);
+            }
+    }
+    rows.append(er);
+    rows[rows.count() - 1][0] = QString("ROOMING: %1").arg(rooming);
 }
 
 void WReportsSetOld::on_chYear_clicked(bool checked)

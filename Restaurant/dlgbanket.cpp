@@ -10,6 +10,7 @@
 #include "rmessage.h"
 #include "cacheusers.h"
 #include "vauchers.h"
+#include "cacheactiveroom.h"
 #include "rchangehall.h"
 #include "hall.h"
 #include "user.h"
@@ -303,7 +304,7 @@ void DlgBanket::printTax()
         return;
     }
 
-    HallStruct *h = 0;
+    HallStruct *h = nullptr;
     for (int i = 0; i < Hall::fBanketHall.count(); i++) {
         if (Hall::fBanketHall.at(i)->fId == ui->leHall->fHiddenText.toInt()) {
             h = Hall::fBanketHall.at(i);
@@ -452,13 +453,29 @@ void DlgBanket::on_btnSave_clicked()
 
     int creditCard = 0;
     int cityLedger = 0;
-    switch (ui->leModeOfPayment->fHiddenText.toInt()) {
+    QString room = "-";
+    QString guest = "-";
+    QString invoice = "";
+    QString res = "";
+    QString pm = ui->leModeOfPayment->fHiddenText;
+    switch (pm.toInt()) {
     case PAYMENT_CARD:
         creditCard = ui->lePaymentComment->fHiddenText.toInt();
         break;
     case PAYMENT_CL:
         cityLedger = ui->lePaymentComment->fHiddenText.toInt();
+        room = ui->lePaymentComment->fHiddenText;
         break;
+    case PAYMENT_ROOM: {
+        CacheActiveRoom ci;
+        if (ci.get(ui->lePaymentComment->fHiddenText)) {
+            room = ci.fRoomCode();
+            guest = ci.fGuestName();
+            invoice = ui->lePaymentComment->text();
+            res = ci.fCode();
+        }
+        break;
+    }
     }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.startTransaction();
@@ -488,12 +505,13 @@ void DlgBanket::on_btnSave_clicked()
 
     fDD.insertId("m_register", fDoc);
     fDD[":f_source"] = VAUCHER_EVENT_N;
+    fDD[":f_res"] = res;
     fDD[":f_wdate"] = WORKING_DATE;
     fDD[":f_rdate"] = QDate::currentDate();
     fDD[":f_time"] = QTime::currentTime();
     fDD[":f_user"] = fUser->fId;
-    fDD[":f_room"] = "-";
-    fDD[":f_guest"] = "-";
+    fDD[":f_room"] = room;
+    fDD[":f_guest"] = guest;
     fDD[":f_itemCode"] = ui->leService->fHiddenText.toInt();
     fDD[":f_finalName"] = QString("%1 %2 #%3").arg(ui->leHall->text()).arg(ui->leService->text()).arg(fDoc);
     fDD[":f_amountAmd"] = ui->leTotal->asDouble();
@@ -508,7 +526,7 @@ void DlgBanket::on_btnSave_clicked()
     fDD[":f_sign"] = (cityLedger == 0 ? 1 : -1);
     fDD[":f_doc"] = fDoc;
     fDD[":f_rec"] = 0;
-    fDD[":f_inv"] = ui->leModeOfPayment->fHiddenText.toInt() == PAYMENT_TRANSFER ? ui->lePaymentComment->text() : "";
+    fDD[":f_inv"] = invoice;
     fDD[":f_finance"] = 1;
     fDD[":f_remarks"] = "";
     fDD[":f_canceled"] = 0;
@@ -632,6 +650,7 @@ void DlgBanket::on_btnDraft_clicked()
     fDD[":f_prepaymentMode"] = ui->leModePrepayment->fHiddenText.toInt();
     fDD[":f_prepaymentModeComment"] = ui->leModePrepaymentComment->text();
     fDD[":f_prepaymentTax"] = ui->lePrepaymentTax->text();
+    fDD[":f_paymentDetails"] = ui->lePaymentComment->text();
     if (fDoc.isEmpty()) {
         fDoc = uuidx(VAUCHER_EVENT_N);
         fDD.insertId("o_event", fDoc);
@@ -657,7 +676,7 @@ void DlgBanket::on_btnOpen_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = result;
     fDD.exec("select f_itemCode, f_comment, f_hall, f_pax, f_total, f_paymentMode, f_creditCard, f_cityLedger, "
-               "f_prepayment, f_prepaymentModeComment,  f_prepaymentTax "
+               "f_prepayment, f_prepaymentModeComment,  f_prepaymentTax, f_paymentDetails "
                "from o_event where f_id=:f_id");
     if (!fDD.nextRow()) {
         message_error(tr("Cannot load event case, #1"));
@@ -681,25 +700,33 @@ void DlgBanket::on_btnOpen_clicked()
         ui->lePrice->setDouble(ui->leTotal->asDouble() / ui->leGuests->asInt());
     }
 
-    CachePaymentMode pc;
-    if (pc.get(fDD.getString(5))) {
-        if (fDD.getInt(5) == PAYMENT_TRANSFER) {
-
-        }
-        ui->leModeOfPayment->setText(pc.fName());
-        ui->leModeOfPayment->fHiddenText = pc.fCode();
-    }
-
     CacheCreditCard cc;
     if (cc.get(fDD.getString(6))) {
         ui->lePaymentComment->setText(cc.fName());
         ui->lePaymentComment->fHiddenText = cc.fCode();
     }
+
     CacheCityLedger cl;
     if (cl.get(fDD.getString(7))) {
         ui->lePaymentComment->setText(cl.fName());
         ui->lePaymentComment->fHiddenText = cl.fCode();
     }
+
+    CachePaymentMode pc;
+    if (pc.get(fDD.getString(5))) {
+        if (fDD.getInt(5) == PAYMENT_ROOM) {
+            DoubleDatabase dd(true, false);
+            dd[":f_invoice"] = fDD.getString("f_paymentdetails");
+            dd.exec("select r.f_room from f_reservation r where r.f_invoice=:f_invoice");
+            if (dd.nextRow()) {
+                ui->lePaymentComment->setText(fDD.getString("f_paymentdetails"));
+                ui->lePaymentComment->fHiddenText = dd.getString("f_room");
+            }
+        }
+        ui->leModeOfPayment->setText(pc.fName());
+        ui->leModeOfPayment->fHiddenText = pc.fCode();
+    }
+
     ui->lePrepayment->setText(float_str(fDD.getDouble(8), 0));
     ui->lbState->setText(QString("%1 #%2").arg(tr("DRAFT")).arg(result.toString()));
     fDoc = result.toString();
@@ -709,7 +736,7 @@ void DlgBanket::on_btnOpen_clicked()
         ui->leModePrepayment->setText(pprep.fName());
         ui->leModePrepayment->fHiddenText = pprep.fCode();
     }
-    ui->lePaymentComment->setText(fDD.getString("f_prepaymentModeComment"));
+    ui->leModePrepaymentComment->setText(fDD.getString("f_prepaymentModeComment"));
     ui->lePrepaymentTax->setText(fDD.getString("f_prepaymentTax"));
     ui->leTotal->setDouble(ui->lePrice->asDouble() * ui->leGuests->asInt());
     ui->leNeedToPay->setDouble(ui->leTotal->asDouble() - ui->lePrepayment->asDouble());

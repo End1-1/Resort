@@ -242,7 +242,6 @@ RDesk::RDesk(QWidget *parent) :
     if (fQuickDish.count() == 0) {
 //        fDD[":f_hall"] = def_default_hall
     }
-    fTrackControl = new TrackControl(TRACK_REST_ORDER);
     fHall = Hall::getHallById(fPreferences.getDb(def_default_hall).toInt());
     /*
     fMenu = fHall->fDefaultMenu;
@@ -341,7 +340,7 @@ void RDesk::setOrderComment()
         DoubleDatabase fDD(true, doubleDatabase);
         fDD[":f_comment"] = comment;
         fDD.update("o_header", QString("where f_id='%1'").arg(fTable->fOrder));
-        fTrackControl->insert("Set order comment", comment, "");
+        TrackControl::insert(TRACK_REST_ORDER,"Set order comment", comment, "", "", fTable->fOrder, "");
     }
 }
 
@@ -376,9 +375,9 @@ void RDesk::moveTable()
             fDD.exec(QString("update o_header set f_state=%1 where f_id='%2'")
                             .arg(ORDER_STATE_MOVED)
                             .arg(fTable->fOrder));
-            fTrackControl->insert("Table moved from",
+            TrackControl::insert(TRACK_REST_ORDER, "Table moved from",
                                       QString("%1/%2").arg(table->fName).arg(table->fOrder),
-                                      QString("%1/%2").arg(fTable->fName).arg(fTable->fOrder));
+                                      QString("%1/%2").arg(fTable->fName).arg(fTable->fOrder), "", fTable->fOrder, "");
         } else {
             fDD[":f_table"] = table->fId;
             fDD.update("o_header", where_id(ap(fTable->fOrder)));
@@ -389,9 +388,10 @@ void RDesk::moveTable()
         fDD.exec(QString("update r_table set f_order='%1' where f_id=%2")
                         .arg(table->fOrder.isEmpty() ? fTable->fOrder : table->fOrder)
                         .arg(table->fId));
-        fTrackControl->insert("Table moved to",
+        TrackControl::insert(TRACK_REST_ORDER, "Table moved to",
                                   QString("%1/%2").arg(fTable->fName).arg(fTable->fOrder),
-                                  QString("%1/%2").arg(table->fName).arg(table->fOrder.isEmpty() ? fTable->fOrder : table->fOrder));
+                                  QString("%1/%2").arg(table->fName).arg(table->fOrder.isEmpty() ? fTable->fOrder : table->fOrder),
+                             "", fTable->fOrder, "");
         fDD.commit();
         fTable->fOrder.clear();
         if (setTable(table)) {
@@ -441,10 +441,10 @@ void RDesk::removeOrder()
                     .arg(od->fName["en"])
                     .arg(od->fQty)
                     .arg(od->fQtyPrint);
-            fTrackControl->insert("Dish removed with order", dish, "");
+            TrackControl::insert(TRACK_REST_ORDER, "Dish removed with order", dish, "", od->fRecId, fTable->fOrder, "");
         }
     }
-    fTrackControl->insert("Order canceled", "", "");
+    TrackControl::insert(TRACK_REST_ORDER, "Order canceled", "", "", "", fTable->fOrder, "");
     closeOrder(ORDER_STATE_REMOVED);
 }
 
@@ -595,7 +595,7 @@ void RDesk::setComplexMode()
             return;
         }
         fDD.update("o_dish", where_id(ap(dc->fRecId)));
-        fTrackControl->insert("New complex begin", dc->fName["en"], "----");
+        TrackControl::insert(TRACK_REST_ORDER, "New complex begin", dc->fName["en"], "----", "", fTable->fOrder, "");
         for (int i = 0; i < dc->fDishes.count(); i++) {
             dc->fDishes[i]->fComplexRec = dc->fRecId;
             dc->fDishes[i]->fComplex = dc->fId;
@@ -606,7 +606,7 @@ void RDesk::setComplexMode()
         ui->tblComplex->setItem(ui->tblComplex->rowCount() - 1, 0, new QTableWidgetItem());
         ui->tblComplex->item(ui->tblComplex->rowCount() - 1, 0)->setData(Qt::UserRole, qVariantFromValue(dc));
         countTotal();
-        fTrackControl->insert("New complex end", dc->fName["en"], "----");
+        TrackControl::insert(TRACK_REST_ORDER, "New complex end", dc->fName["en"], "----", "", fTable->fOrder, "");
     }
 }
 
@@ -721,8 +721,8 @@ int RDesk::printTax(int cashMode)
         fDD[":f_date"] = QDate::currentDate();
         fDD[":f_time"] = QTime::currentTime();
         fDD[":f_name"] = od->fName["en"];
-        fDD[":f_amountCash"] = cashMode == tax_mode_cash ? fTable->fAmount : 0;
-        fDD[":f_amountCard"] = cashMode == tax_mode_cash ? 0 : fTable->fAmount;
+        fDD[":f_amountCash"] = cashMode == tax_mode_cash ? fTable->fAmount : "0";
+        fDD[":f_amountCard"] = cashMode == tax_mode_cash ? "0" : fTable->fAmount;
         fDD[":f_amountPrepaid"] = 0;
         fDD[":f_user"] = fStaff->fId;
         DoubleDatabase did;
@@ -742,8 +742,8 @@ int RDesk::printTax(int cashMode)
         fDD[":f_date"] = QDate::currentDate();
         fDD[":f_time"] = QTime::currentTime();
         fDD[":f_name"] = dc->fName["en"];
-        fDD[":f_amountCash"] = cashMode == tax_mode_cash ? fTable->fAmount : 0;
-        fDD[":f_amountCard"] = cashMode == tax_mode_cash ? 0 : fTable->fAmount;
+        fDD[":f_amountCash"] = cashMode == tax_mode_cash ? fTable->fAmount : "0";
+        fDD[":f_amountCard"] = cashMode == tax_mode_cash ? "0" : fTable->fAmount;
         fDD[":f_amountPrepaid"] = 0;
         fDD[":f_user"] = fStaff->fId;
         DoubleDatabase did;
@@ -1007,11 +1007,11 @@ void RDesk::onBtnQtyClicked()
                 .arg(od->fQty)
                 .arg(od->fQtyPrint);
         countDish(od);
-        fTrackControl->insert("Dish qty", oldQty, newQty);
+        TrackControl::insert(TRACK_REST_ORDER, "Dish qty", oldQty, newQty, od->fRecId, fTable->fOrder, "");
         updateDish(od);
     } else {
         double complexQty = 0;
-        DishComplexStruct *dc = 0;
+        DishComplexStruct *dc = nullptr;
         for (int i = 0; i < ui->tblComplex->rowCount(); i++) {
             DishComplexStruct *dt = ui->tblComplex->item(i, 0)->data(Qt::UserRole).value<DishComplexStruct*>();
             if (dt->fRecId == od->fComplexRecId) {
@@ -1046,7 +1046,7 @@ void RDesk::onBtnQtyClicked()
             QString odNewQty = QString("%1, %2 / %3").arg(od->fName[def_lang])
                     .arg(od->fQty)
                     .arg(od->fQtyPrint);
-            fTrackControl->insert("Dish qty", odOldQty, odNewQty);
+            TrackControl::insert(TRACK_REST_ORDER, "Dish qty", odOldQty, odNewQty, od->fRecId, fTable->fOrder, "");
             countDish(od);
             updateDish(od);
         }
@@ -1057,7 +1057,7 @@ void RDesk::onBtnQtyClicked()
         fDD.update("o_dish", where_id(ap(dc->fRecId)));
         QString newQty = QString("%1, %2").arg(dc->fName[def_lang])
                 .arg(dc->fQty);
-        fTrackControl->insert("Complex qty", oldQty, newQty);
+        TrackControl::insert(TRACK_REST_ORDER, "Complex qty", oldQty, newQty, "", fTable->fOrder, "");
     }
     resetPrintQty();
     ui->tblOrder->viewport()->update();
@@ -1238,7 +1238,7 @@ void RDesk::addDishToOrder(DishStruct *d, bool dontCheckTable)
     updateDishQtyHistory(od);
     addDishToTable(od);
     resetPrintQty();
-    fTrackControl->insert("New dish", od->fName["en"], "");
+    TrackControl::insert(TRACK_REST_ORDER, "New dish", od->fName["en"], "", od->fRecId, fTable->fOrder, "");
 }
 
 void RDesk::addDishToTable(OrderDishStruct *od)
@@ -1280,7 +1280,7 @@ void RDesk::updateDish(OrderDishStruct *od)
 double RDesk::countTotal()
 {
     double total = 0;
-    OrderDishStruct *serv = 0;
+    OrderDishStruct *serv = nullptr;
     for (int i = 0; i < ui->tblOrder->rowCount(); i++) {
         OrderDishStruct *od = ui->tblOrder->item(i, 0)->data(Qt::UserRole).value<OrderDishStruct*>();
         if (!od) {
@@ -1461,9 +1461,7 @@ void RDesk::checkOrderHeader(TableStruct *t, DishStruct *od, bool skipService)
         fDD[":f_order"] = t->fOrder;
         fDD.update("r_table", QString("where f_id=%1").arg(t->fId));
         fDD.commit();
-        fTrackControl->resetChanges();
-        fTrackControl->fInvoice = t->fOrder;
-        fTrackControl->insert("Order started", "", "");
+        TrackControl::insert(TRACK_REST_ORDER, "Order started", "", "", "", t->fOrder, "");
     }
 }
 
@@ -1646,7 +1644,7 @@ void RDesk::printServiceCheck(const QString &prn, int side)
     QFont f("Arial", 24);
     th.setFont(f);
     th.setBorders(false, false, false, false);
-    PTextRect *r = 0;
+    PTextRect *r = nullptr;
     int top = 10;
     th.setTextAlignment(Qt::AlignHCenter);
     int rowHeight = 60;
@@ -1696,6 +1694,7 @@ void RDesk::printServiceCheck(const QString &prn, int side)
         }
         ps->addTextRect(new PTextRect(10, top, 80, rowHeight, float_str(qty, 1), &th, f));
         top += ps->addTextRect(new PTextRect(90, top, 680, rowHeight, od->fName[def_lang], &th, f))->textHeight();
+        TrackControl::insert(TRACK_REST_ORDER, "Printed service check", od->fName[def_lang], float_str(qty, 1), od->fRecId, fTable->fOrder, "");
         if (!od->fComment.isEmpty()) {
             f.setPointSize(18);
             f.setBold(true);
@@ -1738,6 +1737,7 @@ void RDesk::printServiceCheck(const QString &prn, int side)
 
 void RDesk::printRemovedDish(OrderDishStruct *od, double removed, int user)
 {
+    TrackControl::insert(TRACK_REST_ORDER, "Print removed dish", od->fName[def_lang], float_str(removed, 1), od->fRecId, fTable->fOrder, "");
     CacheUsers u;
     QString userName = fStaff->fName;
     if (u.get(user)) {
@@ -2092,7 +2092,7 @@ void RDesk::printReceipt(bool printModePayment)
     fDD.update("o_header", where_id(ap(fTable->fOrder)));
     changeBtnState();
     QString v = printModePayment ? "v2" : "v1";
-    fTrackControl->insert("Print receipt " + v, fTable->fPaymentComment + " " + fTable->fRoomComment, "");
+    TrackControl::insert(TRACK_REST_ORDER, "Print receipt " + v, fTable->fPaymentComment + " " + fTable->fRoomComment, "", "", fTable->fOrder, "");
 }
 
 void RDesk::changeBtnState()
@@ -2267,6 +2267,8 @@ void RDesk::on_btnTrash_clicked()
                 if (float_equal(od->fQty, num)) {
                     od->fState = reason.toInt();
                     od->fCancelUser = trackUser;
+                    od->fQty -= num;
+                    od->fQtyPrint = od->fQty;
                     od->fCancelDate = QDateTime::currentDateTime();
                     setOrderRowHidden(sel.at(0).row(), od);
                 } else {
@@ -2278,6 +2280,8 @@ void RDesk::on_btnTrash_clicked()
                         num -= qtyEmpty;
                         //Log empty
                         if (float_equal(od->fQty, num)) {
+                            od->fQty -= num;
+                            od->fQtyPrint = od->fQty;
                             od->fState = reason.toInt();
                             od->fCancelUser = trackUser;
                             od->fCancelDate = QDateTime::currentDateTime();
@@ -2320,7 +2324,7 @@ void RDesk::on_btnTrash_clicked()
             }
         }
         QString newQty = QString("%1, %2/%3").arg(od->fName[def_lang]).arg(od->fQty).arg(od->fQtyPrint);
-        fTrackControl->insert("Dish qty", oldQty, newQty);
+        TrackControl::insert(TRACK_REST_ORDER, "Dish qty", oldQty, newQty, od->fRecId, fTable->fOrder, "");
         countDish(od);
         updateDish(od);
         resetPrintQty();
@@ -2346,7 +2350,7 @@ void RDesk::on_btnTrash_clicked()
                 o->fState = reason.toInt();
                 ui->tblOrder->setRowHidden(i, !fShowRemoved);
                 updateDish(o);
-                fTrackControl->insert("Remove complex component", o->fName["en"], "");
+                TrackControl::insert(TRACK_REST_ORDER, "Remove complex component", o->fName["en"], "", o->fRecId, fTable->fOrder, "");
             }
         }
         for (int i = 0; i < ui->tblComplex->rowCount(); i++) {
@@ -2355,7 +2359,7 @@ void RDesk::on_btnTrash_clicked()
                 fDD[":f_state"] = reason.toInt();
                 fDD.update("o_dish", where_id(ap(dc->fRecId)));
                 ui->tblComplex->removeRow(i);
-                fTrackControl->insert("Remove complex", dc->fName["en"], "");
+                TrackControl::insert(TRACK_REST_ORDER, "Remove complex", dc->fName["en"], "", dc->fRecId, fTable->fOrder, "");
                 delete dc;
                 break;
             }
@@ -2612,9 +2616,6 @@ void RDesk::on_btnPrint_clicked()
         updateDish(od);
     }
     ui->tblOrder->viewport()->update();
-    if (printed) {
-        fTrackControl->insert("Printed service check", "", "");
-    }
     changeBtnState();
 }
 
@@ -2714,7 +2715,7 @@ void RDesk::on_btnTransfer_clicked()
                 return;
             }
         } else {
-            checkOrderHeader(table, 0, false);
+            checkOrderHeader(table, nullptr, false);
         }
         /*----------------------------- END SELECT TABLE -------------------------*/
         /*-----------------------------BEGIN MOVE DISH-----------------------------*/
@@ -2750,7 +2751,7 @@ void RDesk::on_btnTransfer_clicked()
             message_error(tr("Cannot insert new dish. Please reopen application"));
             return;
         }
-        fTrackControl->insert("Dish movement",
+        TrackControl::insert(TRACK_REST_ORDER, "Dish movement",
                                   QString("%1: %2, %3/%4")
                                   .arg(fTable->fName)
                                   .arg(od.fName[def_lang])
@@ -2759,7 +2760,7 @@ void RDesk::on_btnTransfer_clicked()
                                   QString("%1: %2/%3")
                                   .arg(tr("New table"))
                                   .arg(table->fName)
-                                  .arg(table->fOrder));
+                                  .arg(table->fOrder), "", fTable->fOrder, "");
     }    
     fDD.commit();
     resetPrintQty();

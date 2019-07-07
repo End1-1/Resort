@@ -15,6 +15,11 @@ CacheMenuDishes::CacheMenuDishes() :
     fReplaceUpdateQuery = ":cond";
     fUpdateQuery = " and m.f_id=:f_id";
     getSelectorWidths(4, 120, 250, 350, 80);
-    getSelectorTitles(4, QObject::tr("Menu"), QObject::tr("Type"), QObject::tr("Dish"), QObject::tr("Price"));
+    QStringList titles;
+    titles << QObject::tr("Menu")
+           << QObject::tr("Type")
+           << QObject::tr("Dish")
+           << QObject::tr("Price");
+    getSelectorTitles(titles);
     
 }

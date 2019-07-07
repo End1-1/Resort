@@ -486,7 +486,7 @@ void WMainDesk::on_btnClearFilter_clicked()
     ui->btnFilterCategory->setText(QString("%1: %2").arg(tr("Category filter")).arg(tr("All")));
     ui->btnBedFilter->setText(QString("%1: %2").arg(tr("Bed filter")).arg(tr("All")));
     ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(tr("All")));
-    ui->btnRoomStateFilter->setText(QString("%1: %1").arg(tr("Room state filter")).arg(tr("All")));
+    ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(tr("All")));
     ui->leFilterGuest->clear();
     ui->tblRoom->selectionModel()->clear();
     ui->tblDay->selectionModel()->clear();

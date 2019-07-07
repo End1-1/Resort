@@ -15,9 +15,10 @@ int main(int argc, char *argv[])
 {
 #ifndef QT_DEBUG
     QStringList libPath;
-    libPath << "./";
-    libPath << "./platforms";
-    libPath << "./sqldrivers";
+    libPath << qApp->applicationDirPath();
+    libPath << qApp->applicationDirPath() + "/platforms";
+    libPath << qApp->applicationDirPath() + "/sqldrivers";
+    libPath << qApp->applicationDirPath() + "/printsupport";
     QCoreApplication::setLibraryPaths(libPath);
 #endif
 

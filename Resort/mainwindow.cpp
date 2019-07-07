@@ -70,6 +70,7 @@
 #include "ecomboboxcompleter.h"
 #include "fonlinebreakfast.h"
 #include "recarclient.h"
+#include "finhouseguestfuture.h"
 #include "fnoshowcancelationfee.h"
 #include "fnatbyperiod.h"
 #include "wreservations.h"
@@ -2141,4 +2142,9 @@ void MainWindow::on_actionHelp_triggered()
 void MainWindow::on_actionOptions_triggered()
 {
     DlgOptions::openWindow();
+}
+
+void MainWindow::on_actionInhouse_guest_future_triggered()
+{
+    FInhouseGuestFuture::openFilterReport<FInhouseGuestFuture, WReportGrid>();
 }

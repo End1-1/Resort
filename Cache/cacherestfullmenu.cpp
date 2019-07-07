@@ -13,6 +13,12 @@ CacheRestFullMenu::CacheRestFullMenu()
     fCacheId = cid_rest_full_menu;
     fSelectorTitle = QObject::tr("Dishes");
     getSelectorWidths(5, 0, 200, 0, 300, 80);
-    getSelectorTitles(5, QObject::tr("Code"), QObject::tr("Menu"), QObject::tr("Code"), QObject::tr("Dish"), QObject::tr("Price"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Menu")
+           << QObject::tr("Code")
+           << QObject::tr("Dish")
+           << QObject::tr("Price");
+    getSelectorTitles(titles);
 
 }

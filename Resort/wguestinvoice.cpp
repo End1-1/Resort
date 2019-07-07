@@ -45,7 +45,7 @@ void WGuestInvoice::callback(int sel, const QString &code)
         ui->leBalanceUSD->clear();
         DoubleDatabase dd(true, false);
         dd[":f_id"] = code;
-        dd.exec("select r.f_id, r.f_invoice, r.f_room, r.f_startdate, r.f_enddate, g.guest, rm.f_short "
+        dd.exec("select r.f_id, r.f_invoice, r.f_room, r.f_startdate, r.f_enddate, g.guest as f_guest, rm.f_short "
                 "from f_reservation r "
                 "left join guests g on g.f_id=r.f_guest "
                 "left join f_room rm on rm.f_id=r.f_room "
@@ -57,7 +57,7 @@ void WGuestInvoice::callback(int sel, const QString &code)
         ui->leReserve->clearSelector();
         ui->leRoom->setInt(dd.getInt("f_room"));
         ui->leRoomName->setText(dd.getString("f_short"));
-        ui->leGuest->setText(dd.getString("guest"));
+        ui->leGuest->setText(dd.getString("f_guest"));
         ui->leInvoice->setText(dd.getString("f_invoice"));
         ui->leReserve->setText(dd.getString("f_id"));
         ui->deEntry->setDate(dd.getDate("f_startdate"));
@@ -86,7 +86,7 @@ void WGuestInvoice::setInvoice(const QString &invoice)
     ui->leRoom->setReadOnly(true);
     DoubleDatabase dd(true, false);
     dd[":f_invoice"] = invoice;
-    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, rm.f_short, r.f_room "
+    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest as f_guest, rm.f_short, r.f_room "
             "from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -111,7 +111,7 @@ void WGuestInvoice::initRoom(int room)
     DoubleDatabase dd(true, false);
     dd[":f_room"] = room;
     dd[":f_state"] = RESERVE_CHECKIN;
-    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest, r.f_room, rm.f_short, "
+    dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest as f_guest, r.f_room, rm.f_short, "
             "r.f_vatMode "
             "from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
@@ -224,7 +224,7 @@ void WGuestInvoice::fillFields(DoubleDatabase &dd)
 {
     ui->leRoom->setInt(dd.getInt("f_room"));
     ui->leRoomName->setText(dd.getString("f_short"));
-    ui->leGuest->setText(dd.getString("guest"));
+    ui->leGuest->setText(dd.getString("f_guest"));
     ui->leInvoice->setText(dd.getString("f_invoice"));
     ui->leReserve->setText(dd.getString("f_id"));
     ui->deEntry->setDate(dd.getDate("f_startdate"));

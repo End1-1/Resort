@@ -504,7 +504,7 @@ void DBMRegister::setleAmountUSD(EQLineEdit *l)
 void DBMRegister::setleAmountVAT(EQLineEdit *l)
 {
     leAmountVAT = l;
-    connect(l, SIGNAL(textChanged(QString)), this, SLOT(amountVATChagned(QString)));
+    connect(l, SIGNAL(textChanged(QString)), this, SLOT(amountVATChanged(QString)));
     fTc->addWidget(l, "Amount VAT");
 }
 

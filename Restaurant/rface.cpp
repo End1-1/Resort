@@ -61,7 +61,7 @@ protected:
         rectTable.adjust(-1, -1, 0, 0);
         painter->drawText(rectTable, t->fName);
 
-        if (t->fOrder > 0) {
+        if (t->fOrder.length() > 0) {
             int y = rectTable.top() + 10;
             int x = rectTable.left() + QFontMetrics(f).width(t->fName) + 15;
             int tableNameHeight = rectTable.top() + QFontMetrics(f).height() + 5;
@@ -83,7 +83,7 @@ protected:
 RFace::RFace(QWidget *parent) :
     BaseExtendedDialog(parent),
     ui(new Ui::RFace),
-    fCommand(0)
+    fCommand(nullptr)
 {
     ui->setupUi(this);
     fCanClose = false;
@@ -94,6 +94,13 @@ RFace::RFace(QWidget *parent) :
     fIsConfigured = true;
     // setup tax parameters
     DoubleDatabase fDD(true, doubleDatabase);
+    fDD[":f_app"] = "menu";
+    fDD.exec("select f_version from s_app where f_app='menu'");
+    if (fDD.nextRow()) {
+        fMenuNumber = fDD.getInt(0);
+    } else {
+        fMenuNumber = 0;
+    }
     fDD[":f_comp"] = QHostInfo::localHostName();
     fDD.exec("select f_address, f_port, f_password, f_adg, f_hall, f_menu from s_tax_print where upper(f_comp)=upper(:f_comp)");
     if (fDD.nextRow()) {
@@ -212,6 +219,7 @@ void RFace::secondDbError()
 
 void RFace::timeout()
 {
+    fTimer.stop();
     ui->lbWorkingDate->setText(QString("%1\n%2 %3").arg(tr("Working date")).arg(WORKING_DATE.toString(def_date_format)).arg(QTime::currentTime().toString("HH:mm")));
     fTimerCounter++;
     if (fTimerCounter % hall_refresh_timeout == 0) {
@@ -223,9 +231,20 @@ void RFace::timeout()
         if (fDD.nextRow()) {
             if (Utils::getVersionString(qApp->applicationFilePath()) != fDD.getString(0)) {
                 DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), fDD.getString(0));
+                return;
+            }
+        }
+        fDD[":f_app"] = "menu";
+        fDD.exec("select f_version from s_app where f_app='menu'");
+        if (fDD.nextRow()) {
+            int menu = fDD.getInt(0);
+            if (menu != fMenuNumber) {
+                DlgExitByVersion::exit(QString::number(fMenuNumber), fDD.getString(0));
+                return;
             }
         }
     }
+    fTimer.start();
 }
 
 void RFace::socketReadyRead()
@@ -299,13 +318,13 @@ User *RFace::login()
         User *u = new User(login, this);
         if (!u->isValid()) {
             delete u;
-            u = 0;
+            u = nullptr;
             message_error(tr("Access denied"));
-            return 0;
+            return nullptr;
         }
         return u;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -345,7 +364,7 @@ void RFace::on_tblTables_clicked(const QModelIndex &index)
     if (!t) {
         return;
     }
-    User *user = 0;
+    User *user = nullptr;
     fTimer.stop();
     if ((user = login())) {
         RDesk *d = new RDesk(this);
@@ -413,7 +432,7 @@ void RFace::on_btnBanket_clicked()
 
 void RFace::on_btnTools_clicked()
 {
-    User *user = 0;
+    User *user = nullptr;
     if ((user = login())) {
         RDesk *d = new RDesk(this);
         d->setStaff(user);

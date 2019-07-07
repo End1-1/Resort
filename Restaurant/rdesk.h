@@ -81,7 +81,6 @@ private slots:
 private:
     Ui::RDesk *ui;
     static QMap<int, DishStruct*> fQuickDish;
-    TrackControl *fTrackControl;
     TableStruct *fTable;
     HallStruct *fHall;
     User *fStaff;

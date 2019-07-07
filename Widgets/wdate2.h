@@ -22,12 +22,14 @@ public:
     QString dss2();
     QWidget *fw();
     QWidget *lw();
+
 private:
     Ui::WDate2 *ui;
     void changeDate(int day);
 
 signals:
     void changed();
+
 private slots:
     void on_btnLeft_clicked();
     void on_btnRight_clicked();

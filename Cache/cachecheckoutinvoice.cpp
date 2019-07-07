@@ -27,7 +27,16 @@ CacheCheckoutInvoice::CacheCheckoutInvoice() :
     fCacheId = cid_checkout_invoice;
     fSelectorTitle = QObject::tr("Checkout invoices");
     getSelectorWidths(8, 0, 80, 80, 200, 120, 120, 120, 200);
-    getSelectorTitles(8, QObject::tr("Code"), QObject::tr("Name"), QObject::tr("Room"), QObject::tr("Guest"), QObject::tr("Entry"), QObject::tr("Departure"), QObject::tr("Amount"), QObject::tr("Operator"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Name")
+           << QObject::tr("Room")
+           << QObject::tr("Guest")
+           << QObject::tr("Entry")
+           << QObject::tr("Departure")
+           << QObject::tr("Amount")
+           << QObject::tr("Operator");
+    getSelectorTitles(titles);
     
 }
 

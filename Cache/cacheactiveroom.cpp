@@ -13,6 +13,11 @@ CacheActiveRoom::CacheActiveRoom() :
     fReplaceUpdateQuery = ":cond";
     fUpdateQuery = " and r.f_room=:f_id";
     getSelectorWidths(4, 80, 120, 100, 250);
-    getSelectorTitles(4, QObject::tr("Room"), QObject::tr("Room name"), QObject::tr("Invoice"), QObject::tr("Guest"));
+    QStringList titles;
+    titles << QObject::tr("Room")
+           << QObject::tr("Room name")
+           << QObject::tr("Invoice")
+           << QObject::tr("Guest");
+    getSelectorTitles(titles);
     
 }

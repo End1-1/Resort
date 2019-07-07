@@ -7,6 +7,10 @@ CacheRoomCategory::CacheRoomCategory() :
     fLoadQuery = "select f_id, f_short, f_description from f_room_classes";
     fSelectorTitle = QObject::tr("Room category");
     getSelectorWidths(3, 80, 120, 250);
-    getSelectorTitles(3, QObject::tr("Code"), QObject::tr("Short"), QObject::tr("Description"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Short")
+           << QObject::tr("Description");
+    getSelectorTitles(titles);
 
 }

@@ -614,6 +614,7 @@ void DlgGroupReservationFuck::on_btnCreateGroup_clicked()
 
 void DlgGroupReservationFuck::save()
 {
+    bool flagGuestQtyWarning = false;
     if (ui->leGroupName->isEmpty()) {
         message_error(tr("The group name cannot be empty"));
         return;
@@ -687,8 +688,12 @@ void DlgGroupReservationFuck::save()
             lgg->setText(ui->leGroupName->text());
             lgg->fHiddenText = ui->leGuest->fHiddenText;
         }
+        int totalGuest = ui->tblRoom->lineEdit(i, 12)->asInt() + ui->tblRoom->lineEdit(i, 13)->asInt() + ui->tblRoom->lineEdit(i, 14)->asInt();
+        if (totalGuest == 0) {
+            flagGuestQtyWarning = true;
+        }
         fDD[":f_guest"] = ui->tblRoom->toInt(i, 15);
-        fDD[":f_man"] = ui->tblRoom->lineEdit(i, 12)->asInt();
+        fDD[":f_man"] = totalGuest == 0 ? 1 : ui->tblRoom->lineEdit(i, 12)->asInt();
         fDD[":f_woman"] = ui->tblRoom->lineEdit(i, 13)->asInt();
         fDD[":f_child"] = ui->tblRoom->lineEdit(i, 14)->asInt();
         fDD[":f_baby"] = 0;
@@ -835,6 +840,9 @@ void DlgGroupReservationFuck::save()
     } else {
         message_info(tr("Saved"));
         BroadcastThread::cmdRefreshCache(cid_group_reservation, ui->leGroupCode->text());
+    }
+    if (flagGuestQtyWarning) {
+        message_info(tr("The count of the guest automatically was set to 1 where count of the guests equal to zero"));
     }
     countReserve();
     fDD.commit();

@@ -96,49 +96,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Cardex</string>
-        </property>
-       </widget>
+       <widget class="WCardex" name="wCardex" native="true"/>
       </item>
       <item>
-       <widget class="EQLineEdit" name="leCardex">
-        <property name="minimumSize">
-         <size>
-          <width>60</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="EQLineEdit" name="leCardexName">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
+       <widget class="WActiveGroup" name="wGroup" native="true"/>
       </item>
       <item>
        <widget class="QPushButton" name="btnRefresh">
@@ -329,10 +290,13 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>848</width>
-          <height>20</height>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
        </spacer>
@@ -521,28 +485,30 @@ border-right: 1px solid grey;</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
-   <class>EQLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">eqlineedit.h</header>
-   <slots>
-    <signal>customButtonClicked(bool)</signal>
-   </slots>
+   <class>WCardex</class>
+   <extends>QWidget</extends>
+   <header location="global">wcardex.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
+   <class>WActiveGroup</class>
+   <extends>QWidget</extends>
+   <header location="global">wactivegroup.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>deDate</tabstop>
-  <tabstop>leCardex</tabstop>
-  <tabstop>leCardexName</tabstop>
  </tabstops>
  <resources>
   <include location="res.qrc"/>

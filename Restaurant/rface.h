@@ -19,11 +19,12 @@ class RFace : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit RFace(QWidget *parent = 0);
+    explicit RFace(QWidget *parent = nullptr);
     ~RFace();
     bool setup();
     bool fIsConfigured;
     void secondDbError();
+
 private slots:
     void timeout();
     void socketReadyRead();
@@ -36,15 +37,14 @@ private slots:
     void on_btnDown_clicked();
     void on_btnChangeHall_clicked();
     void on_btnBreakFast_clicked();
-
     void on_btnBanket_clicked();
-
     void on_btnTools_clicked();
 
 protected:
     virtual void closeEvent(QCloseEvent *e);
 
 private:
+    int fMenuNumber;
     bool fCanClose;
     CacheOne fCacheOne;
     Ui::RFace *ui;

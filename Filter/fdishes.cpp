@@ -99,6 +99,30 @@ void FDishes::apply(WReportGrid *rg)
     }
 }
 
+bool FDishes::canClose()
+{
+    if (message_confirm(tr("Update menu number?")) == QDialog::Accepted) {
+        updateMenuNumber();
+    }
+    return WFilterBase::canClose();
+}
+
+void FDishes::updateMenuNumber()
+{
+    DoubleDatabase dd(true, doubleDatabase);
+    dd.exec("select * from s_app where lower(f_app)=lower('menu')");
+    if (dd.nextRow()) {
+        dd[":f_version"] = dd.getInt("f_version") + 1;
+        dd[":f_id"] = dd.getInt("f_id");
+        dd.exec("update s_app set f_version=:f_version where f_id=:f_id");
+    } else {
+        dd[":f_app"] = "menu";
+        dd[":f_version"] = "1";
+        dd.insert("s_app", false);
+    }
+    message_info(tr("The restaurant menu was updated"));
+}
+
 void FDishes::doubleClickOnRow(const QList<QVariant> row)
 {
     QList<QVariant> vals = row;
@@ -145,4 +169,9 @@ void FDishes::on_btnGetFromCafe_clicked()
     while (db1.nextRow()) {
 
     }
+}
+
+void FDishes::on_btnUpdateMenuNumber_clicked()
+{
+    updateMenuNumber();
 }

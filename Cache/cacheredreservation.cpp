@@ -16,6 +16,12 @@ CacheRedReservation::CacheRedReservation() :
     fReplaceUpdateQuery = ":cond";
     fSelectorTitle = QObject::tr("Reservation");
     getSelectorWidths(5, 80, 0, 200, 100, 150);
-    getSelectorTitles(5, QObject::tr("Code"), QObject::tr("Name"), QObject::tr("Guest"), QObject::tr("Room"), QObject::tr("Balance"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Name")
+           << QObject::tr("Guest")
+           << QObject::tr("Room")
+           << QObject::tr("Balance");
+    getSelectorTitles(titles);
     
 }

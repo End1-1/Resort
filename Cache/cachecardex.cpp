@@ -13,6 +13,12 @@ CacheCardex::CacheCardex() :
     fUpdateQuery = " and c.f_cardex=:f_id ";
     fSelectorTitle = QObject::tr("Cardex");
     getSelectorWidths(5, 80, 250, 100, 100, 120);
-    getSelectorTitles(5, QObject::tr("Code"), QObject::tr("Name"), QObject::tr("VAT"), QObject::tr("Commission"), QObject::tr("Valid to"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Name")
+           << QObject::tr("VAT")
+           << QObject::tr("Commission")
+           << QObject::tr("Valid to");
+    getSelectorTitles(titles);
     
 }

@@ -92,7 +92,7 @@ void FVauchers::apply(WReportGrid *rg)
 {
     int canceled = 0;
     if (ui->chCanceled->isChecked()) {
-        canceled = 120;
+        canceled = 120; //this is a column width
     }
     fReportGrid->fModel->clearColumns();
     fReportGrid->fModel->setColumn(80, "", tr("Code"))

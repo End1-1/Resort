@@ -147,5 +147,6 @@
         <file>images/ball-fiolet.png</file>
         <file>images/nation.png</file>
         <file>images/canon.png</file>
+        <file>images/chart.png</file>
     </qresource>
 </RCC>

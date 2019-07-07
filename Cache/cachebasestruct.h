@@ -38,7 +38,7 @@ public:
     virtual bool get(const QString &code);
     bool get(int code);
     void getSelectorWidths(int count, ...);
-    void getSelectorTitles(int count, ...);
+    void getSelectorTitles(const QStringList &titles);
     void getSelectorTwoField();
     DlgSelector *fSelector;
     void initSelector();

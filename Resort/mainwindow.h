@@ -187,6 +187,7 @@ private slots:
     void on_actionPrint_tax_of_checkout_invoices_triggered();
     void on_actionHelp_triggered();
     void on_actionOptions_triggered();
+    void on_actionInhouse_guest_future_triggered();
 
 private:
     Listener fServer2Listener;

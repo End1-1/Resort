@@ -15,6 +15,7 @@
 #include "cachecurrencies.h"
 #include "cachedebtcostumer.h"
 #include "cachedish.h"
+#include "cacheactivegroup.h"
 #include "cachedishstate.h"
 #include "cachedocpayment.h"
 #include "cachegroupreservations.h"
@@ -292,6 +293,9 @@ CacheInstance *CacheOne::getCache(int id)
         break;
     case cid_transfer_fromcl:
         cbs = new CacheTransferFromCL();
+        break;
+    case cid_active_group:
+        cbs = new CacheActiveGroup();
         break;
     default:
         TrackControl tc(0);

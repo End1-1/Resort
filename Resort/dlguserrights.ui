@@ -342,6 +342,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chInhouseGuestAnyTime_2">
+         <property name="text">
+          <string>Inhouse guests, future</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>136</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="EQCheckBox" name="chRoomAssignmen">
          <property name="text">
           <string>Room assignment</string>

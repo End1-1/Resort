@@ -53,14 +53,9 @@ void CacheBaseStruct::getSelectorWidths(int count, ...)
     va_end(vl);
 }
 
-void CacheBaseStruct::getSelectorTitles(int count, ...)
+void CacheBaseStruct::getSelectorTitles(const QStringList &titles)
 {
-    va_list vl;
-    va_start(vl, count);
-    for (int i = 0; i < count; i++) {
-        fSelectorColumnNames << QString(va_arg(vl, QString));
-    }
-    va_end(vl);
+    fSelectorColumnNames = titles;
 }
 
 void CacheBaseStruct::getSelectorTwoField()

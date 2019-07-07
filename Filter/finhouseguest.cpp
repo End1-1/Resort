@@ -12,7 +12,6 @@ FInHouseGuest::FInHouseGuest(QWidget *parent) :
     ui->chDate->setVisible(r__(cr__inhouse_anytime));
     ui->teTime->setVisible(r__(cr__inhouse_anytime));
     ui->chTime->setVisible(r__(cr__inhouse_anytime));
-    ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
     ui->chAll->click();
     ui->chDisplayRate->click();
     fReportGrid->setupTabTextAndIcon(tr("In house guests"), ":/images/bed.png");
@@ -91,8 +90,8 @@ void FInHouseGuest::apply(WReportGrid *rg)
                 .arg(ui->deDate->dateMySql())
                 .arg(ui->teTime->time().toString("HH:mm:ss"));
     }
-    if (!ui->leCardex->isEmpty()) {
-        where += QString(" and r.f_cardex='%1' ").arg(ui->leCardex->text());
+    if (!ui->wCardex->cardex().isEmpty()) {
+        where += QString(" and r.f_cardex='%1' ").arg(ui->wCardex->cardex());
     }
     where += "group by r.f_room order by rm.f_building, r.f_room ";
     query += where ;

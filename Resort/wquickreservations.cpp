@@ -40,7 +40,6 @@ WQuickReservations::WQuickReservations(QWidget *parent) :
     ui(new Ui::WQuickReservations)
 {
     ui->setupUi(this);
-    ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
     ui->tbl->setItemDelegate(new WQuickReservationsDelegate(this));
     Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 20, 100, 50, 100, 80, 80, 60, 50, 150, 150, 100, 80, 150, 150, 0, 0);
     ui->tblTotal->setColumnCount(ui->tbl->columnCount());
@@ -50,7 +49,7 @@ WQuickReservations::WQuickReservations(QWidget *parent) :
     ui->deDate->setDate(WORKING_DATE);
     refresh();
     ui->tbl->installEventFilter(this);
-    ui->leCardex->installEventFilter(this);
+    ui->wCardex->installEventFilter(this);
     ui->deDate->installEventFilter(this);
     connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomUpdated(int, QString)));
 }
@@ -181,12 +180,17 @@ void WQuickReservations::refresh()
                     "left join f_nationality n on n.f_short=g.f_nation "
                     "left join f_cardex cx on cx.f_cardex=r.f_cardex "
                     "left join f_city_ledger cl on cl.f_id=r.f_cityledger "
-                    "where r.f_startdate=:f_startdate and r.f_state=:f_state :cardex "
+                    "where r.f_startdate=:f_startdate and r.f_state=:f_state :cardex :group "
                     "order by r.f_room ";
-    if (ui->leCardex->isEmpty()) {
+    if (ui->wCardex->cardex().isEmpty()) {
         query.replace(":cardex", "");
     } else {
-        query.replace(":cardex", QString(" and r.f_cardex='%1'").arg(ui->leCardex->text()));
+        query.replace(":cardex", QString(" and r.f_cardex='%1'").arg(ui->wCardex->cardex()));
+    }
+    if (ui->wGroup->group() == 0) {
+        query.replace(":group", "");
+    } else {
+        query.replace(":group", QString(" and r.f_group=%1").arg(ui->wGroup->group()));
     }
     dd[":f_startdate"] = ui->deDate->date();
     dd[":f_state"] = RESERVE_RESERVE;

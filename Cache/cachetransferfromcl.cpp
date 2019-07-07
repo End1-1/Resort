@@ -12,5 +12,9 @@ CacheTransferFromCL::CacheTransferFromCL()
     fReplaceUpdateQuery = ":cond";
     fSelectorTitle = QObject::tr("City ledger balance");
     getSelectorWidths(3, 80, 200, 80);
-    getSelectorTitles(3, QObject::tr("Code"), QObject::tr("Name"), QObject::tr("Amount"));
+    QStringList titles;
+    titles << QObject::tr("Code")
+           << QObject::tr("Name")
+           << QObject::tr("Amount");
+    getSelectorTitles(titles);
 }

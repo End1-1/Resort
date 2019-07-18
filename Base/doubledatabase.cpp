@@ -612,10 +612,18 @@ QString DoubleDatabase::lastQuery(QSqlQuery *q)
             value = QString("'%1'").arg(value.toString().replace("'", "''"));
             break;
         case QVariant::Date:
-            value = QString("'%1'").arg(value.toDate().toString("yyyy-MM-dd"));
+            if (value.toDate().isValid()) {
+                value = QString("'%1'").arg(value.toDate().toString("yyyy-MM-dd"));
+            } else {
+                value = "null";
+            }
             break;
         case QVariant::DateTime:
-            value = QString("'%1'").arg(value.toDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+            if (value.toDateTime().isValid()) {
+                value = QString("'%1'").arg(value.toDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+            } else {
+                value = "null";
+            }
             break;
         case QVariant::Double:
             value = QString("%1").arg(value.toDouble());
@@ -624,7 +632,11 @@ QString DoubleDatabase::lastQuery(QSqlQuery *q)
             value = QString("%1").arg(value.toInt());
             break;
         case QVariant::Time:
-            value = QString("'%1'").arg(value.toTime().toString("HH:mm:ss"));
+            if (value.toTime().isValid()) {
+                value = QString("'%1'").arg(value.toTime().toString("HH:mm:ss"));
+            } else {
+                value = "null";
+            }
             break;
         default:
             break;

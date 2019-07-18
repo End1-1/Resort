@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1075</width>
-    <height>598</height>
+    <height>645</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -136,10 +136,8 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">border-bottom: 0px;
-border-top: 0px solid gray;
-border-left: 0px solid gray;
-border-right: 1px solid gray;</string>
+         <string notr="true">
+border-bottom: 0px solid gray;</string>
         </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOn</enum>
@@ -216,6 +214,12 @@ border-right: 1px solid gray;</string>
           <width>16777215</width>
           <height>55</height>
          </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-top: 0px solid gray;
+border-left: 1px solid gray;
+border-right: 1px solid gray;
+border-bottom: 1px solid gray;</string>
         </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOn</enum>

@@ -868,12 +868,28 @@ bool WReservationRoomTab::canCheckIn(QString &why)
             why += tr("Room state is not vacant ready\r\n");
         }
     }
+    if (ui->cbVAT->currentData().toInt() == 0) {
+        result = result && false;
+        why += tr("Mode of VAT is undefined\r\n");
+    }
+    if (ui->tblGuest->rowCount() == 0) {
+        result = result && false;
+        why += tr("No guest in the room\r\n");
+    }
     return result;
 }
 
 bool WReservationRoomTab::checkIn(QString &errorString)
 {
     bool error = false;
+    if (ui->cbVAT->currentData().toInt() == 0) {
+        errorString += tr("Mode of VAT is undefinedn") + "<BR>";
+        error = true;
+    }
+    if (ui->tblGuest->rowCount() == 0) {
+        errorString += tr("No guest in the room") + "<BR>";
+        error = true;
+    }
     ui->lbRoom->setStyleSheet("color:black");
     if (ui->leRoomName->text().length() == 0) {
         errorString += tr("No room selected for this reservation") + "<br>";

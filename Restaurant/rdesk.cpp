@@ -2549,7 +2549,7 @@ void RDesk::on_btnPayment_clicked()
     fDD[":f_itemCode"] = fHall->fItemIdForInvoice;
     fDD[":f_finalName"] = Hall::fHallMap[fTable->fHall]->fName + " " + fTable->fOrder;
     fDD[":f_amountAmd"] = QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString());
-    fDD[":f_amountVat"] = Utils::countVATAmount(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toDouble(), VAT_INCLUDED);
+    fDD[":f_amountVat"] = Utils::countVATAmount(QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString()), VAT_INCLUDED);
     fDD[":f_amountUsd"] = def_usd;
     fDD[":f_fiscal"] = prnTax;
     fDD[":f_paymentMode"] = fTable->fPaymentMode;

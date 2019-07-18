@@ -1,21 +1,30 @@
-#include "fforecastoccupancycategory.h"
-#include "ui_fforecastoccupancycategory.h"
+#include "fforecastoccupancycategoryreal.h"
+#include "ui_fforecastoccupancycategoryreal.h"
 #include "wreportgrid.h"
 
-FForecastOccupancyCategory::FForecastOccupancyCategory(QWidget *parent) :
+struct ROOM {
+    bool v1;
+    bool v2;
+    ROOM() {
+        v1 = false;
+        v2 = false;
+    }
+};
+
+FForecastOccupancyCategoryReal::FForecastOccupancyCategoryReal(QWidget *parent) :
     WFilterBase(parent),
-    ui(new Ui::FForecastOccupancyCategory)
+    ui(new Ui::FForecastOccupancyCategoryReal)
 {
     ui->setupUi(this);
     setupTab();
 }
 
-FForecastOccupancyCategory::~FForecastOccupancyCategory()
+FForecastOccupancyCategoryReal::~FForecastOccupancyCategoryReal()
 {
     delete ui;
 }
 
-void FForecastOccupancyCategory::apply(WReportGrid *rg)
+void FForecastOccupancyCategoryReal::apply(WReportGrid *rg)
 {
     if (ui->deStart->date() < WORKING_DATE || ui->deEnd->date() < WORKING_DATE || ui->deStart->date() > ui->deEnd->date()) {
         message_error(tr("Invalid date range"));
@@ -38,6 +47,14 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
         totRooms += fDD.getInt(1);
     }
 
+    QMap<QString, QMap<QString, ROOM> > mapTmpl;
+    fDD.exec("select rc.f_short, rm.f_id from f_room rm "
+               "left join f_room_classes rc on rm.f_class=rc.f_id ");
+    while (fDD.nextRow()) {
+        mapTmpl[fDD.getString("f_short")][fDD.getString("f_id")].v1 = false;
+        mapTmpl[fDD.getString("f_short")][fDD.getString("f_id")].v2 = false;
+    }
+
     rg->fModel->setColumn(100, "", tr("Date"));
     rg->fModel->setColumn(40, "", tr("Tot"));
     for (QMap<QString, int>::const_iterator it = cats.begin(); it != cats.end(); it++) {
@@ -56,7 +73,7 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
             .setColumn(50, "", tr("Per %"));
 
     QList<QVariant> er;
-    int row;
+    int row = 0;
     QList<QList<QVariant> > rows;
     rows.clear();
     for (int i = 0; i < rg->fModel->columnCount(); i++) {
@@ -64,14 +81,15 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
 
     }
     for (QDate d = ui->deStart->date(); d != ui->deEnd->date().addDays(1); d = d.addDays(1)) {
-        QString query = QString("select rc.f_short, r.f_state, count(r.f_room) as rooms, "
+        QMap<QString, QMap<QString, ROOM> > map = mapTmpl;
+        QString query = QString("select rc.f_short, r.f_room, r.f_state, r.f_startdate, r.f_enddate, r.f_id, "
                                 "sum(coalesce(r.f_pricepernight, 0)) as f_amount "
                                 "from f_room rm "
                                 "left join f_reservation r on r.f_room=rm.f_id "
                                 "left join f_room_classes rc on rc.f_id=rm.f_class "
-                                "where '%1' >= r.f_startDate and '%1' <= r.f_endDate "
+                                "where '%1' between r.f_startDate and r.f_endDate "
                                 "and r.f_state in (1,2,4,7,9) "
-                                "group by 1, 2")
+                                "group by r.f_id ")
                 .arg(d.toString(def_mysql_date_format));
         QList<QVariant> nr;
         fDD.exec(query);
@@ -83,15 +101,39 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
             row = rows.count() - 1;
             while (fDD.nextRow()) {
                 int catIndex = cats[fDD.getString("f_short")] + 2;
-                //qDebug() << d << fDD.getInt("rooms") << catIndex << row << fDD.getDouble("f_amount");
-                if (fDD.getInt(1) == RESERVE_OUTOFROOM || fDD.getInt(1) == RESERVE_OUTOFINVENTORY || fDD.getInt(1) == RESERVE_SERVICE) {
-                    rows[row][totIndex] = rows[row][totIndex].toInt() + fDD.getInt("rooms");
-                    rows[row][catIndex + vacIndex - 2] = rows[row][catIndex + vacIndex - 2].toInt() - fDD.getInt("rooms");
+                int state = fDD.getInt("f_state");
+                QString cs = fDD.getString("f_short");
+                QDate d1 = fDD.getDate("f_startdate");
+                QDate d2 = fDD.getDate("f_enddate");
+                if (state == RESERVE_OUTOFROOM || state == RESERVE_OUTOFINVENTORY || state == RESERVE_SERVICE) {
+                    rows[row][totIndex] = rows[row][totIndex].toInt() + 1;
+                    map[cs][fDD.getString("f_room")].v1 = true;
+                    map[cs][fDD.getString("f_room")].v2 = true;
                 } else {
-                    rows[row][catIndex] = rows[row][catIndex].toInt() + fDD.getInt("rooms");
+                    rows[row][catIndex] = rows[row][catIndex].toInt() + 1;
                     rows[row][totIndex + 1] = rows[row][totIndex + 1].toDouble() + fDD.getDouble("f_amount");
+                    if (d1 < d && d2 > d) {
+                        map[cs][fDD.getString("f_room")].v1 = true;
+                        map[cs][fDD.getString("f_room")].v2 = true;
+                    } else if (d1 == d) {
+                        map[cs][fDD.getString("f_room")].v2 = true;
+                        if (d == WORKING_DATE) {
+                            map[cs][fDD.getString("f_room")].v1 = true;
+                        }
+                    } else if (d2 == d) {
+                        map[cs][fDD.getString("f_room")].v1 = true;
+                    }
                 }
             }
+        }
+        QMap<QString, int> mapQty;
+        for (QMap<QString, QMap<QString, ROOM> >::const_iterator it = map.begin(); it != map.end(); it++) {
+            for (QMap<QString, ROOM>::const_iterator ir = it.value().begin(); ir != it.value().end(); ir++) {
+                if (ir.value().v1 == false || ir.value().v2 == false) {
+                    mapQty[it.key()] = mapQty[it.key()] + 1;
+                }
+            }
+            rows[row][cats[it.key()] + vacIndex] = mapQty[it.key()];
         }
     }
 
@@ -103,7 +145,6 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
             if (rows[i][catIndex].toInt() == 0) {
                 rows[i][catIndex] = 0;
             }
-            rows[i][catIndex + vacIndex - 2] = catsQty[it.key()] - rows[i][catIndex].toInt() + rows[i][catIndex + vacIndex - 2].toInt();
             totalOcc += rows[i][catIndex].toInt();
             totalVac += rows[i][catIndex + vacIndex - 2].toInt();
         }
@@ -118,17 +159,17 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
     rg->fModel->apply(rg);
 }
 
-QWidget *FForecastOccupancyCategory::firstElement()
+QWidget *FForecastOccupancyCategoryReal::firstElement()
 {
     return ui->deStart;
 }
 
-QWidget *FForecastOccupancyCategory::lastElement()
+QWidget *FForecastOccupancyCategoryReal::lastElement()
 {
     return ui->deEnd;
 }
 
-QString FForecastOccupancyCategory::reportTitle()
+QString FForecastOccupancyCategoryReal::reportTitle()
 {
     return QString("%1 %2 - %3")
             .arg(tr("Forecast / Occupancy"))
@@ -136,7 +177,7 @@ QString FForecastOccupancyCategory::reportTitle()
             .arg(ui->deEnd->text());
 }
 
-void FForecastOccupancyCategory::setupTab()
+void FForecastOccupancyCategoryReal::setupTab()
 {
     fReportGrid->setupTabTextAndIcon(QString("%1 %2-%3")
                                      .arg(tr("Forecast occupancy / category"))
@@ -145,13 +186,13 @@ void FForecastOccupancyCategory::setupTab()
                                      ":/images/checkin.png");
 }
 
-void FForecastOccupancyCategory::on_deStart_dateChanged(const QDate &date)
+void FForecastOccupancyCategoryReal::on_deStart_dateChanged(const QDate &date)
 {
     Q_UNUSED(date)
     setupTab();
 }
 
-void FForecastOccupancyCategory::on_deEnd_dateChanged(const QDate &date)
+void FForecastOccupancyCategoryReal::on_deEnd_dateChanged(const QDate &date)
 {
     Q_UNUSED(date)
     setupTab();

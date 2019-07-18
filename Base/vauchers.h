@@ -50,5 +50,6 @@ bool openVaucherInvoice(const QString &vaucherId);
 bool openInvoiceWithId(const QString &invoice);
 void openVaucher(const QString &vaucher, const QString &id);
 bool removeVaucher(const QString &id, const QString &reason);
+bool voucherKind(const QString &id, const QString &compare);
 
 #endif // VAUCHERS_H

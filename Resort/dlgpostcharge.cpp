@@ -164,6 +164,10 @@ void DlgPostCharge::on_btnCancel_clicked()
 
 void DlgPostCharge::on_btnSave_clicked()
 {
+    if (!ui->deDate->date().isValid()) {
+        message_error(tr("The date of voucher is not valid"));
+        return;
+    }
     switch (ui->tabWidget->currentIndex()) {
     case 0:
         if (ui->wRoom->room() == 0) {

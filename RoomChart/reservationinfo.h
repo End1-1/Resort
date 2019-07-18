@@ -19,11 +19,13 @@ public:
     QRectF boundingRect() const;
     CacheReservation fReservation;
     QPointF p;
+
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QRectF fRect;
     QRect fBtnRect;

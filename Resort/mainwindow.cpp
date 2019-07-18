@@ -11,6 +11,7 @@
 #include "message.h"
 #include "wmaindesk.h"
 #include "wreportgrid.h"
+#include "fforecastoccupancycategoryreal.h"
 #include "wtaxattack.h"
 #include "fcallrates.h"
 #include "fcanceledreservations.h"
@@ -172,6 +173,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
+    hl->setSizeConstraint(QLayout::SetMinimumSize);
+    hl->setMargin(0);
     fStatusLabelLeft = new QLabel();
     fStatusLabelRight = new QLabel();
     QFont f(qApp->font());
@@ -322,6 +325,13 @@ void MainWindow::login()
         message_error(tr("Receipt voucher id not defined"));
         return;
     }
+
+    QPushButton *btnMenu = new QPushButton(ui->tabWidget);
+    btnMenu->setText(tr("Menu"));
+    btnMenu->setIcon(QIcon(":/images/bed.png"));
+    btnMenu->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+    //btnMenu->show();
+    //ui->tabWidget->setCornerWidget(btnMenu, Qt::TopLeftCorner);
 }
 
 void MainWindow::addTabWidget(BaseWidget *widget)
@@ -552,6 +562,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionList_of_source_reservation->setVisible(r__(cr__reservatoin_list_of_source));
     ui->actionCategory_to_sell->setVisible(r__(cr__reservation_category_to_sell));
     ui->actionForecast_Occupancy_Category->setVisible(r__(cr__reservation_forecast_occupation));
+    ui->actionForecast_occupancy_by_category->setVisible(r__(cr__reservation_forecast_occupation));
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
@@ -2147,4 +2158,9 @@ void MainWindow::on_actionOptions_triggered()
 void MainWindow::on_actionInhouse_guest_future_triggered()
 {
     FInhouseGuestFuture::openFilterReport<FInhouseGuestFuture, WReportGrid>();
+}
+
+void MainWindow::on_actionForecast_occupancy_by_category_triggered()
+{
+    FForecastOccupancyCategoryReal::openFilterReport<FForecastOccupancyCategoryReal, WReportGrid>();
 }

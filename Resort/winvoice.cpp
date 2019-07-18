@@ -888,6 +888,12 @@ void WInvoice::on_btnCancel_clicked()
     bool haveEntries = false;
     for (int i = 0; i < t1.count(); i++) {
         QList<QVariant> row;
+        if (voucherKind(ui->tblInvLeft->toString(t1.at(i).row(), 0), VAUCHER_POINT_SALE_N)) {
+            if (!r__(cr__ps_correction_in_invoice)) {
+                noall = true;
+                continue;
+            }
+        }
         row << ui->tblInvLeft->item(t1.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvLeft->item(t1.at(i).row(), 8)->data(Qt::DisplayRole);
         row << ui->tblInvLeft->item(t1.at(i).row(), 2)->data(Qt::DisplayRole);
@@ -905,6 +911,12 @@ void WInvoice::on_btnCancel_clicked()
     }
     for (int i = 0; i < t2.count(); i++) {
         QList<QVariant> row;
+        if (voucherKind(ui->tblInvRight->toString(t2.at(i).row(), 0), VAUCHER_POINT_SALE_N)) {
+            if (!r__(cr__ps_correction_in_invoice)) {
+                noall = true;
+                continue;
+            }
+        }
         row << ui->tblInvRight->item(t2.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvRight->item(t2.at(i).row(), 8)->data(Qt::DisplayRole);
         row << ui->tblInvRight->item(t2.at(i).row(), 2)->data(Qt::DisplayRole);

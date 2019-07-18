@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
+    ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
@@ -52,6 +53,7 @@ SOURCES += main.cpp\
     wcheckboxgroup.cpp \
     wcityledger.cpp \
     wguestinvoice.cpp \
+    whomepage.cpp \
     wmaindesk.cpp \
     wmaindeskfilterlist.cpp \
     wpaymentdetails.cpp \
@@ -441,6 +443,7 @@ HEADERS  += mainwindow.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
+    ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
@@ -468,6 +471,7 @@ HEADERS  += mainwindow.h \
     wcheckboxgroup.h \
     wcityledger.h \
     wguestinvoice.h \
+    whomepage.h \
     wmaindesk.h \
     wmaindeskfilterlist.h \
     wpaymentdetails.h \
@@ -858,6 +862,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
+    ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
@@ -881,6 +886,7 @@ FORMS    += mainwindow.ui \
     wchart.ui \
     wcityledger.ui \
     wguestinvoice.ui \
+    whomepage.ui \
     wmaindesk.ui \
     wmaindeskfilterlist.ui \
     wpaymentdetails.ui \

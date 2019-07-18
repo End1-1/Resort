@@ -25,6 +25,7 @@ SOURCES += main.cpp\
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
+    ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
@@ -442,6 +443,7 @@ HEADERS  += mainwindow.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
+    ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
@@ -859,6 +861,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
+    ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \

@@ -30,6 +30,7 @@ DEFINES += _RESTAURANT_
 SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
+    ../Cache/cacheactivegroup.cpp \
     ../Cache/cachetransferfromcl.cpp \
     rface.cpp \
     rlogin.cpp \
@@ -170,6 +171,7 @@ SOURCES += main.cpp\
 HEADERS  += rface.h \
     ../Base/doubleutils.h \
     ../Base/stringutils.h \
+    ../Cache/cacheactivegroup.h \
     ../Cache/cachetransferfromcl.h \
     rlogin.h \
     rmessage.h \

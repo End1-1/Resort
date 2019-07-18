@@ -188,6 +188,7 @@ private slots:
     void on_actionHelp_triggered();
     void on_actionOptions_triggered();
     void on_actionInhouse_guest_future_triggered();
+    void on_actionForecast_occupancy_by_category_triggered();
 
 private:
     Listener fServer2Listener;

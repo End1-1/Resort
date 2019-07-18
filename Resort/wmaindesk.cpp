@@ -291,7 +291,8 @@ void WMainDesk::changeDate()
 
 void WMainDesk::filterRoom()
 {
-    QElapsedTimer et;
+    QElapsedTimer et, tit;
+    tit.start();
     et.start();
     qDebug() << "Start filter room";
     int roomStateFilter = -1;
@@ -404,6 +405,7 @@ void WMainDesk::filterRoom()
 
     qDebug() << et.elapsed() << "End init rooms. Add reservations to chart";
     et.restart();
+    int totalr = 0;
     it = reserveRows.begin();
     while (it != reserveRows.end()) {
         if (fReserveStatus > 0) {
@@ -423,9 +425,10 @@ void WMainDesk::filterRoom()
             continue;
         }
 
+        totalr ++;
         switch (it->at(pos_state).toInt()) {
         case RESERVE_CHECKIN:
-        case RESERVE_RESERVE: {
+        case RESERVE_RESERVE:{
             fScene->addReserveInfo(it->at(pos_id).toString());
             break;
         }
@@ -438,7 +441,7 @@ void WMainDesk::filterRoom()
         }
         it++;
     }
-    qDebug() << et.elapsed() << "All done. Start working";
+    qDebug() << totalr << et.elapsed() << tit.elapsed() << "All done. Start working";
     et.restart();
 }
 

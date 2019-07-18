@@ -17,7 +17,7 @@ WQuickCheckoutProcess::WQuickCheckoutProcess(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
-    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 50, 100, 100, 300, 100, 200);
+    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 50, 100, 100, 300, 100, 200, 120);
 }
 
 WQuickCheckoutProcess::~WQuickCheckoutProcess()
@@ -34,7 +34,7 @@ void WQuickCheckoutProcess::setListOfInvoices(const QStringList &invoices)
         }
         inv += QString("'%1'").arg(s);
     }
-    QString query = QString("select r.f_room, r.f_invoice, r.f_id, g.guest, sum(m.f_amountamd*m.f_sign), '' "
+    QString query = QString("select r.f_room, r.f_invoice, r.f_id, g.guest, sum(m.f_amountamd*m.f_sign), '', r.f_enddate "
                             "from m_register m "
                             "left join f_reservation r on r.f_invoice=m.f_inv "
                             "left join guests g on g.f_id=r.f_guest "
@@ -76,6 +76,10 @@ void WQuickCheckoutProcess::timeout()
         dd[":f_state"] = RESERVE_CHECKOUT;
         dd[":f_checkOutTime"] = QTime::currentTime();
         dd[":f_checkOutUser"] = WORKING_USERID;
+        dd[":f_enddate"] = WORKING_DATE;
+        if (ui->tbl->toDate(i, 6) > WORKING_DATE) {
+            tc.insert("Departure date changed", ui->tbl->toDate(i, 6).toString(def_date_format), WORKING_DATE.toString(def_date_format));
+        }
         result = result && dd.update("f_reservation", where_id(ap(ui->tbl->toString(i, 2))));
         if (!result) {
             tc.insert("Checkout error", dd.fLastError, "");

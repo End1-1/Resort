@@ -50,7 +50,8 @@ void DlgGPOSOrderInfo::setOrder(const QString &id)
         ui->tblData->addButton(i, 7, SLOT(showDishHistory(int)), this, QIcon(":/images/update.png"));
     }
     fDD[":f_header"] = id;
-    fDD.exec("select oh.f_dateCash, u.f_username, oh.f_paymentMode, oh.f_paymentModeComment from o_header oh "
+    fDD.exec("select oh.f_dateCash, u.f_username, oh.f_paymentMode, oh.f_paymentModeComment, "
+             "oh.f_comment from o_header oh "
                "inner join users u on u.f_id=oh.f_staff "
                "where oh.f_id=:f_header");
     if (fDD.rowCount() == 0) {
@@ -61,6 +62,7 @@ void DlgGPOSOrderInfo::setOrder(const QString &id)
     ui->leStaff->setText(fDD.fDbRows.at(0).at(1).toString());
     ui->lePaymentComment->setText(fDD.fDbRows.at(0).at(3).toString());
     ui->lePayment->setText(fDD.fDbRows.at(0).at(2).toString());
+    ui->leComment->setText(fDD.fDbRows.at(0).at(4).toString());
     CachePaymentMode pm;
     if (pm.get(ui->lePayment->text())) {
         ui->lePaymentName->setText(pm.fName());

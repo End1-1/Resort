@@ -101,6 +101,7 @@
     <addaction name="actionReservation_groups"/>
     <addaction name="actionCategory_to_sell"/>
     <addaction name="actionForecast_Occupancy_Category"/>
+    <addaction name="actionForecast_occupancy_by_category"/>
     <addaction name="actionList_of_source_reservation"/>
     <addaction name="actionChanges_of_states_of_room"/>
     <addaction name="actionCancelation_No_show_fees"/>
@@ -1526,6 +1527,11 @@
    </property>
    <property name="text">
     <string>Inhouse guest, future</string>
+   </property>
+  </action>
+  <action name="actionForecast_occupancy_by_category">
+   <property name="text">
+    <string>Forecast occupancy by category</string>
    </property>
   </action>
  </widget>

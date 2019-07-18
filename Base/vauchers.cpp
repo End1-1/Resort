@@ -238,3 +238,14 @@ bool openInvoiceWithId(const QString &invoice)
     }
     return true;
 }
+
+bool voucherKind(const QString &id, const QString &compare)
+{
+    DoubleDatabase db(true, false);
+    db[":f_id"] = id;
+    db.exec("select f_source from m_register where f_id=:f_id");
+    if (db.nextRow()) {
+        return db.getString(0) == compare;
+    }
+    return false;
+}

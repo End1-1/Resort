@@ -34,8 +34,10 @@ DlgNoShow::DlgNoShow(QWidget *parent) :
             << QString::number(PAYMENT_CASH)
             << QString::number(PAYMENT_CARD)
             << QString::number(PAYMENT_ADVANCE)
+            << QString::number(PAYMENT_ROOM)
             << QString::number(PAYMENT_CL);
     ui->deDate->setDate(WORKING_DATE);
+    ui->wGuest->setVisible(false);
 }
 
 DlgNoShow::~DlgNoShow()
@@ -47,6 +49,7 @@ void DlgNoShow::callback(int sel, const QString &code)
 {
     switch (sel) {
     case HINT_PAYMENT_MODE: {
+        ui->wGuest->setVisible(false);
         CachePaymentMode ci;
         if (ci.get(code)) {
             switch( ci.fCode().toInt()) {
@@ -57,6 +60,10 @@ void DlgNoShow::callback(int sel, const QString &code)
             case PAYMENT_CARD:
                 ui->leCardCode->setEnabled(true);
                 ui->btnPrintTax->setEnabled(true);
+                break;
+            case PAYMENT_ROOM:
+                ui->wGuest->setVisible(true);
+                adjustSize();
                 break;
             }
             ui->btnPrintTax->setEnabled(ci.fCode().toInt() != PAYMENT_CL);
@@ -166,9 +173,23 @@ void DlgNoShow::on_btnSave_clicked()
             return;
         }
     }
+    if (ui->lePaymentMode->asInt() == PAYMENT_ROOM) {
+        if (ui->wGuest->invoice().isEmpty()) {
+            message_error(tr("Destination room was not selected"));
+            return;
+        }
+    }
     if (ui->leAmount->asDouble() < 0.01) {
         message_error(tr("Amount cannot be 0"));
         return;
+    }
+    QString inv = ui->leInvoice->text();
+    QString res = ui->leReserve->text();
+    QString guest = ui->leGuest->text();
+    if (ui->lePaymentMode->asInt() == PAYMENT_ROOM) {
+        inv = ui->wGuest->invoice();
+        res = ui->wGuest->reserve();
+        guest = ui->wGuest->guest();
     }
     DoubleDatabase fDD(true, doubleDatabase);
     if (ui->leCode->isEmpty()) {
@@ -183,12 +204,12 @@ void DlgNoShow::on_btnSave_clicked()
     }
 
     fDD[":f_wdate"] = ui->deDate->date();
-    fDD[":f_res"] = ui->leReserve->text();
+    fDD[":f_res"] = res;
     fDD[":f_room"] = ui->leRoom->text();
-    fDD[":f_guest"] = ui->leGuest->text();
+    fDD[":f_guest"] = guest;
     fDD[":f_itemCode"] = (ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toInt() : fPreferences.getDb(def_noshowfee_code).toInt());
-    fDD[":f_finalName"] = (ui->rbCancelation->isChecked() ? tr("Cancelation fee") + " " + ui->leReserve->text()
-                                                              : tr("No show fee") + " " + ui->leReserve->text() );
+    fDD[":f_finalName"] = (ui->rbCancelation->isChecked() ? tr("Cancelation fee") + " " + res
+                                                              : tr("No show fee") + " " + res);
     fDD[":f_amountAmd"] = ui->leAmount->asDouble();
     fDD[":f_amountVat"] = Utils::countVATAmount(ui->leAmount->asDouble(), ui->leVATCode->asInt());
     fDD[":f_amountUsd"] = def_usd;
@@ -201,7 +222,7 @@ void DlgNoShow::on_btnSave_clicked()
     fDD[":f_sign"] = 1;
     fDD[":f_doc"] = "";
     fDD[":f_rec"] = "";
-    fDD[":f_inv"] = ui->leInvoice->text();
+    fDD[":f_inv"] = inv;
     fDD[":f_finance"] = 1;
     fDD[":f_remarks"] = "";
     fDD[":f_canceled"] = 0;

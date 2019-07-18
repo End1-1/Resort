@@ -18,7 +18,7 @@
 #include <QNetworkProxy>
 #include <QMutex>
 
-QMutex mutex;
+static QMutex mutex;
 
 DlgMain::DlgMain(QWidget *parent) :
     QDialog(parent),
@@ -55,8 +55,7 @@ DlgMain::DlgMain(QWidget *parent) :
     if (!fUdpSocket.bind(DATAGRAM_PORT, QUdpSocket::ShareAddress)) {
         logActivity("Cannot bind udp server.");
     }
-    fTcpServer.
-    connect(&fUdpSocket, SIGNAL(readyRead()), this, SLOT(datagramRead()));
+    fTcpServer.connect(&fUdpSocket, SIGNAL(readyRead()), this, SLOT(datagramRead()));
 
     ui->tblConn->setColumnWidth(0, 50);
     ui->tblConn->setColumnWidth(1, 150);
@@ -154,7 +153,7 @@ void DlgMain::clientDisconnected()
             break;
         }
     }
-    Command *c = 0;
+    Command *c = nullptr;
     if (fTcpSockets.contains(s)) {
         c = fTcpSockets[s];
         fTcpSockets.remove(s);

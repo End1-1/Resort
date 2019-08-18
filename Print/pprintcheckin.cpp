@@ -152,6 +152,19 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("5- OUR CHECK OUT TIME IS 12:00 (NOON)."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+#ifdef _METROPOL_
+    top += ps->addTextRect(20, top, 2100, 80, tr("6- SMOKING IS NOT PERMITTED, EXCEPT IN THE DESIGNATED SMOKING AREAS."), &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80, tr("SMOKING IS ALLOWED: ON BALCONY (IF YOUR ROOM HAS SUCH), IN THE 3RD FLOOR OPEN AIR TERAZZA (CAFÉ),"), &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80, tr("IN THE HOOKAH CAFÉ (ON THE GROUND FLOOR, NEXT TO THE LOBBY) AND ON THE ENTRANCE AREA OF THE HOTEL."), &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80, tr("7- SMOKING IN A NON-SMOKING GUEST ROOM, CORRIDORS AND ANY OTHER RESTRICTED AREAS WILL RESULT IN CHARGES"), &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80, tr("AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST."), &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+#endif
+
 
     top += 200;
     trData.setTextAlignment(Qt::AlignCenter);

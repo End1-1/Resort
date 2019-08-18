@@ -250,7 +250,7 @@
          <item row="7" column="0">
           <widget class="QLabel" name="lbDepartureDate">
            <property name="text">
-            <string>Separture</string>
+            <string>Departure</string>
            </property>
           </widget>
          </item>
@@ -1298,6 +1298,19 @@ from</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">eqlineedit.h</header>
+   <slots>
+    <signal>customButtonClicked(bool)</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>EDateEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">edateedit.h</header>
@@ -1308,22 +1321,9 @@ from</string>
    <header location="global">eqcheckbox.h</header>
   </customwidget>
   <customwidget>
-   <class>EQLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">eqlineedit.h</header>
-   <slots>
-    <signal>customButtonClicked(bool)</signal>
-   </slots>
-  </customwidget>
-  <customwidget>
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
    <class>EQDateEdit</class>

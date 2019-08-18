@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>80</width>
-    <height>42</height>
+    <height>36</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>80</width>
-    <height>40</height>
+    <height>35</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>80</width>
-    <height>42</height>
+    <height>37</height>
    </size>
   </property>
   <property name="font">
@@ -33,7 +33,7 @@
   <property name="autoFillBackground">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
     <number>1</number>
    </property>
@@ -51,29 +51,39 @@
    </property>
    <item>
     <widget class="QFrame" name="frame">
+     <property name="styleSheet">
+      <string notr="true">QFrame#frame {border: 1px solid gray;}</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <property name="leftMargin">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <property name="spacing">
-       <number>1</number>
-      </property>
-      <item row="0" column="0">
+      <item>
+       <widget class="QCheckBox" name="chSelected">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="lbRoom">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -105,13 +115,6 @@ CS CV L</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="chSelected">
-        <property name="text">
-         <string/>
         </property>
        </widget>
       </item>

@@ -34,6 +34,8 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
         ui->tblCategory->setItem(0, col++, new C5TableWidgetItem(it.value().at(1).toString()));
         it++;
     }
+    ui->tblCategory->setMinimumWidth(ui->tblCategory->columnCount() * ui->tblCategory->horizontalHeader()->defaultSectionSize());
+    ui->tblCategory->setMaximumWidth(10 + (ui->tblCategory->columnCount() * ui->tblCategory->horizontalHeader()->defaultSectionSize()));
 
     ci = cache(cid_bed);
     ui->tblBed->setColumnCount(ci->count());
@@ -44,6 +46,8 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
         ui->tblBed->setItem(0, col++, new C5TableWidgetItem(it.value().at(0).toString()));
         it++;
     }
+    ui->tblBed->setMinimumWidth(ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize());
+    ui->tblBed->setMaximumWidth(10 + (ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize()));
 
     col = 0;
     ui->tblFloor->setColumnCount(9);
@@ -51,6 +55,8 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     for (int i = 0; i < ui->tblFloor->columnCount(); i++) {
         ui->tblFloor->setItem(0, i, new C5TableWidgetItem(QString::number(i + 1)));
     }
+    ui->tblFloor->setMinimumWidth(ui->tblFloor->columnCount() * ui->tblFloor->horizontalHeader()->defaultSectionSize());
+    ui->tblFloor->setMaximumWidth(10 + (ui->tblFloor->columnCount() * ui->tblFloor->horizontalHeader()->defaultSectionSize()));
 
     fSingleMode = false;
     setMinimumWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + ui->tblData->horizontalHeader()->defaultSectionSize());

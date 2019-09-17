@@ -1,0 +1,1 @@
+create table st_store (f_id integer primary key auto_increment, f_doc integer,  f_base integer, f_store integer,  f_goods integer, f_qty decimal(14,4), f_price decimal(14,2), f_amount decimal(14,2));

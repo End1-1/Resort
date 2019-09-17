@@ -103,6 +103,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnBuilding">
+        <property name="text">
+         <string>Building: All</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnBedFilter">
         <property name="text">
          <string>Bed filter: All</string>

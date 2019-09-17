@@ -22,6 +22,7 @@ DlgRoom::DlgRoom(QList<QVariant> &values, QWidget *parent) :
              << ui->leViewCode
              << ui->leViewName
              << ui->leFloor
+             << ui->leBuild
              << ui->leShortName
              << ui->leDescription
              << ui->leRate
@@ -51,6 +52,7 @@ void DlgRoom::setValues()
     ui->leRate->clear();
     ui->leBedCode->clear();
     ui->leBedName->clear();
+    ui->leBuild->clear();
     ui->leQty->clear();
     ui->leQueue->clear();
     ui->chSmoking->setChecked(false);
@@ -74,6 +76,7 @@ void DlgRoom::on_btnOK_clicked()
     fDD[":f_id"] = ui->leCode->text();
     fDD[":f_class"] = ui->leClassCode->text();
     fDD[":f_floor"] = ui->leFloor->text();
+    fDD[":f_building"] = ui->leBuild->text();
     fDD[":f_short"] = ui->leShortName->text();
     fDD[":f_description"] = ui->leDescription->text();
     fDD[":f_rate"] = ui->leRate->text();

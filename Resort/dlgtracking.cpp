@@ -29,11 +29,28 @@ void DlgTracking::showTracking(int trackId, const QString &windowId)
     DlgTracking *d = new DlgTracking(fPreferences.getDefaultParentForMessage());
     d->fTrack = trackId;
     d->fWindow = windowId;
-    QString query = "select f_comp, f_date, f_time, f_user, "
+    DoubleDatabase dd(true, false);
+    QString w2 = "-----";
+    if (windowId.left(2).toLower() == "in") {
+        dd[":f_invoice"] = windowId;
+        dd.exec("select f_id from f_reservation where f_invoice=:f_invoice");
+        if (dd.nextRow()) {
+            w2 = dd.getString(0);
+        }
+    }
+    if (windowId.left(2).toLower() == "rs") {
+        dd[":f_id"] = windowId;
+        dd.exec("select f_invoice from f_reservation where f_id=:f_id");
+        if (dd.nextRow()) {
+            w2 = dd.getString(0);
+        }
+    }
+    QString query = QString("select f_comp, f_date, f_time, f_user, "
             "f_action, f_value1, f_value2 "
             "from airlog.log "
-            "where (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
-            "order by f_date desc, f_time desc";
+            "where (f_rec='%1' or f_invoice='%1' or f_reservation='%1') "
+            "or (f_rec='%2' or f_invoice='%2' or f_reservation='%2') "
+            "order by f_date desc, f_time desc").arg(windowId).arg(w2);
     d->loadTrack(query, trackId, windowId);
     d->exec();
     delete d;
@@ -54,11 +71,11 @@ void DlgTracking::showTracking(const QString &windowId)
     }
     DlgTracking *d = new DlgTracking(fPreferences.getDefaultParentForMessage());
     d->fWindow = windowId;
-    QString query = "select f_comp, f_date, f_time, f_user, "
+    QString query = QString("select f_comp, f_date, f_time, f_user, "
             "f_action, f_value1, f_value2 "
             "from airlog.log "
-            "where (f_rec=:f_rec or f_invoice=:f_invoice or f_reservation=:f_reservation) "
-            "order by f_date desc, f_time desc";
+            "where (f_rec='%1' or f_invoice='%1' or f_reservation='%1') "
+            "order by f_date desc, f_time desc").arg(windowId);
     d->loadTrack(query, 0, windowId);
     d->exec();
     delete d;
@@ -68,9 +85,6 @@ void DlgTracking::loadTrack(const QString &query, int trackId, const QString &wi
 {
     Q_UNUSED(trackId);
     DoubleDatabase db;
-    db[":f_rec"] = windowId;
-    db[":f_reservation"] = windowId;
-    db[":f_invoice"] = windowId;
     QStringList sl = TrackControl::currentDb();
     db.setDatabase(sl.at(0), sl.at(1), sl.at(2), sl.at(3), 1);
     db.open(true, false);

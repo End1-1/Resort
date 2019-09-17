@@ -774,8 +774,9 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
         openVaucher(ui->tblData->toString(index.row(), 10), ui->tblData->toString(index.row(), 0));
     } else if (index.column() == 5 || index.column() == 6) {
         double oldAmount = ui->tblData->toDouble(index.row(), index.column());
-        double newAmount = QInputDialog::getDouble(this, tr("New amount"), tr("New amount"), oldAmount);
-        if (newAmount < 1) {
+        bool ok = false;
+        double newAmount = QInputDialog::getDouble(this, tr("New amount"), tr("New amount"), oldAmount, 0, 999999999, 2, &ok);
+        if (!ok || newAmount < 1) {
             return;
         }
         fDD[":f_amountAmd"] = newAmount;

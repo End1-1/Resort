@@ -76,6 +76,7 @@ private slots:
     void on_btnBedFilter_clicked();
     void on_btnSmokeFilter_clicked();
     void on_btnRoomStateFilter_clicked();
+    void on_btnBuilding_clicked();
 
 private:
     Ui::WMainDesk *ui;
@@ -94,6 +95,8 @@ private:
     QStringList fSmokeList;
     QString fSmokeFilter;
     QStringList fStateFilter;
+    QString fBuildingFilter;
+    QStringList fBuildingList;
     QString fState;
     QList<QList<QVariant> > fReservationHint;
     void uncheckCatButtons();

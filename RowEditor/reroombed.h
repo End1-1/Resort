@@ -22,6 +22,10 @@ private slots:
 
 private:
     Ui::RERoomBed *ui;
+
+    // RowEditorDialog interface
+protected:
+    void valuesToWidgets();
 };
 
 #endif // REROOMBED_H

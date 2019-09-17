@@ -10,6 +10,7 @@ WReportRoom::WReportRoom(QWidget *parent) :
             .setColumn(0, "f_view", tr("View code"))
             .setColumn(80, "f_view_short", tr("View"))
             .setColumn(80, "f_floor", tr("Floor"))
+            .setColumn(30, "f_building", tr("Build"))
             .setColumn(100, "f_short", tr("Short name"))
             .setColumn(300, "f_description", tr("Description"))
             .setColumn(80, "f_rate", tr("Rate"))
@@ -19,7 +20,8 @@ WReportRoom::WReportRoom(QWidget *parent) :
             .setColumn(50, "f_queue", tr("Queue"))
             .setColumn(80, "f_smoke", tr("Smoke"))
             .setColumn(80, "f_phone", tr("Phone"));
-    fModel->setSqlQuery("select r.f_id, r.f_class, c.f_short, r.f_view, v.f_short as f_view_short, r.f_floor, r.f_short, r.f_description, "
+    fModel->setSqlQuery("select r.f_id, r.f_class, c.f_short, r.f_view, v.f_short as f_view_short, r.f_floor, r.f_building, "
+                        "r.f_short, r.f_description, "
                         "r.f_rate, r.f_bed, b.f_name as f_bed_name, r.f_bedQty, r.f_queue, r.f_smoke, r.f_phone "
                         "from f_room r  "
                         "left join f_room_classes c on r.f_class=c.f_id "

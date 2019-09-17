@@ -14,9 +14,11 @@ class DlgUserGroup : public RowEditorDialog
 public:
     explicit DlgUserGroup(QList<QVariant> &values, QWidget *parent = 0);
     ~DlgUserGroup();
+
 private slots:
     void on_btnCancel_clicked();
     void on_btnOk_clicked();
+
 private:
     Ui::DlgUserGroup *ui;
 };

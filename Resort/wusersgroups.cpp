@@ -30,7 +30,7 @@ void WUsersGroups::processValues(int row, bool isNew)
     if (fRowValues.count() == 0 && !isNew) {
         return;
     }
-    if (fRowValues.at(0).toInt() == 1) {
+    if (fRowValues.count() > 0 && fRowValues.at(0).toInt() == 1) {
         message_info(tr("This is not editable group"));
         return;
     }

@@ -49,12 +49,15 @@ void FBreakfast::apply(WReportGrid *rg)
             .setColumn(80, "", tr("Room"))
             .setColumn(200, "", tr("Guest"))
             .setColumn(200, "", tr("User"));
-    QString sql = "select m.f_wdate, m.f_id,  m.f_finalName, m.f_amountAmd/6500, m.f_amountAmd, \
+    QString sql = "select m.f_wdate, m.f_id,  m.f_finalName, sum(od.f_qty), m.f_amountAmd, \
             pm.f_en, m.f_paymentComment,m.f_room, m.f_guest, u.f_username \
             from m_register m \
             left join f_payment_type pm on pm.f_id =m.f_paymentMode \
+            left join o_dish od on od.f_header=m.f_id \
             left join users u on u.f_id=m.f_user \
-            where m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and m.f_itemCode in (17, 82) "    ;
+            where od.f_state=1 and m.f_wdate between :f_date1 and :f_date2 \
+            and m.f_canceled=0 and m.f_itemCode in (17, 82) \
+            group by m.f_id ";
     sql.replace(":f_date1", ui->deStart->dateMySql()).replace(":f_date2", ui->deEnd->dateMySql());
     rg->fModel->setSqlQuery(sql);
     rg->fModel->apply(rg);

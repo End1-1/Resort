@@ -636,7 +636,7 @@
        <item row="2" column="1">
         <widget class="QLabel" name="label_16">
          <property name="text">
-          <string>Dicount charge id</string>
+          <string>Discount charge id</string>
          </property>
         </widget>
        </item>

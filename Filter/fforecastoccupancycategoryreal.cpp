@@ -157,6 +157,16 @@ void FForecastOccupancyCategoryReal::apply(WReportGrid *rg)
 
     rg->fModel->fDD.fDbRows = rows;
     rg->fModel->apply(rg);
+
+    QList<int> cols;
+    QList<double> vals;
+    for (int i = 1; i < rg->fModel->columnCount(); i++) {
+        cols.append(i);
+    }
+    rg->fModel->sumOfColumns(cols, vals);
+    vals[totIndex + 2 - 1] = vals[totIndex + 1 - 1] / vals[vacIndex - 1 - 1];
+    vals[totIndex + 3 - 1] = vals[vacIndex - 1 - 1] / vals[0] * 100.0;
+    rg->setTblTotalData(cols, vals);
 }
 
 QWidget *FForecastOccupancyCategoryReal::firstElement()

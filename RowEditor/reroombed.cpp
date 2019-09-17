@@ -29,8 +29,14 @@ void RERoomBed::on_btnOk_clicked()
     if (isNew) {
         fDD.insert("f_room_bed");
     } else {
-        fDD.update("f_room_bed", where_id(fTrackControl->oldValue(ui->leCode)));
+        fDD.update("f_room_bed", where_id(ap(fTrackControl->oldValue(ui->leCode))));
     }
     fTrackControl->saveChanges();  //TODO tracking by qstring
     accept();
+}
+
+void RERoomBed::valuesToWidgets()
+{
+    RowEditorDialog::valuesToWidgets();
+    fTrackControl->resetChanges();
 }

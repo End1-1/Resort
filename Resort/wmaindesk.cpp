@@ -53,6 +53,10 @@ WMainDesk::WMainDesk(QWidget *parent) :
     while (fDD.nextRow()) {
         fBedList.append(fDD.getString(0));
     }
+    fDD.exec("select distinct(f_building) from f_room ");
+    while (fDD.nextRow()) {
+        fBuildingList.append(fDD.getString(0));
+    }
     fSmokeList.append(tr("Yes"));
     fSmokeList.append(tr("No"));
     fStateFilter.append(tr("Vacant ready"));
@@ -359,6 +363,12 @@ void WMainDesk::filterRoom()
                     it++;
                     continue;
                 }
+            }
+        }
+        if (fBuildingFilter.length() > 0) {
+            if (room.fBuilding() != fBuildingFilter.toInt()) {
+                it++;
+                continue;
             }
         }
         fRoomList.append(room.fCode());
@@ -758,5 +768,14 @@ void WMainDesk::uncheckCatButtons()
         if (b) {
             b->setChecked(false);
         }
+    }
+}
+
+void WMainDesk::on_btnBuilding_clicked()
+{
+    if  (WMainDeskFilterList::filter(fBuildingList, tr("Building"), fBuildingFilter)) {
+        ui->btnBuilding->setText(QString("%1: %2").arg(tr("Building filter")).arg(fBuildingFilter.isEmpty() ? tr("All") : fBuildingFilter));
+        qApp->processEvents();
+        filterRoom();
     }
 }

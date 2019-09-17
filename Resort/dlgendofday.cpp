@@ -317,7 +317,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         QList<QList<QVariant> > droom;
         fDD[":f_room"] = dbrows.at(i).at(0);
         fDD.exec("select f_state from f_room where f_id=:f_room", droom);
-        fDD[":f_state"] = ROOM_STATE_NONE;
+        fDD[":f_state"] = ROOM_STATE_DIRTY;
         fDD.update("f_room", where_id(dbrows.at(i).at(0).toInt()));
         fDD[":f_date"] = QDate::currentDate();
         fDD[":f_wdate"] = WORKING_DATE;

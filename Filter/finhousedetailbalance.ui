@@ -15,31 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Date range</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="EDateEdit" name="deStart">
-     <property name="maximumSize">
-      <size>
-       <width>80</width>
-       <height>16777215</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="EDateEdit" name="deEnd">
-     <property name="maximumSize">
-      <size>
-       <width>80</width>
-       <height>16777215</height>
-      </size>
-     </property>
-    </widget>
+    <widget class="WDate2" name="wd" native="true"/>
    </item>
    <item>
     <spacer name="horizontalSpacer">
@@ -58,9 +34,10 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
+   <class>WDate2</class>
+   <extends>QWidget</extends>
+   <header location="global">wdate2.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

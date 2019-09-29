@@ -16,6 +16,8 @@ public:
     explicit DlgAdvanceEntry(const QString &reserveId, QWidget *parent = nullptr);
     ~DlgAdvanceEntry();
     void setVoucher(const QString &id);
+    void setRoom(int room);
+    void setInvoice(const QString &invoice);
 
 private slots:
     void on_btnCancel_clicked();

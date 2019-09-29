@@ -780,7 +780,7 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
             return;
         }
         fDD[":f_amountAmd"] = newAmount;
-        fDD[":f_amountVat"] = (index.column() == 5 ? Utils::countVATAmount(newAmount, ui->leVATMode->fHiddenText.toInt()) : 0);
+        fDD[":f_amountVat"] = (index.column() == 5 ? Utils::countVATAmount(newAmount, ui->leVatCode->asInt()) : 0);
         fDD.update("m_register", where_id(ap(ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString())));
         fTrackControl->insert("Manual change amount for " + ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString(),
                                   float_str(oldAmount, 1), float_str(newAmount, 1));

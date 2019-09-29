@@ -31,6 +31,10 @@
         <source>DEBUG VERSION</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>License:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ChSample</name>
@@ -1311,6 +1315,14 @@ name</source>
         <source>Transfer amount</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cancelation reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please, specify the reason of cancelation</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgCityAdvance</name>
@@ -2360,6 +2372,10 @@ rooms</source>
         <source>Card amount for tax</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Comment</source>
+        <translation type="unfinished">Լրացուցիչ</translation>
+    </message>
 </context>
 <context>
     <name>DlgGroupParams</name>
@@ -2617,6 +2633,22 @@ rooms</source>
     <message>
         <source>Revive</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The count of the guest automatically was set to 1 where count of the guests equal to zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancelation reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished">Պատճառ</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Խումբ</translation>
     </message>
 </context>
 <context>
@@ -3025,6 +3057,10 @@ rooms</source>
         <source>Type of card missing</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Destination room was not selected</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgNotes</name>
@@ -3189,7 +3225,7 @@ rooms</source>
 <context>
     <name>DlgOptions</name>
     <message>
-        <source>Dialog</source>
+        <source>Option</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3688,6 +3724,10 @@ rooms</source>
     </message>
     <message>
         <source>This item cannot be charged</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The date of voucher is not valid</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5257,6 +5297,10 @@ for this operation</source>
         <source>Internal phone</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Building number</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgRoomView</name>
@@ -6687,6 +6731,14 @@ for this operation</source>
         <source>Print tax of invoices</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Inhouse guests, future</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PS voucher cancelation from invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -7510,6 +7562,10 @@ ee</source>
     <message>
         <source>Entry</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished">Պատճառ</translation>
     </message>
 </context>
 <context>
@@ -8889,6 +8945,18 @@ ee</source>
         <source>Last price</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Update menu number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update menu number?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The restaurant menu was updated</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FEvents</name>
@@ -9393,6 +9461,65 @@ ee</source>
     </message>
 </context>
 <context>
+    <name>FForecastOccupancyCategoryReal</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid date range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Tot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tot/occ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tot/vac</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>O/O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Գումար</translation>
+    </message>
+    <message>
+        <source>Avg. rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Per %</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forecast / Occupancy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forecast occupancy / category</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FHotelHierarchy</name>
     <message>
         <source>Form</source>
@@ -9614,6 +9741,57 @@ ee</source>
     <message>
         <source>Tax</source>
         <translation type="unfinished">ՀԴՄ</translation>
+    </message>
+</context>
+<context>
+    <name>FInhouseGuestFuture</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inhouse guest, future</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Day use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In house</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
+    </message>
+    <message>
+        <source>Delta</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid date range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inhouse guest, future %1 - %2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10630,6 +10808,18 @@ ee</source>
     <message>
         <source>Show only canceled</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancelation reason</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished">Պատճառ</translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Խումբ</translation>
     </message>
 </context>
 <context>
@@ -13132,6 +13322,14 @@ or contact to administrator</source>
         <source>Options</source>
         <translation type="unfinished">Կարգավորումներ</translation>
     </message>
+    <message>
+        <source>Inhouse guest, future</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forecast occupancy by category</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>
@@ -13397,6 +13595,26 @@ or contact to administrator</source>
     </message>
     <message>
         <source>SHOULD YOU WISH TO USE THE HOTEL&apos;S SAFETY DEPOSIT BOXES AT THE FRONT OFFICE.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6- SMOKING IS NOT PERMITTED, EXCEPT IN THE DESIGNATED SMOKING AREAS.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMOKING IS ALLOWED: ON BALCONY (IF YOUR ROOM HAS SUCH), IN THE 3RD FLOOR OPEN AIR TERAZZA (CAFÉ),</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IN THE HOOKAH CAFÉ (ON THE GROUND FLOOR, NEXT TO THE LOBBY) AND ON THE ENTRANCE AREA OF THE HOTEL.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7- SMOKING IN A NON-SMOKING GUEST ROOM, CORRIDORS AND ANY OTHER RESTRICTED AREAS WILL RESULT IN CHARGES</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14271,6 +14489,10 @@ or contact to administrator</source>
     <message>
         <source>Group</source>
         <translation type="unfinished">Խումբ</translation>
+    </message>
+    <message>
+        <source>Reservation groups</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -16961,6 +17183,17 @@ Reserve</source>
     </message>
 </context>
 <context>
+    <name>WActiveGroup</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Խումբ</translation>
+    </message>
+</context>
+<context>
     <name>WCardex</name>
     <message>
         <source>Code</source>
@@ -17190,6 +17423,13 @@ Reserve</source>
     </message>
 </context>
 <context>
+    <name>WChart</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WCityLedger</name>
     <message>
         <source>Form</source>
@@ -17380,10 +17620,6 @@ Reserve</source>
     </message>
     <message>
         <source>Breakfast charge id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dicount charge id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -17746,6 +17982,10 @@ Reserve</source>
         <source>Checkout voucher id</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Discount charge id</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -18029,6 +18269,21 @@ CS CV L</source>
     </message>
     <message>
         <source>Guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WHomePage</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User/Database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current date/Working date/ Last charge date / Last charge time</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18637,6 +18892,18 @@ reservation</source>
         <source>Room state</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Building: All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Building</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Building filter</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WMainDeskFilterList</name>
@@ -18921,6 +19188,10 @@ reservation</source>
     </message>
     <message>
         <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19690,6 +19961,10 @@ if empty</source>
         <source>Phone</source>
         <translation type="unfinished">Հեռախոս</translation>
     </message>
+    <message>
+        <source>Build</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WReportsSetOld</name>
@@ -19786,19 +20061,11 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Arrangement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Pax</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Market sigment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Market Sigment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -19859,6 +20126,22 @@ if empty</source>
     </message>
     <message>
         <source>Invalid date range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrangement*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Market Sigment*</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>* - &quot;Use date range&quot; filter available for this options</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -20417,11 +20700,19 @@ from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Separture</source>
+        <source>Cardex commission</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cardex commission</source>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode of VAT is undefinedn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No guest in the room</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -20446,6 +20737,16 @@ from</source>
     </message>
     <message>
         <source>Room state is not vacant ready
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode of VAT is undefined
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No guest in the room
 </source>
         <translation type="unfinished"></translation>
     </message>

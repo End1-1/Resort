@@ -64,6 +64,7 @@ public:
     QString fCancelReason;
     QDateTime fCancelDate;
     int fRb;
+    int fSession;
 
     QString fError;
     TrackControl *fTc;

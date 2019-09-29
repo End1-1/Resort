@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -1080,6 +1080,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>76</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chCloseOldOpenOrder">
+         <property name="text">
+          <string>Close a long open order</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>138</number>
          </property>
         </widget>
        </item>

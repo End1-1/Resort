@@ -2072,7 +2072,7 @@ void MainWindow::on_actionHotel_hierarchy_triggered()
 
 void MainWindow::on_actionNew_room_chart_triggered()
 {
-    addTab<WRoomChart>();
+    //REmOVE
 }
 
 void MainWindow::on_actionCall_rates_triggered()

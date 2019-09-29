@@ -76,6 +76,16 @@ void DlgAdvanceEntry::setVoucher(const QString &id)
     ui->wInvoice->setBalance();
 }
 
+void DlgAdvanceEntry::setRoom(int room)
+{
+    ui->wInvoice->setRoom(room);
+}
+
+void DlgAdvanceEntry::setInvoice(const QString &invoice)
+{
+    ui->wInvoice->setInvoice(invoice);
+}
+
 void DlgAdvanceEntry::on_btnCancel_clicked()
 {
     reject();

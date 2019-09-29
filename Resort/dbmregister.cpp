@@ -18,7 +18,8 @@ static const QString voucher_query = "select m.f_id, m.f_source, m.f_res, m.f_in
                                      "m.f_room, m.f_guest, m.f_itemcode, i.f_en as f_itemname, m.f_finalname, m.f_amountamd, m.f_amountusd, m.f_usedprepaid, "
                                      "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
                                      "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
-                                     "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename "
+                                     "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename, "
+                                     "m.f_session "
                                      "from m_register m "
                                      "left join users u on u.f_id=m.f_user "
                                      "left join f_invoice_item i on i.f_id=m.f_itemcode "
@@ -29,10 +30,11 @@ static const QString voucher_query = "select m.f_id, m.f_source, m.f_res, m.f_in
 
 DBMRegister::DBMRegister()
 {
-    fWDate = Preferences().getLocalDate(def_working_day);
+    fWDate = __preferences.getLocalDate(def_working_day);
     fRDate = QDate::currentDate();
     fTime = QTime::currentTime();
-    fUser = Preferences().getLocal(def_working_user_id).toUInt();
+    fUser = __preferences.getLocal(def_working_user_id).toUInt();
+    fSession = __preferences.getLocal(def_session_id).toInt();
     fRoom = 0;
     fItemCode = 0;
     fUsedPrepaid = 0;
@@ -93,7 +95,8 @@ DBMRegister::DBMRegister(const DBMRegister &r) :
     fCancelUser(r.fCancelUser),
     fCancelReason(r.fCancelReason),
     fCancelDate(r.fCancelDate),
-    fRb(r.fRb)
+    fRb(r.fRb),
+    fSession(r.fSession)
 {
     init();
     setle(r);
@@ -141,6 +144,7 @@ DBMRegister &DBMRegister::operator=(const DBMRegister &r)
     fCancelReason = r.fCancelReason;
     fCancelDate = r.fCancelDate;
     fRb = r.fRb;
+    fSession = r.fSession;
     setle(r);
     return *this;
 }
@@ -281,6 +285,7 @@ void DBMRegister::fetchData(DoubleDatabase &d)
     fCancelDate = d.getDateTime("f_canceldate");
     fCancelReason = d.getString("f_cancelreason");
     fRb = d.getInt("f_rb");
+    fSession = d.getInt("f_session");
 }
 
 bool DBMRegister::openVoucher(const QString &id, QString &err)
@@ -349,6 +354,7 @@ bool DBMRegister::save(DoubleDatabase &dd)
     dd[":f_cancelDate"] = fCancelDate;
     dd[":f_side"] = fSide;
     dd[":f_rb"] = fRb;
+    dd[":f_session"] = fSession;
     if (fId.isEmpty()) {
         fId = uuidx(fSource);
         if (fId.isEmpty()) {

@@ -26,7 +26,7 @@ public:
     QList<QVariant> fData;
     QString fSelectorTitle;
     CacheInstance *fInstance;
-    QDate fWorkingDate;
+    static QDate fWorkingDate;
     void reInit();
     inline QVariant getVariant(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]]; }
     inline QString getString(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toString(); }

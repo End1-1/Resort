@@ -580,6 +580,7 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             fDD[":f_cancelReason"] = "";
             fDD[":f_side"] = side;
             fDD[":f_cash"] = pmMode == PAYMENT_CL ? 0 : 1;
+            fDD[":f_session"] = WORKING_SESSION;
             fDD.update("m_register", where_id(ap(rid)));
 
             t->item(i, 0)->setText(rid);
@@ -707,6 +708,7 @@ void DlgPaymentsDetails::on_btnSave_clicked()
             fDD[":f_cancelReason"] = "";
             fDD[":f_side"] = ui->tblRefund->toInt(i, 8);
             fDD[":f_cash"] = 0;
+            fDD[":f_session"] = WORKING_SESSION;
             fDD.update("m_register", where_id(ap(rid)));
             ui->tblRefund->setValue(i, 0, rid);
             fTrackControl->insert("Refund", ui->tblRefund->toString(i, 2), "");

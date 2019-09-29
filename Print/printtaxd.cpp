@@ -167,6 +167,8 @@ void PrintTaxD::on_btnPrint_clicked()
         fDD[":f_usedPrepaid"] = usedPre;
         fDD.update("m_register", where_id(ap(ui->tblData->toString(i, 0))));
 
+        fDD[":f_tax"] = fTaxCode;
+        fDD[":f_wdate"] = WORKING_DATE;
         fDD[":f_vaucher"] = ui->tblData->toString(i, 0);
         fDD[":f_invoice"] = fInvoice;
         fDD[":f_date"] = QDate::currentDate();

@@ -10,6 +10,7 @@
 #define dr_discount_20 "discount 20"
 #define dr_discount_50 "discount 50"
 #define dr_order_number_prefix "order number prefix"
+#define dr_long_order_time "long order time"
 
 class DefRest : public Base {
 public:

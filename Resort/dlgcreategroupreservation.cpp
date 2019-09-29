@@ -70,7 +70,7 @@ DlgCreateGroupReservation::~DlgCreateGroupReservation()
 void DlgCreateGroupReservation::loadRooms()
 {
     DoubleDatabase fDD(true, doubleDatabase);
-    fDD.exec("select f_id, f_floor, f_short, f_rate from f_room order by f_id");
+    fDD.exec("select f_id, f_floor, f_short, f_rate from f_room order by f_floor, f_id");
     int floor = 0;
     int row = 0;
     int col = 0;
@@ -186,7 +186,9 @@ void DlgCreateGroupReservation::makeRooms()
             if (ui->tblData->cellWidget(i, j)) {
                 WGroupReserveRect *gr = static_cast<WGroupReserveRect*>(ui->tblData->cellWidget(i, j));
                 CacheRoom room;
-                room.get(gr->code());
+                if (!room.get(gr->code())) {
+                    continue;
+                }
                 bool enabled = !excluded.contains(room.fCode().toInt());
                 if (lstCat.count() > 0) {
                     enabled = enabled && lstCat.contains(room.fCategoryShort());

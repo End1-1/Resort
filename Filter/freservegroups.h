@@ -26,6 +26,7 @@ private:
 private slots:
     void doubleClick(const QList<QVariant> &row);
     void removeGroup();
+    void newGroup();
 };
 
 #endif // FRESERVEGROUPS_H

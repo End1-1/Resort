@@ -134,13 +134,14 @@ void DWMainDeskHint::load()
                     "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
                "left join f_cardex cdx on cdx.f_cardex=r.f_cardex "
                "inner join users u on u.f_id=r.f_author "
-               "where (r.f_state=%1 or r.f_state=%2 or r.f_state=%3) "
+               "where ((r.f_state=%1 or r.f_state=%2) or (r.f_state=%3 and r.f_enddate>='%4')) "
                " and r.f_startdate is not null "
                "group by r.f_id "
                "order by 1, 2 ")
             .arg(RESERVE_CHECKIN)
             .arg(RESERVE_RESERVE)
-            .arg(RESERVE_SERVICE);
+            .arg(RESERVE_SERVICE)
+            .arg(WORKING_DATE.toString(def_mysql_datetime_format));
     fTableModel->setSqlQuery(query);
     fTableModel->apply(nullptr);
     fLoaded = true;

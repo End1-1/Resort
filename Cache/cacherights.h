@@ -144,7 +144,7 @@
 #define cr__tax_attack 135
 #define cr__inhouse_guest_future 136
 #define cr__ps_correction_in_invoice 137
-#define cr__1
+#define cr__close_long_open_order 138
 #define cr__1
 #define cr__1
 #define cr__1

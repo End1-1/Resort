@@ -173,6 +173,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chQuickCheckout, QString::number(fGroupId) + ": " +  "Quick checkout")
             .addWidget(ui->chTaxOfInvoices, QString::number(fGroupId) + ": " + "Tax attack")
             .addWidget(ui->chPSVoucherCancelFromInvoice, QString::number(fGroupId) + ": " + "PS voucher cancelation from invoice")
+            .addWidget(ui->chCloseOldOpenOrder, QString::number(fGroupId) + ": " + ui->chCloseOldOpenOrder->text())
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

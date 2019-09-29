@@ -316,6 +316,7 @@ void Login::on_btnLogin_clicked()
         fDD.insert("serv_tax", false);
     }   
 
+    CacheBaseStruct::fWorkingDate = WORKING_DATE;
     BaseUIDX::fUserId = WORKING_USERID;
     EDateEditFirstDate = WORKING_DATE;
     CacheRights::fGroup = WORKING_USERGROUP;
@@ -325,6 +326,33 @@ void Login::on_btnLogin_clicked()
         CheckoutMinDate = ug.fMinDate();
     }
 
+    fDD[":f_user"] = WORKING_USERID;
+    fDD.exec("select f_id, f_start from s_user_session where f_user=:f_user and f_end<'2000-01-01'");
+    QString message;
+    if (fDD.nextRow()) {
+        fPreferences.setLocal(def_session_id, fDD.getInt(0));
+        message = QString("%1, %2<br>%3 %4<br>%5 %6")
+                .arg(tr("Welcome"))
+                .arg(WORKING_USERNAME)
+                .arg(tr("Your session number is"))
+                .arg(fDD.getInt(0))
+                .arg(tr("started at"))
+                .arg(fDD.getDateTime(1).toString(def_date_time_format));
+    } else {
+        fDD[":f_user"] = WORKING_USERID;
+        fDD[":f_start"] = QDateTime::currentDateTime();
+        int newSession = fDD.insert("s_user_session");
+        fPreferences.setLocal(def_session_id, newSession);
+        message = QString("%1, %2<br>%3 %4 %5")
+                .arg(tr("Welcome"))
+                .arg(WORKING_USERNAME)
+                .arg(tr("Your session number is"))
+                .arg(newSession)
+                .arg(tr("started at right now"));
+    }
+    if (!fPreferences.getDb(def_user_auto_session).toBool()) {
+        message_info(message);
+    }
     accept();
 }
 

@@ -338,6 +338,10 @@ void DlgEndOfDay::on_btnOk_clicked()
     }
     /* END OF ADD DAY TO S_DAYS SYSTEM TABLE */
 
+    if (fPreferences.getDb(def_user_auto_session).toBool()) {
+        fDD.exec("update s_user_session set f_end=current_timestamp");
+    }
+
     if (result) {
         fDD.exec("insert into f_eod (f_date) values (current_timestamp())");
         fDD.commit();

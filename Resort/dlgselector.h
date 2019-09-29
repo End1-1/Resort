@@ -33,7 +33,8 @@ private slots:
     void on_btnCacnel_clicked();
     void on_btnOK_clicked();
     void on_lineEdit_textEdited(const QString &arg1);
-    void on_btnRefresh_clicked();
+    void on_btnRefresh_clicked();    
+    void on_tblData_clicked(const QModelIndex &index);
 
 private:
     Ui::DlgSelector *ui;

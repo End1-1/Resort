@@ -40,6 +40,8 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
     ui(new Ui::WReservationRoomTab)
 {
     ui->setupUi(this);
+    ui->leReserveCode->setEnabled(false);
+    ui->leReserveName->setEnabled(false);
     fReservation = static_cast<WReservation*>(parent);
     ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexname, HINT_CARDEX);
     ui->leCardexCode->setInitialValue(fPreferences.getDb(def_default_cardex).toString());
@@ -416,65 +418,13 @@ bool WReservationRoomTab::save()
             }
         }
     }
-    QString query;
+    //QString query;
     if (result && !oldRoom.isEmpty()) {
         fDD[":f_room"] = ui->leRoomCode->text();
         result = result && fDD.exec("update m_register set f_room=:f_room where f_inv=" + ap(ui->leInvoice->text()));
     }
-    if (result) {
-        QString allGuest = ui->tblGuest->item(0, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(0, 2)->data(Qt::DisplayRole).toString();
-        for (int i = 1; i < ui->tblGuest->rowCount(); i++) {
-            allGuest += ", " + ui->tblGuest->item(i, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(i, 2)->data(Qt::DisplayRole).toString();
-        }
-        CacheRoom room;
-        DoubleDatabase dd2(true, true);
-        dd2[":f_id"] = ui->leReservId->text();
-        dd2.exec("delete from f_reservation_chart where f_id=:f_id");
-        dd2[":f_reservation"] = ui->leReservId->text();
-        dd2.exec("delete from f_reservation_map where f_reservation=:f_reservation");
-        if (room.get(ui->leRoomCode->text())) {
-            dd2[":f_id"] = ui->leReservId->text();
-            dd2[":f_invoice"] = ui->leInvoice->text();
-            dd2[":f_state"] = ui->leReserveCode->text();
-            dd2[":f_statename"] = ui->leReserveName->text();
-            dd2[":f_reservestate"] = ui->leStatusCode->text();
-            dd2[":f_reservestatename"] = ui->leStatusName->text();
-            dd2[":f_room"] = ui->leRoomCode->text();
-            dd2[":f_roomshort"] = ui->leRoomName->text();
-            dd2[":f_roomcategory"] = room.fCategoryId();
-            dd2[":f_roomstate"] = room.fState();
-            dd2[":f_roomfloor"] = room.fFloor();
-            dd2[":f_roombuilding"] = room.fBuilding();
-            dd2[":f_startdate"] = ui->deEntry->date();
-            dd2[":f_enddate"] = ui->deDeparture->date();
-            dd2[":f_days"] = ui->deEntry->date().daysTo(ui->deDeparture->date());
-            dd2[":f_guest"] = ui->tblGuest->item(0, 1)->data(Qt::DisplayRole).toString() + ui->tblGuest->item(0, 2)->data(Qt::DisplayRole).toString();
-            dd2[":f_allguest"] = allGuest;
-            dd2[":f_cardex"] = ui->leCardexCode->text();
-            dd2[":f_cardexname"] = ui->leCardexname->text();
-            dd2[":f_groupcode"] = fReservation->groupId();
-            dd2[":f_groupname"] = fReservation->groupName();
-            dd2.insert("f_reservation_chart", false);
-            if (ui->deEntry->date().daysTo(ui->deDeparture->date()) == 0) {
-                dd2[":f_reservation"] = ui->leReservId->text();
-                dd2[":f_room"] = ui->leRoomCode->text();
-                dd2[":f_date"] = ui->deEntry->date();
-                dd2[":f_entry"] = 1;
-                dd2[":f_departure"] = 1;
-                dd2.insert("f_reservation_map", false);
-            } else {
-                for (qint64 i = 0, count = ui->deEntry->date().daysTo(ui->deDeparture->date()); i < count; i++) {
-                    dd2[":f_reservation"] = ui->leReservId->text();
-                    dd2[":f_room"] = ui->leRoomCode->text();
-                    dd2[":f_date"] = ui->deEntry->date().addDays(i);
-                    dd2[":f_entry"] = (i == 0 ? 1 : 0);
-                    dd2[":f_departure"] = (i == count - 1 ? 1 : 0);
-                    dd2.insert("f_reservation_map", false);
-                }
-            }
-        } else {
-        }        
-    }
+
+
     if (result) {
         ui->btnAppendAdvance->setEnabled(true);
         fDD.commit();
@@ -592,7 +542,7 @@ void WReservationRoomTab::loadReservation(const QString &id)
         message_error(tr("Invalid reservation code"));
         return;
     }
-    if (fDD.getInt(1) == RESERVE_SERVICE) {
+    if (fDD.getInt(0) == RESERVE_SERVICE) {
         startTrackControl();
         fDD[":f_table"] = TRACK_RESERVATION;
         fDD[":f_windowId"] = ui->leReservId->text();
@@ -601,7 +551,7 @@ void WReservationRoomTab::loadReservation(const QString &id)
     }
     int c = 0;
         QList<QVariant> &row = fDD.fDbRows[0];
-        ui->leReserveCode->setInt(row.at(c++).toInt());
+        ui->leReserveCode->setInitialValue(row.at(c++).toInt());
         if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
             ui->leReserveCode->setInitialValue(RESERVE_RESERVE);
             ui->leReserveCode->fHiddenText = "1";
@@ -1206,7 +1156,8 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
     if (ui->leReserveCode->asInt() == RESERVE_REMOVED) {
         return true;
     }
-    int cr = DlgCheckAdvanceBeforeCancel::checkAdvance(ui->leInvoice->text());
+    QString cancelReason;
+    int cr = DlgCheckAdvanceBeforeCancel::checkAdvance(ui->leInvoice->text(), cancelReason);
     getAdvance();
     switch (cr) {
     case CR_NOCANCEL:
@@ -1231,7 +1182,12 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
     fDD[":f_reservation"] = ui->leReservId->text();
     fDD.exec("delete from f_reservation_map where f_reservation=:f_reservation");
 
+    fDD[":f_id"] = ui->leReservId->text();
+    fDD[":f_reason"] = cancelReason;
+    fDD.insert("f_reservation_cancel_reason", false);
+
     if (result) {
+        fTrackControl->insert("Cancel reason", cancelReason, "");
         fTrackControl->insert("Reservation was canceled", "", "");
         fTrackControl->saveChanges();
         fDD.commit();
@@ -1249,6 +1205,7 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
         }
     }
     emit commonChanges();
+    setGroupBoxesEnabled(false);
     BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
     return result;
 }
@@ -1273,17 +1230,20 @@ bool WReservationRoomTab::canRevive()
 bool WReservationRoomTab::revive()
 {
     DoubleDatabase fDD(true, doubleDatabase);
-    ui->leReserveCode->setInitialValue(RESERVE_RESERVE);
-    fDD[":f_state"] = RESERVE_RESERVE;
-    fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
-    fTrackControl->insert("Revive", "", "");
     loadReservation(ui->leReservId->text());
     fDD[":f_id"] = ui->leReservId->text();
     fDD.exec("select f_group from f_reservation where f_id=:f_id");
     if (fDD.nextRow()) {
         fReservation->setGroup(fDD.getInt("f_group"));
     }
-    save();
+    ui->leReserveCode->setInitialValue(RESERVE_RESERVE);
+    if (!save()) {
+        return false;
+    }
+    fDD[":f_id"] = ui->leReservId->text();
+    fDD.exec("delete from f_reservation_cancel_reason where f_id=:f_id");
+    setGroupBoxesEnabled(true);
+    fTrackControl->insert("Revive", "", "");
     emit commonChanges();
     return true;
 }

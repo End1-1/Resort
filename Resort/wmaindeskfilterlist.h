@@ -16,7 +16,7 @@ class WMainDeskFilterList : public BaseDialog
 public:
     explicit WMainDeskFilterList(QWidget *parent = nullptr);
     ~WMainDeskFilterList();
-    static bool filter(const QStringList &values, const QString &title, QString &out);
+    static bool filter(const QStringList &values, const QStringList &names, const QString &title, QString &out);
 
 private slots:
     void on_lstValues_itemClicked(QListWidgetItem *item);

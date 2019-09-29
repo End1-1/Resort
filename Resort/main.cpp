@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QDir>
 
+#define DEMO
+
 int main(int argc, char *argv[])
 {
 #ifndef QT_DEBUG
@@ -20,6 +22,14 @@ int main(int argc, char *argv[])
     libPath << qApp->applicationDirPath() + "/sqldrivers";
     libPath << qApp->applicationDirPath() + "/printsupport";
     QCoreApplication::setLibraryPaths(libPath);
+#endif
+
+#ifdef DEMO
+    QDate cd = QDate::currentDate();
+    QDate vd = QDate::fromString("01.11.2019", "dd.MM.yyyy");
+    if (cd > vd) {
+        return 0;
+    }
 #endif
 
     def_station = "SmartHotel: ";

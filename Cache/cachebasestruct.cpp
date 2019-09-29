@@ -2,6 +2,8 @@
 #include "cacheone.h"
 #include "dlgselector.h"
 
+QDate CacheBaseStruct::fWorkingDate;
+
 CacheBaseStruct::CacheBaseStruct()
 {
     fCacheId = 0;
@@ -14,7 +16,6 @@ CacheBaseStruct::CacheBaseStruct()
 
 CacheBaseStruct::~CacheBaseStruct()
 {
-
 }
 
 void CacheBaseStruct::reInit()

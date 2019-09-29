@@ -38,7 +38,7 @@ public:
     friend class FCategoryToSell;
     explicit WReportGrid(QWidget *parent = nullptr);
     ~WReportGrid();
-    QToolButton *addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver = nullptr);
+    QToolButton *addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver = nullptr, int pos = 1000);
     int fillRowValuesOut(QList<QVariant> &out);
     void setTblTotalData(const QList<int> &columns, const QList<double> &values);
     void setTblNoTotalData();

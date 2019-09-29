@@ -178,7 +178,7 @@ void WReservation::openVaucher(const QString &id)
 {
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = id;
-    fDD.exec("select f_doc from m_register where f_id=:f_id");
+    fDD.exec("select f_res from m_register where f_id=:f_id");
     if (fDD.nextRow()) {
         QString reserveId = fDD.getString(0);
         openReserveWindows(reserveId);

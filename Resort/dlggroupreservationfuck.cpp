@@ -20,6 +20,7 @@
 #include "wreservationroomtab.h"
 #include "ptextrect.h"
 #include "pimage.h"
+#include <QInputDialog>
 
 DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     BaseWidget(parent),
@@ -1282,6 +1283,15 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
 
 void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
 {
+    bool ok = false;
+    QString reason = QInputDialog::getText(this, tr("Cancelation reason"), tr("Reason"), QLineEdit::Normal, "", &ok).trimmed();
+    if (!ok) {
+        return;
+    }
+    if (reason.isEmpty()) {
+        message_error("Please, specify the reason on cancelation");
+        return;
+    }
     if (message_confirm(tr("Confirm to removing whole group")) != RESULT_YES) {
         return;
     }
@@ -1310,6 +1320,9 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
         fDD[":f_cancelUser"] = WORKING_USERID;
         fDD[":f_cancelDate"] = QDateTime::currentDateTime();
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
+        fDD[":f_id"] = ui->tblRoom->toString(i, 0);
+        fDD[":f_reason"] = tr("Group") + ": " + reason;
+        fDD.insert("f_reservation_cancel_reason", false);
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(i, 0));
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tblRoom->toString(i, 0));
         TrackControl tc(TRACK_RESERVATION);
@@ -1319,6 +1332,11 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
     if (!cannotCancel.isEmpty()) {
         message_info(tr("Next reservations was not canceled, because have an advance") + "<br>" + cannotCancel);
     } else {
+        fDD[":f_canceled"] = 1;
+        fDD[":f_cancelDate"] = QDateTime::currentDateTime();
+        fDD[":f_cancelUser"] = WORKING_USERID;
+        fDD[":f_cancelReason"] = reason;
+        fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
         message_info(tr("Reservation group was successfully canceled"));
     }
     loadGroup(ui->leGroupCode->asInt());

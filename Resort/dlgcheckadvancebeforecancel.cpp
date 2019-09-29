@@ -29,11 +29,12 @@ DlgCheckAdvanceBeforeCancel::~DlgCheckAdvanceBeforeCancel()
     delete ui;
 }
 
-int DlgCheckAdvanceBeforeCancel::checkAdvance(const QString &inv)
+int DlgCheckAdvanceBeforeCancel::checkAdvance(const QString &inv, QString &reason)
 {
     DlgCheckAdvanceBeforeCancel *d = new DlgCheckAdvanceBeforeCancel(inv, fPreferences.getDefaultParentForMessage());
     d->getBalance();
     int result = d->exec();
+    reason = d->ui->teReason->toPlainText();
     delete d;
     return result;
 }
@@ -79,6 +80,11 @@ void DlgCheckAdvanceBeforeCancel::on_btnRefund_clicked()
 void DlgCheckAdvanceBeforeCancel::on_btnCancelreservation_clicked()
 {
     if (message_confirm(tr("Confirm to cancel reservation")) == RESULT_YES)  {
+        ui->teReason->setPlainText(ui->teReason->toPlainText().trimmed());
+        if (ui->teReason->toPlainText().isEmpty()) {
+            message_error(tr("Please, specify the reason of cancelation"));
+            return;
+        }
         done(CR_CANCEL);
     }
 }

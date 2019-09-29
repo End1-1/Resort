@@ -2,6 +2,7 @@
 #include "ui_freservegroups.h"
 #include "wreportgrid.h"
 #include "dlggroupreservationfuck.h"
+#include <QInputDialog>
 
 FReserveGroups::FReserveGroups(QWidget *parent) :
     WFilterBase(parent),
@@ -12,7 +13,11 @@ FReserveGroups::FReserveGroups(QWidget *parent) :
     if (r__(cr__super_correction)) {
         fReportGrid->addToolBarButton(":/images/garbage.png", tr("Remove group"), SLOT(removeGroup()), this)->setFocusPolicy(Qt::NoFocus);
     }
+    if (r__(cr__reservation_group_reservation)) {
+        fReportGrid->setBtnNewVisible(true);
+    }
     connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClick(QList<QVariant>)));
+    connect(fReportGrid, SIGNAL(newBtn()), this, SLOT(newGroup()));
 }
 
 FReserveGroups::~FReserveGroups()
@@ -100,6 +105,15 @@ void FReserveGroups::removeGroup()
         message_error(tr("Nothing was selected"));
         return;
     }
+    bool ok = false;
+    QString reason = QInputDialog::getText(this, tr("Cancelation reason"), tr("Reason"), QLineEdit::Normal, "", &ok).trimmed();
+    if (!ok) {
+        return;
+    }
+    if (reason.isEmpty()) {
+        message_error("Please, specify the reason on cancelation");
+        return;
+    }
     if (message_confirm(tr("Confirm remove group")) != QDialog::Accepted) {
         return;
     }
@@ -107,10 +121,28 @@ void FReserveGroups::removeGroup()
     fDD[":f_canceled"] = 1;
     fDD[":f_cancelDate"] = QDateTime::currentDateTime();
     fDD[":f_cancelUser"] = WORKING_USERID;
+    fDD[":f_cancelReason"] = reason;
     fDD.update("f_reservation_group", where_id(val.at(0).toInt()));
-    fDD[":f_state"] = RESERVE_REMOVED;
-    fDD[":f_cancelDate"] = QDateTime::currentDateTime();
-    fDD[":f_cancelUser"] = WORKING_USERID;
-    fDD.update("f_reservation", where_field("f_group", val.at(0).toInt()));
+    fDD[":f_group"] = val.at(0).toInt();
+    fDD[":f_state"] = RESERVE_RESERVE;
+    fDD.exec("select f_id from f_reservation where f_group=:f_group and f_state=:f_state");
+    QStringList rid;
+    while (fDD.nextRow()) {
+        rid.append(fDD.getString(0));
+    }
+    for (QString id: rid) {
+        fDD[":f_state"] = RESERVE_REMOVED;
+        fDD[":f_cancelDate"] = QDateTime::currentDateTime();
+        fDD[":f_cancelUser"] = WORKING_USERID;
+        fDD.update("f_reservation", where_id(ap(id)));
+        fDD[":f_id"] = id;
+        fDD[":f_reason"] = tr("Group") + ": " + reason;
+        fDD.insert("f_reservation_cancel_reason", false);
+    }
     fReportGrid->fModel->removeRow(row);
+}
+
+void FReserveGroups::newGroup()
+{
+    addTab<DlgGroupReservationFuck>();
 }

@@ -164,7 +164,7 @@ void WReportGrid::tblMainGridHScroll(int value)
     ui->tblTotals->horizontalScrollBar()->setValue(value);
 }
 
-QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver)
+QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver, int pos)
 {
     QToolButton *b = new QToolButton(this);
     b->setIcon(QIcon(image));
@@ -174,7 +174,10 @@ QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &
         receiver = this;
     }
     connect(b, SIGNAL(clicked()), receiver, slot);
-    ui->hlToolbar->insertWidget(6, b);
+    if (pos == 1000) {
+        pos = 6;
+    }
+    ui->hlToolbar->insertWidget(pos, b);
     return b;
 }
 

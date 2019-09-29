@@ -49,20 +49,28 @@ WMainDesk::WMainDesk(QWidget *parent) :
         ui->hlCatButtons->addWidget(btn);
         fCatList.append(fDD.getString(0));
     }
-    fDD.exec("select f_id from f_room_bed order by 1");
+    fDD.exec("select f_id, f_name from f_room_bed order by 1");
     while (fDD.nextRow()) {
         fBedList.append(fDD.getString(0));
+        fBedListNames.append(fDD.getString(1));
     }
-    fDD.exec("select distinct(f_building) from f_room ");
+    fDD.exec("select f_id, f_name from f_room_building ");
     while (fDD.nextRow()) {
         fBuildingList.append(fDD.getString(0));
+        fBuildingListNames.append(fDD.getString(1));
     }
     fSmokeList.append(tr("Yes"));
     fSmokeList.append(tr("No"));
-    fStateFilter.append(tr("Vacant ready"));
-    fStateFilter.append(tr("Checkin"));
-    fStateFilter.append(tr("Dirty"));
-    fStateFilter.append(tr("O/O"));
+    fSmokeListNames.append(tr("Yes"));
+    fSmokeListNames.append(tr("No"));
+    fStateList.append(tr("Vacant ready"));
+    fStateList.append(tr("Checkin"));
+    fStateList.append(tr("Dirty"));
+    fStateList.append(tr("O/O"));
+    fStateListNames.append(tr("Vacant ready"));
+    fStateListNames.append(tr("Checkin"));
+    fStateListNames.append(tr("Dirty"));
+    fStateListNames.append(tr("O/O"));
     fDockHint = new DWMainDeskHint(this);
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
@@ -300,13 +308,13 @@ void WMainDesk::filterRoom()
     et.start();
     qDebug() << "Start filter room";
     int roomStateFilter = -1;
-    if (fState == tr("Vacant ready")) {
+    if (fStateFilter == tr("Vacant ready")) {
         roomStateFilter = ROOM_STATE_NONE;
-    } else if (fState == tr("Checkin")) {
+    } else if (fStateFilter == tr("Checkin")) {
         roomStateFilter = ROOM_STATE_CHECKIN;
-    } else if (fState == tr("Dirty")) {
+    } else if (fStateFilter == tr("Dirty")) {
         roomStateFilter = ROOM_STATE_DIRTY;
-    } else if (fState == tr("O/O")) {
+    } else if (fStateFilter == tr("O/O")) {
         roomStateFilter = ROOM_STATE_OUTOF;
     }
     fRoomList.clear();
@@ -495,7 +503,7 @@ void WMainDesk::on_btnClearFilter_clicked()
     fCatFilter.clear();
     fBedFilter.clear();
     fSmokeFilter.clear();
-    fState.clear();
+    fStateFilter.clear();
     ui->btnFilterCategory->setText(QString("%1: %2").arg(tr("Category filter")).arg(tr("All")));
     ui->btnBedFilter->setText(QString("%1: %2").arg(tr("Bed filter")).arg(tr("All")));
     ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(tr("All")));
@@ -735,7 +743,7 @@ void WMainDesk::on_btnFilterCategory_clicked()
 
 void WMainDesk::on_btnBedFilter_clicked()
 {
-    if  (WMainDeskFilterList::filter(fBedList, tr("Bed"), fBedFilter)) {
+    if  (WMainDeskFilterList::filter(fBedList, fBedListNames, tr("Bed"), fBedFilter)) {
         ui->btnBedFilter->setText(QString("%1: %2").arg(tr("Bed filter")).arg(fBedFilter.isEmpty() ? tr("All") : fBedFilter));
         qApp->processEvents();
         filterRoom();
@@ -744,7 +752,7 @@ void WMainDesk::on_btnBedFilter_clicked()
 
 void WMainDesk::on_btnSmokeFilter_clicked()
 {
-    if  (WMainDeskFilterList::filter(fSmokeList, tr("Smoke"), fSmokeFilter)) {
+    if  (WMainDeskFilterList::filter(fSmokeList, fSmokeListNames, tr("Smoke"), fSmokeFilter)) {
         ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(fSmokeFilter.isEmpty() ? tr("All") : fSmokeFilter));
         qApp->processEvents();
         filterRoom();
@@ -753,8 +761,8 @@ void WMainDesk::on_btnSmokeFilter_clicked()
 
 void WMainDesk::on_btnRoomStateFilter_clicked()
 {
-    if  (WMainDeskFilterList::filter(fStateFilter, tr("Room state"), fState)) {
-        ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(fState.isEmpty() ? tr("All") : fState));
+    if  (WMainDeskFilterList::filter(fStateList, fStateListNames, tr("Room state"), fStateFilter)) {
+        ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(fStateFilter.isEmpty() ? tr("All") : fStateFilter));
         qApp->processEvents();
         filterRoom();
     }
@@ -773,7 +781,7 @@ void WMainDesk::uncheckCatButtons()
 
 void WMainDesk::on_btnBuilding_clicked()
 {
-    if  (WMainDeskFilterList::filter(fBuildingList, tr("Building"), fBuildingFilter)) {
+    if  (WMainDeskFilterList::filter(fBuildingList, fBuildingListNames, tr("Building"), fBuildingFilter)) {
         ui->btnBuilding->setText(QString("%1: %2").arg(tr("Building filter")).arg(fBuildingFilter.isEmpty() ? tr("All") : fBuildingFilter));
         qApp->processEvents();
         filterRoom();

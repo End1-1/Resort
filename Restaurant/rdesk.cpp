@@ -587,14 +587,18 @@ void RDesk::setComplexMode()
         fDD[":f_complex"] = dc->fId;
         fDD[":f_complexId"] = dc->fId;
         fDD[":f_adgt"] = dc->fAdgt;
-        dc->fRecId = uuidx("DR");
-        fDD.insertId("o_dish", dc->fRecId);
         if (dc->fRecId.isEmpty()) {
-            message_error("Application will quit due an program error.");
-            qApp->quit();
-            return;
+            dc->fRecId = uuidx("DR");
+            fDD[":f_id"] = dc->fRecId;
+            fDD.insert("o_dish", false);
+            if (dc->fRecId.isEmpty()) {
+                message_error("Application will quit due an program error.");
+                qApp->quit();
+                return;
+            }
+        } else {
+            fDD.update("o_dish", where_id(ap(dc->fRecId)));
         }
-        fDD.update("o_dish", where_id(ap(dc->fRecId)));
         TrackControl::insert(TRACK_REST_ORDER, "New complex begin", dc->fName["en"], "----", "", fTable->fOrder, "");
         for (int i = 0; i < dc->fDishes.count(); i++) {
             dc->fDishes[i]->fComplexRec = dc->fRecId;
@@ -1212,7 +1216,6 @@ void RDesk::addDishToOrder(DishStruct *d, bool dontCheckTable)
     countDish(od);
     od->fRecId = uuidx("DR");
     DoubleDatabase fDD(true, doubleDatabase);
-    fDD.insertId("o_dish", od->fRecId);
     fDD[":f_header"] = fTable->fOrder;
     fDD[":f_state"] = DISH_STATE_READY;
     fDD[":f_dish"] = od->fDishId;
@@ -1234,7 +1237,8 @@ void RDesk::addDishToOrder(DishStruct *d, bool dontCheckTable)
     fDD[":f_complexId"] = 0;
     fDD[":f_adgt"] = od->fAdgt;
     fDD[":f_complexRec"] = od->fComplexRecId;
-    fDD.update("o_dish", where_id(ap(od->fRecId)));
+    fDD[":f_id"] = od->fRecId;
+    fDD.insert("o_dish", false);
     updateDishQtyHistory(od);
     addDishToTable(od);
     resetPrintQty();
@@ -1296,7 +1300,7 @@ double RDesk::countTotal()
 //        if (od->fComplex > 0 ) {
 //            continue;
 //        }
-        total += od->fTotal;
+        total += od->fPrice * od->fQtyPrint;
     }
     for (int i = 0; i < ui->tblComplex->rowCount(); i++) {
         DishComplexStruct *dc = ui->tblComplex->item(i, 0)->data(Qt::UserRole).value<DishComplexStruct*>();
@@ -1323,6 +1327,28 @@ double RDesk::countTotal()
     dd.close();
 
     return grandTotal;
+}
+
+bool RDesk::checkQtyBeforeReceipt()
+{
+    OrderDishStruct *serv = nullptr;
+    for (int i = 0; i < ui->tblOrder->rowCount(); i++) {
+        OrderDishStruct *od = ui->tblOrder->item(i, 0)->data(Qt::UserRole).value<OrderDishStruct*>();
+        if (!od) {
+            continue;
+        }
+        if (od->fState != DISH_STATE_READY) {
+            continue;
+        }
+        if (od->fDishId == Hall::getHallById(fTable->fHall)->fServiceItem) {
+            serv = od;
+            continue;
+        }
+        if (od->fQty - od->fQtyPrint > 0.01) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void RDesk::countDish(OrderDishStruct *d)
@@ -1808,6 +1834,11 @@ void RDesk::printRemovedDish(OrderDishStruct *od, double removed, int user)
 
 void RDesk::printReceipt(bool printModePayment)
 {
+    if (!checkQtyBeforeReceipt()) {
+        message_error(tr("Order is not ready. Send first."));
+        return;
+    }
+    //TODO: long open order handler. if (fTable->fOpened - QDateTime::currentDateTime() < '10 hour')...
     int trackUser = fStaff->fId;
     if (!printModePayment) {
         if (fTable->fPrint > 0) {
@@ -2538,7 +2569,7 @@ void RDesk::on_btnPayment_clicked()
             cardName = cc.fName();
         }
     }
-    fDD.insertId("m_register", fTable->fOrder);
+    fDD[":f_id"] = fTable->fOrder;
     fDD[":f_source"] = VAUCHER_POINT_SALE_N;
     fDD[":f_wdate"] = WORKING_DATE;
     fDD[":f_rdate"] = QDate::currentDate();
@@ -2567,7 +2598,7 @@ void RDesk::on_btnPayment_clicked()
     fDD[":f_cancelReason"] = "";
     fDD[":f_side"] = side;
     fDD[":f_cash"] = fTable->fPaymentMode == PAYMENT_CARD || fTable->fPaymentMode == PAYMENT_CARD || fTable->fPaymentMode == PAYMENT_BANK;
-    fDD.update("m_register", where_id(ap(fTable->fOrder)));
+    fDD.insert("m_register", false);
 
     printReceipt(true);
     closeOrder();
@@ -2615,6 +2646,7 @@ void RDesk::on_btnPrint_clicked()
         od->fQtyPrint = od->fQty;
         updateDish(od);
     }
+    countTotal();
     ui->tblOrder->viewport()->update();
     changeBtnState();
 }

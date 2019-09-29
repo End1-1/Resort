@@ -98,6 +98,7 @@ private:
     void addDishToTable(OrderDishStruct *od);
     void updateDish(OrderDishStruct *od);
     double countTotal();
+    bool checkQtyBeforeReceipt();
     void countDish(OrderDishStruct *d);
     bool setTable(TableStruct *t);
     void checkOrderHeader(TableStruct *t, DishStruct *od, bool skipService);

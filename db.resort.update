@@ -1,1 +1,13 @@
 create table st_store (f_id integer primary key auto_increment, f_doc integer,  f_base integer, f_store integer,  f_goods integer, f_qty decimal(14,4), f_price decimal(14,2), f_amount decimal(14,2));
+create table f_reservation_cancel_reason (f_id varchar(16) primary key, f_reason tinytext);
+drop table f_reservation_map;
+drop table f_reservation_chart;
+alter table f_reservation_group add column f_cancelreason tinytext after f_canceluser;
+insert into s_app (f_app, f_version) values ('DB', '1');
+alter table airwick.tax_print add column f_voucher varchar(16) after f_Db;
+alter table m_tax_history add f_wdate date after f_id;
+alter table m_tax_history add f_tax integer after f_id;
+
+/* DB - 2 */
+update s_app set f_version='2' where f_app='DB';
+create table s_user_session (f_id integer primary key auto_increment, f_user integer, f_start timestamp, f_end timestamp);

@@ -1234,6 +1234,7 @@ void WInvoice::on_btnTaxBack_clicked()
 void WInvoice::on_btnAdvance_clicked()
 {
     DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), this);
+    d->setInvoice(ui->leInvoice->text());
     d->exec();
     delete d;
     loadInvoice(ui->leInvoice->text());

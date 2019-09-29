@@ -148,7 +148,7 @@ void DlgSelector::on_tblData_doubleClicked(const QModelIndex &index)
             ui->tblData->setItemChecked(i, 0, false);
         }
     }
-    ui->tblData->setItemChecked(index.row(), 0, ui->tblData->itemChecked(index.row(), 0));
+    ui->tblData->setItemChecked(index.row(), 0, !ui->tblData->itemChecked(index.row(), 0));
     if (!fMultiCheck) {
         ui->tblData->setItemChecked(index.row(), 0, true);
         accept();
@@ -162,7 +162,19 @@ void DlgSelector::on_btnCacnel_clicked()
 
 void DlgSelector::on_btnOK_clicked()
 {
-    accept();
+    if (fMultiCheck) {
+        for (int i = 0; i < ui->tblData->rowCount(); i++) {
+            if (ui->tblData->itemChecked(i, 0)) {
+                accept();
+                return;
+            }
+        }
+    } else {
+        QModelIndexList ml = ui->tblData->selectionModel()->selectedRows();
+        if (ml.count() > 0) {
+            on_tblData_doubleClicked(ml.at(0));
+        }
+    }
 }
 
 void DlgSelector::on_lineEdit_textEdited(const QString &arg1)
@@ -176,5 +188,12 @@ void DlgSelector::on_btnRefresh_clicked()
         fCacheInstance->load();
         setData(fCacheInstance->fRows);
         filter(ui->lineEdit->text());
+    }
+}
+
+void DlgSelector::on_tblData_clicked(const QModelIndex &index)
+{
+    if (fMultiCheck) {
+        ui->tblData->setItemChecked(index.row(), 0, !ui->tblData->itemChecked(index.row(), 0));
     }
 }

@@ -15,10 +15,10 @@ public:
     explicit DlgUserRights(QWidget *parent = nullptr);
     ~DlgUserRights();
     void setup(QList<QVariant> &values);
+
 private slots:
     void on_btnCancel_clicked();
     void on_btnOk_clicked();
-
     void on_chCheckUncheck_clicked(bool checked);
 
 private:

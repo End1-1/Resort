@@ -76,7 +76,10 @@
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::NoSelection</enum>
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="wordWrap">
       <bool>false</bool>
@@ -139,17 +142,17 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

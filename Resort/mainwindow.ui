@@ -107,7 +107,6 @@
     <addaction name="actionCancelation_No_show_fees"/>
     <addaction name="actionAvaiable_rooms"/>
     <addaction name="actionLenght_of_stay"/>
-    <addaction name="actionNew_room_chart"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1001,6 +1000,10 @@
    </property>
   </action>
   <action name="actionCanceled_reservations">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
+   </property>
    <property name="text">
     <string>Canceled reservations</string>
    </property>

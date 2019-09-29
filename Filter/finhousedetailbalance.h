@@ -21,6 +21,9 @@ public:
 
 private:
     Ui::FInhouseDetailBalance *ui;
+
+private slots:
+    void refresh();
 };
 
 #endif // FINHOUSEDETAILBALANCE_H

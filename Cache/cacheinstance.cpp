@@ -64,7 +64,8 @@ void CacheInstance::update(const QString &code)
             fDD.exec(fStruct->fLoadQuery + " where " + fStruct->fUpdateQuery);
         }
     } else {
-        QString sql = fStruct->fLoadQuery.replace(fStruct->fReplaceUpdateQuery, fStruct->fUpdateQuery);
+        QString sql = fStruct->fLoadQuery;
+        sql.replace(fStruct->fReplaceUpdateQuery, fStruct->fUpdateQuery);
         fDD.exec(sql);
     }
     if (fRows.contains(code)) {

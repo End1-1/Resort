@@ -37,6 +37,8 @@
 
 #define def_no_tracking_changes "No tracking changes"
 #define def_working_day "Working date"
+#define def_session_id "User session id"
+#define def_user_auto_session "User auto session"
 #define def_default_extra_bed "Default extra bed"
 #define def_room_charge_id "Room charge id"
 #define def_default_cardex "Default cardex"
@@ -84,6 +86,8 @@
 #define def_log_main_db "Logs main database"
 #define def_log_reserve_db "Logs reserve database"
 #define def_print_voucher_after_save "Print vouchers after save"
+#define def_append_tax_inhouse_detailed "Append tax in inhouse detailed"
+#define def_long_open_order_time "Long open order time"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

@@ -218,6 +218,8 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->lePenaltyList->setText(fPreferences.getDb(def_penalty_list).toString());
     ui->leRoomMoveVoucher->setText(fPreferences.getDb(def_room_move_voucher).toString());
     ui->leCheckoutVoucherId->setText(fPreferences.getDb(def_checkout_voucher_id).toString());
+    ui->chothTaxGuestDetailed->setChecked(fPreferences.getDb(def_append_tax_inhouse_detailed).toBool());
+    ui->chAutoSession->setChecked(fPreferences.getDb(def_user_auto_session).toBool());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -270,6 +272,8 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->lePenaltyList, "Penalty list")
             .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
             .addWidget(ui->leCheckoutVoucherId, "Checkout voucher id")
+            .addWidget(ui->chothTaxGuestDetailed, ui->chothTaxGuestDetailed->text())
+            .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
             ;
 
     getCompSettings();
@@ -367,6 +371,8 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_penalty_list, ui->lePenaltyList->text());
     values.insert(def_room_move_voucher, ui->leRoomMoveVoucher->text());
     values.insert(def_checkout_voucher_id, ui->leCheckoutVoucherId->text());
+    values.insert(def_append_tax_inhouse_detailed, ui->chothTaxGuestDetailed->isChecked() ? "1" : "0");
+    values.insert(def_user_auto_session, ui->chAutoSession->isChecked() ? "1" : "0");
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
@@ -443,6 +449,7 @@ void WGlobalDbConfig::on_lwHost_clicked(const QModelIndex &index)
     ui->leSecondReceiptPrinter->setText(v[dr_second_receipt_printer]);
     ui->leDisc20->setText(v[dr_discount_20]);
     ui->leDisc50->setText(v[dr_discount_50]);
+    ui->leLongOrderTime->setText(v[dr_long_order_time]);
 }
 
 void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
@@ -475,6 +482,10 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_discount_50;
     fDD[":f_value"] = ui->leDisc50->text();
+    fDD.insert("r_config");    
+    fDD[":f_comp"] = ui->leHost->text();
+    fDD[":f_key"] = dr_long_order_time;
+    fDD[":f_value"] = ui->leLongOrderTime->text();
     fDD.insert("r_config");
 
     getCompSettings();

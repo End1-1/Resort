@@ -88,7 +88,7 @@ void Hall::refresh()
     fDD[":f_state"] = DISH_STATE_READY;
     QString query = "select t.f_id, t.f_lockHost, t.f_order, "
             "h.f_dateOpen, h.f_comment, u.f_firstName, "
-            "sum(d.f_total) "
+            "sum(d.f_price*d.f_qtyprint) "
             "from r_table t "
             "left join o_header h on t.f_order=h.f_id "
             "left join users u on u.f_id=h.f_staff "

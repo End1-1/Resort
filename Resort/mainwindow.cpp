@@ -22,6 +22,7 @@
 #include "fhotelhierarchy.h"
 #include "guestcheckin.h"
 #include "dlgquickroomassignment.h"
+#include "froomstates.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
 #include "wcardexlist.h"
@@ -569,7 +570,9 @@ void MainWindow::enableMainMenu(bool value)
 
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
+    ui->actionQuick_checkout->setVisible(r__(cr__quick_checkout));
     ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
+    ui->actionInhouse_guest_future->setVisible(r__(cr__inhouse_guest_future));
     ui->actionExpected_arrivals->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->actionExpected_arrivals_departures_2->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_pax));
@@ -585,6 +588,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionWakeup_calls->setVisible(r__(cr__wakeupcall));
     ui->actionHotel_hierarchy->setVisible(r__(cr__hotel_hierarcgy));
     ui->actionDaily_transactions->setVisible(r__(cr__daily_transactions));
+    ui->actionState_of_the_room->setVisible(r__(cr__state_of_room));
 
     ui->menuBar->actions().at(3)->setVisible(r__(cr__menu_cashier)); // Cashier
     ui->actionCurrencies->setVisible(r__(cr__currencies));
@@ -2163,4 +2167,9 @@ void MainWindow::on_actionInhouse_guest_future_triggered()
 void MainWindow::on_actionForecast_occupancy_by_category_triggered()
 {
     FForecastOccupancyCategoryReal::openFilterReport<FForecastOccupancyCategoryReal, WReportGrid>();
+}
+
+void MainWindow::on_actionState_of_the_room_triggered()
+{
+    FRoomStates::openFilterReport<FRoomStates, WReportGrid>();
 }

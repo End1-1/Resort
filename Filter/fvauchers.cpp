@@ -217,7 +217,7 @@ void FVauchers::eliminateVoucher()
         fDD.exec("delete from o_header where f_id=:f_id");
         fDD[":f_header"] = out.at(0);
         fDD.exec("delete from o_dish where f_header=:f_header");
-        fDD.exec("delete from resort.o_dish_qty where f_rec not in (select f_id from resort.o_dish)");
+        fDD.exec("delete from o_dish_qty where f_rec not in (select f_id from o_dish)");
         l[":f_rec"] = out.at(0);
         l[":f_invoice"] = out.at(0);
         l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");

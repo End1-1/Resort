@@ -190,6 +190,8 @@ private slots:
     void on_actionInhouse_guest_future_triggered();
     void on_actionForecast_occupancy_by_category_triggered();
 
+    void on_actionState_of_the_room_triggered();
+
 private:
     Listener fServer2Listener;
     Ui::MainWindow *ui;

@@ -174,6 +174,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chTaxOfInvoices, QString::number(fGroupId) + ": " + "Tax attack")
             .addWidget(ui->chPSVoucherCancelFromInvoice, QString::number(fGroupId) + ": " + "PS voucher cancelation from invoice")
             .addWidget(ui->chCloseOldOpenOrder, QString::number(fGroupId) + ": " + ui->chCloseOldOpenOrder->text())
+            .addWidget(ui->chStateOfTheRoom, QString::number(fGroupId) + ": " + ui->chStateOfTheRoom->text())
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

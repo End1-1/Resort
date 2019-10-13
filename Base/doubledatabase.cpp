@@ -109,7 +109,9 @@ void DoubleDatabase::setDatabase(const QString &host, const QString &db, const Q
     default:
         break;
     }
-    logEvent(QString("#%1 %2:%3").arg(dbNum).arg(host).arg(db));
+//    if (logging) {
+//        logEvent(QString("#%1 %2:%3").arg(dbNum).arg(host).arg(db));
+//    }
 }
 
 bool DoubleDatabase::open(bool db1, bool db2)

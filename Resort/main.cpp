@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QDir>
 
-#define DEMO
+#define DEMO_
 
 int main(int argc, char *argv[])
 {

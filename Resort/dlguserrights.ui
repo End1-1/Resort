@@ -462,6 +462,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chStateOfTheRoom">
+         <property name="text">
+          <string>State of the rooms</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>139</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

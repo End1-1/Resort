@@ -26,6 +26,7 @@ SOURCES += main.cpp\
     ../Filter/fcashreportbyitem.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
+    ../Filter/froomstates.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -370,7 +371,6 @@ SOURCES += main.cpp\
     ../Cache/cachegroupreservations.cpp \
     ../GridOptionWidgets/gowidget.cpp \
     ../GridOptionWidgets/godaily.cpp \
-    ../Base/demo.cpp \
     ../Vouchers/voucher_av.cpp \
     dlgexport.cpp \
     goexpextedarrivals.cpp \
@@ -445,6 +445,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fcashreportbyitem.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
+    ../Filter/froomstates.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -793,7 +794,6 @@ HEADERS  += mainwindow.h \
     ../Cache/cachegroupreservations.h \
     ../GridOptionWidgets/gowidget.h \
     ../GridOptionWidgets/godaily.h \
-    ../Base/demo.h \
     ../Vouchers/voucher_av.h \
     dlgexport.h \
     goexpextedarrivals.h \
@@ -864,6 +864,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
+    ../Filter/froomstates.ui \
     dlgconfigtaxserver.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \

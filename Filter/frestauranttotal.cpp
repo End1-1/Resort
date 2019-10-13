@@ -62,6 +62,7 @@ FRestaurantTotal::FRestaurantTotal(QWidget *parent) :
     ui->leDishState->setInitialValue(DISH_STATE_READY);
 
     fReportGrid->fIncludes.clear();
+    fReportGrid->fIncludes["oh.f_comment"] = false;
     fReportGrid->fIncludes["oh.f_id"] = false;
     fReportGrid->fIncludes["oh.f_state"] = false;
     fReportGrid->fIncludes["os.f_" + def_lang] = false;
@@ -144,6 +145,7 @@ void FRestaurantTotal::apply(WReportGrid *rg)
            << 0 // payment mode
            << 150 //payment mode name
            << 80 // payment mode comment
+           << 200 //Comment
            << 80 // count of orders
            << 80 // sum qty
            << 80 // sum total
@@ -176,7 +178,9 @@ void FRestaurantTotal::apply(WReportGrid *rg)
            << "oh.f_tax"
            << "oh.f_paymentMode"
            << "pm.f_" + def_lang
-           << "oh.f_paymentModeComment";
+           << "oh.f_paymentModeComment"
+           << "oh.f_comment"
+              ;
     if (countAmount) {
         rg->fFields
                 << "count(distinct(oh.f_id))"
@@ -214,8 +218,10 @@ void FRestaurantTotal::apply(WReportGrid *rg)
            << tr("Payment mode code")
            << tr("P/M")
            << tr("P/M comment")
+           << tr("Order comment")
            << tr("Qty")
-           << tr("Total");
+           << tr("Total")
+           ;
 
     rg->fTables.clear();
     rg->fTables << "o_header oh"
@@ -711,7 +717,7 @@ void FRestaurantTotal::removePermanently()
     fDD.exec("delete from o_header where f_id=:f_id");
     fDD[":f_id"] = val.at(0);
     fDD.exec("delete from m_register where f_id=:f_id");
-    fDD.exec("delete from resort.o_dish_qty where f_rec not in (select f_id from resort.o_dish)");
+    fDD.exec("delete from o_dish_qty where f_rec not in (select f_id from o_dish)");
     DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
     l.open(true, false);
     l[":f_rec"] = val.at(0);

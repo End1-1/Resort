@@ -11,3 +11,8 @@ alter table m_tax_history add f_tax integer after f_id;
 /* DB - 2 */
 update s_app set f_version='2' where f_app='DB';
 create table s_user_session (f_id integer primary key auto_increment, f_user integer, f_start timestamp, f_end timestamp);
+alter table m_register add column f_session integer;
+
+/*DB - 3 */
+update s_app set f_version='3' where f_app='DB';
+create table web_sessions (f_id integer primary key auto_increment, f_state smallint, f_session varchar(64),  f_user integer, f_start timestamp,  f_end timestamp);

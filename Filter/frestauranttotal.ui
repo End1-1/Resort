@@ -724,6 +724,22 @@ ledger</string>
      </property>
     </widget>
    </item>
+   <item row="5" column="7">
+    <widget class="EQCheckBox" name="chShowOrderComment">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Order comment</string>
+     </property>
+     <property name="Field" stdset="0">
+      <string>oh.f_comment</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

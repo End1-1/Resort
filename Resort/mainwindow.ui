@@ -218,6 +218,8 @@
     <addaction name="actionInhouse_guest_future"/>
     <addaction name="actionList_of_checkin_guests"/>
     <addaction name="actionExpected_arrivals_simple"/>
+    <addaction name="actionExpected_arivals_simple"/>
+    <addaction name="actionExpected_departures_simple"/>
     <addaction name="actionExpected_arrivals"/>
     <addaction name="actionExpected_arrivals_departures_2"/>
     <addaction name="actionDaily_transactions"/>
@@ -1545,6 +1547,24 @@
    </property>
    <property name="text">
     <string>State of the room</string>
+   </property>
+  </action>
+  <action name="actionExpected_departures_simple">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/departure.png</normaloff>:/images/departure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Expected departures / simple</string>
+   </property>
+  </action>
+  <action name="actionExpected_arivals_simple">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
+   </property>
+   <property name="text">
+    <string>Expected arrivals / simple</string>
    </property>
   </action>
  </widget>

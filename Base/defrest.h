@@ -11,6 +11,7 @@
 #define dr_discount_50 "discount 50"
 #define dr_order_number_prefix "order number prefix"
 #define dr_long_order_time "long order time"
+#define dr_new_dish_state_after_close "new_dish_state_after_close"
 
 class DefRest : public Base {
 public:

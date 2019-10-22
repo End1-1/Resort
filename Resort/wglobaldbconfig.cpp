@@ -450,6 +450,7 @@ void WGlobalDbConfig::on_lwHost_clicked(const QModelIndex &index)
     ui->leDisc20->setText(v[dr_discount_20]);
     ui->leDisc50->setText(v[dr_discount_50]);
     ui->leLongOrderTime->setText(v[dr_long_order_time]);
+    ui->cbNewDishState->setCurrentIndex(v[dr_new_dish_state_after_close].toInt());
 }
 
 void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
@@ -486,6 +487,10 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_long_order_time;
     fDD[":f_value"] = ui->leLongOrderTime->text();
+    fDD.insert("r_config");
+    fDD[":f_comp"] = ui->leHost->text();
+    fDD[":f_key"] = dr_new_dish_state_after_close;
+    fDD[":f_value"] = ui->cbNewDishState->currentIndex();
     fDD.insert("r_config");
 
     getCompSettings();

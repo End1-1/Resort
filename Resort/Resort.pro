@@ -24,6 +24,8 @@ SOURCES += main.cpp\
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
+    ../Filter/fexpecteddeparturesimple.cpp \
+    ../Filter/fexpectedsimple.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Filter/froomstates.cpp \
@@ -42,7 +44,7 @@ SOURCES += main.cpp\
     dlgseachfromdatabase.cpp \
     dlgsingleprinttax.cpp \
     dlgtransferlog.cpp \
-        mainwindow.cpp \
+    mainwindow.cpp \
     login.cpp \
     loginsettings.cpp \
     message.cpp \
@@ -443,6 +445,8 @@ HEADERS  += mainwindow.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
+    ../Filter/fexpecteddeparturesimple.h \
+    ../Filter/fexpectedsimple.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
     ../Filter/froomstates.h \
@@ -862,6 +866,8 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     ../Filter/fcashreportbyitem.ui \
+    ../Filter/fexpecteddeparturesimple.ui \
+    ../Filter/fexpectedsimple.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
     ../Filter/froomstates.ui \

@@ -17,6 +17,8 @@ public:
     ~RoomState();
     virtual void callback(int sel, const QString &code);
     void setRoom(const QString &code);
+    void uncheckStiky();
+
 private slots:
     void on_btnCancel_clicked();
     void on_btnOk_clicked();
@@ -27,6 +29,7 @@ private slots:
 private:
     Ui::RoomState *ui;
     CacheRoom fRoom;
+    bool fUncheckedStiky;
     void checkOO();
 };
 

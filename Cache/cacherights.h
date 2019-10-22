@@ -146,8 +146,8 @@
 #define cr__ps_correction_in_invoice 137
 #define cr__close_long_open_order 138
 #define cr__state_of_room 139
-#define cr__1
-#define cr__1
+#define cr__expeced_departures_simple 140
+#define cr__expected_arrivals_simple 141
 #define cr__1
 #define cr__1
 #define cr__1

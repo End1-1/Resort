@@ -22,6 +22,7 @@ public:
     inline int fSmoke() {return getInt("f_smoke"); }
     inline QString fPrice() {return getString("f_rate"); }
     inline int fBuilding() {return getInt("f_building"); }
+    inline QString fStateName() {return getString("f_statename");}
 };
 
 bool CI_Romm_compare(QString &left, QString &right);

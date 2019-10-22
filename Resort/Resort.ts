@@ -6648,10 +6648,6 @@ for this operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Expected arrivals / pax</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Expected arrivals / departures</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6737,6 +6733,22 @@ for this operation</source>
     </message>
     <message>
         <source>PS voucher cancelation from invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected departures / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State of the rooms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close a long open order</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9075,6 +9087,22 @@ ee</source>
         <source>Expected arrivals</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Nation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FExpectedArrivals</name>
@@ -9692,7 +9720,7 @@ ee</source>
     </message>
     <message>
         <source>Date range</source>
-        <translation type="unfinished">Ժամանակաշրջան</translation>
+        <translation type="obsolete">Ժամանակաշրջան</translation>
     </message>
     <message>
         <source>In House Detailed Balance</source>
@@ -9741,6 +9769,26 @@ ee</source>
     <message>
         <source>Tax</source>
         <translation type="unfinished">ՀԴՄ</translation>
+    </message>
+    <message>
+        <source>SUBTOTAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-TAX-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cash </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Card </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prepaid </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -11237,6 +11285,14 @@ ledger</source>
         <source>oh.f_dateOpen;oh.f_dateClose;timediff(oh.f_dateclose, oh.f_dateopen)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Order comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>oh.f_comment</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FRoomArrangement</name>
@@ -11405,6 +11461,41 @@ ledger</source>
     </message>
     <message>
         <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FRoomStates</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State of the room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State code</source>
+        <translation type="unfinished">Վիճակի կոդ</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Անվանում</translation>
+    </message>
+    <message>
+        <source>State</source>
+        <translation type="unfinished">Վիճակ</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State of the rooms</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12203,6 +12294,22 @@ or contact to administrator</source>
         <source>Server time and workstation time note same, aborting.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Welcome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Your session number is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>started at</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>started at right now</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LoginSettings</name>
@@ -12496,10 +12603,6 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Transfer amount</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Expected arrivals / pax</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -13328,6 +13431,18 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Forecast occupancy by category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>State of the room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected departures / simple</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17986,6 +18101,22 @@ Reserve</source>
         <source>Discount charge id</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Automatically user session</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A long open order time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output additional of tax info in the guest detailed balance</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -18912,8 +19043,8 @@ reservation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <source>All</source>
+        <translation type="unfinished">Բոլորը</translation>
     </message>
 </context>
 <context>

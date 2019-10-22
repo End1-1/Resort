@@ -302,6 +302,26 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chExpectedArrivalsSimple">
+         <property name="text">
+          <string>Expected arrivals / simple</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>141</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chExpectedDeparturesSimple">
+         <property name="text">
+          <string>Expected departures / simple</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>140</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="EQCheckBox" name="chExpectedArrivalsPax_2">
          <property name="text">
           <string>Expected arrivals / departures</string>

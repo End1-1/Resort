@@ -1097,6 +1097,7 @@ void RDesk::on_btnExit_clicked()
         fDD[":f_lockTime"] = 0;
         fDD[":f_lockHost"] = "";
         fDD.update("r_table", QString("where f_id=%1").arg(fTable->fId));
+        checkUnprinted();
     }
     fCanClose = true;
     close();
@@ -2209,6 +2210,35 @@ void RDesk::resetPrintQty()
     }
 }
 
+void RDesk::checkUnprinted()
+{
+    switch (defrest(dr_new_dish_state_after_close).toInt()) {
+    case 0:
+        break;
+    case 1:
+        for (int i = 0; i < ui->tblOrder->rowCount(); i++) {
+            OrderDishStruct *od = ui->tblOrder->item(i, 0)->data(Qt::UserRole).value<OrderDishStruct*>();
+            if (!od) {
+                continue;
+            }
+            if (od->fState != DISH_STATE_READY) {
+                continue;
+            }
+            if (od->fQty - od->fQtyPrint > 0.1) {
+                od->fQty = od->fQtyPrint;
+                if (od->fQty < 0.001) {
+                    od->fState = DISH_STATE_EMPTY;
+                }
+                updateDish(od);
+            }
+        }
+        break;
+    case 2:
+        ui->btnPrint->click();
+        break;
+    }
+}
+
 void RDesk::updateDishQtyHistory(OrderDishStruct *od)
 {
     DoubleDatabase fDD(true, doubleDatabase);
@@ -2653,6 +2683,7 @@ void RDesk::on_btnPrint_clicked()
 
 void RDesk::on_btnTable_clicked()
 {
+    checkUnprinted();
     RSelectTable *t = new RSelectTable(this);
     t->setup(fTable->fHall);
     if (t->exec() == QDialog::Accepted) {

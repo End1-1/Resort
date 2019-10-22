@@ -21,12 +21,14 @@
 #include "wquickroomassignment.h"
 #include "fhotelhierarchy.h"
 #include "guestcheckin.h"
+#include "fexpecteddeparturesimple.h"
 #include "dlgquickroomassignment.h"
 #include "froomstates.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
 #include "wcardexlist.h"
 #include "dlgtransferlog.h"
+#include "fexpectedsimple.h"
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
 #include "fcashreportbyitem.h"
@@ -574,6 +576,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionIn_house_guest->setVisible(r__(cr__inhouse_guest));
     ui->actionInhouse_guest_future->setVisible(r__(cr__inhouse_guest_future));
     ui->actionExpected_arrivals->setVisible(r__(cr__expected_arrivals_deparutures));
+    ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_simple));
+    ui->actionExpected_departures_simple->setVisible(r__(cr__expeced_departures_simple));
     ui->actionExpected_arrivals_departures_2->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_pax));
     ui->actionRoom_assignment->setVisible(r__(cr__room_assignment));
@@ -2172,4 +2176,14 @@ void MainWindow::on_actionForecast_occupancy_by_category_triggered()
 void MainWindow::on_actionState_of_the_room_triggered()
 {
     FRoomStates::openFilterReport<FRoomStates, WReportGrid>();
+}
+
+void MainWindow::on_actionExpected_departures_simple_triggered()
+{
+    FExpectedDepartureSimple::openFilterReport<FExpectedDepartureSimple, WReportGrid>();
+}
+
+void MainWindow::on_actionExpected_arivals_simple_triggered()
+{
+    FExpectedSimple::openFilterReport<FExpectedSimple, WReportGrid>();
 }

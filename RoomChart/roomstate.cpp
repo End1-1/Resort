@@ -84,6 +84,12 @@ void RoomState::setRoom(const QString &code)
     ui->leRoomCode->setInitialValue(code);
 }
 
+void RoomState::uncheckStiky()
+{
+    ui->btnSticky->setChecked(false);
+    fUncheckedStiky = true;
+}
+
 void RoomState::on_btnCancel_clicked()
 {
     reject();
@@ -173,6 +179,10 @@ void RoomState::on_btnOk_clicked()
     fDD.insert("f_room_state_change");
     fTrackControl->insert("Room state changed", ui->leCurrentStateName->text(), ui->leNewStateName->text() + add);
     BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
+    if (fUncheckedStiky) {
+        accept();
+        return;
+    }
     if (ui->btnSticky->isChecked()) {
         ui->leRoomCode->clear();
         ui->leNewState->clear();

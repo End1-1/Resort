@@ -111,6 +111,7 @@ private:
     void changeBtnState();
     void checkEmpty();
     void resetPrintQty();
+    void checkUnprinted();
     void updateDishQtyHistory(OrderDishStruct *od);
 };
 

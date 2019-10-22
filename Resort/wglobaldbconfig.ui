@@ -958,33 +958,27 @@
              </size>
             </property>
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="2" column="1" colspan="3">
-              <widget class="QLineEdit" name="leFirstReceiptPrinter"/>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_28">
+             <item row="6" column="1">
+              <widget class="QCheckBox" name="chOpenTableAfterRun">
                <property name="text">
-                <string>Second receipt check printer</string>
+                <string/>
                </property>
               </widget>
              </item>
-             <item row="8" column="3">
-              <spacer name="verticalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
+             <item row="5" column="1" colspan="3">
+              <widget class="EQLineEdit" name="leDisc50"/>
              </item>
-             <item row="7" column="0">
-              <widget class="QLabel" name="label_56">
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_29">
                <property name="text">
-                <string>A long open order time</string>
+                <string>Code for discount 20%</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="EQLineEdit" name="leHallName">
+               <property name="readOnly">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -998,24 +992,10 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_30">
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_56">
                <property name="text">
-                <string>Code for discount card 50%</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_29">
-               <property name="text">
-                <string>Code for discount 20%</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_27">
-               <property name="text">
-                <string>First receipt check printer</string>
+                <string>A long open order time</string>
                </property>
               </widget>
              </item>
@@ -1026,10 +1006,30 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
-              <widget class="EQLineEdit" name="leHallName">
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="leHost">
                <property name="readOnly">
                 <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="3">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>First receipt check printer</string>
                </property>
               </widget>
              </item>
@@ -1040,12 +1040,31 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
-              <widget class="QLineEdit" name="leHost">
-               <property name="readOnly">
-                <bool>true</bool>
+             <item row="3" column="1" colspan="3">
+              <widget class="QLineEdit" name="leSecondReceiptPrinter"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>Code for discount card 50%</string>
                </property>
               </widget>
+             </item>
+             <item row="2" column="1" colspan="3">
+              <widget class="QLineEdit" name="leFirstReceiptPrinter"/>
+             </item>
+             <item row="4" column="1" colspan="3">
+              <widget class="EQLineEdit" name="leDisc20"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_28">
+               <property name="text">
+                <string>Second receipt check printer</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="EQLineEdit" name="leLongOrderTime"/>
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_20">
@@ -1054,24 +1073,31 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="1" colspan="3">
-              <widget class="QLineEdit" name="leSecondReceiptPrinter"/>
-             </item>
-             <item row="6" column="1">
-              <widget class="QCheckBox" name="chOpenTableAfterRun">
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_57">
                <property name="text">
-                <string/>
+                <string>New dish state after close order</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1" colspan="3">
-              <widget class="EQLineEdit" name="leDisc50"/>
-             </item>
-             <item row="4" column="1" colspan="3">
-              <widget class="EQLineEdit" name="leDisc20"/>
-             </item>
-             <item row="7" column="1">
-              <widget class="EQLineEdit" name="leLongOrderTime"/>
+             <item row="8" column="1">
+              <widget class="QComboBox" name="cbNewDishState">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Remove</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Autosend</string>
+                </property>
+               </item>
+              </widget>
              </item>
             </layout>
            </widget>

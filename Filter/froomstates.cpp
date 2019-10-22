@@ -2,6 +2,9 @@
 #include "ui_froomstates.h"
 #include "wreportgrid.h"
 #include "roomstate.h"
+#include "chardefaults.h"
+
+static QMap<int, QColor> fColorOfStates;
 
 FRoomStates::FRoomStates(QWidget *parent) :
     WFilterBase(parent),
@@ -10,6 +13,13 @@ FRoomStates::FRoomStates(QWidget *parent) :
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("State of the room"), ":/images/window.png");
     connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(dbClick(QList<QVariant>)));
+    connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomUpdated(int, QString)));
+    if (fColorOfStates.count() == 0) {
+        fColorOfStates[ROOM_STATE_NONE] = Qt::white;
+        fColorOfStates[ROOM_STATE_CHECKIN] = static_cast<QColor>(__ss.value("checkincolor", -16733441).toInt()), QColor::fromRgb(70, 170, 255);
+        fColorOfStates[ROOM_STATE_DIRTY] = Qt::yellow;
+        fColorOfStates[ROOM_STATE_OUTOF] = Qt::gray;
+    }
 }
 
 FRoomStates::~FRoomStates()
@@ -21,18 +31,32 @@ FRoomStates::~FRoomStates()
 void FRoomStates::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
-    rg->fModel->setColumn(80, "", tr("Code"))
+    rg->fModel->setColumn(0, "", tr("State code"))
+            .setColumn(60, "", tr("Code"))
             .setColumn(150, "", tr("Name"))
             .setColumn(105, "", tr("State"))
-            .setColumn(300, "", tr("Guest"));
-    QString query = "select r.f_id, r.f_short, rs.f_en, g.guest "
+            .setColumn(110, "", tr("Entry"))
+            .setColumn(110, "", tr("Departure"))
+            .setColumn(70, "", tr("Adults"))
+            .setColumn(70, "", tr("Childs"))
+            .setColumn(100, "", tr("Nation"))
+            .setColumn(300, "", tr("Guest"))
+            .setColumn(200, "", tr("Cardex"));
+    QString query = "select r.f_state, r.f_id, r.f_short, rs.f_en, "
+            "rn.f_startdate, rn.f_enddate, rn.f_man+rn.f_woman, rn.f_child, "
+            "na.f_name, CONCAT(g.f_title, ' ',g.f_firstName, ' ',g.f_lastName) as guest, ca.f_name "
             "from f_room r "
             "left join f_reservation rn on rn.f_room=r.f_id and rn.f_state=1 "
-            "left join guests g on g.f_id=rn.f_guest "
+            "left join f_guests g on g.f_id=rn.f_guest "
             "left join f_room_state rs on rs.f_id=r.f_state "
+            "left join f_nationality na on na.f_short=g.f_nation "
+            "left join f_cardex ca on ca.f_cardex=rn.f_cardex "
             "order by r.f_building, r.f_id ";
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
+    for (int i = 0; i < rg->fModel->rowCount(); i++) {
+        rg->fModel->setBackgroundColor(i, fColorOfStates[rg->fModel->data(i, 0).toInt()]);
+    }
 }
 
 QWidget *FRoomStates::firstElement()
@@ -56,7 +80,24 @@ void FRoomStates::dbClick(const QList<QVariant> &row)
         return;
     }
     RoomState *rs = new RoomState(this);
-    rs->setRoom(row.at(0).toString());
+    rs->uncheckStiky();
+    rs->setRoom(row.at(1).toString());
     rs->exec();
     delete rs;
+}
+
+void FRoomStates::roomUpdated(int cacheid, const QString &name)
+{
+    Q_UNUSED(cacheid);
+    CacheRoom cr;
+    if (!cr.get(name)) {
+        return;
+    }
+    for (int i = 0; i < fReportGrid->fModel->rowCount(); i++) {
+        if (fReportGrid->fModel->data(i, 1).toInt() == cr.fCode().toInt()) {
+            fReportGrid->fModel->setData(i, 0, cr.fState());
+            fReportGrid->fModel->setData(i, 3, cr.fStateName());
+            fReportGrid->fModel->setBackgroundColor(i, fColorOfStates[cr.fState()]);
+        }
+    }
 }

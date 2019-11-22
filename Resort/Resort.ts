@@ -2650,6 +2650,14 @@ rooms</source>
         <source>Group</source>
         <translation type="unfinished">Խումբ</translation>
     </message>
+    <message>
+        <source>Copy from last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy from last?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgGroupReserveOption</name>
@@ -6751,6 +6759,10 @@ for this operation</source>
         <source>Close a long open order</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Expected arrivals / pax</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -9087,22 +9099,6 @@ ee</source>
         <source>Expected arrivals</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Nation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Entry</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Departure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remarks</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>FExpectedArrivals</name>
@@ -9343,6 +9339,96 @@ ee</source>
     </message>
     <message>
         <source>No rates</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FExpectedDepartureSimple</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected departures / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected departures</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FExpectedSimple</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Childs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -11498,6 +11584,34 @@ ledger</source>
         <source>State of the rooms</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Childs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FSalary</name>
@@ -13443,6 +13557,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Expected departures / simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Expected arrivals / pax</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18117,6 +18235,22 @@ Reserve</source>
         <source>Output additional of tax info in the guest detailed balance</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>New dish state after close order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Հեռացնել</translation>
+    </message>
+    <message>
+        <source>Autosend</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -19251,6 +19385,10 @@ reservation</source>
         <source>Done</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Խումբ</translation>
+    </message>
 </context>
 <context>
     <name>WQuickCheckoutBalance</name>
@@ -19467,6 +19605,10 @@ reservation</source>
     <message>
         <source>Room rate</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Group</source>
+        <translation type="unfinished">Խումբ</translation>
     </message>
 </context>
 <context>
@@ -20847,37 +20989,37 @@ from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reservation not saved
+        <source>Reservation not saved<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Room is not selected
+        <source>Room is not selected<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Date of entry is not equal to working date
+        <source>Date of entry is not equal to working date<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Reservatin state should be &apos;Reserved&apos;
+        <source>Reservatin state should be &apos;Reserved&apos;<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Room state is not vacant ready
+        <source>Room state is not vacant ready<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mode of VAT is undefined
+        <source>Mode of VAT is undefined<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>No guest in the room
+        <source>No guest in the room<byte value="xd"/>
 </source>
         <translation type="unfinished"></translation>
     </message>

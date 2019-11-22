@@ -48,6 +48,7 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
 
 private slots:
+    void totalScrollValue(int value);
     void roomUpdated(int cacheId, const QString &code);
     void on_btnRefresh_clicked();
     void on_btnTrackControl_clicked();
@@ -58,7 +59,6 @@ private slots:
     void on_btnDateLeft_clicked();
     void on_btnDateRight_clicked();
     void on_btnMassNation_clicked();
-
     void on_btnRoomRate_clicked();
 
 private:

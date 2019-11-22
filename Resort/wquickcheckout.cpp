@@ -21,8 +21,8 @@ WQuickCheckout::WQuickCheckout(QWidget *parent) :
     installEventFilter(this);
     ui->tbl->setItemDelegate(new WQuickCheckoutItemDelegate(this));
     ui->chAllInvoices->setChecked(__s.value("quickcheckout_allinvoices").toBool());
-    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 60, 100, 200, 300, 100, 100, 100, 80, 80);
-    Utils::tableSetColumnWidths(ui->tblTotal, ui->tbl->columnCount(), 60, 100, 200, 300, 100, 100, 100, 80, 80);
+    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 60, 100, 200, 300, 100, 100, 100, 80, 80, 200);
+    Utils::tableSetColumnWidths(ui->tblTotal, ui->tbl->columnCount(), 60, 100, 200, 300, 100, 100, 100, 80, 80, 200);
     refresh();
 }
 
@@ -71,12 +71,13 @@ void WQuickCheckout::refresh()
 {
     QMap<QString, int> invMap;
     QString query = "select r.f_room, r.f_invoice, c.f_name, g.guest as f_guest, 0, 0, 0, r.f_man+r.f_woman, "
-                    "rc.f_short "
+                    "rc.f_short, concat(rg.f_name, ' - ', r.f_group) as f_groupname "
                     "from f_reservation r "
                     "left join f_room rm on rm.f_id=r.f_room "
                     "left join f_room_classes rc on rc.f_id=rm.f_class "
                     "left join guests g on g.f_id=r.f_guest "
                     "left join f_cardex c on c.f_cardex=r.f_cardex "
+                    "left join f_reservation_group rg on rg.f_id=r.f_group "
                     "where r.f_state=:f_state :date :cardex :group "
                     "order by r.f_room ";
     if (ui->chAllInvoices->isChecked()) {

@@ -19,6 +19,7 @@ INCLUDEPATH += $$PWD/../Cache
 INCLUDEPATH += $$PWD/../Print
 INCLUDEPATH += $$PWD/../Resort
 INCLUDEPATH += $$PWD/../Selector
+INCLUDEPATH += $$PWD/../Threads
 INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += C:/OpenSSL-Win32/include
 INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
@@ -32,6 +33,8 @@ SOURCES += main.cpp\
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
     ../Cache/cachetransferfromcl.cpp \
+    ../Threads/broadcastthread.cpp \
+    ../Threads/objectthread.cpp \
     rface.cpp \
     rlogin.cpp \
     rmessage.cpp \
@@ -108,7 +111,6 @@ SOURCES += main.cpp\
     dlgselecttaxcashmode.cpp \
     dlgbreakfast.cpp \
     ../Base/command.cpp \
-    ../Resort/broadcastthread.cpp \
     dlgbanket.cpp \
     dlgbanketitems.cpp \
     dlglist.cpp \
@@ -173,6 +175,8 @@ HEADERS  += rface.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
     ../Cache/cachetransferfromcl.h \
+    ../Threads/broadcastthread.h \
+    ../Threads/objectthread.h \
     rlogin.h \
     rmessage.h \
     ../Base/base.h \
@@ -248,7 +252,6 @@ HEADERS  += rface.h \
     dlgselecttaxcashmode.h \
     dlgbreakfast.h \
     ../Base/command.h \
-    ../Resort/broadcastthread.h \
     dlgbanket.h \
     dlgbanketitems.h \
     ../Base/vauchers.h \

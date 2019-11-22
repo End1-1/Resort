@@ -252,6 +252,16 @@ void DlgGroupReservationFuck::setup()
     setupTabTextAndIcon(tr("Group reservation"), ":/images/groupreservation.png");
 }
 
+void DlgGroupReservationFuck::singleGuestFocusOut()
+{
+
+}
+
+void DlgGroupReservationFuck::singleGuestLineEdit(bool)
+{
+
+}
+
 void DlgGroupReservationFuck::preCount(const QString &str)
 {
     Q_UNUSED(str)
@@ -495,12 +505,20 @@ void DlgGroupReservationFuck::createRooms(const QString &cat, const QString &bed
 void DlgGroupReservationFuck::on_deArrival_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
+    if (ui->deArrival->date() < WORKING_DATE) {
+        //message_error(tr("Invalid arrival date"));
+        return;
+    }
     countReserve();
 }
 
 void DlgGroupReservationFuck::on_deDeparture_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
+    if (ui->deDeparture->date() < WORKING_DATE) {
+        //message_error(tr("Invalid departure date"));
+        return;
+    }
     countReserve();
 }
 
@@ -650,6 +668,11 @@ void DlgGroupReservationFuck::save()
     bool err = false;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
+            continue;
+        }
+        if (ui->tblRoom->dateEdit(i, 4)->date() < WORKING_DATE) {
+            ui->tblRoom->setValue(i, 17, "X");
+            err = true;
             continue;
         }
         if (ui->tblRoom->toString(i, 17) == "X") {
@@ -1358,4 +1381,27 @@ void DlgGroupReservationFuck::on_btnReviveReservations_clicked()
         loadGroup(ui->leGroupCode->asInt());
     }
     delete d;
+}
+
+void DlgGroupReservationFuck::on_btnCopyLast_clicked()
+{
+    if (message_confirm(tr("Copy from last?")) != QDialog::Accepted) {
+        return;
+    }
+    DoubleDatabase dd(true, false);
+    dd.exec("select max(f_id) from f_reservation_group");
+    if (dd.nextRow()) {
+        dd[":f_id"] = dd.getInt(0);
+        dd.exec("select * from f_reservation_group where f_id=:f_id");
+        if (dd.nextRow()) {
+            ui->deArrival->setDate(dd.getDate("f_entry"));
+            ui->deDeparture->setDate(dd.getDate("f_departure"));
+            ui->cbArr->setIndexForData(dd.getInt("f_arrangement"));
+            ui->cbModeOfPayment->setIndexForData(dd.getInt("f_paymentmode"));
+            ui->leCardexCode->setInitialValue(dd.getString("f_cardex"));
+            ui->leCLCode->setInitialValue(dd.getInt("f_cityledger"));
+            ui->teCommonRemark->setPlainText(dd.getString("f_remarks"));
+            ui->leCardCode->setInitialValue(dd.getInt("f_card"));
+        }
+    }
 }

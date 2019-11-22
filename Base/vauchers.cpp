@@ -125,6 +125,13 @@ void openVaucher(const QString &vaucher, const QString &id)
         DlgCLInitialBalance::openVaucher(id);
     } else if (vaucher == "DS") {
         DlgDiscount::openVaucher(id);
+    } else if (vaucher == "TR") {
+        DoubleDatabase dd(true, false);
+        dd[":f_id"] = id;
+        dd.exec("select f_doc from m_register where f_id=:f_id");
+        if (dd.nextRow()) {
+            openVaucherInvoice(dd.getString(0));
+        }
     }
 }
 

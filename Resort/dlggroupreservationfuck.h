@@ -20,6 +20,8 @@ public:
     virtual void setup();
 
 private slots:
+    void singleGuestFocusOut();
+    void singleGuestLineEdit(bool);
     void preCount(const QString &str);
     void removeRow();
     void editReserve();
@@ -53,6 +55,7 @@ private slots:
     void on_btnPrint_clicked();
     void on_btnCancelGroup_clicked();
     void on_btnReviveReservations_clicked();
+    void on_btnCopyLast_clicked();
 
 private:
     Ui::DlgGroupReservationFuck *ui;

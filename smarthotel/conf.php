@@ -9,5 +9,6 @@ $dbconn = new mysqli($servername, $username,  $password, $database);
 if ($dbconn->connect_error) {
     die("Connection failed: " . $dbconn->connect_error);
 }
+$dbconn->set_charset("utf8");
 
 $SHOW_MENU = false;

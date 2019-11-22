@@ -269,7 +269,7 @@ void WInvoice::loadInvoice(const QString &id)
     }
     startTracking();
     if (oldInvoice != ui->leInvoice->text()) {
-        fTrackControl->insert("Open invoice", "", "");
+
     }
     fTrackControl->saveChanges();
     ui->teRemark->setReadOnly(false);
@@ -290,14 +290,14 @@ void WInvoice::startTracking()
 {
     if (fTrackControl == nullptr) {
         fTrackControl = new TrackControl(TRACK_RESERVATION);
-        fTrackControl->fRecord = "-";
-        fTrackControl->fInvoice = ui->leInvoice->text();
-        fTrackControl->fReservation = ui->leReserveID->text();
         fTrackControl->addWidget(ui->leTotalLeft, "Guest total")
             .addWidget(ui->leTotalRight, "Company total")
             .addWidget(ui->leGranTotal, "Grand total")
             .addWidget(ui->teRemark, "Remarks");
     }
+    fTrackControl->fRecord = "-";
+    fTrackControl->fInvoice = ui->leInvoice->text();
+    fTrackControl->fReservation = ui->leReserveID->text();
 }
 
 bool WInvoice::activeDoc(const QString &invoice)

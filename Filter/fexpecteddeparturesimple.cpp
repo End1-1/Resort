@@ -9,6 +9,10 @@ FExpectedDepartureSimple::FExpectedDepartureSimple(QWidget *parent) :
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Expected departures / simple"),
                                      ":/images/departure.png");
+#ifndef _METROPOL_
+    ui->wd->setVisible(false);
+#endif
+    connect(ui->wd, SIGNAL(changed()), this, SLOT(refresh()));
 }
 
 FExpectedDepartureSimple::~FExpectedDepartureSimple()
@@ -30,7 +34,7 @@ void FExpectedDepartureSimple::apply(WReportGrid *rg)
                             "inner join f_room rm on rm.f_id=r.f_room "
                             "inner join f_guests g on g.f_id=r.f_guest "
                             "left join f_nationality n on n.f_short=g.f_nation "
-                            "where r.f_endDate='" + WORKING_DATE.toString(def_mysql_date_format) + "' "
+                            "where r.f_endDate between " + ui->wd->ds1() + " and " + ui->wd->ds2() + " "
                             "and r.f_state=1 "
                             "order by r.f_room ");
     rg->fModel->apply(rg);
@@ -55,4 +59,9 @@ QWidget *FExpectedDepartureSimple::lastElement()
 QString FExpectedDepartureSimple::reportTitle()
 {
     return QString("%1, %2").arg(tr("Expected departures")).arg(WORKING_DATE.toString(def_date_format));
+}
+
+void FExpectedDepartureSimple::refresh()
+{
+    apply(fReportGrid);
 }

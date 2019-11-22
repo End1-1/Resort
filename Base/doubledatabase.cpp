@@ -158,11 +158,13 @@ bool DoubleDatabase::startTransaction()
 //    if (fExecFlagSlave) {
 //        fDb2.transaction();
 //    }
-    QSqlQuery q(fDb1);
-    bool result = q.exec("start transaction");
+    QSqlQuery *q = new QSqlQuery(fDb1);
+    bool result = q->exec("start transaction");
+    delete q;
     if (result && fExecFlagSlave) {
-        QSqlQuery q2(fDb2);
-        result = result && q2.exec("start transaction");
+        QSqlQuery *q2 = new QSqlQuery(fDb2);
+        result = result && q2->exec("start transaction");
+        delete q2;
     }
     return result;
 }
@@ -174,22 +176,26 @@ bool DoubleDatabase::commit()
 //        fDb2.commit();
 //    }
 //    return true;
-    QSqlQuery q1(fDb1);
-    bool result = q1.exec("commit");
+    QSqlQuery *q1 = new QSqlQuery(fDb1);
+    bool result = q1->exec("commit");
+    delete q1;
     if (result && fExecFlagSlave) {
-        QSqlQuery q2(fDb2);
-        result = result && q2.exec("commit");
+        QSqlQuery *q2 = new QSqlQuery(fDb2);
+        result = result && q2->exec("commit");
+        delete q2;
     }
     return result;
 }
 
 void DoubleDatabase::rollback()
 {
-    QSqlQuery q1(fDb1);
-    bool result = q1.exec("rollback");
+    QSqlQuery *q1 = new QSqlQuery(fDb1);
+    bool result = q1->exec("rollback");
+    delete q1;
     if (result && fExecFlagSlave) {
-        QSqlQuery q2(fDb2);
-        result = result && q2.exec("rollback");
+        QSqlQuery *q2 = new QSqlQuery(fDb2);
+        result = result && q2->exec("rollback");
+        delete q2;
     }
 }
 
@@ -243,6 +249,7 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
                     logEvent("#2 " + lastQuery(q2));
                 }
             } else {
+                delete q2;
                 goto FAIL;
             }
             delete q2;
@@ -255,7 +262,7 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             d.setUserName(BaseUIDX::fAirUser);
             d.setPassword(BaseUIDX::fAirPass);
             if (d.open()) {
-                QSqlQuery q(d);
+                QSqlQuery *q = new QSqlQuery(d);
                 QString query = lastQuery(q1).trimmed().simplified();
                 QString failop = "select";
                 QString table;
@@ -283,14 +290,15 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
                         table = query.mid(12, pos - 12);
                     }
                 }
-                q.prepare("insert into f_fail (f_sql, f_date, f_comp, f_src, f_failId, f_failTable, f_failop) values (:f_sql, current_timestamp, :f_comp, :f_src, :f_failid, :f_failtable, :f_failop)");
-                q.bindValue(":f_sql", query);
-                q.bindValue(":f_comp", QHostInfo::localHostName());
-                q.bindValue(":f_src", __dd1Database.toLower());
-                q.bindValue(":f_failop", failop);
-                q.bindValue(":f_failid", id);
-                q.bindValue(":f_failtable", table);
-                q.exec();
+                q->prepare("insert into f_fail (f_sql, f_date, f_comp, f_src, f_failId, f_failTable, f_failop) values (:f_sql, current_timestamp, :f_comp, :f_src, :f_failid, :f_failtable, :f_failop)");
+                q->bindValue(":f_sql", query);
+                q->bindValue(":f_comp", QHostInfo::localHostName());
+                q->bindValue(":f_src", __dd1Database.toLower());
+                q->bindValue(":f_failop", failop);
+                q->bindValue(":f_failid", id);
+                q->bindValue(":f_failtable", table);
+                q->exec();
+                delete q;
                 d.close();
             }
 #ifdef _RESORT_
@@ -324,6 +332,7 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             dbrows << row;
         }
     }
+    delete q1;
     return result;
 }
 

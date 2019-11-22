@@ -431,6 +431,11 @@
           <string>Guest code</string>
          </property>
         </column>
+        <column>
+         <property name="text">
+          <string>Group</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item>

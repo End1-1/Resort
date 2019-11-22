@@ -405,6 +405,28 @@ void FRestaurantTotal::open()
     fr->apply(rg);
 }
 
+void FRestaurantTotal::removeVoucher(const QString &id)
+{
+    QStringList dishes;
+    DoubleDatabase fDD(true, doubleDatabase);
+    fDD.startTransaction();
+    fDD.exec("select f_id from o_dish where f_header=:f_header");
+    while (fDD.nextRow()) {
+        dishes.append(fDD.getString(0));
+    }
+    fDD[":f_header"] = id;
+    fDD.exec("delete from o_dish where f_header=:f_header");
+    fDD[":f_id"] = id;
+    fDD.exec("delete from o_header where f_id=:f_id");
+    fDD[":f_id"] = id;
+    fDD.exec("delete from m_register where f_id=:f_id");
+    for (const QString &d: dishes) {
+        fDD[":f_rec"] = d;
+        fDD.exec("delete from o_dish_qty where f_rec=:f_rec");
+    }
+    fDD.commit();
+}
+
 void FRestaurantTotal::printNewPage(int &top, int &left, int &page, PPrintPreview *pp, PPrintScene *&ps, int nextHeight)
 {
     int footerTop = sizePortrait.height() - 200;
@@ -709,21 +731,7 @@ void FRestaurantTotal::removePermanently()
     if (message_yesnocancel(tr("<h1><b>Confirm to remove the order<br>PERMANENTLY</b></h1>")) != RESULT_YES) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD.startTransaction();
-    fDD[":f_header"] = val.at(0);
-    fDD.exec("delete from o_dish where f_header=:f_header");
-    fDD[":f_id"] = val.at(0);
-    fDD.exec("delete from o_header where f_id=:f_id");
-    fDD[":f_id"] = val.at(0);
-    fDD.exec("delete from m_register where f_id=:f_id");
-    fDD.exec("delete from o_dish_qty where f_rec not in (select f_id from o_dish)");
-    DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
-    l.open(true, false);
-    l[":f_rec"] = val.at(0);
-    l[":f_invoice"] = val.at(0);
-    l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
-    fDD.commit();
+    removeVoucher(val.at(0).toString());
     message_info(tr("Please, refresh report to view the changes"));
 }
 

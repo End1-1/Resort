@@ -8,7 +8,6 @@
 #include <QGraphicsItem>
 #include <QScrollBar>
 #include <QElapsedTimer>
-#include <QThread>
 
 WRoomChart::WRoomChart(QWidget *parent) :
     BaseWidget(parent),

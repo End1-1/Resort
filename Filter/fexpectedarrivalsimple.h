@@ -21,6 +21,9 @@ public:
 
 private:
     Ui::FExpectedArrivalSimple *ui;
+
+private slots:
+    void refresh();
 };
 
 #endif // FEXPECTEDARRIVALSIMPLE_H

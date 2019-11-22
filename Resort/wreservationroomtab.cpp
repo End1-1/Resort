@@ -96,6 +96,7 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
     connect(ui->leRoomCode, &EQLineEdit::focusOut, [this]() {
         checkDatesCross();
     });
+    ui->cbArrangment->setIndexForData(fPreferences.getDb(def_room_arrangement).toInt());
 }
 
 WReservationRoomTab::~WReservationRoomTab()

@@ -199,6 +199,11 @@ border-bottom: 0px solid gray;</string>
           <string>Cat</string>
          </property>
         </column>
+        <column>
+         <property name="text">
+          <string>Group</string>
+         </property>
+        </column>
        </widget>
       </item>
       <item>

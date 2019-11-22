@@ -9,6 +9,10 @@ FExpectedSimple::FExpectedSimple(QWidget *parent) :
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Expected arrivals / simple"),
                                      ":/images/arrival.png");
+    connect(ui->wd, SIGNAL(changed()), this, SLOT(refresh()));
+#ifndef _METROPOL_
+    ui->wd->setVisible(false);
+#endif
 }
 
 FExpectedSimple::~FExpectedSimple()
@@ -36,7 +40,7 @@ void FExpectedSimple::apply(WReportGrid *rg)
                             "inner join f_guests g on g.f_id=r.f_guest "
                             "left join f_nationality n on n.f_short=g.f_nation "
                             "left join f_cardex ca on ca.f_cardex=r.f_cardex "
-                            "where f_startDate='" + WORKING_DATE.toString(def_mysql_date_format) + "' "
+                            "where f_startDate between " + ui->wd->ds1() + " and " + ui->wd->ds2() + " "
                             "and r.f_state=2 "
                             "order by r.f_room ");
     rg->fModel->apply(rg);
@@ -61,4 +65,9 @@ QWidget *FExpectedSimple::lastElement()
 QString FExpectedSimple::reportTitle()
 {
     return QString("%1, %2").arg(tr("Expected arrivals")).arg(WORKING_DATE.toString(def_date_format));
+}
+
+void FExpectedSimple::refresh()
+{
+    apply(fReportGrid);
 }

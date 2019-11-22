@@ -24,6 +24,7 @@ public:
     virtual QWidget *lastElement();
     QString reportTitle();
     static void open();
+    static void removeVoucher(const QString &id);
 
 private:
     Ui::FRestaurantTotal *ui;

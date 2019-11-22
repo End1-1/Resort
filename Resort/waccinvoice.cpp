@@ -16,6 +16,7 @@
 #include "dlgviewinvoicecorrections.h"
 #include "cachecheckoutinvoice.h"
 #include "pexportinvoicetoexcel.h"
+#include "frestauranttotal.h"
 #include "dlgchartdaterange.h"
 #include "dlgreservationguests.h"
 #include "dlgpostcharge.h"
@@ -722,10 +723,7 @@ void WAccInvoice::on_btnEliminate_clicked()
     fDD[":f_id"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
     fDD.exec("delete from m_register where f_id=:f_id");
     if (ui->tblData->toString(rows.at(0).row(), 10) == VAUCHER_POINT_SALE_N) {
-        fDD[":f_id"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
-        fDD.exec("delete from o_header where f_id=:f_id");
-        fDD[":f_header"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
-        fDD.exec("delete from o_dish where f_header=:f_header");
+        FRestaurantTotal::removeVoucher(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString());
     } else if (ui->tblData->toString(rows.at(0).row(), 10) == VAUCHER_EVENT_N) {
         fDD[":f_id"] = ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole);
         fDD.exec("delete from o_event where f_id=:f_id");

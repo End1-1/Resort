@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>470</width>
     <height>16</height>
    </rect>
   </property>
@@ -19,13 +19,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="sizeConstraint">
-    <enum>QLayout::SetMinimumSize</enum>
-   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -39,14 +33,31 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMinimumSize</enum>
+    <widget class="WDate2" name="wd" native="true"/>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </layout>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>451</width>
+       <height>13</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>WDate2</class>
+   <extends>QWidget</extends>
+   <header location="global">wdate2.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

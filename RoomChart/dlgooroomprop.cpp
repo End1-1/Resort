@@ -101,7 +101,7 @@ void DlgOORoomProp::on_btmRemove_clicked()
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD.update("f_reservation", where_id(ap(ui->leReserve->text())));
     if (fReservation.fDateStart() <= WORKING_DATE) {
-        fDD[":f_state"] = ROOM_STATE_NONE;
+        fDD[":f_state"] = ROOM_STATE_DIRTY;
         fDD.update("f_room", where_id(ui->leRoom->asInt()));
         BroadcastThread::cmdRefreshCache(cid_room, ui->leRoom->text());
     }

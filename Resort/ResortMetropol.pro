@@ -33,6 +33,8 @@ SOURCES += main.cpp\
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
+    ../Threads/broadcastthread.cpp \
+    ../Threads/objectthread.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlginvoicepaymentoptions.cpp \
@@ -102,7 +104,6 @@ SOURCES += main.cpp\
     dlgcardex.cpp \
     dwmaindeskhint.cpp \
     ../Base/command.cpp \
-    broadcastthread.cpp \
     ../Cache/cacheinvoiceitem.cpp \
     ../Cache/cacheactiveroom.cpp \
     dlgpaymentsdetails.cpp \
@@ -453,6 +454,8 @@ HEADERS  += mainwindow.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
+    ../Threads/broadcastthread.h \
+    ../Threads/objectthread.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlginvoicepaymentoptions.h \
@@ -522,7 +525,6 @@ HEADERS  += mainwindow.h \
     dlgcardex.h \
     dwmaindeskhint.h \
     ../Base/command.h \
-    broadcastthread.h \
     ../Cache/cacheinvoiceitem.h \
     ../Cache/cacheactiveroom.h \
     dlgpaymentsdetails.h \
@@ -1136,6 +1138,7 @@ INCLUDEPATH += $$PWD/../Controls
 INCLUDEPATH += $$PWD/../RowEditor
 INCLUDEPATH += $$PWD/../RoomChart
 INCLUDEPATH += $$PWD/../Filter
+INCLUDEPATH += $$PWD/../Threads
 INCLUDEPATH += $$PWD/../Print
 INCLUDEPATH += $$PWD/../Widgets
 INCLUDEPATH += $$PWD/../RGDoubleClick

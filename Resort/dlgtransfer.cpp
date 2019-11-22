@@ -114,7 +114,7 @@ void DlgTransfer::on_btnOk_clicked()
             }
         }
         fTrackControl->insert("Move out from invoice", QString("%1 / %2 / %3 / %4")
-                                  .arg(ui->leInvoiceFrom->text())
+                                  .arg(ui->leInvoiceTo->text())
                                   .arg(ui->tblData->item(i, 1)->text())
                                   .arg(ui->tblData->item(i, 2)->text())
                                   .arg(ui->tblData->item(i, 3)->text()), "");
@@ -125,7 +125,7 @@ void DlgTransfer::on_btnOk_clicked()
     fTrackControl->fInvoice = ui->leInvoiceTo->text();
     for (int i = 0, count = ui->tblData->rowCount(); i < count; i++) {
         fTrackControl->insert("Move into invoice", QString("%1 / %2 / %3 / %4")
-                                  .arg(ui->leInvoiceTo->text())
+                                  .arg(ui->leInvoiceFrom->text())
                                   .arg(ui->tblData->item(i, 1)->text())
                                   .arg(ui->tblData->item(i, 2)->text())
                                   .arg(ui->tblData->item(i, 3)->text()), "");

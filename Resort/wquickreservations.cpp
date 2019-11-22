@@ -19,6 +19,7 @@
 #include "wquickreservationscheckin.h"
 #include <QPainter>
 #include <QInputDialog>
+#include <QScrollBar>
 
 static const int col_room_state = 0;
 static const int col_reservation = 1;
@@ -34,6 +35,7 @@ static const int col_nat = 11;
 static const int col_cardex = 12;
 static const int col_invoice = 14;
 static const int col_guest_code = 15;
+static const int col_group = 16;
 
 WQuickReservations::WQuickReservations(QWidget *parent) :
     BaseWidget(parent),
@@ -41,7 +43,7 @@ WQuickReservations::WQuickReservations(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tbl->setItemDelegate(new WQuickReservationsDelegate(this));
-    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 20, 100, 50, 100, 80, 80, 60, 50, 150, 150, 100, 80, 150, 150, 0, 0);
+    Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 20, 100, 50, 100, 80, 80, 60, 50, 150, 150, 100, 80, 150, 150, 0, 0, 200);
     ui->tblTotal->setColumnCount(ui->tbl->columnCount());
     for (int i = 0; i < ui->tbl->columnCount(); i++) {
         ui->tblTotal->setColumnWidth(i, ui->tbl->columnWidth(i));
@@ -52,6 +54,7 @@ WQuickReservations::WQuickReservations(QWidget *parent) :
     ui->wCardex->installEventFilter(this);
     ui->deDate->installEventFilter(this);
     connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomUpdated(int, QString)));
+    connect(ui->tblTotal->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(totalScrollValue(int)));
 }
 
 WQuickReservations::~WQuickReservations()
@@ -152,6 +155,11 @@ bool WQuickReservations::eventFilter(QObject *watched, QEvent *event)
     return BaseWidget::eventFilter(watched, event);
 }
 
+void WQuickReservations::totalScrollValue(int value)
+{
+    ui->tbl->horizontalScrollBar()->setValue(value);
+}
+
 void WQuickReservations::roomUpdated(int cacheId, const QString &code)
 {
     Q_UNUSED(code);
@@ -173,8 +181,9 @@ void WQuickReservations::refresh()
     QString query = "select rm.f_state, r.f_id, r.f_room, rm.f_short, r.f_startdate, r.f_enddate, r.f_roomfee, "
                     "r.f_man+r.f_woman+r.f_child as f_pax, "
                     "g.f_firstname, g.f_lastname, g.f_passport, n.f_name, cx.f_name, cl.f_name, "
-                    "r.f_invoice, r.f_guest "
+                    "r.f_invoice, r.f_guest, concat(rg.f_name, '-', rg.f_id) as f_groupname "
                     "from f_reservation r "
+                    "left join f_reservation_group rg on rg.f_id=r.f_group "
                     "left join f_room rm on rm.f_id=r.f_room "
                     "left join f_guests g on g.f_id=r.f_guest "
                     "left join f_nationality n on n.f_short=g.f_nation "

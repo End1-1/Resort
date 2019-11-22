@@ -916,10 +916,41 @@ void RDesk::complimentary()
     }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_paymentMode"] = PAYMENT_COMPLIMENTARY;
-    fDD[":f_paymentModeComment"] =  comment;
+    fDD[":f_paymentModeComment"] = tr("Complimentary");
     fDD.update("o_header", where_id(ap(fTable->fOrder)));
     fTable->fPaymentComment = comment;
     fTable->fPaymentMode = PAYMENT_COMPLIMENTARY;
+
+    fDD[":f_id"] = fTable->fOrder;
+    fDD[":f_source"] = VAUCHER_POINT_SALE_N;
+    fDD[":f_wdate"] = WORKING_DATE;
+    fDD[":f_rdate"] = QDate::currentDate();
+    fDD[":f_time"] = QTime::currentTime();
+    fDD[":f_user"] = fStaff->fId;
+    fDD[":f_room"] = "";
+    fDD[":f_guest"] = "";
+    fDD[":f_itemCode"] = fHall->fItemIdForInvoice;
+    fDD[":f_finalName"] = Hall::fHallMap[fTable->fHall]->fName + " " + fTable->fOrder;
+    fDD[":f_amountAmd"] = QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString());
+    fDD[":f_amountVat"] = Utils::countVATAmount(QLocale().toDouble(ui->tblTotal->item(1, 1)->data(Qt::EditRole).toString()), VAT_INCLUDED);
+    fDD[":f_amountUsd"] = def_usd;
+    fDD[":f_fiscal"] = 0;
+    fDD[":f_paymentMode"] = fTable->fPaymentMode;
+    fDD[":f_creditCard"] = 0;
+    fDD[":f_cityLedger"] = 0;
+    fDD[":f_paymentComment"] = "";
+    fDD[":f_dc"] = PAY_DEBIT ;
+    fDD[":f_sign"] = 1;
+    fDD[":f_doc"] = fTable->fOrder;
+    fDD[":f_rec"] = "";
+    fDD[":f_inv"] = "";
+    fDD[":f_finance"] = 1;
+    fDD[":f_remarks"] = "";
+    fDD[":f_canceled"] = 0;
+    fDD[":f_cancelReason"] = "";
+    fDD[":f_side"] = 0;
+    fDD[":f_cash"] = 0;
+    fDD.insert("m_register", false);
     printReceipt(true);
     closeOrder();
 }
@@ -1242,6 +1273,7 @@ void RDesk::addDishToOrder(DishStruct *d, bool dontCheckTable)
     fDD.insert("o_dish", false);
     updateDishQtyHistory(od);
     addDishToTable(od);
+    countTotal();
     resetPrintQty();
     TrackControl::insert(TRACK_REST_ORDER, "New dish", od->fName["en"], "", od->fRecId, fTable->fOrder, "");
 }
@@ -1258,7 +1290,6 @@ void RDesk::addDishToTable(OrderDishStruct *od)
     ui->tblOrder->item(row, 2)->setData(Qt::UserRole, qVariantFromValue(od));
     ui->tblOrder->setCurrentCell(row, 0);
     setOrderRowHidden(row, od);
-    countTotal();
     changeBtnState();
 }
 
@@ -1321,11 +1352,13 @@ double RDesk::countTotal()
     ui->tblTotal->item(1, 1)->setData(Qt::EditRole, float_str(grandTotal, 0));
     fTable->fAmount = QString::number(grandTotal, 'f', 2);
 
-    DoubleDatabase dd;
-    dd.open(true, true);
-    dd[":f_total"] = grandTotal;
-    dd.update("o_header", where_id(ap(fTable->fOrder)));
-    dd.close();
+    if (!fTable->fOrder.isEmpty()) {
+        DoubleDatabase dd;
+        dd.open(true, true);
+        dd[":f_total"] = grandTotal;
+        dd.update("o_header", where_id(ap(fTable->fOrder)));
+        dd.close();
+    }
 
     return grandTotal;
 }

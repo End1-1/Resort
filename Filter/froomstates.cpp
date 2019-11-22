@@ -41,10 +41,12 @@ void FRoomStates::apply(WReportGrid *rg)
             .setColumn(70, "", tr("Childs"))
             .setColumn(100, "", tr("Nation"))
             .setColumn(300, "", tr("Guest"))
-            .setColumn(200, "", tr("Cardex"));
+            .setColumn(200, "", tr("Cardex"))
+            .setColumn(250, "", tr("Remarks"));
     QString query = "select r.f_state, r.f_id, r.f_short, rs.f_en, "
             "rn.f_startdate, rn.f_enddate, rn.f_man+rn.f_woman, rn.f_child, "
-            "na.f_name, CONCAT(g.f_title, ' ',g.f_firstName, ' ',g.f_lastName) as guest, ca.f_name "
+            "na.f_name, CONCAT(g.f_title, ' ',g.f_firstName, ' ',g.f_lastName) as guest, ca.f_name, "
+            "rn.f_remarks "
             "from f_room r "
             "left join f_reservation rn on rn.f_room=r.f_id and rn.f_state=1 "
             "left join f_guests g on g.f_id=rn.f_guest "

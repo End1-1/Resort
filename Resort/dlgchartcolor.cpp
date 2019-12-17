@@ -11,6 +11,7 @@ DlgChartColor::DlgChartColor(QWidget *parent) :
     ui->setupUi(this);
     ui->leReserveColor->setText(__s.value("reservecolor").toString());
     ui->leCheckinColor->setText(__s.value("checkincolor").toString());
+    ui->chShowRoomDescription->setChecked(__s.value("showroomdescription", false).toBool());
     connect(ui->leReserveColor, SIGNAL(doubleClicked()), this, SLOT(selectColor()));
     connect(ui->leCheckinColor, SIGNAL(doubleClicked()), this, SLOT(selectColor()));
 }
@@ -40,4 +41,9 @@ void DlgChartColor::on_btnSave_clicked()
 void DlgChartColor::on_btnCancel_clicked()
 {
     reject();
+}
+
+void DlgChartColor::on_chShowRoomDescription_clicked(bool checked)
+{
+    __s.setValue("showroomdescription", checked);
 }

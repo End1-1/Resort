@@ -16,6 +16,7 @@ public:
     inline int fCategoryId() { return getInt("f_class"); }
     inline QString fCategoryShort() {return getString("f_cshort"); }
     inline QString fCategory() { return getString("f_description"); }
+    inline QString fRoomDescription() { return getString("room_description"); }
     inline QString fBed() {return getString("f_bed"); }
     inline QString fView() {return getString("f_view"); }
     inline int fFloor() { return getInt("f_floor"); }

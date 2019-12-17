@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>111</height>
+    <height>134</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,20 +21,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="EColorLineEdit" name="leReserveColor"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Checkin color</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="EColorLineEdit" name="leCheckinColor"/>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -78,6 +65,33 @@
        </spacer>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="EColorLineEdit" name="leReserveColor"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Checkin color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="EColorLineEdit" name="leCheckinColor"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="chShowRoomDescription">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Show room description</string>
+     </property>
     </widget>
    </item>
   </layout>

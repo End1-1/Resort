@@ -300,7 +300,7 @@ CacheInstance *CacheOne::getCache(int id)
     default:
         TrackControl tc(0);
         tc.insert("UNKNOWN CASH ID", QString::number(id),"");
-        break;
+        return nullptr;
     }
 
     result = new CacheInstance(cbs);

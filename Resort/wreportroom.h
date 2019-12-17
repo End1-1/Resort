@@ -9,8 +9,10 @@ class WReportRoom : public WReportGrid
 public:
     explicit WReportRoom(QWidget *parent = nullptr);
     ~WReportRoom();
+
 protected:
     virtual void setupTab();
+
 private:
 };
 

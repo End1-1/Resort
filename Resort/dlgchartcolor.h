@@ -17,10 +17,10 @@ public:
 
 private slots:
     void selectColor();
-
     void on_btnSave_clicked();
-
     void on_btnCancel_clicked();
+
+    void on_chShowRoomDescription_clicked(bool checked);
 
 private:
     Ui::DlgChartColor *ui;

@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
 #ifdef DEMO
     QDate cd = QDate::currentDate();
-    QDate vd = QDate::fromString("01.11.2019", "dd.MM.yyyy");
+    QDate vd = QDate::fromString("01.04.2020", "dd.MM.yyyy");
     if (cd > vd) {
         return 0;
     }

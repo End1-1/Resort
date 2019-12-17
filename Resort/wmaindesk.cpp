@@ -37,6 +37,9 @@ WMainDesk::WMainDesk(QWidget *parent) :
 {
     DoubleDatabase fDD(true, doubleDatabase);
     ui->setupUi(this);
+    ui->wRoom->setMaximumWidth(__s.value("showroomdescription").toBool() ? 250 : 100);
+    ui->wRoom->setMinimumWidth(__s.value("showroomdescription").toBool() ? 250 : 100);
+    ui->tblRoom->setColumnWidth(0, ui->wRoom->maximumWidth() - 2);
     ui->g->verticalScrollBar()->blockSignals(true);
     ui->g->horizontalScrollBar()->blockSignals(true);
     fDD.exec("select f_short from f_room_classes order by 1");

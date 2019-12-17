@@ -4,7 +4,7 @@
 
 RoomItemDelegate::RoomItemDelegate()
 {
-
+    fShowRoomDescription = __s.value("showroomdescription").toBool();
 }
 
 void RoomItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -33,14 +33,17 @@ void RoomItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->fillRect(option.rect, brush);
 
     QTextOption o;
-    o.setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+    o.setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    o.setWrapMode(QTextOption::NoWrap);
     painter->setPen(LIGHT_GRAY);
     painter->drawRect(option.rect);
 
     painter->setPen(Qt::black);
-    painter->drawText(option.rect, r.fName(), o);
-    painter->setPen(LIGHT_GRAY);
     QRect rect = option.rect;
+    rect.adjust(2, 1, -2, -1);
+    painter->drawText(rect, fShowRoomDescription ? r.fName() + ", " + r.fRoomDescription() : r.fName(), o);
+    painter->setPen(LIGHT_GRAY);
+
     rect.adjust(-1, -1, -1, -1);
    // painter->drawText(rect, r.fName(), o);
 }

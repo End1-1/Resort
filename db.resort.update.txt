@@ -16,3 +16,8 @@ alter table m_register add column f_session integer;
 /*DB - 3 */
 update s_app set f_version='3' where f_app='DB';
 create table web_sessions (f_id integer primary key auto_increment, f_state smallint, f_session varchar(64),  f_user integer, f_start timestamp,  f_end timestamp);
+
+/*DB - 4 */
+update s_app set f_version='4' where f_app='DB';
+create table f_room_extra_list (f_id integer primary key auto_increment, f_name tinytext);
+create table f_room_extra (f_id integer primary key auto_increment, f_room integer, f_extra integer);

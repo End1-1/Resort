@@ -15,6 +15,7 @@ public:
     explicit DlgRoom(QList<QVariant> &values, QWidget *parent = 0);
     ~DlgRoom();
     virtual void setValues();
+
 private slots:
     void on_btnCancel_clicked();
     void on_btnOK_clicked();

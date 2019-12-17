@@ -21,6 +21,7 @@ SOURCES += main.cpp\
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
+    ../Cache/cacheroomextra.cpp \
     ../Controls/edoubleedit.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
@@ -443,6 +444,7 @@ HEADERS  += mainwindow.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
+    ../Cache/cacheroomextra.h \
     ../Controls/edoubleedit.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \

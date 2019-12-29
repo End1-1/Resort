@@ -7,6 +7,7 @@
 #include "winvoice.h"
 #include "waccinvoice.h"
 #include "dlgclinitialbalance.h"
+#include "dbmregister.h"
 #include "dlgdiscount.h"
 #include "paymentmode.h"
 #include "dbmregister.h"
@@ -139,12 +140,13 @@ bool removeVaucher(const QString &id, const QString &reason)
 {
     Preferences p;
     DoubleDatabase db(true, doubleDatabase);
-    QString src, name, doc;
+    QString src, name, doc, wdate;
     int rec, item, fiscal;
+    double amount;
     QString f_inv;
     int track = TRACK_VAUCHER;
     db[":f_id"] = id;
-    db.exec("select f_source, f_doc, f_rec, f_itemCode, f_finalName, f_amountAmd, f_fiscal, f_inv, f_doc "
+    db.exec("select f_source, f_doc, f_rec, f_itemCode, f_finalName, f_amountAmd, f_fiscal, f_inv, f_doc, f_wdate "
               "from m_register where f_id=:f_id");
     if (db.nextRow()) {
         src = db.getString(0);
@@ -152,9 +154,10 @@ bool removeVaucher(const QString &id, const QString &reason)
         rec = db.getInt(2);
         item = db.getInt(3);
         name = db.getString(4);
-        //amount = r.at(0).at(5).toDouble();
+        amount = db.getDouble(5);
         fiscal = db.getInt(6);
         f_inv = db.getString(7);
+        wdate = db.getDate(9).toString(def_date_format);
     } else {
         return false;
     }
@@ -211,6 +214,15 @@ bool removeVaucher(const QString &id, const QString &reason)
                       .arg(name), "", doc, f_inv);
     }
     Q_UNUSED(rec)
+
+    DBMRegister vr;
+    vr.fSource = VOUCHER_REMOVAL_N;
+    vr.fItemCode = __preferences.getDb(def_removal_vaucher_id).toInt();
+    vr.fFinalName = QObject::tr("REMOVAL OF") + " " + name;
+    vr.fAmountAMD = amount;
+    vr.fDoc = id;
+    vr.fRemarks = id + " / " + wdate + " / " + reason;
+    vr.save(db);
     return true;
 }
 

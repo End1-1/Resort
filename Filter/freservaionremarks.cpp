@@ -31,6 +31,7 @@ void FReservaionRemarks::apply(WReportGrid *rg)
     for (int i = 0; i < rg->fModel->rowCount(); i++) {
         rg->fModel->setBackgroundColor(i, (i % 2 == 0 ? Qt::white : COLOR_DARK_ROW));
     }
+    rg->fTableView->resizeRowsToContents();
 }
 
 QWidget *FReservaionRemarks::firstElement()

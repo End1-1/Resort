@@ -133,6 +133,9 @@ void FForecastOccupancyCategoryReal::apply(WReportGrid *rg)
                     mapQty[it.key()] = mapQty[it.key()] + 1;
                 }
             }
+            if (rows.count() == 0) {
+                continue;
+            }
             rows[row][cats[it.key()] + vacIndex] = mapQty[it.key()];
         }
     }

@@ -1253,6 +1253,10 @@ name</source>
         <source>The changes will applied in next time you logon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show room description</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgChartDateRange</name>
@@ -14725,6 +14729,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Reservation groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room extra</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

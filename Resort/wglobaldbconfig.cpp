@@ -220,6 +220,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leCheckoutVoucherId->setText(fPreferences.getDb(def_checkout_voucher_id).toString());
     ui->chothTaxGuestDetailed->setChecked(fPreferences.getDb(def_append_tax_inhouse_detailed).toBool());
     ui->chAutoSession->setChecked(fPreferences.getDb(def_user_auto_session).toBool());
+    ui->leRemovalVoucherId->setText(fPreferences.getDb(def_removal_vaucher_id).toString());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -274,6 +275,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->leCheckoutVoucherId, "Checkout voucher id")
             .addWidget(ui->chothTaxGuestDetailed, ui->chothTaxGuestDetailed->text())
             .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
+            .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
             ;
 
     getCompSettings();
@@ -373,6 +375,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_checkout_voucher_id, ui->leCheckoutVoucherId->text());
     values.insert(def_append_tax_inhouse_detailed, ui->chothTaxGuestDetailed->isChecked() ? "1" : "0");
     values.insert(def_user_auto_session, ui->chAutoSession->isChecked() ? "1" : "0");
+    values.insert(def_removal_vaucher_id, ui->leRemovalVoucherId->text());
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;

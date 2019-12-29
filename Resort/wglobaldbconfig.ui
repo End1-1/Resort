@@ -547,92 +547,6 @@
        <string>Vouchers</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="3" column="4">
-        <widget class="EQLineEdit" name="leReceiptVaucherId"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLabel" name="label_33">
-         <property name="text">
-          <string>Receipt vaucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="EQLineEdit" name="leDiscountId"/>
-       </item>
-       <item row="1" column="4">
-        <widget class="QLineEdit" name="leBrekfastChargeId"/>
-       </item>
-       <item row="10" column="4">
-        <widget class="EQLineEdit" name="leAdvanceVoucherId"/>
-       </item>
-       <item row="6" column="4">
-        <widget class="EQLineEdit" name="lePosTransferId"/>
-       </item>
-       <item row="14" column="4">
-        <widget class="EQLineEdit" name="leTransferAmountVoucherId"/>
-       </item>
-       <item row="4" column="4">
-        <widget class="EQLineEdit" name="leReservationVoucherId"/>
-       </item>
-       <item row="15" column="4">
-        <widget class="EQCheckBox" name="chPrintVoucherAfterSave">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="EQLineEdit" name="leRoomChargeId"/>
-       </item>
-       <item row="7" column="4">
-        <widget class="EQLineEdit" name="leNegTransferId"/>
-       </item>
-       <item row="15" column="1">
-        <widget class="QLabel" name="label_54">
-         <property name="text">
-          <string>Print voucher after save</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="label_15">
-         <property name="text">
-          <string>Breakfast charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="4">
-        <widget class="EQLineEdit" name="leCheckinVoucherId"/>
-       </item>
-       <item row="10" column="1">
-        <widget class="QLabel" name="lbNeg_3">
-         <property name="text">
-          <string>Advance voucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QLabel" name="lbNeg">
-         <property name="text">
-          <string>Negative transfer charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Room charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QLabel" name="lbNeg_6">
-         <property name="text">
-          <string>Transfer amouint voucher id</string>
-         </property>
-        </widget>
-       </item>
        <item row="12" column="1">
         <widget class="QLabel" name="lbNeg_4">
          <property name="text">
@@ -640,39 +554,15 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
-        <widget class="QLabel" name="label_49">
+       <item row="9" column="4">
+        <widget class="EQLineEdit" name="leRoomMoveVoucher"/>
+       </item>
+       <item row="16" column="1">
+        <widget class="QLabel" name="label_54">
          <property name="text">
-          <string>Default side for EOD</string>
+          <string>Print voucher after save</string>
          </property>
         </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string>Discount charge id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="6">
-        <widget class="EQLineEdit" name="leRoomingEODSide">
-         <property name="maximumSize">
-          <size>
-           <width>30</width>
-           <height>16777215</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QLabel" name="lbNeg_7">
-         <property name="text">
-          <string>Room move voucher id</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="EQLineEdit" name="leRefundId"/>
        </item>
        <item row="5" column="1">
         <widget class="QLabel" name="label_18">
@@ -681,10 +571,43 @@
          </property>
         </widget>
        </item>
+       <item row="12" column="4">
+        <widget class="EQLineEdit" name="leCheckinVoucherId"/>
+       </item>
+       <item row="6" column="4">
+        <widget class="EQLineEdit" name="lePosTransferId"/>
+       </item>
+       <item row="11" column="4">
+        <widget class="EQLineEdit" name="leAdvanceVoucherIdTransfer"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>Breakfast charge id</string>
+         </property>
+        </widget>
+       </item>
        <item row="8" column="4">
         <widget class="EQLineEdit" name="leRoomRateChangeId"/>
        </item>
-       <item row="16" column="1">
+       <item row="13" column="1">
+        <widget class="QLabel" name="lbNeg_8">
+         <property name="text">
+          <string>Checkout voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="4">
+        <widget class="EQLineEdit" name="leReservationVoucherId"/>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLabel" name="lbNeg_7">
+         <property name="text">
+          <string>Room move voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
         <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -696,6 +619,67 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="14" column="1">
+        <widget class="QLabel" name="lbNeg_6">
+         <property name="text">
+          <string>Transfer amouint voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QLabel" name="lbNeg_3">
+         <property name="text">
+          <string>Advance voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="4">
+        <widget class="EQCheckBox" name="chPrintVoucherAfterSave">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="EQLineEdit" name="leRoomChargeId"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>Receipt vaucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="EQLineEdit" name="leReceiptVaucherId"/>
+       </item>
+       <item row="7" column="4">
+        <widget class="EQLineEdit" name="leNegTransferId"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Discount charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QLabel" name="lbNeg_5">
+         <property name="text">
+          <string>Advance transfer voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4">
+        <widget class="EQLineEdit" name="leDiscountId"/>
+       </item>
+       <item row="0" column="5">
+        <widget class="QLabel" name="label_49">
+         <property name="text">
+          <string>Default side for EOD</string>
+         </property>
+        </widget>
        </item>
        <item row="8" column="1">
         <widget class="QLabel" name="lbNeg_2">
@@ -718,28 +702,54 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="4">
-        <widget class="EQLineEdit" name="leRoomMoveVoucher"/>
-       </item>
-       <item row="11" column="1">
-        <widget class="QLabel" name="lbNeg_5">
-         <property name="text">
-          <string>Advance transfer voucher id</string>
+       <item row="0" column="6">
+        <widget class="EQLineEdit" name="leRoomingEODSide">
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>16777215</height>
+          </size>
          </property>
         </widget>
        </item>
-       <item row="11" column="4">
-        <widget class="EQLineEdit" name="leAdvanceVoucherIdTransfer"/>
-       </item>
-       <item row="13" column="1">
-        <widget class="QLabel" name="lbNeg_8">
-         <property name="text">
-          <string>Checkout voucher id</string>
-         </property>
-        </widget>
+       <item row="5" column="4">
+        <widget class="EQLineEdit" name="leRefundId"/>
        </item>
        <item row="13" column="4">
         <widget class="EQLineEdit" name="leCheckoutVoucherId"/>
+       </item>
+       <item row="14" column="4">
+        <widget class="EQLineEdit" name="leTransferAmountVoucherId"/>
+       </item>
+       <item row="10" column="4">
+        <widget class="EQLineEdit" name="leAdvanceVoucherId"/>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLabel" name="lbNeg">
+         <property name="text">
+          <string>Negative transfer charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Room charge id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="leBrekfastChargeId"/>
+       </item>
+       <item row="15" column="1">
+        <widget class="QLabel" name="lbNeg_9">
+         <property name="text">
+          <string>Removal voucher id</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="4">
+        <widget class="EQLineEdit" name="leRemovalVoucherId"/>
        </item>
       </layout>
      </widget>

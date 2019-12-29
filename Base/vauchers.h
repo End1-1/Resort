@@ -41,6 +41,7 @@
 #define VAUCHER_INVOICE_N "IN"
 #define VOUCHER_ADVANCE_TRANSFER_N "AT"
 #define VOUCHER_MOVE_ROOM_N "MR"
+#define VOUCHER_REMOVAL_N "VR"
 
 QString vaucherPaymentName(int code, const QString &cardcode, const QString &clcode);
 QString vaucherCode(int code, const QString &prefix);

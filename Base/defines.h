@@ -88,6 +88,7 @@
 #define def_print_voucher_after_save "Print vouchers after save"
 #define def_append_tax_inhouse_detailed "Append tax in inhouse detailed"
 #define def_long_open_order_time "Long open order time"
+#define def_removal_vaucher_id "Removal vaucher id"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110

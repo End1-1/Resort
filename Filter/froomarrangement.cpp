@@ -8,7 +8,6 @@ FRoomArrangement::FRoomArrangement(QWidget *parent) :
 {
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Room arrangement"), ":/images/graph.png");
-    ui->cbYear->setCurrentIndex(ui->cbYear->findText(QString::number(QDate::currentDate().year())));
 }
 
 FRoomArrangement::~FRoomArrangement()

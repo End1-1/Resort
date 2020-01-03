@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="EQComboBox" name="cbYear"/>
+    <widget class="EYearCombo" name="cbYear"/>
    </item>
    <item>
     <widget class="EDateEdit" name="deDate1"/>
@@ -59,9 +59,9 @@
    <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
-   <class>EQComboBox</class>
+   <class>EYearCombo</class>
    <extends>QComboBox</extends>
-   <header location="global">eqcombobox.h</header>
+   <header location="global">eyearcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -8,7 +8,6 @@ FYearlyFinancialReport::FYearlyFinancialReport(QWidget *parent) :
 {
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Yearly financial report"), ":/images/graph.png");
-    ui->cbYear->setCurrentIndex(ui->cbYear->findText(QDate::currentDate().toString("yyyy")));
 }
 
 FYearlyFinancialReport::~FYearlyFinancialReport()

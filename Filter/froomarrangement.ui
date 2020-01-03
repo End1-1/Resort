@@ -22,23 +22,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="EQComboBox" name="cbYear">
-     <item>
-      <property name="text">
-       <string>2017</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2018</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2019</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="EYearCombo" name="cbYear"/>
    </item>
    <item row="0" column="2">
     <widget class="EQCheckBox" name="ch1">
@@ -164,9 +148,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EQComboBox</class>
+   <class>EYearCombo</class>
    <extends>QComboBox</extends>
-   <header location="global">eqcombobox.h</header>
+   <header location="global">eyearcombo.h</header>
   </customwidget>
   <customwidget>
    <class>EQCheckBox</class>

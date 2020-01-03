@@ -11,7 +11,6 @@ FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
     ui->setupUi(this);
     setTabText();
     fReportGrid->fTableView->verticalHeader()->setDefaultSectionSize(18);
-    ui->cbYear->setCurrentIndex(ui->cbYear->findText(QString::number(QDate::currentDate().year())));
     ui->cbMonth->setCurrentIndex(QDate::currentDate().month() - 1);
     ui->deStart->setDate(QDate::currentDate().addDays((QDate::currentDate().day() - 1) * -1));
     ui->deEnd->setDate(QDate::currentDate());

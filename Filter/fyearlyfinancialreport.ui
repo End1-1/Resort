@@ -22,23 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="cbYear">
-     <item>
-      <property name="text">
-       <string>2017</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2018</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2019</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="EYearCombo" name="cbYear"/>
    </item>
    <item>
     <widget class="QLabel" name="label_2">
@@ -79,6 +63,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>EYearCombo</class>
+   <extends>QComboBox</extends>
+   <header location="global">eyearcombo.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -2,6 +2,7 @@
 #include "ui_fmonthlyoccperc.h"
 #include "wreportgrid.h"
 #include "monthnames.h"
+#include "cacheyear.h"
 
 FMonthlyOccPerc::FMonthlyOccPerc(QWidget *parent) :
     WFilterBase(parent),
@@ -9,10 +10,6 @@ FMonthlyOccPerc::FMonthlyOccPerc(QWidget *parent) :
 {
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Yearly summary occupancy report"), ":/images/reports.png");
-    ui->cbYear->addItem("2017");
-    ui->cbYear->addItem("2018");
-    ui->cbYear->addItem("2019");
-    ui->cbYear->setCurrentIndex(2);
     ui->deDate1->setDate(QDate::fromString(QString("%1-01-01").arg(ui->cbYear->currentText()), "yyyy-MM-dd"));
     ui->deDate2->setDate(QDate::fromString(QString("%1-12-31").arg(ui->cbYear->currentText()), "yyyy-MM-dd"));
 }

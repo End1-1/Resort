@@ -353,6 +353,24 @@ void Login::on_btnLogin_clicked()
     if (!fPreferences.getDb(def_user_auto_session).toBool()) {
         message_info(message);
     }
+    fDD.exec("select max(f_id) from serv_years");
+    int max_year = 0;
+    if (fDD.nextRow()) {
+        max_year = fDD.getInt(0);
+    }
+    int curr_year = QDate::currentDate().year();
+    if (curr_year > max_year) {
+        while (max_year < curr_year) {
+            if (max_year == 0) {
+                max_year = curr_year;
+            } else {
+                max_year++;
+            }
+            fDD[":f_id"] = max_year;
+            fDD[":f_name"] = QString::number(max_year);
+            fDD.insert("serv_years");
+        }
+    }
     accept();
 }
 

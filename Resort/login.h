@@ -17,6 +17,7 @@ public:
     explicit Login(QWidget *parent = nullptr);
     ~Login();
     void setLockUser(int id);
+
 private slots:
     void shortcutSlot();
     void timeout();

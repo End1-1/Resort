@@ -133,28 +133,13 @@
       </widget>
      </item>
      <item>
-      <widget class="EQComboBox" name="cbYear">
+      <widget class="EYearCombo" name="cbYear">
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
        <property name="currentText">
-        <string>2017</string>
+        <string/>
        </property>
-       <item>
-        <property name="text">
-         <string>2017</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2018</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>2019</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>
@@ -253,14 +238,19 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">eqcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
+   <class>EYearCombo</class>
+   <extends>QComboBox</extends>
+   <header location="global">eyearcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

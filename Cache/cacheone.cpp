@@ -14,6 +14,7 @@
 #include "cachecreditcard.h"
 #include "cachecurrencies.h"
 #include "cachedebtcostumer.h"
+#include "cacheyear.h"
 #include "cachedish.h"
 #include "cacheactivegroup.h"
 #include "cachedishstate.h"
@@ -296,6 +297,9 @@ CacheInstance *CacheOne::getCache(int id)
         break;
     case cid_active_group:
         cbs = new CacheActiveGroup();
+        break;
+    case cid_serv_year:
+        cbs = new CacheYear();
         break;
     default:
         TrackControl tc(0);

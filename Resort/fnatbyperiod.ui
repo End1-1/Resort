@@ -22,23 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="cbYear1">
-     <item>
-      <property name="text">
-       <string>2017</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2018</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2019</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="EYearCombo" name="cbYear1"/>
    </item>
    <item>
     <widget class="EQComboBox" name="cbMonth1">
@@ -112,23 +96,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="cbYear2">
-     <item>
-      <property name="text">
-       <string>2017</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2018</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2019</string>
-      </property>
-     </item>
-    </widget>
+    <widget class="EYearCombo" name="cbYear2"/>
    </item>
    <item>
     <widget class="EQComboBox" name="cbMonth2">
@@ -214,6 +182,11 @@
    <class>EQComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">eqcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EYearCombo</class>
+   <extends>QComboBox</extends>
+   <header location="global">eyearcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

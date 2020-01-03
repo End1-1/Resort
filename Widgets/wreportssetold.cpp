@@ -62,8 +62,6 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
         w->deleteLater();
         ui->tabWidget->removeTab(index);
     });
-
-    ui->cbYear->setCurrentIndex(ui->cbYear->findText(QDate::currentDate().toString("yyyy")));
 }
 
 WReportsSetOld::~WReportsSetOld()

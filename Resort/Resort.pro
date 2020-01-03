@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
     ../Cache/cacheroomextra.cpp \
+    ../Cache/cacheyear.cpp \
     ../Controls/edoubleedit.cpp \
+    ../Controls/eyearcombo.cpp \
     ../Controls/tableview.cpp \
     ../Filter/fcashreportbyitem.cpp \
     ../Filter/fexpecteddeparturesimple.cpp \
@@ -445,7 +447,9 @@ HEADERS  += mainwindow.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
     ../Cache/cacheroomextra.h \
+    ../Cache/cacheyear.h \
     ../Controls/edoubleedit.h \
+    ../Controls/eyearcombo.h \
     ../Controls/tableview.h \
     ../Filter/fcashreportbyitem.h \
     ../Filter/fexpecteddeparturesimple.h \

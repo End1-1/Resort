@@ -13,7 +13,7 @@ FCityLedgerBalance::FCityLedgerBalance(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("C/L Total balance"), ":/images/balance.png");
 #ifdef _METROPOL_
     fReportGrid->fStaticQuery = " \
-            select m.f_cityLedger, cl.f_name,  sum(m.f_amountamd*m.f_sign) as amount , sum(m.f_amountamd/m.f_amountusd*m.f_sign)  \
+            select m.f_cityLedger, cl.f_name,  sum(m.f_amountamd*m.f_sign*-1) as amount , sum((m.f_amountamd/m.f_amountusd)*m.f_sign*-1)  \
             from m_register m \
             inner join f_city_ledger cl on cl.f_id=m.f_cityLedger \
             where m.f_finance=1 and  cl.f_id>0 and f_canceled=0 \

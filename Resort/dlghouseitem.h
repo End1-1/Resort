@@ -15,21 +15,25 @@ class DlgHouseItem : public BaseExtendedDialog
 public:
     explicit DlgHouseItem(QWidget *parent = nullptr);
     ~DlgHouseItem();
+    void setRoom(int room);
     virtual void callback(int sel, const QString &code);
-    static void openWindow();
+    static void openWindow(int room);
+
 private slots:
     void comboStateCurrentIndexChanged(int index);
     void on_btnAddItem_clicked();
-
     void on_btnSave_clicked();
-
     void on_btnRemoveItem_clicked();
+    void on_btnSaveStates_clicked();
+    void on_btnCopy_clicked();
+    void on_btnPaste_clicked();
 
 private:
     Ui::DlgHouseItem *ui;
     EQLineEdit *fleInventory;
     void loadRoom();
     int addRow();
+    void checkForReady();
 };
 
 #endif // DLGHOUSEITEM_H

@@ -148,8 +148,8 @@
 #define cr__state_of_room 139
 #define cr__expeced_departures_simple 140
 #define cr__expected_arrivals_simple 141
-#define cr__1
-#define cr__1
+#define cr__edit_room_inventory_list 142
+#define cr__checkin_with_not_ready_room_inventory 143
 #define cr__1
 #define cr__1
 #define cr__1

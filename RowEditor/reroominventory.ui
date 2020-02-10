@@ -7,40 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>111</height>
+    <height>472</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Room inventory</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Code</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="EQLineEdit" name="leCode">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="PrimaryKey" stdset="0">
-      <bool>true</bool>
-     </property>
-     <property name="Field" stdset="0">
-      <string>f_id</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Name</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <widget class="EQLineEdit" name="leName">
      <property name="Field" stdset="0">
@@ -48,7 +21,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="3" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -90,6 +63,42 @@
          </size>
         </property>
        </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Code</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="EQLineEdit" name="leCode">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="PrimaryKey" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="Field" stdset="0">
+      <string>f_id</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QWidget" name="widget_2" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QListWidget" name="lst"/>
       </item>
      </layout>
     </widget>

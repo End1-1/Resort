@@ -37,6 +37,39 @@ void RERoomInventory::openRoomInventoryReport()
     r->fullSetup<RERoomInventory>(widths, fields, titles, title, icon, query);
 }
 
+void RERoomInventory::setValues()
+{
+    RowEditorDialog::setValues();
+    ui->lst->clear();
+    DoubleDatabase db(true, false);
+    db[":f_inventory"] = ui->leCode->asInt();
+    db.exec("select g.f_en, g.f_id, i.f_permit from users_groups g left join f_room_inventory_permission i on g.f_id=i.f_group and i.f_inventory=:f_inventory");
+    while (db.nextRow()) {
+        QListWidgetItem *i = new QListWidgetItem(ui->lst);
+        i->setText(db.getString(0));
+        i->setData(Qt::UserRole, db.getInt(1));
+        i->setFlags(i->flags() | Qt::ItemIsUserCheckable);
+        i->setCheckState(db.getInt(2) == 0 ? Qt::Unchecked : Qt::Checked);
+        ui->lst->addItem(i);
+    }
+}
+
+void RERoomInventory::save()
+{
+    if (RowEditorDialog::saveOnly()) {
+        DoubleDatabase db(true, doubleDatabase);
+        db[":f_inventory"] = ui->leCode->asInt();
+        db.exec("delete from f_room_inventory_permission where f_inventory=:f_inventory");
+        for (int i = 0; i < ui->lst->count(); i++) {
+            db[":f_inventory"] = ui->leCode->asInt();
+            db[":f_group"] = ui->lst->item(i)->data(Qt::UserRole).toInt();
+            db[":f_permit"] = ui->lst->item(i)->checkState() == Qt::Checked ? 1 : 0;
+            db.insert("f_room_inventory_permission", false);
+        }
+    }
+    accept();
+}
+
 void RERoomInventory::on_btnCancel_clicked()
 {
     reject();

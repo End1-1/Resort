@@ -604,6 +604,11 @@ void WInvoice::on_btnCheckout_clicked()
         fDD[":f_reservation"] = ui->leReserveID->text();
         fDD.insert("f_room_state_change", false);
     }
+    //SET ROOM INVENTORY NOT READY
+    if (result) {
+        fDD[":f_room"] = ui->leRoomCode->asInt();
+        fDD.exec("update f_room_inventory_journal set f_state=2 where f_room=:f_room");
+    }
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_source"] = VAUCHER_RECEIPT_N;
     fDD.exec("select f_cityLedger, sum(f_amountAmd*f_sign) from m_register where f_cityLedger>0 and f_inv=:f_inv and f_source=:f_source and f_canceled=0");

@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -448,6 +448,26 @@
          </property>
          <property name="Tag" stdset="0">
           <number>84</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chReceptionEditRoomInventory">
+         <property name="text">
+          <string>Edit room inventory list</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>142</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chCheckinWithNotReadyRoomInventory">
+         <property name="text">
+          <string>Checkin with room incomplete inventory</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>143</number>
          </property>
         </widget>
        </item>

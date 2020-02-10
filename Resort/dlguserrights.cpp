@@ -177,6 +177,8 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chStateOfTheRoom, QString::number(fGroupId) + ": " + ui->chStateOfTheRoom->text())
             .addWidget(ui->chExpectedDeparturesSimple, QString::number(fGroupId) + ": " + ui->chExpectedDeparturesSimple->text())
             .addWidget(ui->chExpectedArrivalsSimple, QString::number(fGroupId) + ": " + ui->chExpectedArrivalsSimple->text())
+            .addWidget(ui->chReceptionEditRoomInventory, QString::number(fGroupId) + ": " + ui->chReceptionEditRoomInventory->text())
+            .addWidget(ui->chCheckinWithNotReadyRoomInventory, QString::number(fGroupId) + ": " + ui->chCheckinWithNotReadyRoomInventory->text())
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

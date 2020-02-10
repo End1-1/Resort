@@ -3,6 +3,7 @@
 #include "wreportgrid.h"
 #include "roomstate.h"
 #include "chardefaults.h"
+#include "dlghouseitem.h"
 
 static QMap<int, QColor> fColorOfStates;
 
@@ -81,11 +82,12 @@ void FRoomStates::dbClick(const QList<QVariant> &row)
     if (row.count() == 0) {
         return;
     }
-    RoomState *rs = new RoomState(this);
-    rs->uncheckStiky();
-    rs->setRoom(row.at(1).toString());
-    rs->exec();
-    delete rs;
+    DlgHouseItem::openWindow(row.at(1).toInt());
+//    RoomState *rs = new RoomState(this);
+//    rs->uncheckStiky();
+//    rs->setRoom(row.at(1).toString());
+//    rs->exec();
+//    delete rs;
 }
 
 void FRoomStates::roomUpdated(int cacheid, const QString &name)

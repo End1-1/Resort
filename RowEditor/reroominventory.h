@@ -15,9 +15,11 @@ public:
     explicit RERoomInventory(QList<QVariant> &values, QWidget *parent = 0);
     ~RERoomInventory();
     static void openRoomInventoryReport();
+    virtual void setValues() override;
+    virtual void save() override;
+
 private slots:
     void on_btnCancel_clicked();
-
     void on_btnSave_clicked();
 
 private:

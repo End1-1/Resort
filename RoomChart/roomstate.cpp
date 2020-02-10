@@ -105,6 +105,24 @@ void RoomState::on_btnOk_clicked()
         return;
     }
     DoubleDatabase fDD(true, doubleDatabase);
+    if (ui->leNewState->asInt() == ROOM_STATE_NONE) {
+        bool clear = true;
+        fDD[":f_room"] = ui->leRoomCode->asInt();
+        fDD.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state=2");
+        if (fDD.nextRow()) {
+            clear = false;
+        }
+        if (!clear) {
+            if (r__(cr__checkin_with_not_ready_room_inventory)) {
+                if (message_confirm(tr("Confirm to checkin with incomplete room inventory")) != QDialog::Accepted) {
+                    return;
+                }
+            } else {
+                message_error(tr("Room inventory is not ready"));
+                return;
+            }
+        }
+    }
     QString add = ui->leRoomCode->text();
     if (ui->leNewState->asInt() == ROOM_STATE_OUTOF) {
         if (ui->lbOO->text() != "OK") {

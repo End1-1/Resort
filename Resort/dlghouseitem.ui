@@ -143,7 +143,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnPrint">
+       <widget class="QPushButton" name="btnCopy">
         <property name="minimumSize">
          <size>
           <width>30</width>
@@ -161,7 +161,53 @@
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/printer.png</normaloff>:/images/printer.png</iconset>
+          <normaloff>:/images/copy.png</normaloff>:/images/copy.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnPaste">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/paste.png</normaloff>:/images/paste.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSave">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
         </property>
        </widget>
       </item>
@@ -189,7 +235,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnSave">
+       <widget class="QPushButton" name="btnSaveStates">
         <property name="minimumSize">
          <size>
           <width>30</width>
@@ -198,12 +244,12 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>30</width>
+          <width>1677715</width>
           <height>30</height>
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>Save states</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">

@@ -827,11 +827,29 @@ bool WReservationRoomTab::canCheckIn(QString &why)
         result = result && false;
         why += tr("No guest in the room\r\n");
     }
+    DoubleDatabase dd(true, false);
+    if (!r__(cr__checkin_with_not_ready_room_inventory)) {
+        dd[":f_room"] = ui->leRoomCode->asInt();
+        dd.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state=2");
+        if (dd.nextRow()) {
+            result = result && false;
+            why += tr("Room inventory is not ready");
+        }
+    }
     return result;
 }
 
 bool WReservationRoomTab::checkIn(QString &errorString)
 {
+    DoubleDatabase dd(true, false);
+    dd[":f_room"] = ui->leRoomCode->asInt();
+    dd.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state=2");
+    if (dd.nextRow()) {
+        if (message_confirm(tr("Confirm to checkin with incomplete room inventory")) != QDialog::Accepted) {
+            return false;
+        }
+    }
+
     bool error = false;
     if (ui->cbVAT->currentData().toInt() == 0) {
         errorString += tr("Mode of VAT is undefinedn") + "<BR>";

@@ -2009,7 +2009,7 @@ void MainWindow::on_actionAvaiable_rooms_triggered()
 
 void MainWindow::on_actionRoom_inventory_2_triggered()
 {
-    DlgHouseItem::openWindow();
+    DlgHouseItem::openWindow(0);
 }
 
 void MainWindow::on_actionRoom_inventory_states_triggered()

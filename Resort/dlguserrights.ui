@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -458,6 +458,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>142</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chReceptionEditRoomInventory_2">
+         <property name="text">
+          <string>Room inventory viewer</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>144</number>
          </property>
         </widget>
        </item>
@@ -1680,6 +1690,149 @@
    <header location="global">eqcheckbox.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>chAllREservation</tabstop>
+  <tabstop>chRoomChart</tabstop>
+  <tabstop>chEditReservation</tabstop>
+  <tabstop>chUnlockReserve</tabstop>
+  <tabstop>chCmnRepREservation</tabstop>
+  <tabstop>chEditViewGroupReservation</tabstop>
+  <tabstop>chEndOfDay</tabstop>
+  <tabstop>chRecheckin</tabstop>
+  <tabstop>chReservationCancel</tabstop>
+  <tabstop>chCheckout</tabstop>
+  <tabstop>chReservLengthOfStay</tabstop>
+  <tabstop>chArrivalBirthDayPanel</tabstop>
+  <tabstop>chCancelationNOShow</tabstop>
+  <tabstop>chEmailConfirmation</tabstop>
+  <tabstop>chCategoryToSell</tabstop>
+  <tabstop>chForecastOccupancy</tabstop>
+  <tabstop>chListOfSourceReservation</tabstop>
+  <tabstop>chAvailableRooms</tabstop>
+  <tabstop>chRoomStateChange</tabstop>
+  <tabstop>btnCancel</tabstop>
+  <tabstop>tw</tabstop>
+  <tabstop>chCheckUncheck</tabstop>
+  <tabstop>btnOk</tabstop>
+  <tabstop>chReceptionMenu</tabstop>
+  <tabstop>chQuickReservations</tabstop>
+  <tabstop>chQuickCheckout</tabstop>
+  <tabstop>chExpectedArrivalsPax</tabstop>
+  <tabstop>chExpectedArrivalsSimple</tabstop>
+  <tabstop>chExpectedDeparturesSimple</tabstop>
+  <tabstop>chExpectedArrivalsPax_2</tabstop>
+  <tabstop>chDailyTransactions</tabstop>
+  <tabstop>chInhouseGuest</tabstop>
+  <tabstop>chInhouseGuestAnyTime</tabstop>
+  <tabstop>chInhouseGuestAnyTime_2</tabstop>
+  <tabstop>chRoomAssignmen</tabstop>
+  <tabstop>chRoomStatusChange</tabstop>
+  <tabstop>chCallHistory</tabstop>
+  <tabstop>chNotes</tabstop>
+  <tabstop>chContacts</tabstop>
+  <tabstop>chRemarks</tabstop>
+  <tabstop>chHotelStatus</tabstop>
+  <tabstop>chRecetpionRoomInventory</tabstop>
+  <tabstop>chReceptionEditRoomInventory</tabstop>
+  <tabstop>chCheckinWithNotReadyRoomInventory</tabstop>
+  <tabstop>chListOfCheckingGuest</tabstop>
+  <tabstop>chWakeupCalls</tabstop>
+  <tabstop>chHotelHierarchy</tabstop>
+  <tabstop>chStateOfTheRoom</tabstop>
+  <tabstop>chMenuCashier</tabstop>
+  <tabstop>chAdvanceReceipt</tabstop>
+  <tabstop>chAdvanceReceiptInvoice</tabstop>
+  <tabstop>chReceiptVaucher</tabstop>
+  <tabstop>chPostCharge</tabstop>
+  <tabstop>chChangePostChargeWorkingDate</tabstop>
+  <tabstop>chDiscountVaucher</tabstop>
+  <tabstop>chTransferAmount</tabstop>
+  <tabstop>chRefundVoucher</tabstop>
+  <tabstop>chTransferAnyDirection</tabstop>
+  <tabstop>chCashReports</tabstop>
+  <tabstop>chCurrencies</tabstop>
+  <tabstop>chInvoiceExportToExcel</tabstop>
+  <tabstop>chPrintInvoicePartialy</tabstop>
+  <tabstop>chAdvanceReport</tabstop>
+  <tabstop>chChangeRVDateBank</tabstop>
+  <tabstop>chChangeRVDateCash</tabstop>
+  <tabstop>chChangeRVDateCL</tabstop>
+  <tabstop>chChangeDateRVCard</tabstop>
+  <tabstop>chCancelCurrentDate</tabstop>
+  <tabstop>chCancelPreviousDate</tabstop>
+  <tabstop>chPSVoucherCancelFromInvoice</tabstop>
+  <tabstop>chTempReceipt</tabstop>
+  <tabstop>chTaxOfInvoices</tabstop>
+  <tabstop>chMenuCityLedger</tabstop>
+  <tabstop>chCityLedgerBalance</tabstop>
+  <tabstop>chAvailableCLAmounts</tabstop>
+  <tabstop>chMenuBookeeping</tabstop>
+  <tabstop>chVaucherHistory</tabstop>
+  <tabstop>chDailyMovement</tabstop>
+  <tabstop>chMonthlyTotal</tabstop>
+  <tabstop>chCheckoutInvoices</tabstop>
+  <tabstop>chMoveInvoiceItem</tabstop>
+  <tabstop>chSuperCorrection</tabstop>
+  <tabstop>chBookHGuestTrayLegder</tabstop>
+  <tabstop>chInhouseDetailedBalance</tabstop>
+  <tabstop>chYeralyFinancial</tabstop>
+  <tabstop>chMenuRestaurant</tabstop>
+  <tabstop>chOnlineRest</tabstop>
+  <tabstop>chReportRestaurant</tabstop>
+  <tabstop>chRestaurantReports</tabstop>
+  <tabstop>choMovement</tabstop>
+  <tabstop>choCancelation</tabstop>
+  <tabstop>choPrintUnlimitedReceipt</tabstop>
+  <tabstop>choPrintReports</tabstop>
+  <tabstop>chRestReportanyDay</tabstop>
+  <tabstop>chPrintReceiptByNumber</tabstop>
+  <tabstop>chPrintTaxByNumber</tabstop>
+  <tabstop>chBanket</tabstop>
+  <tabstop>chBreakfast</tabstop>
+  <tabstop>chRecover</tabstop>
+  <tabstop>chComplimentary</tabstop>
+  <tabstop>chRemoveOrderPermanent</tabstop>
+  <tabstop>chCloseOldOpenOrder</tabstop>
+  <tabstop>chAnalyticsMenu</tabstop>
+  <tabstop>chMonthlyOccupancyPercentages</tabstop>
+  <tabstop>chGuestByNationality</tabstop>
+  <tabstop>chCardexAnalysis</tabstop>
+  <tabstop>chReportSet</tabstop>
+  <tabstop>chCallIn</tabstop>
+  <tabstop>chCallOut</tabstop>
+  <tabstop>chCallInt</tabstop>
+  <tabstop>chCallTrasferOut</tabstop>
+  <tabstop>chCallTransferIn</tabstop>
+  <tabstop>chRoomArrangement</tabstop>
+  <tabstop>chMenuDirectory</tabstop>
+  <tabstop>chInvoiceItems</tabstop>
+  <tabstop>chPartners</tabstop>
+  <tabstop>chPartnersRemove</tabstop>
+  <tabstop>chCityledgerList</tabstop>
+  <tabstop>chGuests</tabstop>
+  <tabstop>chCreditCard</tabstop>
+  <tabstop>chServices</tabstop>
+  <tabstop>chNationalityFile</tabstop>
+  <tabstop>chRoomEditor</tabstop>
+  <tabstop>chRoomEditor_2</tabstop>
+  <tabstop>chSetupTax</tabstop>
+  <tabstop>chHotelRoomInventory</tabstop>
+  <tabstop>chRoomInventoryState</tabstop>
+  <tabstop>chMenuApplication</tabstop>
+  <tabstop>chUsersGroups</tabstop>
+  <tabstop>chUsers</tabstop>
+  <tabstop>chTrackChanges</tabstop>
+  <tabstop>chTrakingIndividual</tabstop>
+  <tabstop>chGlobalConfig</tabstop>
+  <tabstop>chUpdateProgram</tabstop>
+  <tabstop>chExportInvoice</tabstop>
+  <tabstop>chSingleVaucher</tabstop>
+  <tabstop>chExportSingleVauchers</tabstop>
+  <tabstop>chActiveReserve</tabstop>
+  <tabstop>chDoNotUseSecondDB</tabstop>
+  <tabstop>chExecFailedSql</tabstop>
+  <tabstop>chReceptionEditRoomInventory_2</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

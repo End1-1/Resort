@@ -1,6 +1,7 @@
 #include "roomstate.h"
 #include "ui_roomstate.h"
 #include "vauchers.h"
+#include "dlghouseitem.h"
 #include "cachereservation.h"
 #include "paymentmode.h"
 #include "cacheroomstate.h"
@@ -243,4 +244,25 @@ void RoomState::checkOO()
 void RoomState::on_btnSticky_clicked(bool checked)
 {
     __s.setValue("roomstatesticky", checked);
+}
+
+void RoomState::on_lbStatus_linkActivated(const QString &link)
+{
+    Q_UNUSED(link);
+    if (r__(cr__view_room_inventory_state)) {
+        DlgHouseItem *d  = new DlgHouseItem(this);
+        d->setRoom(ui->leRoomCode->asInt());
+        d->exec();
+        delete d;
+    }
+}
+
+void RoomState::on_btnWhy_clicked()
+{
+    if (r__(cr__view_room_inventory_state)) {
+        DlgHouseItem *d  = new DlgHouseItem(this);
+        d->setRoom(ui->leRoomCode->asInt());
+        d->exec();
+        delete d;
+    }
 }

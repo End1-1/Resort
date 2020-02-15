@@ -26,6 +26,15 @@ DlgHouseItem::DlgHouseItem(QWidget *parent) :
     ui->btnCopy->setVisible(r__(cr__edit_room_inventory_list));
     ui->btnPaste->setVisible(r__(cr__edit_room_inventory_list));
     ui->btnSave->setVisible(r__(cr__edit_room_inventory_list));
+
+    if (WORKING_USERGROUP != 1) {
+        ui->btnAddItem->setVisible(ui->btnAddItem->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnRemoveItem->setVisible(ui->btnRemoveItem->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnCopy->setVisible(ui->btnCopy->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnPaste->setVisible(ui->btnPaste->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnSave->setVisible(ui->btnSave->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnSaveStates->setVisible(ui->btnSaveStates->isVisible() && !r__(cr__view_room_inventory_state));
+    }
 }
 
 DlgHouseItem::~DlgHouseItem()
@@ -96,6 +105,9 @@ void DlgHouseItem::loadRoom()
     db.exec("select * from f_room_inventory_journal where f_room=:f_room");
     while (db.nextRow()) {
         if (WORKING_USERGROUP != 1) {
+            if (r__(cr__view_room_inventory_state)) {
+                continue;
+            }
             if (!r__(cr__edit_room_inventory_list)) {
                 if (!inventories.contains(db.getInt("f_inventory"))) {
                     continue;
@@ -138,7 +150,33 @@ void DlgHouseItem::checkForReady()
     DoubleDatabase db(true, false);
     db[":f_room"] = ui->leRoomCode->asInt();
     db.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state = 2");
-    if (!db.nextRow()) {
+    if (db.nextRow()) {
+        db[":f_id"] = ui->leRoomCode->asInt();
+        db.exec("select f_state from f_room where f_id=:f_id");
+        int oldstate = -1;
+        if (db.nextRow()) {
+            oldstate = db.getInt(0);
+        }
+        if (oldstate == ROOM_STATE_NONE) {
+            db[":f_date"] = QDate::currentDate();
+            db[":f_wdate"] = WORKING_DATE;
+            db[":f_time"] = QTime::currentTime();
+            db[":f_oldState"] = oldstate;
+            db[":f_newState"] = ROOM_STATE_DIRTY;
+            db[":f_user"] = WORKING_USERID;
+            db[":f_comment"] = "";
+            db.insert("f_room_state_change");
+            db[":f_id"] = ui->leRoomCode->asInt();
+            db[":f_state"] = ROOM_STATE_DIRTY;
+            db.exec("update f_room set f_state=:f_state where f_id=:f_id");
+            QString statename = QString::number(oldstate);
+            if (rs.get(oldstate)) {
+                statename = rs.fName();
+            }
+            TrackControl::insert(TRACK_ROOM_STATE, "Room state changed", statename, "VACANT NOT READY, Reason: not clear");
+            BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
+        }
+    } else {
         db[":f_id"] = ui->leRoomCode->asInt();
         db.exec("select f_state from f_room where f_id=:f_id");
         int oldstate = -1;
@@ -193,12 +231,19 @@ void DlgHouseItem::on_btnSave_clicked()
         fDD[":f_comment"] = ui->tblMain->lineEdit(i, 4)->text();
         fDD.update("f_room_inventory_journal", where_id(ui->tblMain->item(i, 0)->data(Qt::EditRole).toInt()));
     }
+    checkForReady();
     message_info(tr("Saved"));
 }
 
 void DlgHouseItem::on_btnRemoveItem_clicked()
 {
     int row = ui->tblMain->currentRow();
+    QTableWidgetItem *item = ui->tblMain->item(row, 0);
+    if (item && item->data(Qt::EditRole).toInt() > 0) {
+        DoubleDatabase fDD(true, doubleDatabase);
+        fDD[":f_id"] = ui->tblMain->item(row, 0)->data(Qt::EditRole);
+        fDD.exec("delete from f_room_inventory_journal where f_id=:f_id");
+    }
     ui->tblMain->removeRow(row);
 }
 

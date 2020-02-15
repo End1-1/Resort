@@ -207,6 +207,9 @@
      </item>
      <item row="1" column="3">
       <widget class="QLabel" name="lbStatus">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -232,16 +235,34 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="btnWhy">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Resort/res.qrc">
+         <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
-  </customwidget>
   <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
@@ -249,6 +270,11 @@
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

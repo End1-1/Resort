@@ -91,7 +91,7 @@ void FExpectedArrivals2::printArrival(WReportGrid *rg)
            << tr("Cardex")
            << tr("Advance")
            << tr("CardexRate")
-           << tr("Balance")
+           << tr("Room rate")
            << tr("RS")
            << tr("Departure")
            << tr("Remarks");

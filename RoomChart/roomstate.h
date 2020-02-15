@@ -26,6 +26,10 @@ private slots:
     void on_deEnd_textChanged(const QString &arg1);
     void on_btnSticky_clicked(bool checked);
 
+    void on_lbStatus_linkActivated(const QString &link);
+
+    void on_btnWhy_clicked();
+
 private:
     Ui::RoomState *ui;
     CacheRoom fRoom;

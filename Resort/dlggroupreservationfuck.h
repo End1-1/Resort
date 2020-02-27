@@ -20,6 +20,7 @@ public:
     virtual void setup();
 
 private slots:
+    void reservationCacheUpdated(int cacheId, const QString &id);
     void singleGuestFocusOut();
     void singleGuestLineEdit(bool);
     void preCount(const QString &str);
@@ -56,11 +57,13 @@ private slots:
     void on_btnCancelGroup_clicked();
     void on_btnReviveReservations_clicked();
     void on_btnCopyLast_clicked();
+    void on_btnTrackChanges_clicked();
 
 private:
     Ui::DlgGroupReservationFuck *ui;
     int fCurrRow;
     DlgSimpleSelectRoom *fDockRoom;
+    TrackControl *fGroupTrackControl;
     void save();
     void countReserve();
     void countTotalReservation();

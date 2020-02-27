@@ -28,12 +28,12 @@ DlgHouseItem::DlgHouseItem(QWidget *parent) :
     ui->btnSave->setVisible(r__(cr__edit_room_inventory_list));
 
     if (WORKING_USERGROUP != 1) {
-        ui->btnAddItem->setVisible(ui->btnAddItem->isVisible() && !r__(cr__view_room_inventory_state));
-        ui->btnRemoveItem->setVisible(ui->btnRemoveItem->isVisible() && !r__(cr__view_room_inventory_state));
-        ui->btnCopy->setVisible(ui->btnCopy->isVisible() && !r__(cr__view_room_inventory_state));
-        ui->btnPaste->setVisible(ui->btnPaste->isVisible() && !r__(cr__view_room_inventory_state));
-        ui->btnSave->setVisible(ui->btnSave->isVisible() && !r__(cr__view_room_inventory_state));
-        ui->btnSaveStates->setVisible(ui->btnSaveStates->isVisible() && !r__(cr__view_room_inventory_state));
+        ui->btnAddItem->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
+        ui->btnRemoveItem->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
+        ui->btnCopy->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
+        ui->btnPaste->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
+        ui->btnSave->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
+        ui->btnSaveStates->setVisible(!r__(cr__view_room_inventory_state));
     }
 }
 

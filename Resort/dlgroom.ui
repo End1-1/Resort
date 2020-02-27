@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>362</height>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,9 @@
      </item>
      <item row="8" column="2">
       <widget class="EQLineEdit" name="leBedName">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -140,13 +143,20 @@
      </item>
      <item row="1" column="2">
       <widget class="EQLineEdit" name="leClassName">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
       </widget>
      </item>
      <item row="0" column="1" colspan="2">
-      <widget class="EQLineEdit" name="leCode"/>
+      <widget class="EQLineEdit" name="leCode">
+       <property name="Field" stdset="0">
+        <string>f_id</string>
+       </property>
+      </widget>
      </item>
      <item row="7" column="1" colspan="2">
       <widget class="EQLineEdit" name="leRate"/>
@@ -186,6 +196,9 @@
      </item>
      <item row="2" column="2">
       <widget class="EQLineEdit" name="leViewName">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -283,6 +296,26 @@
    </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>leCode</tabstop>
+  <tabstop>leClassCode</tabstop>
+  <tabstop>leViewCode</tabstop>
+  <tabstop>leFloor</tabstop>
+  <tabstop>leBuild</tabstop>
+  <tabstop>leShortName</tabstop>
+  <tabstop>leDescription</tabstop>
+  <tabstop>leRate</tabstop>
+  <tabstop>leBedCode</tabstop>
+  <tabstop>leQty</tabstop>
+  <tabstop>leQueue</tabstop>
+  <tabstop>lePhone</tabstop>
+  <tabstop>chSmoking</tabstop>
+  <tabstop>btnOK</tabstop>
+  <tabstop>btnCancel</tabstop>
+  <tabstop>leBedName</tabstop>
+  <tabstop>leViewName</tabstop>
+  <tabstop>leClassName</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

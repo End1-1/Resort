@@ -820,6 +820,17 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="btnTrackChanges">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

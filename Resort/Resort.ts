@@ -2662,6 +2662,10 @@ rooms</source>
         <source>Copy from last?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>The reservations that&apos;s colored magenta could not be saved, because there are saved in another document.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgGroupReserveOption</name>
@@ -2785,6 +2789,14 @@ rooms</source>
     <message>
         <source>Incomplete document</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save states</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved</source>
+        <translation type="unfinished">Պահպանված է</translation>
     </message>
 </context>
 <context>
@@ -6767,6 +6779,18 @@ for this operation</source>
         <source>Expected arrivals / pax</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Edit room inventory list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room inventory viewer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkin with room incomplete inventory</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -7092,10 +7116,6 @@ departures 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2017</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>January</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7204,14 +7224,6 @@ ee</source>
     </message>
     <message>
         <source>Monthly report</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2018</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9345,6 +9357,10 @@ ee</source>
         <source>No rates</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Room rate</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FExpectedDepartureSimple</name>
@@ -10262,14 +10278,6 @@ ee</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2017</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2018</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>January</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10363,10 +10371,6 @@ ee</source>
     </message>
     <message>
         <source>Avg room</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -11395,14 +11399,6 @@ ledger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2017</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2018</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>January</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11468,10 +11464,6 @@ ledger</source>
     </message>
     <message>
         <source>No month is selected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12191,10 +12183,6 @@ ledger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2017</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Currency</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12265,14 +12253,6 @@ ledger</source>
     <message>
         <source>Total</source>
         <translation type="unfinished">Ընդամենը</translation>
-    </message>
-    <message>
-        <source>2018</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2019</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -14735,6 +14715,14 @@ or contact to administrator</source>
         <source>Room extra</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>REMOVAL OF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>REBanquetComment</name>
@@ -16921,6 +16909,14 @@ deviation</source>
         <source>Invalid date range</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Confirm to checkin with incomplete room inventory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room inventory is not ready</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Smtp</name>
@@ -18257,6 +18253,10 @@ Reserve</source>
     </message>
     <message>
         <source>Autosend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Removal voucher id</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -20262,10 +20262,6 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2017</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>February</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20370,19 +20366,11 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2018</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cannot load report data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Unknown filter widget. Contact to administrator.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>2019</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -21029,6 +21017,14 @@ from</source>
     <message>
         <source>No guest in the room<byte value="xd"/>
 </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room inventory is not ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm to checkin with incomplete room inventory</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

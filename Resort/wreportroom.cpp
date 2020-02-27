@@ -30,6 +30,7 @@ WReportRoom::WReportRoom(QWidget *parent) :
                         "order by c.f_short, r.f_short");
     fModel->apply(this);
     fRowEditorDialog = new DlgRoom(fRowValues, this);
+    setBtnNewVisible();
 }
 
 WReportRoom::~WReportRoom()

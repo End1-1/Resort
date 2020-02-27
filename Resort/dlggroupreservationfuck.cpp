@@ -9,6 +9,7 @@
 #include "waccinvoice.h"
 #include "cachecardex.h"
 #include "paymentmode.h"
+#include "dlgtracking.h"
 #include "cachegroupreservations.h"
 #include "dlggrouprevive.h"
 #include "winvoice.h"
@@ -106,14 +107,21 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     on_cbModeOfPayment_currentIndexChanged(0);
 
     ui->cbArr->setIndexForData(fPreferences.getDb(def_room_arrangement));
-    //ui->btnReviveReservations->setVisible(r__(cr__rev))
+    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
 
     fTrackControl = new TrackControl(TRACK_RESERVATION);
+    fGroupTrackControl = new TrackControl(TRACK_RESERVATION_GROUP);
+    fGroupTrackControl->addWidget(ui->leGroupName, "Group name")
+            .addWidget(ui->leCardexName, "Cardex")
+            .addWidget(ui->leCLName, "City ledger")
+            .addWidget(ui->teCommonRemark, "All remarks");
 }
 
 DlgGroupReservationFuck::~DlgGroupReservationFuck()
 {
     delete ui;
+    fGroupTrackControl->saveChanges();
+    fGroupTrackControl->deleteLater();
 }
 
 void DlgGroupReservationFuck::openGroup(int id)
@@ -245,11 +253,25 @@ void DlgGroupReservationFuck::loadGroup(int id)
     ui->btnSave->setEnabled(editable || r__(cr__super_correction));
     ui->btnClear->setEnabled(editable || r__(cr__super_correction));
     ui->btnClearFilter->setEnabled(editable || r__(cr__super_correction));
+    fGroupTrackControl->fRecord = ui->leGroupCode->text();
+    fGroupTrackControl->resetChanges();
 }
 
 void DlgGroupReservationFuck::setup()
 {
     setupTabTextAndIcon(tr("Group reservation"), ":/images/groupreservation.png");
+}
+
+void DlgGroupReservationFuck::reservationCacheUpdated(int cacheId, const QString &id)
+{
+    Q_UNUSED(cacheId);
+    for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+        if (ui->tblRoom->toString(i, 0).compare(id) == 0) {
+            ui->tblRoom->item(i, 0)->setBackgroundColor(Qt::magenta);
+            ui->tblRoom->setCurrentCell(-1, -1);
+            return;
+        }
+    }
 }
 
 void DlgGroupReservationFuck::singleGuestFocusOut()
@@ -307,6 +329,7 @@ void DlgGroupReservationFuck::removeRow()
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(row, 0))));
     BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(row, 0));
+    fGroupTrackControl->insertMessage("Reservation removed", QString("%1, %2").arg(ui->tblRoom->toString(row, 0)).arg(ui->tblRoom->lineEdit(row, 1)->text()), "");
     ui->tblRoom->removeRow(row);
     message_info(tr("Reservation was canceled."));
     countTotalReservation();
@@ -496,6 +519,7 @@ void DlgGroupReservationFuck::createRooms(const QString &cat, const QString &bed
             ui->tblRoom->addButton(row, 18, SLOT(editReserve()), this, QIcon(":/images/bed.png"));
             ui->tblRoom->setItemWithValue(row, 20, tr("Reserved"));
             ui->tblRoom->setItemWithValue(row, 21, RESERVE_RESERVE);
+            fGroupTrackControl->insertMessage("New room", QString("%1-%2, %3 - %4").arg(r.fCode()).arg(r.fRoomDescription()).arg(ui->deArrival->text()).arg(ui->deDeparture->text()), "");
         }
         it++;
     }
@@ -633,6 +657,8 @@ void DlgGroupReservationFuck::on_btnCreateGroup_clicked()
 
 void DlgGroupReservationFuck::save()
 {
+    ui->tblRoom->setCurrentCell(-1, -1);
+    bool flagAnotherSaved = false;
     bool flagGuestQtyWarning = false;
     if (ui->leGroupName->isEmpty()) {
         message_error(tr("The group name cannot be empty"));
@@ -667,6 +693,10 @@ void DlgGroupReservationFuck::save()
 
     bool err = false;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+        if (ui->tblRoom->item(i, 0)->backgroundColor() == Qt::magenta) {
+            flagAnotherSaved = true;
+            continue;
+        }
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
         }
@@ -868,6 +898,9 @@ void DlgGroupReservationFuck::save()
     if (flagGuestQtyWarning) {
         message_info(tr("The count of the guest automatically was set to 1 where count of the guests equal to zero"));
     }
+    if (flagAnotherSaved) {
+        message_info(tr("The reservations that's colored magenta could not be saved, because there are saved in another document."));
+    }
     countReserve();
     fDD.commit();
     fDD.close();
@@ -876,7 +909,11 @@ void DlgGroupReservationFuck::save()
 
 void DlgGroupReservationFuck::on_btnSave_clicked()
 {
+    disconnect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
     save();
+    fGroupTrackControl->fRecord = ui->leGroupCode->text();
+    fGroupTrackControl->saveChanges();
+    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
 }
 
 void DlgGroupReservationFuck::on_btnRemarksToAll_clicked()
@@ -886,6 +923,7 @@ void DlgGroupReservationFuck::on_btnRemarksToAll_clicked()
             continue;
         }
         ui->tblRoom->setItemWithValue(i, 11, ui->teCommonRemark->toPlainText());
+        fGroupTrackControl->insert("Remarks for reservations", ui->teCommonRemark->toPlainText(), "");
     }
 }
 
@@ -898,6 +936,7 @@ void DlgGroupReservationFuck::on_btnRemarksToAll_2_clicked()
         ui->tblRoom->lineEdit(i, 10)->setText(ui->leGuest->text());
         ui->tblRoom->setItemWithValue(i, 15, ui->leGuest->fHiddenText);
     }
+    fGroupTrackControl->insert("Remarks for reservations", ui->teCommonRemark->toPlainText(), "");
 }
 
 void DlgGroupReservationFuck::roomTextChanged(const QString &arg1)
@@ -1006,6 +1045,7 @@ void DlgGroupReservationFuck::on_btnArrangeToAll_clicked()
             continue;
         }
         ui->tblRoom->comboBox(i, 9)->setCurrentIndex(ui->cbArr->currentIndex());
+        fGroupTrackControl->insert("Room arrangement for reservations", ui->cbArr->currentText(), "");
     }
 }
 
@@ -1018,6 +1058,7 @@ void DlgGroupReservationFuck::on_btnPriceToAll_clicked()
         if (ui->tblRoom->toString(i, 2) == ui->cbCat->currentText() && ui->tblRoom->toString(i, 3) == ui->cbBed->currentData().toString()) {
             ui->tblRoom->lineEdit(i, 6)->setText(ui->lePrice->text());
         }
+        fGroupTrackControl->insert("Price for reservations", QString("%1,%2").arg(ui->cbCat->currentText()).arg(ui->cbBed->currentText()), "");
     }
     countTotalReservation();
 }
@@ -1027,6 +1068,7 @@ void DlgGroupReservationFuck::on_btnClear_clicked()
     for (int i = ui->tblRoom->rowCount() - 1; i > -1; i--) {
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             ui->tblRoom->removeRow(i);
+            fGroupTrackControl->insert("Remove unsaved", ui->tblRoom->lineEdit(i, 1)->text(), "");
         }
     }
 }
@@ -1039,6 +1081,7 @@ void DlgGroupReservationFuck::on_btnDateAll_clicked()
         }
         ui->tblRoom->dateEdit(i, 4)->setDate(ui->deArrival->date());
         ui->tblRoom->dateEdit(i, 5)->setDate(ui->deDeparture->date());
+        fGroupTrackControl->insert("Arrival/departure changed", ui->deArrival->text() + "/" + ui->deDeparture->text(), "");
     }
 }
 
@@ -1066,6 +1109,7 @@ void DlgGroupReservationFuck::on_btnArrangeToAll_2_clicked()
         if (t) {
             t->insert("Cardex changed", ui->leCardCode->text(), "");
         }
+        fGroupTrackControl->insert("Cardex for reservations", ui->leCardexCode->text(), "");
     }
 }
 
@@ -1086,6 +1130,7 @@ void DlgGroupReservationFuck::on_btnAllPayments_clicked()
             t->insert("Cardex changed", ui->leCardCode->text(), "");
         }
     }
+    fGroupTrackControl->insert("Payment mode for reservations", ui->cbModeOfPayment->currentText(), "");
 }
 
 void DlgGroupReservationFuck::on_cbModeOfPayment_currentIndexChanged(int index)
@@ -1360,6 +1405,7 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
         fDD[":f_cancelUser"] = WORKING_USERID;
         fDD[":f_cancelReason"] = reason;
         fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
+        fGroupTrackControl->insertMessage("Group was canceled", "", "");
         message_info(tr("Reservation group was successfully canceled"));
     }
     loadGroup(ui->leGroupCode->asInt());
@@ -1378,6 +1424,7 @@ void DlgGroupReservationFuck::on_btnReviveReservations_clicked()
         }
     }
     if (d->exec() == QDialog::Accepted) {
+        fGroupTrackControl->insert("Group revive", "", "");
         loadGroup(ui->leGroupCode->asInt());
     }
     delete d;
@@ -1404,4 +1451,9 @@ void DlgGroupReservationFuck::on_btnCopyLast_clicked()
             ui->leCardCode->setInitialValue(dd.getInt("f_card"));
         }
     }
+}
+
+void DlgGroupReservationFuck::on_btnTrackChanges_clicked()
+{
+    DlgTracking::showTracking(TRACK_RESERVATION_GROUP, ui->leGroupCode->text());
 }

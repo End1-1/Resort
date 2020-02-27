@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>970</width>
-    <height>663</height>
+    <height>669</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -462,7 +462,7 @@
         </widget>
        </item>
        <item>
-        <widget class="EQCheckBox" name="chReceptionEditRoomInventory_2">
+        <widget class="EQCheckBox" name="chRoomInventoryViewer">
          <property name="text">
           <string>Room inventory viewer</string>
          </property>
@@ -1831,7 +1831,7 @@
   <tabstop>chActiveReserve</tabstop>
   <tabstop>chDoNotUseSecondDB</tabstop>
   <tabstop>chExecFailedSql</tabstop>
-  <tabstop>chReceptionEditRoomInventory_2</tabstop>
+  <tabstop>chRoomInventoryViewer</tabstop>
  </tabstops>
  <resources/>
  <connections/>

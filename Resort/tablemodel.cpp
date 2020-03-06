@@ -619,7 +619,7 @@ void TableModel::sumOfColumns(const QList<int> columns, QList<double> &out)
     }
     foreach (int r, fRows) {
         for (int i = 0; i < count; i++) {
-            values[i] += fDD.fDbRows.at(r).at(columns.at(i)).toDouble();
+            values[i] += QLocale().toDouble(fDD.fDbRows.at(r).at(columns.at(i)).toString());
         }
     }
     for (int i = 0; i < count; i++) {

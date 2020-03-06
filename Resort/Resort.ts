@@ -5325,6 +5325,18 @@ for this operation</source>
         <source>Building number</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>f_id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room code is missing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duplicate room code.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgRoomView</name>
@@ -7606,6 +7618,10 @@ ee</source>
     <message>
         <source>Reason</source>
         <translation type="unfinished">Պատճառ</translation>
+    </message>
+    <message>
+        <source>Nationality</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -20410,7 +20426,35 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>* - &quot;Use date range&quot; filter available for this options</source>
+        <source>Cardex group / Category**</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;* - &amp;quot;Use date range&amp;quot; filter available for this options&lt;/p&gt;&lt;p&gt;** - &amp;quot;Available only with &apos;Use date range&apos; option&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cardex group / Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Occ. %</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rooming</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Avg. rooming</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

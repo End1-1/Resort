@@ -429,6 +429,13 @@
               </widget>
              </item>
              <item>
+              <widget class="ERadioButton" name="rbCardexCategory">
+               <property name="text">
+                <string>Cardex group / Category**</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="ERadioButton" name="rbrCardexYearly">
                <property name="text">
                 <string>Cardex / Yearly</string>
@@ -601,7 +608,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>* - &quot;Use date range&quot; filter available for this options</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;* - &amp;quot;Use date range&amp;quot; filter available for this options&lt;/p&gt;&lt;p&gt;** - &amp;quot;Available only with 'Use date range' option&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>

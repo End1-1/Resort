@@ -55,19 +55,21 @@ void FCanceledReservations::apply(WReportGrid *rg)
             .setColumn(120, "", tr("Arrival"))
             .setColumn(120, "", tr("Departure"))
             .setColumn(120, "", tr("Canceled"))
+            .setColumn(140, "", tr("Nationality"))
             .setColumn(200, "", tr("Guest"))
             .setColumn(80, "", tr("Room"))
             .setColumn(250, "", tr("OP"))
             .setColumn(250, "", tr("Cancel by"))
             .setColumn(300, "", tr("Reason"))
             ;
-    QString query = QString("select r.f_id, r.f_startDate, r.f_endDate, r.f_cancelDate, g.guest, "
+    QString query = QString("select r.f_id, r.f_startDate, r.f_endDate, r.f_cancelDate, n.f_name, concat(g.f_firstname, ' ', g.f_lastname) as guest, "
             "r.f_room, concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
             "cr.f_reason "
             "from f_reservation r   "
-            "left join guests g on g.f_id=r.f_guest "
+            "left join f_guests g on g.f_id=r.f_guest "
             "left join users u1 on u1.f_id=r.f_author "
             "left join users u2 on u2.f_id=r.f_cancelUser "
+            "left join f_nationality n on n.f_short=g.f_nation "
             "left join f_reservation_cancel_reason cr on cr.f_id=r.f_id "
             "where cast(%1 as date) between :date1 and :date2 and r.f_state=:f_state")
             .arg(date);

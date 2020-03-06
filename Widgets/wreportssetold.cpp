@@ -32,6 +32,7 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     fBtnGroup.addButton(ui->rbrOccupancyCategory);
     fBtnGroup.addButton(ui->rbrNationality);
     fBtnGroup.addButton(ui->rbrCardex);
+    fBtnGroup.addButton(ui->rbCardexCategory);
     fBtnGroup.addButton(ui->rbrCardexYearly);
     fBtnGroup.addButton(ui->rbrNatYearly);
     fBtnGroup.addButton(ui->rbrSalesMan);
@@ -42,6 +43,7 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     fBtnGroup.addButton(ui->rbrMarketSigment);
 
     ui->rbrCategory->fData["rep"] = 5;
+    ui->rbCardexCategory->fData["rep"] = 20;
     ui->rbrCategoryYearly->fData["rep"] = 6;
     ui->rbrOccupancyCategory->fData["rep"] = 7;
     ui->rbrNationality->fData["rep"] = 8;
@@ -208,7 +210,8 @@ void WReportsSetOld::on_btnGo_clicked()
             || eb->fData["rep"].toInt() == 11
             || eb->fData["rep"].toInt() == 14
             || eb->fData["rep"].toInt() == 9
-            || eb->fData["rep"].toInt() == 16) {
+            || eb->fData["rep"].toInt() == 16
+            || eb->fData["rep"].toInt() == 20) {
         QList<QList<QVariant> > rows;
         QList<int> widths;
         QStringList titles;
@@ -285,6 +288,10 @@ void WReportsSetOld::on_btnGo_clicked()
             sumCols << 1 << 2 << 3 << 4 << 5 << 6;
             marketsigment(rows, months);
             break;
+        case 20:
+            reportTitle = tr("Cardex group / Category") + " " + ui->deDate1->text() + " - " + ui->deDate2->text();
+            cardexCategory(rows, months, widths, titles, sumCols);
+            break;
         }
         WReportGrid *rg = new WReportGrid(this);
         ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
@@ -307,6 +314,14 @@ void WReportsSetOld::on_btnGo_clicked()
             rg->fTableView->setSpan(rg->fModel->rowCount() - 2, 0, 1, 14);
             rg->fTableView->setSpan(rg->fModel->rowCount() - 3, 0, 1, 14);
             rg->setTblNoTotalData();
+            break;
+        case 20:
+            if (sumVals[0] > 0) {
+                rg->fTableTotal->setItem(0, widths.count() - 3, new C5TableWidgetItem(float_str(sumVals[widths.count() - 5] / sumVals[0] * 100)));
+            }
+            if (sumVals[widths.count() - 3] > 0) {
+                rg->fTableTotal->setItem(0, widths.count() - 1, new C5TableWidgetItem(float_str(sumVals[widths.count() - 3] / sumVals[widths.count() - 5])));
+            }
             break;
         }
     } else {
@@ -1256,6 +1271,132 @@ void WReportsSetOld::marketsigment(QList<QList<QVariant> > &rows, const QString 
     }
     rows.append(er);
     rows[rows.count() - 1][0] = QString("ROOMING: %1").arg(rooming);
+}
+
+void WReportsSetOld::cardexCategory(QList<QList<QVariant> > &rows, const QString &month, QList<int> &widths, QStringList &titles, QList<int> &sumCols)
+{
+    widths << 140 << 80;
+    titles << "CATEGORY"  << "TOTAL";
+    DoubleDatabase dd(true, false);
+    dd.exec("select f_short from f_room_classes");
+    QMap<QString, int> mCatRows;
+    while (dd.nextRow()) {
+        mCatRows[dd.getString(0)] = rows.count();
+        QList<QVariant> v;
+        v.append(dd.getString(0));
+        rows.append(v);
+    }
+    dd[":date1"] = ui->deDate1->date();
+    dd[":date2"] = ui->deDate2->date();
+    dd.exec("select rc.f_short, count(r.f_id) * (datediff(:date2, :date1) + 1)"
+            "from f_room r "
+            "inner join f_room_classes rc on rc.f_id=r.f_class "
+            "group by 1");
+    while (dd.nextRow()) {
+        int row = mCatRows[dd.getString(0)];
+        QList<QVariant> &v = rows[row];
+        v.append(dd.getInt(1));
+    }
+    //Rooms by category and cardex group
+    dd[":date1"] = ui->deDate1->date();
+    dd[":date2"] = ui->deDate2->date();
+    dd.exec("select cx.f_group, rc.f_short, count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv  "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+            "where r.f_state=3 and m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") "
+            "and m.f_wdate between :date1 and :date2 "
+            "and m.f_canceled=0 and m.f_finance=1 "
+            "group by 1, 2 ");
+    QMap<QString, int> carCol;
+    while (dd.nextRow()) {
+        QString cx = dd.getString(0);
+        QString cat = dd.getString(1);
+        if (!carCol.contains(cx)) {
+            for (int i = 0; i < rows.count(); i++) {
+                rows[i].append(QVariant());
+            }
+            carCol[cx] = widths.count();
+            widths.append(80);
+            titles.append(cx);
+        }
+        int row = mCatRows[cat];
+        int col = carCol[cx];
+        rows[row][col] = dd.getInt(2);
+    }
+
+    //Guests
+    dd[":date1"] = ui->deDate1->date();
+    dd[":date2"] = ui->deDate2->date();
+    dd.exec("select rc.f_short, sum(r.f_man+r.f_woman+r.f_child), count(m.f_id) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and m.f_wdate between :date1 and :date2 "
+            "and r.f_state=3 "
+            "group by 1");
+    widths.append(80);
+    titles.append(tr("Guests"));
+    widths.append(80);
+    titles.append(tr("Nights"));
+    for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < rows.count(); i++) {
+            rows[i].append(QVariant());
+        }
+    }
+    int colnights = widths.count() - 1;
+    while (dd.nextRow()) {
+        int row = mCatRows[dd.getString(0)];
+        int col = rows.at(0).count() - 2;
+        rows[row][col] = dd.getInt(1);
+        rows[row][colnights] = dd.getInt(2);
+    }
+    //Percentage
+    widths.append(80);
+    titles.append(tr("Occ. %"));
+    for (int i = 0; i < rows.count(); i++) {
+        int col = widths.count() - 1;
+        rows[i].append(QVariant());
+        rows[i][col] = float_str(rows[i][col - 1].toDouble() / rows[i][1].toDouble() * 100);
+    }
+
+    //Rooming
+    dd[":date1"] = ui->deDate1->date();
+    dd[":date2"] = ui->deDate2->date();
+    dd.exec("select rc.f_short, sum(m.f_amountAmd) "
+            "from m_register m "
+            "left join f_reservation r on r.f_invoice=m.f_inv "
+            "left join f_room rm on rm.f_id=r.f_room "
+            "left join f_room_classes rc on rc.f_id=rm.f_class "
+            "where m.f_itemCode in (" + fPreferences.getDb(def_rooming_list).toString() + ") and m.f_canceled=0 and m.f_finance=1 "
+            "and m.f_wdate between :date1 and :date2 "
+            "and r.f_state=3 "
+            "group by 1");
+    widths.append(80);
+    widths.append(80);
+    titles.append(tr("Rooming"));
+    titles.append(tr("Avg. rooming"));
+    for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < rows.count(); i++) {
+            rows[i].append(QVariant());
+        }
+    }
+    while (dd.nextRow()) {
+        int row = mCatRows[dd.getString(0)];
+        int col = widths.count() - 2;
+        rows[row][col] = float_str(dd.getDouble(1), 2);
+        if (rows[row][colnights].toInt() > 0) {
+            rows[row][col + 1] = dd.getDouble(1) / rows[row][colnights].toInt();
+        }
+    }
+
+    for (int i = 1; i < widths.count() - 1; i++) {
+        sumCols.append(i);
+    }
 }
 
 void WReportsSetOld::on_chYear_clicked(bool checked)

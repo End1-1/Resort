@@ -41,6 +41,7 @@ private:
     void nationalityYearly(QList<QList<QVariant> > &rows, const QString &month);
     void cardex(QList<QList<QVariant> > &rows, const QString &month);
     void marketsigment(QList<QList<QVariant> > &rows, const QString &month);
+    void cardexCategory(QList<QList<QVariant> >&rows, const QString &month, QList<int> &widths, QStringList &titles, QList<int> &sumCols);
 };
 
 #endif // WREPORTSSETOLD_H

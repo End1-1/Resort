@@ -304,7 +304,7 @@ bool WReservationRoomTab::save()
             fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
             fDD[":f_itemCode"] = fPreferences.getDb(def_room_rate_change_id);
             fDD[":f_finalName"] = tr("ROOM RATE CHANGE FOR #") + ui->leReservId->text();
-            fDD[":f_amountAmd"] = ui->leRooming->asDouble() - fTrackControl->oldValue(ui->leRooming).toDouble();
+            fDD[":f_amountAmd"] = ui->leRooming->asDouble() - QLocale().toDouble(fTrackControl->oldValue(ui->leRooming));
             fDD[":f_amountVat"] = 0;
             fDD[":f_amountUsd"] = def_usd;
             fDD[":f_fiscal"] = 0;

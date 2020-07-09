@@ -167,10 +167,13 @@ void DlgEndOfDay::on_btnOk_clicked()
     /* --------------- BEGIN GUESTS COUNT HISTORY ----------------*/
     fDD.exec("select f_reservation, f_guest from f_reservation_guests "
                "where f_reservation in (select f_id from f_reservation where f_state=1)", dbrows);
-    query = "insert into f_reservation_guests_history (f_date, f_reservation,f_guest) values ";
+    query = "";
     first = true;
 
     for (int i = 0; i < dbrows.count(); i++) {
+        if (i == 0) {
+            query = "insert into f_reservation_guests_history (f_date, f_reservation,f_guest) values ";
+        }
         if (first) {
             first = false;
         } else {
@@ -182,7 +185,7 @@ void DlgEndOfDay::on_btnOk_clicked()
                 .arg(dbrows.at(i).at(1).toInt());
 
     }
-    if (result) {
+    if (result && !query.isEmpty()) {
         result = result && fDD.exec(query);
     }
     /* --------------- END GUESTS COUNT HISTORY ----------------*/

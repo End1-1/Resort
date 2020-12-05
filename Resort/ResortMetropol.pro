@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core charts gui sql network xml printsupport
+QT       += core gui sql network xml printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -1149,8 +1149,8 @@ INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
 INCLUDEPATH += $$PWD/../Server2
-INCLUDEPATH += C:/OpenSSL-Win32/include
-INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += c:/projects/XLSX/src
 

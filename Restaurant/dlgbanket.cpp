@@ -340,7 +340,7 @@ void DlgBanket::printTax()
 
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString(), "true");
+                  fPreferences.getDb(def_tax_password).toString(), "true", "3", "3");
     ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), ui->leTotal->asDouble() + ui->lePrepayment->asDouble(), 1, 0);
 
     switch (ui->leModeOfPayment->fHiddenText.toInt()) {
@@ -897,7 +897,7 @@ void DlgBanket::on_pushButton_2_clicked()
     }
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString(), "true");
+                  fPreferences.getDb(def_tax_password).toString(), "true", "3", "3");
     QString in, out, err;
     int res = ptn.printAdvanceJson(ui->leModePrepayment->fHiddenText.toInt() == PAYMENT_CASH ? ui->lePrepayment->asDouble() : 0,
                          ui->leModePrepayment->fHiddenText.toInt() == PAYMENT_CASH ? 0 : ui->lePrepayment->asDouble(), in, out, err);
@@ -966,7 +966,7 @@ void DlgBanket::on_btnDuplicateFiscal_clicked()
 
     PrintTaxN ptn(fPreferences.getDb(def_tax_address).toString(),
                   fPreferences.getDb(def_tax_port).toInt(),
-                  fPreferences.getDb(def_tax_password).toString(), "true");
+                  fPreferences.getDb(def_tax_password).toString(), "true", "3", "3");
     ptn.addGoods(h->fVatDept, i.fAdgt(), i.fCode(), i.fTaxName(), fDD.getDouble("f_total"), 1, 0);
 
     switch (fDD.getInt("f_paymentMode")) {

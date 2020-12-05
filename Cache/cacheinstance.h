@@ -1,6 +1,8 @@
 #ifndef CACHEINSTANCE_H
 #define CACHEINSTANCE_H
 
+#include <QObject>
+#include <QMap>
 #include <QList>
 
 class CacheBaseStruct;

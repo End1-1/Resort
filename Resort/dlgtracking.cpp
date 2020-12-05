@@ -18,9 +18,7 @@ DlgTracking::~DlgTracking()
 
 void DlgTracking::showTracking(int trackId, const QString &windowId)
 {
-#ifndef _METROPOL_
-    return;
-#endif
+
     if (!r__(cr__tracking_chnages_individual)) {
         message_error(tr("Access denied"));
         return;

@@ -21,8 +21,8 @@ INCLUDEPATH += $$PWD/../Resort
 INCLUDEPATH += $$PWD/../Selector
 INCLUDEPATH += $$PWD/../Threads
 INCLUDEPATH += C:/projects/NewTax/Src
-INCLUDEPATH += C:/OpenSSL-Win32/include
-INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include/openssl
 
 DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
 DEFINES += _APPLICATION_=\\\"Restaurant\\\"
@@ -33,6 +33,7 @@ SOURCES += main.cpp\
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
     ../Cache/cachetransferfromcl.cpp \
+    ../Cache/cacheyear.cpp \
     ../Threads/broadcastthread.cpp \
     ../Threads/objectthread.cpp \
     rface.cpp \
@@ -175,6 +176,7 @@ HEADERS  += rface.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
     ../Cache/cachetransferfromcl.h \
+    ../Cache/cacheyear.h \
     ../Threads/broadcastthread.h \
     ../Threads/objectthread.h \
     rlogin.h \
@@ -336,7 +338,7 @@ FORMS    += rface.ui \
     ../Resort/dlgexitbyversion.ui
 
 
-LIBS += -LC:/OpenSSL-Win32/lib
+LIBS += -LC:/Soft/OpenSSL-Win32/lib
 LIBS += -lVersion -lwsock32 -lopenssl
 LIBS += -llibcrypto
 

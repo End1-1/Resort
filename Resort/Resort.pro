@@ -1130,7 +1130,7 @@ RESOURCES += \
     res.qrc
 
 LIBS += -lVersion
-LIBS += -LC:/OpenSSL-Win32/lib
+LIBS += -LC:/Soft/OpenSSL-Win32/lib
 LIBS += -lopenssl
 LIBS += -llibcrypto
 LIBS +=  -lwsock32
@@ -1153,8 +1153,8 @@ INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
 INCLUDEPATH += $$PWD/../Server2
-INCLUDEPATH += C:/OpenSSL-Win32/include
-INCLUDEPATH += C:/OpenSSL-Win32/include/openssl
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include
+INCLUDEPATH += C:/Soft/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += c:/projects/XLSX/src
 

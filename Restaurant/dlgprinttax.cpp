@@ -43,7 +43,7 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
     fTimer.stop();
     PrintTaxN pt(fPreferences.getDb(def_tax_address).toString(),
                 fPreferences.getDb(def_tax_port).toInt(),
-                fPreferences.getDb(def_tax_password).toString(), "true");
+                fPreferences.getDb(def_tax_password).toString(), "true", "3", "3");
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_header"] = order;
     fDD[":f_state"] = DISH_STATE_READY;

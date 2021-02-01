@@ -1,7 +1,7 @@
 #ifndef DLGONEBREAKFASAT_H
 #define DLGONEBREAKFASAT_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "user.h"
 #include "trackcontrol.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class DlgOneBreakfasat;
 }
 
-class DlgOneBreakfasat : public BaseExtendedDialog
+class DlgOneBreakfasat : public BaseExtendedDialogR
 {
     Q_OBJECT
 

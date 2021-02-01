@@ -1,13 +1,13 @@
 #ifndef DLGLIST_H
 #define DLGLIST_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgList;
 }
 
-class DlgList : public BaseExtendedDialog
+class DlgList : public BaseExtendedDialogR
 {
     Q_OBJECT
 

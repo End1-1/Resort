@@ -6,7 +6,7 @@
     "<p style=\"font-size:18px;color:%3;\" align=\"center\">%4</p></body></html>")
 
 RMessage::RMessage(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RMessage)
 {
     ui->setupUi(this);

@@ -2,7 +2,7 @@
 #include "ui_rchangelanguage.h"
 
 RChangeLanguage::RChangeLanguage(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RChangeLanguage)
 {
     ui->setupUi(this);

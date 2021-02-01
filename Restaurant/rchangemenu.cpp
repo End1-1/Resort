@@ -3,7 +3,7 @@
 #include "dishestable.h"
 
 RChangeMenu::RChangeMenu(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RChangeMenu)
 {
     ui->setupUi(this);

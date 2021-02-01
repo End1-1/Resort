@@ -1,7 +1,7 @@
 #ifndef RTOOLS_H
 #define RTOOLS_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 class RDesk;
 
@@ -9,7 +9,7 @@ namespace Ui {
 class RTools;
 }
 
-class RTools : public BaseExtendedDialog
+class RTools : public BaseExtendedDialogR
 {
     Q_OBJECT
 

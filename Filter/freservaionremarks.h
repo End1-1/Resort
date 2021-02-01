@@ -15,6 +15,7 @@ public:
     explicit FReservaionRemarks(QWidget *parent = nullptr);
     ~FReservaionRemarks();
     virtual void apply(WReportGrid *rg);
+    void apply2(WReportGrid *rg);
     virtual QWidget *firstElement();
     virtual QWidget *lastElement();
     virtual QString reportTitle();
@@ -23,6 +24,8 @@ public:
 private slots:
     void on_rbReserve_clicked();
     void on_rbCheckin_clicked();
+
+    void on_rbCheckout_clicked();
 
 private:
     Ui::FReservaionRemarks *ui;

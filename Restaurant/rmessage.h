@@ -1,7 +1,7 @@
 #ifndef RMESSAGE_H
 #define RMESSAGE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 #define message_error(msg) RMessage::showError(msg, this)
 #define message_question(msg) RMessage::showQuestion(msg, this)
@@ -16,7 +16,7 @@ namespace Ui {
 class RMessage;
 }
 
-class RMessage : public BaseExtendedDialog
+class RMessage : public BaseExtendedDialogR
 {
     Q_OBJECT
 

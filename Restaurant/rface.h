@@ -1,7 +1,7 @@
 #ifndef RFACE_H
 #define RFACE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "hall.h"
 #include "dishestable.h"
 #include "user.h"
@@ -14,7 +14,7 @@ namespace Ui {
 class RFace;
 }
 
-class RFace : public BaseExtendedDialog
+class RFace : public BaseExtendedDialogR
 {
     Q_OBJECT
 

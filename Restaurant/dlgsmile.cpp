@@ -3,7 +3,7 @@
 #include <QBitmap>
 
 DlgSmile::DlgSmile(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgSmile)
 {
     ui->setupUi(this);

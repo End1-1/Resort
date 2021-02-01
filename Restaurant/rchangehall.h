@@ -1,14 +1,14 @@
 #ifndef RCHANGEHALL_H
 #define RCHANGEHALL_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "hall.h"
 
 namespace Ui {
 class RChangeHall;
 }
 
-class RChangeHall : public BaseExtendedDialog
+class RChangeHall : public BaseExtendedDialogR
 {
     Q_OBJECT
 

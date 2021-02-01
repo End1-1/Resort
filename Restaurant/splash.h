@@ -1,13 +1,13 @@
 #ifndef SPLASH_H
 #define SPLASH_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class Splash;
 }
 
-class Splash : public BaseExtendedDialog
+class Splash : public BaseExtendedDialogR
 {
     Q_OBJECT
 

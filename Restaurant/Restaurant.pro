@@ -17,7 +17,7 @@ INCLUDEPATH += $$PWD/../Base
 INCLUDEPATH += $$PWD/../Controls
 INCLUDEPATH += $$PWD/../Cache
 INCLUDEPATH += $$PWD/../Print
-INCLUDEPATH += $$PWD/../Resort
+INCLUDEPATH += $$PWD/../Server2
 INCLUDEPATH += $$PWD/../Selector
 INCLUDEPATH += $$PWD/../Threads
 INCLUDEPATH += C:/projects/NewTax/Src
@@ -29,6 +29,8 @@ DEFINES += _APPLICATION_=\\\"Restaurant\\\"
 DEFINES += _RESTAURANT_
 
 SOURCES += main.cpp\
+    ../Base/dlgexitbyversion.cpp \
+    ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
@@ -36,6 +38,7 @@ SOURCES += main.cpp\
     ../Cache/cacheyear.cpp \
     ../Threads/broadcastthread.cpp \
     ../Threads/objectthread.cpp \
+    baseextendeddialogr.cpp \
     rface.cpp \
     rlogin.cpp \
     rmessage.cpp \
@@ -44,7 +47,6 @@ SOURCES += main.cpp\
     ../Base/basedialog.cpp \
     ../Base/defines.cpp \
     ../Base/preferences.cpp \
-    baseextendeddialog.cpp \
     ../Base/user.cpp \
     hall.cpp \
     rdesk.cpp \
@@ -166,12 +168,12 @@ SOURCES += main.cpp\
     ../Cache/cacherestfullmenu.cpp \
     ../Cache/cachevaucher.cpp \
     ../Cache/cachereservegroup.cpp \
-    ../Cache/cachestoredoc.cpp \
-    ../Resort/dlgselector.cpp \
-    ../Resort/dlgexitbyversion.cpp
+    ../Cache/cachestoredoc.cpp
 
 
 HEADERS  += rface.h \
+    ../Base/dlgexitbyversion.h \
+    ../Base/dlgselector.h \
     ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
@@ -179,6 +181,7 @@ HEADERS  += rface.h \
     ../Cache/cacheyear.h \
     ../Threads/broadcastthread.h \
     ../Threads/objectthread.h \
+    baseextendeddialogr.h \
     rlogin.h \
     rmessage.h \
     ../Base/base.h \
@@ -188,7 +191,6 @@ HEADERS  += rface.h \
     ../Base/utils.h \
     ../Base/user.h \
     hall.h \
-    baseextendeddialog.h \
     rdesk.h \
     dishestable.h \
     splash.h \
@@ -299,11 +301,11 @@ HEADERS  += rface.h \
     ../Cache/cacherestfullmenu.h \
     ../Cache/cachevaucher.h \
     ../Cache/cachereservegroup.h \
-    ../Cache/cachestoredoc.h \
-    ../Resort/dlgselector.h \
-    ../Resort/dlgexitbyversion.h
+    ../Cache/cachestoredoc.h
 
 FORMS    += rface.ui \
+    ../Base/dlgexitbyversion.ui \
+    ../Base/dlgselector.ui \
     rlogin.ui \
     rmessage.ui \
     rdesk.ui \
@@ -333,9 +335,7 @@ FORMS    += rface.ui \
     dlgonebreakfasat.ui \
     dlggettext.ui \
     dlgconnecttoserver.ui \
-    dlgprinttax.ui \
-    ../Resort/dlgselector.ui \
-    ../Resort/dlgexitbyversion.ui
+    dlgprinttax.ui
 
 
 LIBS += -LC:/Soft/OpenSSL-Win32/lib

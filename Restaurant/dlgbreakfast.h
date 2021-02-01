@@ -1,7 +1,7 @@
 #ifndef DLGBREAKFAST_H
 #define DLGBREAKFAST_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "cacheinvoiceitem.h"
 #include "user.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class DlgBreakfast;
 }
 
-class DlgBreakfast : public BaseExtendedDialog
+class DlgBreakfast : public BaseExtendedDialogR
 {
     Q_OBJECT
 

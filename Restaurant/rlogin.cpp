@@ -2,7 +2,7 @@
 #include "ui_rlogin.h"
 
 RLogin::RLogin(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RLogin)
 {
     ui->setupUi(this);

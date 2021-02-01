@@ -4,7 +4,7 @@
 #include "dlgselecttaxcashmode.h"
 
 RTools::RTools(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RTools)
 {
     ui->setupUi(this);

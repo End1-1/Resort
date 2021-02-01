@@ -1,14 +1,14 @@
 #ifndef RSELECTTABLE_H
 #define RSELECTTABLE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "hall.h"
 
 namespace Ui {
 class RSelectTable;
 }
 
-class RSelectTable : public BaseExtendedDialog
+class RSelectTable : public BaseExtendedDialogR
 {
     Q_OBJECT
 

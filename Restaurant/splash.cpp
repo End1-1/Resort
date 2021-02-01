@@ -3,7 +3,7 @@
 #include <QMovie>
 
 Splash::Splash(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::Splash)
 {
     ui->setupUi(this);

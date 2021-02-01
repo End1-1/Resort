@@ -1,13 +1,13 @@
 #ifndef RCHANGELANGUAGE_H
 #define RCHANGELANGUAGE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RChangeLanguage;
 }
 
-class RChangeLanguage : public BaseExtendedDialog
+class RChangeLanguage : public BaseExtendedDialogR
 {
     Q_OBJECT
 

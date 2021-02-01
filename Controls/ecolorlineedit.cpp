@@ -37,6 +37,7 @@ void EColorLineEdit::setColor(int c)
 
 void EColorLineEdit::mouseDoubleClickEvent(QMouseEvent *e)
 {
+    Q_UNUSED(e);
     emit doubleClicked();
 }
 

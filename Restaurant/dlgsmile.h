@@ -1,14 +1,14 @@
 #ifndef DLGSMILE_H
 #define DLGSMILE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include <QTimer>
 
 namespace Ui {
 class DlgSmile;
 }
 
-class DlgSmile : public BaseExtendedDialog {
+class DlgSmile : public BaseExtendedDialogR {
     Q_OBJECT
 public:
     explicit DlgSmile(QWidget *parent = 0);

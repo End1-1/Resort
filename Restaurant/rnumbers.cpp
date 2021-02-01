@@ -3,7 +3,7 @@
 #include "rmessage.h"
 
 RNumbers::RNumbers(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RNumbers)
 {
     ui->setupUi(this);

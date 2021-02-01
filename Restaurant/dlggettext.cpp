@@ -2,7 +2,7 @@
 #include "ui_dlggettext.h"
 
 DlgGetText::DlgGetText(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgGetText)
 {
     ui->setupUi(this);

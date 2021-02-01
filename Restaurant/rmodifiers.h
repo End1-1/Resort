@@ -1,13 +1,13 @@
 #ifndef RMODIFIERS_H
 #define RMODIFIERS_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RModifiers;
 }
 
-class RModifiers : public BaseExtendedDialog
+class RModifiers : public BaseExtendedDialogR
 {
     Q_OBJECT
 

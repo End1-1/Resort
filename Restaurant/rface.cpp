@@ -81,7 +81,7 @@ protected:
 };
 
 RFace::RFace(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RFace),
     fCommand(nullptr)
 {

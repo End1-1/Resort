@@ -2,7 +2,7 @@
 #include "ui_dlglist.h"
 
 DlgList::DlgList(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgList)
 {
     ui->setupUi(this);

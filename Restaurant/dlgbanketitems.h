@@ -1,13 +1,13 @@
 #ifndef DLGBANKETITEMS_H
 #define DLGBANKETITEMS_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgBanketItems;
 }
 
-class DlgBanketItems : public BaseExtendedDialog
+class DlgBanketItems : public BaseExtendedDialogR
 {
     Q_OBJECT
 

@@ -20,7 +20,7 @@
 #include <QPainter>
 
 DlgOneBreakfasat::DlgOneBreakfasat(User *u, QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgOneBreakfasat)
 {
     ui->setupUi(this);

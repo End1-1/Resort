@@ -24,7 +24,7 @@ protected:
 };
 
 RSelectTable::RSelectTable(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RSelectTable)
 {
     ui->setupUi(this);

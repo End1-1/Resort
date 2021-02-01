@@ -1,13 +1,13 @@
 #ifndef RLOGIN_H
 #define RLOGIN_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RLogin;
 }
 
-class RLogin : public BaseExtendedDialog
+class RLogin : public BaseExtendedDialogR
 {
     Q_OBJECT
 

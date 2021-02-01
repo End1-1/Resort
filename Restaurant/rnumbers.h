@@ -1,13 +1,13 @@
 #ifndef RNUMBERS_H
 #define RNUMBERS_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RNumbers;
 }
 
-class RNumbers : public BaseExtendedDialog
+class RNumbers : public BaseExtendedDialogR
 {
     Q_OBJECT
 

@@ -3,7 +3,7 @@
 #include <QScrollBar>
 
 DlgComplexDish::DlgComplexDish(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgComplexDish)
 {
     ui->setupUi(this);

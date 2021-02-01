@@ -2,7 +2,7 @@
 #include "ui_rmodifiers.h"
 
 RModifiers::RModifiers(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RModifiers)
 {
     ui->setupUi(this);

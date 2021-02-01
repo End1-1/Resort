@@ -2,7 +2,7 @@
 #include "ui_dlgbanketitems.h"
 
 DlgBanketItems::DlgBanketItems(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgBanketItems)
 {
     ui->setupUi(this);

@@ -1,7 +1,7 @@
 #ifndef DLGCONNECTTOSERVER_H
 #define DLGCONNECTTOSERVER_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include <QUdpSocket>
 #include <QTimer>
 
@@ -9,7 +9,7 @@ namespace Ui {
 class DlgConnectToServer;
 }
 
-class DlgConnectToServer : public BaseExtendedDialog
+class DlgConnectToServer : public BaseExtendedDialogR
 {
     Q_OBJECT
 

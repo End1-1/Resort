@@ -42,6 +42,7 @@
 #include <QItemDelegate>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QInputDialog>
 #include <QPrinterInfo>
 #include <QScrollBar>
 
@@ -224,7 +225,7 @@ protected:
 };
 
 RDesk::RDesk(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RDesk)
 {
     ui->setupUi(this);
@@ -698,8 +699,11 @@ int RDesk::printTax(int cashMode)
         return 0;
     }
 
+    QString taxpayer;
+    taxpayer = QInputDialog::getText(this, tr("Enter taxpayer pin"), tr("Taxpayer pin"));
+
     int taxCode = 0;
-    int result = DlgPrintTax::printTax(fHall->fVatDept, fTable->fOrder, (cashMode == tax_mode_cash ? 0 : fTable->fAmount.toDouble()), taxCode);
+    int result = DlgPrintTax::printTax(fHall->fVatDept, fTable->fOrder, (cashMode == tax_mode_cash ? 0 : fTable->fAmount.toDouble()), taxCode, taxpayer);
     if (result != TAX_OK) {
         return 0;
     }
@@ -988,7 +992,7 @@ void RDesk::closeEvent(QCloseEvent *e)
         return;
     }
     checkEmpty();
-    BaseExtendedDialog::closeEvent(e);
+    BaseExtendedDialogR::closeEvent(e);
 }
 
 void RDesk::onBtnQtyClicked()

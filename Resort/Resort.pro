@@ -17,6 +17,8 @@ DEFINES += _RESORT_
 DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
+    ../Base/dlgexitbyversion.cpp \
+    ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
@@ -395,9 +397,7 @@ SOURCES += main.cpp\
     ../Cache/cachebed.cpp \
     ../Cache/cachereservationcardex.cpp \
     ../Cache/cachesex.cpp \
-    dlgselector.cpp \
     dlgcreategroupreservation.cpp \
-    dlgexitbyversion.cpp \
     dlgexecfailedsqls.cpp \
     ../Filter/fdishes.cpp \
     ../Filter/froomarrangement.cpp \
@@ -442,6 +442,8 @@ SOURCES += main.cpp\
     ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
+    ../Base/dlgexitbyversion.h \
+    ../Base/dlgselector.h \
     ../Base/doubleutils.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
@@ -823,9 +825,7 @@ HEADERS  += mainwindow.h \
     ../Cache/cachebasestruct.h \
     ../Cache/cachereservationcardex.h \
     ../Cache/cachesex.h \
-    dlgselector.h \
     dlgcreategroupreservation.h \
-    dlgexitbyversion.h \
     dlgexecfailedsqls.h \
     ../Filter/fdishes.h \
     ../Filter/froomarrangement.h \
@@ -873,6 +873,8 @@ HEADERS  += mainwindow.h \
     ../Filter/wcardexlist.h
 
 FORMS    += mainwindow.ui \
+    ../Base/dlgexitbyversion.ui \
+    ../Base/dlgselector.ui \
     ../Filter/fcashreportbyitem.ui \
     ../Filter/fexpecteddeparturesimple.ui \
     ../Filter/fexpectedsimple.ui \
@@ -1099,9 +1101,7 @@ FORMS    += mainwindow.ui \
     ../Filter/flengthofstay.ui \
     ../Filter/fexportreservation.ui \
     dlgreservationguests.ui \
-    dlgselector.ui \
     dlgcreategroupreservation.ui \
-    dlgexitbyversion.ui \
     dlgexecfailedsqls.ui \
     ../Filter/fdishes.ui \
     ../Filter/froomarrangement.ui \

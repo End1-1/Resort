@@ -3,7 +3,7 @@
 #include "rmessage.h"
 
 DlgReservation::DlgReservation(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgReservation)
 {
     ui->setupUi(this);

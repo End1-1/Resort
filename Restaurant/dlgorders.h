@@ -1,13 +1,13 @@
 #ifndef DLGORDERS_H
 #define DLGORDERS_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgOrders;
 }
 
-class DlgOrders : public BaseExtendedDialog
+class DlgOrders : public BaseExtendedDialogR
 {
     Q_OBJECT
 

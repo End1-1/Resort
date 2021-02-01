@@ -1,7 +1,7 @@
 #ifndef RDESK_H
 #define RDESK_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "dishestable.h"
 #include "hall.h"
 #include "user.h"
@@ -16,7 +16,7 @@ class RDesk;
 class RTools;
 class DishItemDelegate;
 
-class RDesk : public BaseExtendedDialog
+class RDesk : public BaseExtendedDialogR
 {
     Q_OBJECT
     friend class RTools;

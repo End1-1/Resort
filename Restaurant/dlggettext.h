@@ -1,13 +1,13 @@
 #ifndef DLGGETTEXT_H
 #define DLGGETTEXT_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgGetText;
 }
 
-class DlgGetText : public BaseExtendedDialog
+class DlgGetText : public BaseExtendedDialogR
 {
     Q_OBJECT
 

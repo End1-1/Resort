@@ -32,6 +32,23 @@
     </widget>
    </item>
    <item>
+    <widget class="QRadioButton" name="rbCheckout">
+     <property name="text">
+      <string>Checkout</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Checkout date</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="WDate2" name="wd" native="true"/>
+   </item>
+   <item>
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -46,6 +63,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>WDate2</class>
+   <extends>QWidget</extends>
+   <header location="global">wdate2.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

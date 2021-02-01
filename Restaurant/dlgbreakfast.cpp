@@ -13,7 +13,7 @@
 #include <QPainter>
 
 DlgBreakfast::DlgBreakfast(User *user, QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgBreakfast)
 {
     ui->setupUi(this);

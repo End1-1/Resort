@@ -1,13 +1,13 @@
 #ifndef RDISHCOMMENT_H
 #define RDISHCOMMENT_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RDishComment;
 }
 
-class RDishComment : public BaseExtendedDialog
+class RDishComment : public BaseExtendedDialogR
 {
     Q_OBJECT
 

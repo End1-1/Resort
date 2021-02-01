@@ -1,13 +1,13 @@
 #ifndef DLGRESERVATION_H
 #define DLGRESERVATION_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgReservation;
 }
 
-class DlgReservation : public BaseExtendedDialog
+class DlgReservation : public BaseExtendedDialogR
 {
     Q_OBJECT
 

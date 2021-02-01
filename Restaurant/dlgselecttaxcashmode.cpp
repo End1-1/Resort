@@ -2,7 +2,7 @@
 #include "ui_dlgselecttaxcashmode.h"
 
 DlgSelectTaxCashMode::DlgSelectTaxCashMode(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgSelectTaxCashMode)
 {
     ui->setupUi(this);
@@ -17,7 +17,7 @@ DlgSelectTaxCashMode::~DlgSelectTaxCashMode()
 bool DlgSelectTaxCashMode::getCashMode(int &mode)
 {
     bool result = false;
-    DlgSelectTaxCashMode *d = new DlgSelectTaxCashMode(fParent);
+    DlgSelectTaxCashMode *d = new DlgSelectTaxCashMode();
     if (d->exec() == QDialog::Accepted) {
         mode = d->fResult;
         result = true;

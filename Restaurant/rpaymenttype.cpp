@@ -2,7 +2,7 @@
 #include "ui_rpaymenttype.h"
 
 RPaymentType::RPaymentType(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RPaymentType)
 {
     ui->setupUi(this);

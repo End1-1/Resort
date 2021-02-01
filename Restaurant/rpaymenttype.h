@@ -1,13 +1,13 @@
 #ifndef RPAYMENTTYPE_H
 #define RPAYMENTTYPE_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RPaymentType;
 }
 
-class RPaymentType : public BaseExtendedDialog
+class RPaymentType : public BaseExtendedDialogR
 {
     Q_OBJECT
 

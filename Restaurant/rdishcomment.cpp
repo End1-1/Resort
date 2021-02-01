@@ -2,7 +2,7 @@
 #include "ui_rdishcomment.h"
 
 RDishComment::RDishComment(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RDishComment)
 {
     ui->setupUi(this);

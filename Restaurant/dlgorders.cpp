@@ -11,7 +11,7 @@
 #include <QInputDialog>
 
 DlgOrders::DlgOrders(int staff, QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgOrders)
 {
     ui->setupUi(this);
@@ -51,9 +51,12 @@ void DlgOrders::on_btnPrintTax_clicked()
     fDD.nextRow();
     QString vatDept = Hall::fHallMap[fDD.getValue("f_hall").toInt()]->fVatDept;
 
+    QString taxpayer;
+    taxpayer = QInputDialog::getText(this, tr("Enter taxpayer pin"), tr("Taxpayer pin"));
+
     int taxCode = 0;
     int result = DlgPrintTax::printTax(vatDept, ui->tblData->item(row, 0)->data(Qt::EditRole).toString(),
-                                       (PAYMENT_CASH == fDD.getValue("f_paymentMode").toInt() ? 0 : fDD.getValue("f_total").toDouble()), taxCode);
+                                       (PAYMENT_CASH == fDD.getValue("f_paymentMode").toInt() ? 0 : fDD.getValue("f_total").toDouble()), taxCode, taxpayer);
     if (result != TAX_OK) {
         return;
     }

@@ -4,7 +4,7 @@
 #include <QJsonObject>
 
 DlgPrintTax::DlgPrintTax(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseDialog(parent),
     ui(new Ui::DlgPrintTax)
 {
     ui->setupUi(this);
@@ -19,13 +19,14 @@ DlgPrintTax::~DlgPrintTax()
     delete ui;
 }
 
-int DlgPrintTax::printTax(const QString &dep, const QString &order, double cardAmount, int &taxCode)
+int DlgPrintTax::printTax(const QString &dep, const QString &order, double cardAmount, int &taxCode, const QString &taxPayer)
 {
     DlgPrintTax *d = new DlgPrintTax(fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(QString("%1: %2").arg(tr("Printing")).arg(order));
     d->fOrder = order;
     d->fDep = dep;
     d->fCardAmount = cardAmount;
+    d->fTaxPayer = taxPayer;
     int result = d->exec();
     taxCode = d->fTaxCode;
     delete d;
@@ -35,7 +36,7 @@ int DlgPrintTax::printTax(const QString &dep, const QString &order, double cardA
 int DlgPrintTax::exec()
 {
     fTimer.start(2000);
-    return BaseExtendedDialog::exec();
+    return BaseDialog::exec();
 }
 
 void DlgPrintTax::load(const QString &dep, const QString &order)
@@ -44,6 +45,7 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
     PrintTaxN pt(fPreferences.getDb(def_tax_address).toString(),
                 fPreferences.getDb(def_tax_port).toInt(),
                 fPreferences.getDb(def_tax_password).toString(), "true", "3", "3");
+    pt.fPartnerTin = fTaxPayer;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_header"] = order;
     fDD[":f_state"] = DISH_STATE_READY;

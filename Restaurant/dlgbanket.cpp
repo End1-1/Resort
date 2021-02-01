@@ -27,7 +27,7 @@
 #include <QPainter>
 
 DlgBanket::DlgBanket(User *user, QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgBanket)
 {
     ui->setupUi(this);

@@ -1,7 +1,7 @@
 #ifndef DLGBANKET_H
 #define DLGBANKET_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "user.h"
 #include "trackcontrol.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class DlgBanket;
 }
 
-class DlgBanket : public BaseExtendedDialog
+class DlgBanket : public BaseExtendedDialogR
 {
     Q_OBJECT
 

@@ -7,8 +7,6 @@
 #include <QDate>
 
 class QSqlQuery;
-class MainWindow;
-class RFace;
 
 extern QString __dd1Host;
 extern QString __dd1Database;
@@ -23,9 +21,11 @@ extern QString __dd2Password;
 extern bool doubleDatabase;
 
 #ifdef _RESORT_
+class MainWindow;
 extern MainWindow *__mainWindow;
 #endif
 #ifdef _RESTAURANT_
+class RFace;
 extern RFace *__rface;
 #endif
 

@@ -1,13 +1,13 @@
 #ifndef RCHANGEMENU_H
 #define RCHANGEMENU_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class RChangeMenu;
 }
 
-class RChangeMenu : public BaseExtendedDialog
+class RChangeMenu : public BaseExtendedDialogR
 {
     Q_OBJECT
 

@@ -1,13 +1,13 @@
 #ifndef DLGVOIDBACK_H
 #define DLGVOIDBACK_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 
 namespace Ui {
 class DlgVoidBack;
 }
 
-class DlgVoidBack : public BaseExtendedDialog
+class DlgVoidBack : public BaseExtendedDialogR
 {
     Q_OBJECT
 

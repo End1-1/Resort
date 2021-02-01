@@ -8,7 +8,7 @@
 #include <QNetworkInterface>
 
 DlgConnectToServer::DlgConnectToServer(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgConnectToServer)
 {
     ui->setupUi(this);

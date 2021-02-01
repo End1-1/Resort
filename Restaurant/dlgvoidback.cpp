@@ -4,7 +4,7 @@
 #include <QScrollBar>
 
 DlgVoidBack::DlgVoidBack(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::DlgVoidBack)
 {
     ui->setupUi(this);

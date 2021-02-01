@@ -2,7 +2,7 @@
 #include "ui_rchangehall.h"
 
 RChangeHall::RChangeHall(QWidget *parent) :
-    BaseExtendedDialog(parent),
+    BaseExtendedDialogR(parent),
     ui(new Ui::RChangeHall)
 {
     ui->setupUi(this);

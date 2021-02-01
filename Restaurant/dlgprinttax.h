@@ -1,7 +1,7 @@
 #ifndef DLGPRINTTAX_H
 #define DLGPRINTTAX_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "printtaxn.h"
 #include <QTimer>
 
@@ -13,14 +13,14 @@ namespace Ui {
 class DlgPrintTax;
 }
 
-class DlgPrintTax : public BaseExtendedDialog
+class DlgPrintTax : public BaseDialog
 {
     Q_OBJECT
 
 public:
     explicit DlgPrintTax(QWidget *parent = nullptr);
     ~DlgPrintTax();
-    static int printTax(const QString &dep, const QString &order, double cardAmount, int &taxCode);
+    static int printTax(const QString &dep, const QString &order, double cardAmount, int &taxCode, const QString &taxPayer);
     virtual int exec();
 
 private slots:
@@ -33,6 +33,7 @@ private:
     QTimer fTimer;
     QString fDep;
     QString fOrder;
+    QString fTaxPayer;
     int fTaxCode;
     double fCardAmount;
     void load(const QString &dep, const QString &order);

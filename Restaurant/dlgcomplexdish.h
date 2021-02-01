@@ -1,14 +1,14 @@
 #ifndef DLGCOMPLEXDISH_H
 #define DLGCOMPLEXDISH_H
 
-#include "baseextendeddialog.h"
+#include "baseextendeddialogr.h"
 #include "dishestable.h"
 
 namespace Ui {
 class DlgComplexDish;
 }
 
-class DlgComplexDish : public BaseExtendedDialog
+class DlgComplexDish : public BaseExtendedDialogR
 {
     Q_OBJECT
 

@@ -37,6 +37,7 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     ui->wInvoice->setDBMRegister(&fDoc);
     ui->wInvoice->setReservationMode(reserveId);
     ui->wPayment->setDBMRegister(&fDoc);
+    ui->leServiceQty->setValidator(new QIntValidator());
     fDoc.setleID(ui->leVoucher);
     fDoc.setleWDate(ui->deDate);
     fDoc.setleUser(ui->leUser, ui->leUsername);
@@ -54,6 +55,7 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
 void DlgAdvanceEntry::changeTaxMode(bool mode)
 {
     ui->leService->setEnabled(mode);
+    ui->leServiceQty->setEnabled(mode);
 }
 
 void DlgAdvanceEntry::clearSelector()
@@ -185,7 +187,7 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
             message_error(tr("Invalid service item code"));
             return;
         }
-        dpt.addGoods(inv.fVatDept(), inv.fAdgt(), inv.fCode(), inv.fTaxName(), ui->wPayment->amount(), 1);
+        dpt.addGoods(inv.fVatDept(), inv.fAdgt(), inv.fCode(), inv.fTaxName(), ui->wPayment->amount() / ui->leServiceQty->asDouble(), ui->leServiceQty->asDouble());
         dpt.fOrder = ui->wInvoice->invoice();
         if (ui->wPayment->paymentCode() == PAYMENT_CARD) {
             dpt.fCardAmount = ui->wPayment->amount();

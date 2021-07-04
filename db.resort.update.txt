@@ -25,4 +25,7 @@ create table f_room_extra (f_id integer primary key auto_increment, f_room integ
 /*DB - 5 */
 update s_app set f_version='5' where f_app='DB';
 delete from f_room_inventory_state;
-insert into f_room_inventory_state (f_id, f_name) values (1, 'OK'), (2, 'NOT READY');
+insert into f_room_inventory_state (f_id, f_name) values (1, 'OK'), (2, 'NOT READY
+
+/*DB - 6*/
+ALTER TABLE `f_room_classes` ADD COLUMN `f_queue` TINYINT default 1  NULL AFTER `f_description`;

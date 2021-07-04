@@ -6,9 +6,11 @@ RERoomCategory::RERoomCategory(QList<QVariant> &values, QWidget *parent) :
     ui(new Ui::RERoomCategory)
 {
     ui->setupUi(this);
+    ui->leOrder->setValidator(new QIntValidator());
     addWidget(ui->leCode, "Code");
     addWidget(ui->leShort, "Short");
     addWidget(ui->leDescription, "Description");
+    addWidget(ui->leOrder, "Order");
     fTable = "f_room_classes";
 }
 

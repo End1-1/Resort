@@ -187,6 +187,7 @@ void FCardexSales::guestReport(WReportGrid *rg)
 
 void FCardexSales::cardexReport(WReportGrid *rg)
 {
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
     fReportGrid->fModel->clearColumns();
     fReportGrid->fModel->setColumn(250, "", tr("Cardex"))
             .setColumn(50, "", tr("B/O"))
@@ -210,7 +211,7 @@ void FCardexSales::cardexReport(WReportGrid *rg)
             left join f_reservation r on car.f_cardex=r.f_cardex \
             left join m_register mm on mm.f_inv=r.f_invoice \
             left join (select rr.f_cardex, sum(rr.f_man+rr.f_woman+rr.f_child) as total  from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and f_finance=1 and m.f_itemCode in (1,66,69,14,15) group by 1) pax on pax.f_cardex=r.f_cardex \
-            left join (select rr.f_cardex, count(m.f_id) as nights from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and f_wdate between :f_date1 and :f_date2 and f_itemCode in (1,66,69,14,15) and f_canceled=0 group by 1) n on n.f_cardex=r.f_cardex \
+            left join (select rr.f_cardex, count(m.f_id) as nights from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and f_wdate between :f_date1 and :f_date2 and f_itemCode in (" + rooming + ") and f_canceled=0 group by 1) n on n.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=1 and m.f_wdate between :f_date1 and :f_date2 group by 1) bo on bo.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=2 and m.f_wdate between :f_date1 and :f_date2 group by 1) bb on bb.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=3 and m.f_wdate between :f_date1 and :f_date2 group by 1) hb on hb.f_cardex=r.f_cardex \

@@ -12,6 +12,7 @@ public:
     inline QString fCode() {return getString("f_id"); }
     inline QString fName() {return getString("f_short"); }
     inline QString fFullName() {return getString("f_description"); }
+    inline int fQueue(){return getInt("f_queue");}
 };
 
 #endif // CACHEROOMCATEGORY_H

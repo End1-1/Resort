@@ -60,6 +60,7 @@ WInvoice::WInvoice(QWidget *parent) :
 
     ui->leRoomCode->setSelector(this, cache(cid_active_room), ui->leRoom, HINT_ACTIVE_ROOM);
 
+    ui->btnManualTax->setVisible(r__(cr__manualtax));
     ui->btnPostingCharges->setVisible(r__(cr__postchage_vaucher));
     ui->btnPaymentsDetails->setVisible(r__(cr__receipt_vaucher));
     ui->btnDiscount->setVisible(r__(cr__discount_vaucher));
@@ -257,7 +258,7 @@ void WInvoice::loadInvoice(const QString &id)
 
     /* advance */
     fDD[":f_inv"] = ui->leInvoice->text();
-    fDD.exec("select sum(f_amountAmd) as f_advance from m_register where f_Canceled=0 and f_inv=:f_inv and f_source='AV' and f_fiscal=1");
+    fDD.exec("select sum(f_amountAmd) as f_advance from m_register where f_Canceled=0 and f_inv=:f_inv and f_source='AV' and f_fiscal>0");
     if (fDD.nextRow()) {
         ui->lePrepaid->setDouble(fDD.getDouble(0));
     }

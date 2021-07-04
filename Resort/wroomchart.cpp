@@ -15,6 +15,7 @@ WRoomChart::WRoomChart(QWidget *parent) :
 {
     ui->setupUi(this);
     fFirstDate = WORKING_DATE;
+    fLastDate = fFirstDate.addYears(5);
     fVisibleDays = static_cast<int>(fFirstDate.daysTo(fLastDate));
     FONT = qApp->font();
     if (DAYS_OF_WEEK.count() == 0) {
@@ -42,7 +43,7 @@ WRoomChart::WRoomChart(QWidget *parent) :
     fDock = new WRoomChartDock(this);
     fDock->hide();
     DoubleDatabase dd(true, false);
-    dd.exec("select f_id, f_short from f_room_classes order by 2");
+    dd.exec("select f_id, f_short from f_room_classes order by f_queue");
     while (dd.nextRow()) {
         QPushButton *b = new QPushButton();
         b->setMaximumSize(30, 30);

@@ -80,7 +80,7 @@ void FCashReport::apply(WReportGrid *rg)
         return;
     }
     query = query.replace(":f_wdate1", ui->deFrom->dateMySql()).replace(":f_wdate2", ui->deTo->dateMySql());
-    query += "order by 7, 6";
+    query += "order by 7, 6, 2";
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
     QList<int> cols;

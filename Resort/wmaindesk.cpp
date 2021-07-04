@@ -42,7 +42,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     ui->tblRoom->setColumnWidth(0, ui->wRoom->maximumWidth() - 2);
     ui->g->verticalScrollBar()->blockSignals(true);
     ui->g->horizontalScrollBar()->blockSignals(true);
-    fDD.exec("select f_short from f_room_classes order by 1");
+    fDD.exec("select f_short from f_room_classes order by f_queue");
     while (fDD.nextRow()) {
         QPushButton *btn = new QPushButton(fDD.getString("f_short"));
         btn->setCheckable(true);
@@ -77,8 +77,13 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fDockHint = new DWMainDeskHint(this);
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
-    fDateStart = QDate::fromString("01/01/2019", def_date_format);
-    fDateEnd = QDate::fromString("31/12/2021", def_date_format);
+    fDD.exec("select min(f_startdate) from f_reservation where f_state in (1,2,4,7,9)");
+    if (fDD.nextRow()){
+        fDateStart = fDD.getDate(0);
+    } else {
+        fDateStart = QDate::currentDate();
+    }
+    fDateEnd = fDateStart.addYears(5);
     ChartStartDate = fDateStart;
     int dayCount = fDateStart.daysTo(fDateEnd) + 1;
     ui->tblDay->setColumnCount(dayCount);

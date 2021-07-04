@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql network xml printsupport
+QT       += core gui sql network xml printsupport charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,6 +18,7 @@ DEFINES += _HOTEL_
 DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
+    ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
@@ -391,9 +392,8 @@ SOURCES += main.cpp\
     ../Cache/cachebed.cpp \
     ../Cache/cachereservationcardex.cpp \
     ../Cache/cachesex.cpp \
-    dlgselector.cpp \
     dlgcreategroupreservation.cpp \
-    dlgexitbyversion.cpp \
+    ../Base/dlgexitbyversion.cpp \
     dlgexecfailedsqls.cpp \
     ../Filter/fdishes.cpp \
     ../Filter/froomarrangement.cpp \
@@ -441,6 +441,7 @@ SOURCES += main.cpp\
     ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
+    ../Base/dlgselector.h \
     ../Base/doubleutils.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
@@ -817,9 +818,8 @@ HEADERS  += mainwindow.h \
     ../Cache/cachebasestruct.h \
     ../Cache/cachereservationcardex.h \
     ../Cache/cachesex.h \
-    dlgselector.h \
     dlgcreategroupreservation.h \
-    dlgexitbyversion.h \
+    ../Base/dlgexitbyversion.h \
     dlgexecfailedsqls.h \
     ../Filter/fdishes.h \
     ../Filter/froomarrangement.h \
@@ -870,6 +870,7 @@ HEADERS  += mainwindow.h \
     ../Filter/wcardexlist.h
 
 FORMS    += mainwindow.ui \
+    ../Base/dlgselector.ui \
     ../Filter/fcashreportbyitem.ui \
     ../Filter/fexpecteddeparturesimple.ui \
     ../Filter/fexpectedsimple.ui \
@@ -1092,9 +1093,8 @@ FORMS    += mainwindow.ui \
     ../Filter/flengthofstay.ui \
     ../Filter/fexportreservation.ui \
     dlgreservationguests.ui \
-    dlgselector.ui \
     dlgcreategroupreservation.ui \
-    dlgexitbyversion.ui \
+    ../Base/dlgexitbyversion.ui \
     dlgexecfailedsqls.ui \
     ../Filter/fdishes.ui \
     ../Filter/froomarrangement.ui \
@@ -1126,7 +1126,7 @@ RESOURCES += \
     res.qrc
 
 LIBS += -lVersion
-LIBS += -LC:/OpenSSL-Win32/lib
+LIBS += -LC:/Soft/OpenSSL-Win32/lib
 LIBS += -lopenssl
 LIBS += -llibcrypto
 LIBS +=  -lwsock32
@@ -1134,21 +1134,21 @@ LIBS +=  -lwsock32
 DISTFILES += \
     last_cache.txt
 
-INCLUDEPATH += $$PWD/../Base
-INCLUDEPATH += $$PWD/../Cache
-INCLUDEPATH += $$PWD/../Cache2
-INCLUDEPATH += $$PWD/../Selector
-INCLUDEPATH += $$PWD/../Controls
-INCLUDEPATH += $$PWD/../RowEditor
-INCLUDEPATH += $$PWD/../RoomChart
-INCLUDEPATH += $$PWD/../Filter
-INCLUDEPATH += $$PWD/../Threads
-INCLUDEPATH += $$PWD/../Print
-INCLUDEPATH += $$PWD/../Widgets
-INCLUDEPATH += $$PWD/../RGDoubleClick
-INCLUDEPATH += $$PWD/../GridOptionWidgets
-INCLUDEPATH += $$PWD/../Vouchers
-INCLUDEPATH += $$PWD/../Server2
+INCLUDEPATH += C:/Projects/Resort/Base
+INCLUDEPATH += C:/Projects/Resort/Cache
+INCLUDEPATH += C:/Projects/Resort/Cache2
+INCLUDEPATH += C:/Projects/Resort/Selector
+INCLUDEPATH += C:/Projects/Resort/Controls
+INCLUDEPATH += C:/Projects/Resort/RowEditor
+INCLUDEPATH += C:/Projects/Resort/RoomChart
+INCLUDEPATH += C:/Projects/Resort/Filter
+INCLUDEPATH += C:/Projects/Resort/Threads
+INCLUDEPATH += C:/Projects/Resort/Print
+INCLUDEPATH += C:/Projects/Resort/Widgets
+INCLUDEPATH += C:/Projects/Resort/RGDoubleClick
+INCLUDEPATH += C:/Projects/Resort/GridOptionWidgets
+INCLUDEPATH += C:/Projects/Resort/Vouchers
+INCLUDEPATH += C:/Projects/Resort/Server2
 INCLUDEPATH += C:/Soft/OpenSSL-Win32/include
 INCLUDEPATH += C:/Soft/OpenSSL-Win32/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src

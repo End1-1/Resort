@@ -26,7 +26,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -214,13 +214,6 @@
        <string>Print tax</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>TAX</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="EQLineEdit" name="leTax">
          <property name="readOnly">
@@ -238,10 +231,10 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QRadioButton" name="btnService">
+       <item row="4" column="0">
+        <widget class="QPushButton" name="btnPrintTax">
          <property name="text">
-          <string>Print as service</string>
+          <string>Print tax</string>
          </property>
         </widget>
        </item>
@@ -259,14 +252,21 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="btnPrintTax">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_14">
          <property name="text">
-          <string>Print tax</string>
+          <string>TAX</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="1" column="1">
+        <widget class="QRadioButton" name="btnService">
+         <property name="text">
+          <string>Print as service</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -278,6 +278,23 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Quantity</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="EQLineEdit" name="leServiceQty">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>1</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

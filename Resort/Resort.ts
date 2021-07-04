@@ -10734,6 +10734,26 @@ ee</source>
         <source>Checkin</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkout date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Arrival</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FReservationsCommon</name>
@@ -14262,6 +14282,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Data read timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You should to setup cashier and pin before to use fiscal printer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

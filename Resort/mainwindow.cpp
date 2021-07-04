@@ -1284,18 +1284,21 @@ void MainWindow::on_actionCategories_triggered()
     QList<int> widths;
     widths << 80
            << 200
-           << 300;
+           << 300
+           << 100;
     QStringList fields;
     fields << "f_id"
            << "f_short"
-           << "f_description";
+           << "f_description"
+            << "f_queue";
     QStringList titles;
     titles << tr("Code")
            << tr("Short")
-           << tr("Description");
+           << tr("Description")
+           << tr("Queue");
     QString title = tr("Room categories");
     QString icon = ":/images/category.png";
-    QString query = "select f_id, f_short, f_description from f_room_classes";
+    QString query = "select f_id, f_short, f_description, f_queue from f_room_classes";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RERoomCategory>(widths, fields, titles, title, icon, query);
     RERoomCategoryRate *cr = new RERoomCategoryRate(r);

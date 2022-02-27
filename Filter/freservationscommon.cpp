@@ -66,6 +66,9 @@ void FReservationsCommon::apply(WReportGrid *rg)
     if (ui->chOnlyGroup->isChecked()) {
         where += " and r.f_group>0 ";
     }
+    if (ui->chExtraBed->isChecked()) {
+        where += " and r.f_extrabed=1 ";
+    }
     where += " order by r.f_startDate ";
     buildQuery(rg, where);
     QList<int> cols;

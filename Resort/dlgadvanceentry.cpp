@@ -30,7 +30,8 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     QList<int> paymentFilter;
     paymentFilter << PAYMENT_CASH
                   << PAYMENT_CARD
-                  << PAYMENT_BANK;
+                  << PAYMENT_BANK
+                  << PAYMENT_PAYX;
     ui->wPayment->setPaymentFilter(paymentFilter);
     ui->wPayment->hideVAT(true);
     ui->leService->setSelector(this, cache(cid_invoice_item), ui->leServiceName);
@@ -114,6 +115,9 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     case PAYMENT_BANK:
         finalName = "BANK";
         break;
+    case PAYMENT_PAYX:
+        finalName = "PAYX";
+        break;
     default:
         message_error(tr("Selected mode of payment is not allowed here"));
         return;
@@ -163,7 +167,7 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     }
 
     double cash = ui->wPayment->paymentCode() == PAYMENT_CASH ? ui->wPayment->amount() : 0;
-    double card = ui->wPayment->paymentCode() == PAYMENT_CARD ? ui->wPayment->amount() : 0;
+    double card = ui->wPayment->paymentCode() == PAYMENT_CASH ? 0 : ui->wPayment->amount();
     int taxCode = 0;
     if (ui->rbAdvance->isChecked()) {
         QString outJson;

@@ -8,6 +8,7 @@
 #include "dlgopengrouporsingle.h"
 #include "dlggroupreservationfuck.h"
 #include "dlghelp.h"
+#include "logging.h"
 #include <QPushButton>
 #include <QCloseEvent>
 
@@ -411,15 +412,19 @@ void WReservation::on_btnSave_clicked()
 void WReservation::on_btnCheckIn_clicked()
 {
     bool allSaved = true;
-    QString errorString;    
+    QString errorString;
+    logging::justLog("Before checkin pressed");
     WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->currentWidget());
+    logging::justLog(QString("Checkin pressed. %1 %2").arg(r->reserveId()).arg(r->roomCode()));
     allSaved = allSaved && r->checkIn(errorString);
     ui->btnCheckIn->setEnabled(r->reserveState() == RESERVE_RESERVE);
     if (allSaved) {
+        logging::writeLog(QString("Checkin success. %1 %2").arg(r->reserveId()).arg(r->roomCode()));
         if (ui->tab->count() == 1) {
             removeFromTabWidget();
         }
     } else {
+        logging::justLog(QString("Checkin failed. %1 %2 %3").arg(r->reserveId()).arg(r->roomCode()).arg(errorString));
         message_error(tr("Checkin failed") + "<br>" + errorString);
     }
 }

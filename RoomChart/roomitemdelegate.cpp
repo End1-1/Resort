@@ -24,11 +24,17 @@ void RoomItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     } else {
     */
     QLinearGradient bgFill(0, 0, 0, option.rect.height());
-    QColor alpha = ROOM_RECT_BACKGROUND[r.fState()][0];
+    int state = r.fState();
+    QColor mainColor = ROOM_RECT_BACKGROUND[state][0];
+    if (r.fDoNotDisturbe()) {
+        mainColor = QColor::fromRgb(__s.value("donotdisturbecolor", -5570689).toInt());
+    }
+    QColor alpha = mainColor;
     alpha = alpha.light();
-    bgFill.setColorAt(0, ROOM_RECT_BACKGROUND[r.fState()][0]);
+    bgFill.setColorAt(0, mainColor);
     bgFill.setColorAt(0.5, alpha);
-    bgFill.setColorAt(1, ROOM_RECT_BACKGROUND[r.fState()][0]);
+    bgFill.setColorAt(1, mainColor);
+
     QBrush brush(bgFill);
     painter->fillRect(option.rect, brush);
 

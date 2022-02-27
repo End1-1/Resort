@@ -647,11 +647,11 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
     ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
 
-    if (fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
-        ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
-    } else {
-        ui->menuBar->actions().at(9)->setVisible(false);
-    }
+//    if (fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
+//        ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
+//    } else {
+//        //ui->menuBar->actions().at(9)->setVisible(false);
+//    }
 
     ui->menuBar->actions().at(10)->setVisible(r__(cr__menu_direcotory)); //Directory hotel
     ui->actionContacts->setVisible(r__(cr__contacts));

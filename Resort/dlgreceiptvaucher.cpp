@@ -13,6 +13,7 @@
 #include "paymentmode.h"
 #include "pprintvaucher.h"
 #include "cacheusers.h"
+#include "winvoice.h"
 
 #define HINT_ACTIVE_ROOM 1
 #define HINT_CITY_LEDGER 2
@@ -33,7 +34,8 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
                                      << QString::number(PAYMENT_CARD)
                                      << QString::number(PAYMENT_BANK)
-                                     << QString::number(PAYMENT_BARTER);
+                                     << QString::number(PAYMENT_BARTER)
+                                     << QString::number(PAYMENT_PAYX);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
     clVisible(false);
@@ -111,6 +113,10 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
             case PAYMENT_BANK:
                 cardVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT BANK"));
+                break;
+            case PAYMENT_PAYX:
+                cardVisible(false);
+                ui->leFinalName->setText(tr("PAYMENT PAYX"));
                 break;
             case PAYMENT_CL:
                 clVisible(true);
@@ -211,6 +217,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wRoom->guest();
             break;
+        case PAYMENT_PAYX:
+            finalName += "PAYX";
+            break;
         default:
             errors += tr("Selected mode of payment is not allowed here") + "<br>";
             break;
@@ -238,6 +247,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             break;
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wCL->cityLedgerName();
+            break;
+        case PAYMENT_PAYX:
+            finalName += "PAYX";
             break;
         default:
             errors += tr("Selected payment mode is not allowed here") + "<br>";
@@ -300,6 +312,11 @@ void DlgReceiptVaucher::on_btnSave_clicked()
 
 void DlgReceiptVaucher::on_btnCancel_clicked()
 {
+    if (!ui->leVaucher->text().isEmpty()) {
+        WInvoice w(this);
+        w.loadInvoice(ui->wRoom->invoice());
+        w.on_btnTaxPrint_clicked();
+    }
     reject();
 }
 

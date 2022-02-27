@@ -2,6 +2,7 @@
 #include "ui_fcashreport.h"
 #include "wreportgrid.h"
 #include "cacheusers.h"
+#include "cachepaymentmode.h"
 
 FCashReport::FCashReport(QWidget *parent) :
     WFilterBase(parent),
@@ -12,6 +13,7 @@ FCashReport::FCashReport(QWidget *parent) :
     ui->deFrom->setDate(WORKING_DATE.addDays(-1));
     ui->deTo->setDate(WORKING_DATE.addDays(-1));
     ui->leOperator->setSelector(this, cache(cid_users), ui->leOperatorName, 0);
+    ui->lePayments->setSelector(this, cache(cid_payment_mode), ui->lePayments, 0);
     fReportGrid->setupTabTextAndIcon(tr("Cache report / detailed"), ":/images/credit-card.png");
     fHotelQuery = " select u.f_username, m.f_rdate, m.f_room, "
                   "m.f_id, m.f_guest, m.f_finalName, p.f_en, m.f_paymentComment, "
@@ -21,10 +23,10 @@ FCashReport::FCashReport(QWidget *parent) :
                   "left join f_payment_type p on p.f_id=m.f_paymentMode "
                   "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
                   "and m.f_finance=1 and "
-                  "(m.f_source in ('RV', 'AV') "
-                      "or ((m.f_source='CH' and  m.f_paymentMode in (1, 2, 3, 4) "
+                  "((m.f_source in ('RV', 'AV') :payment) "
+                      "or ((m.f_source='CH' :payment "
                       "and ((m.f_inv='' or m.f_inv is null) and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ") "
-                      "or (m.f_itemCode in (" + fPreferences.getDb(def_noshowfee_code).toString() + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ")))))";
+                      "or (m.f_itemCode in (" + fPreferences.getDb(def_noshowfee_code).toString() + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ") :payment ))))";
     fRestaurantQuery = " select u.f_username, mr.f_rdate, mr.f_room, "
                        "mr.f_id, mr.f_guest, mr.f_finalName, p.f_en, mr.f_paymentComment, "
                        "mr.f_amountAmd, mr.f_amountAmd / mr.f_amountUsd,  mr.f_remarks, mr.f_source "
@@ -33,7 +35,7 @@ FCashReport::FCashReport(QWidget *parent) :
                        "left join f_payment_type p on p.f_id=mr.f_paymentMode "
                        "where mr.f_wdate between :f_wdate1 and :f_wdate2 and mr.f_canceled=0 "
                        "and mr.f_finance=1 "
-                       "and ((mr.f_source in ('PS', 'PE') and mr.f_paymentMode in (1, 2, 3, 4)) :orbreak) ";
+                       "and ((mr.f_source in ('PS', 'PE') :payment ) :orbreak) ";
 }
 
 FCashReport::~FCashReport()
@@ -65,6 +67,11 @@ void FCashReport::apply(WReportGrid *rg)
         } else {
             query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
         }
+        if (ui->lePayments->isEmpty()) {
+            query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15)");
+        } else {
+            query.replace(":payment", "and m.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
+        }
     }
 
     if (ui->chRestaurant->isChecked()) {
@@ -73,6 +80,11 @@ void FCashReport::apply(WReportGrid *rg)
         }
         query += fRestaurantQuery;
         query = query.replace(":orbreak", QString(" or mr.f_itemCode=%1 ").arg(fPreferences.getDb(def_auto_breakfast_id).toInt()));
+        if (ui->lePayments->isEmpty()) {
+            query.replace(":payment", " and mr.f_paymentMode in (1, 2, 3, 4, 15)");
+        } else {
+            query.replace(":payment", "and mr.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
+        }
     }
 
     if (query.isEmpty()) {

@@ -144,7 +144,7 @@ void WInvoice::loadInvoice(const QString &id)
             "g.f_passport, rs.f_cardex, c.f_name, rs.f_pricePerNight, rs.f_remarks, rs.f_startDate, rs.f_endDate,"
             "rs.f_man+rs.f_woman+rs.f_child, gs.total, rs.f_vatMode, v.f_" + def_lang +", "
             "rs.f_checkInTime, 0 as i_f_prepaid, ucheckin.f_username, rs.f_cityLedger, cl.f_name, "
-            "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking "
+            "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking, r.f_donotdisturbe "
             "from  f_reservation rs "
             "left join f_room r on rs.f_room=r.f_id "
             "left join f_guests g on rs.f_guest=g.f_id "
@@ -191,6 +191,7 @@ void WInvoice::loadInvoice(const QString &id)
     ui->leArrangement->setText(row.at(c++).toString());
     ui->leNights->setText(QString("%1 / %2").arg(row.at(c++).toString()).arg(ui->deCheckin->date().daysTo(ui->deDeparture->date())));
     ui->leBookingNo->setText(row.at(c++).toString());
+    ui->btnDoNotDisturbe->setChecked(row.at(c++).toInt() > 0);
     /* -------------------------- BEGIN CONTENT --------------------------*/
     ui->tblInvLeft->clearContents();
     ui->tblInvRight->clearContents();
@@ -752,11 +753,15 @@ void WInvoice::on_btnCheckout_clicked()
 
 void WInvoice::on_btnPaymentsDetails_clicked()
 {
+    QString amount = ui->leGranTotal->text();
     DlgPaymentsDetails *d = new DlgPaymentsDetails(this);
     d->setInvoice(ui->leInvoice->text());
     d->exec();
     loadInvoice(ui->leInvoice->text());
     delete d;
+    if (ui->leGranTotal->text() != amount) {
+        on_btnTaxPrint_clicked();
+    }
 }
 
 void WInvoice::on_btnTaxPrint_clicked()
@@ -893,12 +898,10 @@ void WInvoice::on_btnCancel_clicked()
     bool noall = false;
     bool haveEntries = false;
     for (int i = 0; i < t1.count(); i++) {
-        QList<QVariant> row;
-        if (voucherKind(ui->tblInvLeft->toString(t1.at(i).row(), 0), VAUCHER_POINT_SALE_N)) {
-            if (!r__(cr__ps_correction_in_invoice)) {
-                noall = true;
-                continue;
-            }
+        QList<QVariant> row;        
+        if (!r__(cr__ps_correction_in_invoice)) {
+            noall = true;
+            continue;
         }
         row << ui->tblInvLeft->item(t1.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvLeft->item(t1.at(i).row(), 8)->data(Qt::DisplayRole);
@@ -917,11 +920,9 @@ void WInvoice::on_btnCancel_clicked()
     }
     for (int i = 0; i < t2.count(); i++) {
         QList<QVariant> row;
-        if (voucherKind(ui->tblInvRight->toString(t2.at(i).row(), 0), VAUCHER_POINT_SALE_N)) {
-            if (!r__(cr__ps_correction_in_invoice)) {
-                noall = true;
-                continue;
-            }
+        if (!r__(cr__ps_correction_in_invoice)) {
+            noall = true;
+            continue;
         }
         row << ui->tblInvRight->item(t2.at(i).row(), 0)->data(Qt::DisplayRole);
         row << ui->tblInvRight->item(t2.at(i).row(), 8)->data(Qt::DisplayRole);
@@ -1389,4 +1390,18 @@ void WInvoice::on_btnPostMinibar_clicked()
 void WInvoice::on_btnWakeup_clicked()
 {
     DlgWakepCalls::openWakeupCalls(ui->leRoomCode->text());
+}
+
+void WInvoice::on_btnDoNotDisturbe_clicked(bool checked)
+{
+    if (message_confirm(tr("Change the room state?")) != RESULT_YES) {
+        ui->btnDoNotDisturbe->setChecked(!checked);
+        return;
+    }
+    DoubleDatabase dd(true);
+    dd[":f_donotdisturbe"] = (int) checked;
+    dd[":f_id"] = ui->leRoomCode->asInt();
+    dd.exec("update f_room set f_donotdisturbe=:f_donotdisturbe where f_id=:f_id");
+    BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
+    BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReserveID->text());
 }

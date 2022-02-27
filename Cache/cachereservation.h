@@ -48,6 +48,7 @@ public:
     inline QString fCredit() {return getString("credit"); }
     inline QString fDebet() {return getString("debet"); }
     inline QString fBalance() {return float_str(getDouble("credit") - getDouble("debet"), 2); }
+    inline bool fDoNotDisturbe() {return getInt("f_donotdisturbe") > 0;}
 
     virtual void postProcess(CacheInstance *ci);
     virtual void postUpdate(CacheInstance *ci, const QString &id);

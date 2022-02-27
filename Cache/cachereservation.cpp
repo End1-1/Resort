@@ -11,7 +11,7 @@ CacheReservation::CacheReservation() :
                   "concat(g.f_firstName, ' ', g.f_lastName) as f_guest_name, c.f_name as f_cardex_name, r.f_invoice,  "
                   "rs.f_" + def_lang + " as f_reserveStateName, a.amount, coalesce(cc.credit, 0) as credit, coalesce(cd.debet, 0) as debet, "
                   "r.f_remarks, r.f_arrangement, r.f_author, r.f_group, "
-                  "r.f_created, r.f_createTime "
+                  "r.f_created, r.f_createTime, rm.f_donotdisturbe "
                   "from f_reservation r "
                   "left join f_room rm on rm.f_id=r.f_room "
                   "left join f_guests g on r.f_guest=g.f_id "

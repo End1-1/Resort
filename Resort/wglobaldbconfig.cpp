@@ -644,8 +644,8 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
 void WGlobalDbConfig::on_btnInitExtRestData_clicked()
 {
     DoubleDatabase dd(true, doubleDatabase);
-    dd.exec("delete from r_dish");
-    dd.exec("delete from r_dish_type");
+//    dd.exec("delete from r_dish");
+//    dd.exec("delete from r_dish_type");
 
     DoubleDatabase dr(__dd1Host, ui->leExternalRestaurantDb->text(), __dd1Username, __dd1Password);
     if (!dr.open(true, false)) {
@@ -655,6 +655,7 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
     QMap<int, QString> adg;
     dr.exec("select f_id, f_name, f_adgcode from d_part2");
     while (dr.nextRow()) {
+        continue;
         dd[":f_id"] = dr.getInt(0);
         dd[":f_part"] = 1;
         dd[":f_en"] = dr.getString(1);
@@ -666,6 +667,18 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_queue"] = dr.getInt(0);
         dd[":f_active"] = 1;
         dd.insert("r_dish_type", false);
+
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_part"] = 1;
+        dd[":f_en"] = dr.getString(1);
+        dd[":f_am"] = dr.getString(1);
+        dd[":f_ru"] = dr.getString(1);
+        adg[dr.getInt(0)] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_active"] = 1;
+        dd.update("r_dish_type", where_id(dr.getInt(0)));
     }
     dr.exec("select f_id, f_part, f_name from d_dish");
     while (dr.nextRow()) {
@@ -680,6 +693,18 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_unit"] = 1;
         dd[":f_adgt"] = adg[dr.getInt(1)];
         dd.insert("r_dish", false);
+
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_type"] = dr.getInt(1);
+        dd[":f_en"] = dr.getString(2);
+        dd[":f_am"] = dr.getString(2);
+        dd[":f_ru"] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_unit"] = 1;
+        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd.update("r_dish", where_id(dr.getInt(0)));
     }
     message_info(tr("Done"));
 }

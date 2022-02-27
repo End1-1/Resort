@@ -212,6 +212,32 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnDontDisturbe">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/do-not-disturbe.png</normaloff>:/images/do-not-disturbe.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -293,17 +319,17 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
-  </customwidget>
-  <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

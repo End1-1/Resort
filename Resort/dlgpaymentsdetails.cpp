@@ -109,7 +109,7 @@ void DlgPaymentsDetails::setInvoice(const QString &id)
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":invoice"] = id;
     fDD.exec("select r.f_room, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-               "r.f_cityLedger, cl.f_name, r.f_startDate, r.f_endDate, r.f_id "
+               "r.f_cityLedger, cl.f_name, r.f_startDate, r.f_endDate, r.f_id, rm.f_donotdisturbe "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
                "inner join f_room rm on rm.f_id=r.f_room "
@@ -737,4 +737,9 @@ void DlgPaymentsDetails::on_btnOptions_clicked()
     DlgInvoicePaymentOptions *d = new DlgInvoicePaymentOptions(this);
     d->exec();
     delete d;
+}
+
+void DlgPaymentsDetails::on_btnBankPayX_clicked()
+{
+    newPaidRow(PAYMENT_PAYX);
 }

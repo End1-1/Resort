@@ -27,6 +27,7 @@ private slots:
     void on_btnSaveStates_clicked();
     void on_btnCopy_clicked();
     void on_btnPaste_clicked();
+    void on_btnDontDisturbe_clicked(bool checked);
 
 private:
     Ui::DlgHouseItem *ui;

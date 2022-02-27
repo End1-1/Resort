@@ -261,7 +261,7 @@
           <item row="2" column="1">
            <widget class="QCheckBox" name="checkBox_2">
             <property name="text">
-             <string>Jule</string>
+             <string>July</string>
             </property>
             <property name="M" stdset="0">
              <number>7</number>

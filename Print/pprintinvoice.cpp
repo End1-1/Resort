@@ -151,10 +151,16 @@ void PPrintInvoice::previewInvoice()
                  left join guests g on g.f_id=rg.f_guest \
                 where rg.f_first=0 and rg.f_reservation in (select f_id from f_reservation where f_invoice=:f_invoice) ");
     while (dguest.nextRow()) {
-        top += ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f))->textHeight();
+        th.setWrapMode(QTextOption::WordWrap);
+        PTextRect *tre = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f));
+        th.setWrapMode(QTextOption::NoWrap);
+        top += tre->textHeight();
     }
     if (!dh.getString("f_address").isEmpty()) {
-        top += ps->addTextRect(20, top, 2100, rowHeight, tr("Address: ") + dh.getString("f_address"), &th)->textHeight();
+        th.setWrapMode(QTextOption::WordWrap);
+        PTextRect *tre = ps->addTextRect(20, top, 2100, rowHeight, tr("Address: ") + dh.getString("f_address"), &th);
+        th.setWrapMode(QTextOption::NoWrap);
+        top += tre->textHeight();
     }
     top += r->textHeight();
     QPen boldPen;

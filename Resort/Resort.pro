@@ -1161,3 +1161,4 @@ INCLUDEPATH += c:/projects/XLSX/src
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"
 DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
+#DEFINES += _DBDRIVER_=\\\"QMARIADB\\\"

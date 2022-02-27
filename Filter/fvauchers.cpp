@@ -88,6 +88,18 @@ void FVauchers::open()
     v->apply(rg);
 }
 
+void FVauchers::openWithFilter(const QDate &d1, const QDate &d2, const QString &itemlist)
+{
+    WReportGrid *rg = addTab<WReportGrid>();
+    FVauchers *v = new FVauchers(rg);
+    v->ui->deFrom->setDate(d1);
+    v->ui->deTo->setDate(d2);
+    v->fItems = itemlist;
+    rg->addFilterWidget(v);
+    v->apply(rg);
+    v->ui->leVaucherCode->setEnabled(false);
+}
+
 void FVauchers::apply(WReportGrid *rg)
 {
     int canceled = 0;
@@ -135,6 +147,9 @@ void FVauchers::apply(WReportGrid *rg)
         query += " and r.f_canceled=1";
     } else {
         query += " and r.f_canceled=0";
+    }
+    if (!fItems.isEmpty()) {
+        query += " and r.f_itemcode in (" + fItems + ") ";
     }
     query += " order by r.f_source ";
     rg->fModel->setSqlQuery(query);
@@ -218,19 +233,19 @@ void FVauchers::eliminateVoucher()
         fDD[":f_header"] = out.at(0);
         fDD.exec("delete from o_dish where f_header=:f_header");
         fDD.exec("delete from o_dish_qty where f_rec not in (select f_id from o_dish)");
-        l[":f_rec"] = out.at(0);
-        l[":f_invoice"] = out.at(0);
-        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
+//        l[":f_rec"] = out.at(0);
+//        l[":f_invoice"] = out.at(0);
+//        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     }
     if (out.at(1).toString() == VAUCHER_EVENT_N) {
         fDD[":f_id"] = out.at(0);
         fDD.exec("delete from o_event where f_id=:f_id");
-        l[":f_rec"] = out.at(0);
-        l[":f_invoice"] = out.at(0);
-        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
+//        l[":f_rec"] = out.at(0);
+//        l[":f_invoice"] = out.at(0);
+//        l.exec("delete from log where f_rec=:f_rec or f_invoice=:f_invoice");
     }
-    l[":f_rec"] = out.at(0);
-    l.exec("delete from log where f_rec=:f_rec");
+//    l[":f_rec"] = out.at(0);
+//    l.exec("delete from log where f_rec=:f_rec");
     TrackControl::insert(TRACK_RESERVATION, "ELIMINATE VOUCHER", name, "", id, invoice, reserve);
     fReportGrid->fModel->removeRow(row);
 }

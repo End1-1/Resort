@@ -109,6 +109,7 @@ void FCardexSales::guestReport(WReportGrid *rg)
             .setColumn(80, "", tr("Inv"))
             .setColumn(80, "", tr("Nation"))
             .setColumn(80, "", tr("Nights"))
+            .setColumn(80, "", tr("Avg. rate"))
             .setColumn(fItems[1].fWidth, "", fItems[1].fTitle)
             .setColumn(fItems[2].fWidth, "", fItems[2].fTitle)
             .setColumn(fItems[3].fWidth, "", fItems[3].fTitle)
@@ -118,21 +119,23 @@ void FCardexSales::guestReport(WReportGrid *rg)
             .setColumn(80, "", tr("Total"));
     fQuery = "select distinct(concat(g.f_firstName, ' ', g.f_lastName)), r.f_room, r.f_startDate, r.f_endDate,\
             ra.f_en, pax.total,r.f_invoice, g.f_nation, n.nights, \
+            rm.amount as f_avgrate, \
             coalesce(s1.amount, 0), coalesce(s2.amount, 0), coalesce(s3.amount, 0), coalesce(s4.amount,0), coalesce(s5.amount, 0), coalesce(s6.amount, 0),\
             coalesce(s1.amount, 0) + coalesce(s2.amount, 0) + coalesce(s3.amount, 0) + coalesce(s4.amount,0) + coalesce(s5.amount, 0) + coalesce(s6.amount, 0) \
             from f_reservation r \
             left join f_guests g on g.f_id=r.f_guest \
             left join f_room_arrangement ra on ra.f_id=r.f_arrangement \
             left join m_register mm on mm.f_inv=r.f_invoice \
-            left join (select m.f_inv, sum(r.f_man+r.f_woman+r.f_child) as total  from m_register m left join f_reservation r on r.f_invoice=m.f_inv where :side m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and f_finance=1 and m.f_itemCode in (1,66,69,14,15) group by 1) pax on pax.f_inv=r.f_invoice \
-            left join (select f_inv, count(f_id) as nights from m_register where f_wdate between :f_date1 and :f_date2 and f_itemCode in (1,66,69,14,15) and f_canceled=0 group by 1) n on n.f_inv=r.f_invoice \
+            left join (select m.f_inv, sum(r.f_man+r.f_woman+r.f_child) as total  from m_register m left join f_reservation r on r.f_invoice=m.f_inv where :side m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and f_finance=1 and m.f_itemCode in (" + fItems[1].fItems + ") group by 1) pax on pax.f_inv=r.f_invoice \
+            left join (select f_inv, count(f_id) as nights from m_register where f_wdate between :f_date1 and :f_date2 and f_itemCode in (" + fItems[1].fItems + ") and f_canceled=0 group by 1) n on n.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item1) and m.f_wdate between :f_date1 and :f_date2 group by 1) s1 on s1.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item2) and m.f_wdate between :f_date1 and :f_date2 group by 1) s2 on s2.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item3) and m.f_wdate between :f_date1 and :f_date2 group by 1) s3 on s3.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item4) and m.f_wdate between :f_date1 and :f_date2 group by 1) s4 on s4.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item5) and m.f_wdate between :f_date1 and :f_date2 group by 1) s5 on s5.f_inv=r.f_invoice \
             left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item6) and m.f_wdate between :f_date1 and :f_date2 group by 1) s6 on s6.f_inv=r.f_invoice \
-            where :f_cardex (r.f_state=3 :checkin) and mm.f_wdate between :f_date1 and :f_date2"
+            left join (select m.f_inv, sum((m.f_amountAmd :novat) :curr) as amount from m_register m where :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item1) and m.f_wdate between :f_date1 and :f_date2 group by 1) rm on rm.f_inv=r.f_invoice \
+            where :f_cardex (r.f_state=3 :checkin) and mm.f_wdate between :f_date1 and :f_date2 "
             ;
     if (!ui->chCompanyPart->isChecked() && !ui->chGuestPart->isChecked()) {
         message_error(tr("Select guest or company side first"));
@@ -180,14 +183,13 @@ void FCardexSales::guestReport(WReportGrid *rg)
     rg->fModel->apply(rg);
     QList<int> cols;
     QList<double> vals;
-    cols << 5 << 8 << 9 << 10 << 11 << 12 << 13 << 14 << 15;
+    cols << 5 << 8 << 10 << 11 << 12 << 13 << 14 << 15 << 16;
     rg->fModel->sumOfColumns(cols, vals);
     rg->setTblTotalData(cols, vals);
 }
 
 void FCardexSales::cardexReport(WReportGrid *rg)
 {
-    QString rooming = fPreferences.getDb(def_rooming_list).toString();
     fReportGrid->fModel->clearColumns();
     fReportGrid->fModel->setColumn(250, "", tr("Cardex"))
             .setColumn(50, "", tr("B/O"))
@@ -196,6 +198,7 @@ void FCardexSales::cardexReport(WReportGrid *rg)
             .setColumn(50, "", tr("F/B"))
             .setColumn(80, "", tr("Pax"))
             .setColumn(80, "", tr("Nights"))
+            .setColumn(80, "", tr("Avg. rate"))
             .setColumn(fItems[1].fWidth, "", fItems[1].fTitle)
             .setColumn(fItems[2].fWidth, "", fItems[2].fTitle)
             .setColumn(fItems[3].fWidth, "", fItems[3].fTitle)
@@ -205,13 +208,14 @@ void FCardexSales::cardexReport(WReportGrid *rg)
             .setColumn(80, "", tr("Total"));
     fQuery = "select distinct(car.f_name), \
             bo.total, bb.total, hb.total, fb.total, pax.total, n.nights, \
+            rm.amount as f_avgrate, \
             coalesce(s1.amount, 0), coalesce(s2.amount, 0), coalesce(s3.amount, 0), coalesce(s4.amount,0), coalesce(s5.amount, 0), coalesce(s6.amount, 0),\
             coalesce(s1.amount, 0) + coalesce(s2.amount, 0) + coalesce(s3.amount, 0) + coalesce(s4.amount,0) + coalesce(s5.amount, 0) + coalesce(s6.amount, 0) \
             from f_cardex car \
             left join f_reservation r on car.f_cardex=r.f_cardex \
             left join m_register mm on mm.f_inv=r.f_invoice \
-            left join (select rr.f_cardex, sum(rr.f_man+rr.f_woman+rr.f_child) as total  from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and f_finance=1 and m.f_itemCode in (1,66,69,14,15) group by 1) pax on pax.f_cardex=r.f_cardex \
-            left join (select rr.f_cardex, count(m.f_id) as nights from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and f_wdate between :f_date1 and :f_date2 and f_itemCode in (" + rooming + ") and f_canceled=0 group by 1) n on n.f_cardex=r.f_cardex \
+            left join (select rr.f_cardex, sum(rr.f_man+rr.f_woman+rr.f_child) as total  from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and m.f_wdate between :f_date1 and :f_date2 and m.f_canceled=0 and f_finance=1 and m.f_itemCode in (" + fItems[1].fItems + ") group by 1) pax on pax.f_cardex=r.f_cardex \
+            left join (select rr.f_cardex, count(m.f_id) as nights from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where :side (rr.f_state=3 :rrcheckin) and f_wdate between :f_date1 and :f_date2 and f_itemCode in (" + fItems[1].fItems + ") and f_canceled=0 group by 1) n on n.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=1 and m.f_wdate between :f_date1 and :f_date2 group by 1) bo on bo.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=2 and m.f_wdate between :f_date1 and :f_date2 group by 1) bb on bb.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, count(rr.f_id) as total from f_reservation rr left join m_register m on m.f_inv=rr.f_invoice where (rr.f_state=3 :rrcheckin) and rr.f_arrangement=3 and m.f_wdate between :f_date1 and :f_date2 group by 1) hb on hb.f_cardex=r.f_cardex \
@@ -222,7 +226,8 @@ void FCardexSales::cardexReport(WReportGrid *rg)
             left join (select rr.f_cardex, sum((m.f_amountAmd :novat) :curr) as amount from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where (rr.f_state=3 :rrcheckin) and :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item4) and m.f_wdate between :f_date1 and :f_date2 group by 1) s4 on s4.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, sum((m.f_amountAmd :novat) :curr) as amount from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where (rr.f_state=3 :rrcheckin) and :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item5) and m.f_wdate between :f_date1 and :f_date2 group by 1) s5 on s5.f_cardex=r.f_cardex \
             left join (select rr.f_cardex, sum((m.f_amountAmd :novat) :curr) as amount from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where (rr.f_state=3 :rrcheckin) and :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item6) and m.f_wdate between :f_date1 and :f_date2 group by 1) s6 on s6.f_cardex=r.f_cardex \
-            where :f_cardex (r.f_state=3 :checkin) and mm.f_wdate between :f_date1 and :f_date2"
+            left join (select rr.f_cardex, sum((m.f_amountAmd :novat) :curr) as amount from m_register m left join f_reservation rr on rr.f_invoice=m.f_inv where (rr.f_state=3 :rrcheckin) and :side m.f_sign=1 and f_canceled=0 and m.f_itemCode in (:item1) and m.f_wdate between :f_date1 and :f_date2 group by 1) rm on rm.f_cardex=r.f_cardex \
+            where :f_cardex (r.f_state=3 :checkin) and mm.f_wdate between :f_date1 and :f_date2 "
             ;
     if (!ui->chCompanyPart->isChecked() && !ui->chGuestPart->isChecked()) {
         message_error(tr("Select guest or company side first"));
@@ -272,7 +277,7 @@ void FCardexSales::cardexReport(WReportGrid *rg)
     rg->fModel->apply(rg);
     QList<int> cols;
     QList<double> vals;
-    cols << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13;
+    cols << 1 << 2 << 3 << 4 << 5 << 6 << 8 << 9 << 10 << 11 << 12 << 13 << 14;
     rg->fModel->sumOfColumns(cols, vals);
     rg->setTblTotalData(cols, vals);
 }

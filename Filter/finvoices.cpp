@@ -76,6 +76,7 @@ void FInvoices::openReport(bool free)
            << 100
            << 100
            << 100
+           << 100
               ;
     QStringList fields;
     fields << "r.f_invoice"
@@ -85,7 +86,8 @@ void FInvoices::openReport(bool free)
            << "coalesce(c.amount,0) as f_credit"
            << "coalesce(d.amount,0) as f_debet"
            << "coalesce(b.amount,0) as f_balance"
-           << "coalesce(f.f, 0) as f";
+           << "coalesce(f.f, 0) as f"
+            << "r.f_booking";
     QStringList titles;
     titles << tr("Number")
            << tr("Date")
@@ -94,7 +96,8 @@ void FInvoices::openReport(bool free)
            << tr("Debit")
            << tr("Credit")
            << tr("Balance")
-           << tr("Free");
+           << tr("Free")
+           << tr("Booking");
     QMap<QString, bool> includes;
     includes["r.f_invoice"] = true;
     includes["r.f_endDate"] = true;
@@ -104,6 +107,7 @@ void FInvoices::openReport(bool free)
     includes["coalesce(d.amount,0) as f_debet"] = true;
     includes["coalesce(b.amount,0) as f_balance"] = true;
     includes["coalesce(f.f, 0) as f"] = true;
+    includes["r.f_booking"] = true;
     QStringList tables;
     tables << "f_reservation r"
            << "f_guests g"

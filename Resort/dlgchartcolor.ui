@@ -7,13 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>134</height>
+    <height>156</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Chart color schema</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="chShowRoomDescription">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -21,7 +28,14 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Checkin color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -70,29 +84,25 @@
    <item row="0" column="1">
     <widget class="EColorLineEdit" name="leReserveColor"/>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Checkin color</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <widget class="EColorLineEdit" name="leCheckinColor"/>
    </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="chShowRoomDescription">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Show room description</string>
      </property>
     </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Do not disturbe color</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="EColorLineEdit" name="leDoNotDisturbeColor"/>
    </item>
   </layout>
  </widget>
@@ -103,6 +113,14 @@
    <header location="global">ecolorlineedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>leReserveColor</tabstop>
+  <tabstop>leCheckinColor</tabstop>
+  <tabstop>leDoNotDisturbeColor</tabstop>
+  <tabstop>chShowRoomDescription</tabstop>
+  <tabstop>btnSave</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

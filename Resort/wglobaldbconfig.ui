@@ -1924,6 +1924,11 @@
    </slots>
   </customwidget>
   <customwidget>
+   <class>EQDateEdit</class>
+   <extends>QDateEdit</extends>
+   <header location="global">eqdateedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQCheckBox</class>
    <extends>QCheckBox</extends>
    <header location="global">eqcheckbox.h</header>
@@ -1932,11 +1937,6 @@
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQDateEdit</class>
-   <extends>QDateEdit</extends>
-   <header location="global">eqdateedit.h</header>
   </customwidget>
   <customwidget>
    <class>EQTimeEdit</class>

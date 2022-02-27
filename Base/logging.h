@@ -11,6 +11,7 @@ class logging
 {
 public:
     logging();
+    static void justLog(const QString &text);
     static void writeLog(const QString &text);
     static void writeLog(const QString &text, QElapsedTimer &t);
 };

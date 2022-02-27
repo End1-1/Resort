@@ -10,8 +10,8 @@ static QSettings  __ss("SmartHotel", "SmartHotel");
 
 QFont FONT;
 QMap<int, QString> DAYS_OF_WEEK;
-QDate fFirstDate = QDate::fromString("01/01/2019", "dd/MM/yyyy");
-QDate fLastDate = QDate::fromString("01/01/2021", "dd/MM/yyyy");
+QDate fFirstDate = QDate::fromString("01/01/2021", "dd/MM/yyyy");
+QDate fLastDate = QDate::fromString("01/01/2022", "dd/MM/yyyy");
 
 QMap<int, int> fRoomRows;
 QMap<int, QString> fRoomShort;

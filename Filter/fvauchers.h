@@ -15,6 +15,7 @@ public:
     explicit FVauchers(QWidget *parent = nullptr);
     ~FVauchers();
     static void open();
+    static void openWithFilter(const QDate &d1, const QDate &d2, const QString &itemlist);
     virtual void apply(WReportGrid *rg);
     virtual QWidget *firstElement();
     virtual QWidget *lastElement();
@@ -25,6 +26,7 @@ private:
     QToolButton *fBtnRemove;
     Ui::FVauchers *ui;
     QString fQuery;
+    QString fItems;
 
 private slots:
     void clickOnRow(int row);

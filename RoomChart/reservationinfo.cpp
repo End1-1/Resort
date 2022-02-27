@@ -84,9 +84,13 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         delete this;
         return;
     }
+    QColor mainColor = rc[fReservation.fState()][0];
     switch (fReservation.fState()) {
     case RESERVE_CHECKIN:
-    //case RESERVE_CHECKOUT:
+        if (fReservation.fDoNotDisturbe()) {
+            mainColor = QColor::fromRgb(__s.value("donotdisturbecolor", -5570689).toInt());
+        }
+    break;
     case RESERVE_RESERVE:
         break;
     default:
@@ -101,12 +105,12 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     }
 
     QRect rect = option->rect;
-    QColor alpha =  rc[fReservation.fState()][0];
+    QColor alpha = mainColor;
     alpha = alpha.light(110);
     QLinearGradient bgFill(0, 0, 0, rect.height());
-    bgFill.setColorAt(0, rc[fReservation.fState()][0]);
+    bgFill.setColorAt(0, mainColor);
     bgFill.setColorAt(0.5, alpha);
-    bgFill.setColorAt(1, rc[fReservation.fState()][0]);
+    bgFill.setColorAt(1, mainColor);
     QBrush brush(bgFill);
     painter->fillRect(rect, brush);
     painter->setPen(Qt::gray);

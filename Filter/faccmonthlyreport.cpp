@@ -2,6 +2,7 @@
 #include "ui_faccmonthlyreport.h"
 #include "wreportgrid.h"
 #include "paymentmode.h"
+#include "fvauchers.h"
 #include <QHeaderView>
 
 FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
@@ -11,6 +12,7 @@ FAccMonthlyReport::FAccMonthlyReport(QWidget *parent) :
     ui->setupUi(this);
     setTabText();
     fReportGrid->fTableView->verticalHeader()->setDefaultSectionSize(18);
+    connect(fReportGrid->fTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(dblClick(QModelIndex)));
     ui->cbMonth->setCurrentIndex(QDate::currentDate().month() - 1);
     ui->deStart->setDate(QDate::currentDate().addDays((QDate::currentDate().day() - 1) * -1));
     ui->deEnd->setDate(QDate::currentDate());
@@ -359,6 +361,26 @@ QString FAccMonthlyReport::reportTitle()
             .arg(ui->deEnd->text())
             .arg(text)
             .arg(ui->chCanceled->isChecked() ? tr("Canceled") : "");
+}
+
+void FAccMonthlyReport::dblClick(const QModelIndex &index)
+{
+    if (!index.isValid()) {
+        return;
+    }
+    if (index.column() < 2 || index.column() > 13) {
+        return;
+    }
+    DoubleDatabase fDD(true, doubleDatabase);
+    fDD[":f_id"] = index.column() - 1;
+    fDD.exec("select * from serv_monthly where f_id=:f_id");
+    if (!fDD.nextRow()) {
+        return;
+    }
+    QString items = fDD.getString("f_items");
+    QString dateStr = fReportGrid->fModel->data(index.row(), 1).toString();
+    QDate date = QDate::fromString(dateStr, def_date_format);
+    FVauchers::openWithFilter(date, date, items);
 }
 
 void FAccMonthlyReport::setTabText()

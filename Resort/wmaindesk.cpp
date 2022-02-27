@@ -80,6 +80,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fDD.exec("select min(f_startdate) from f_reservation where f_state in (1,2,4,7,9)");
     if (fDD.nextRow()){
         fDateStart = fDD.getDate(0);
+        fDateStart.setDate(fDateStart.year(), fDateStart.month(), 1);
     } else {
         fDateStart = QDate::currentDate();
     }

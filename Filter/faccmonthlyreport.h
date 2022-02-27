@@ -20,6 +20,7 @@ public:
     virtual QString reportTitle();
 
 private slots:
+    void dblClick(const QModelIndex &index);
     void on_deStart_dateChanged(const QDate &date);
     void on_deEnd_dateChanged(const QDate &date);
     void on_cbYear_currentIndexChanged(const QString &arg1);

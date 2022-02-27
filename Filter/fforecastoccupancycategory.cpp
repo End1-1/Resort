@@ -40,12 +40,12 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
 
     rg->fModel->setColumn(100, "", tr("Date"));
     rg->fModel->setColumn(40, "", tr("Tot"));
-    for (QMap<QString, int>::const_iterator it = cats.begin(); it != cats.end(); it++) {
+    for (QMap<QString, int>::const_iterator it = cats.constBegin(); it != cats.constEnd(); it++) {
         rg->fModel->setColumn(40, "", it.key());
     }
     rg->fModel->setColumn(80, "", tr("Tot/occ"));
     int vacIndex = rg->fModel->columnCount();
-    for (QMap<QString, int>::const_iterator it = cats.begin(); it != cats.end(); it++) {
+    for (QMap<QString, int>::const_iterator it = cats.constBegin(); it != cats.constEnd(); it++) {
         rg->fModel->setColumn(40, "", it.key());
     }
     rg->fModel->setColumn(80, "", tr("Tot/vac"));
@@ -69,7 +69,7 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
                                 "from f_room rm "
                                 "left join f_reservation r on r.f_room=rm.f_id "
                                 "left join f_room_classes rc on rc.f_id=rm.f_class "
-                                "where '%1' >= r.f_startDate and '%1' <= r.f_endDate "
+                                "where '%1' >= r.f_startDate and '%1' < r.f_endDate "
                                 "and r.f_state in (1,2,4,7,9) "
                                 "group by 1, 2")
                 .arg(d.toString(def_mysql_date_format));

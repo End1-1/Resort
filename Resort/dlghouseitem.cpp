@@ -4,6 +4,7 @@
 #include "cacheroominventory.h"
 #include "cacheroomstate.h"
 #include "cacheroom.h"
+#include "cachereservation.h"
 #include <QMutex>
 #include <QClipboard>
 
@@ -127,6 +128,11 @@ void DlgHouseItem::loadRoom()
         ui->tblMain->lineEdit(row, 4)->setText(db.getValue("f_comment").toString());
     }
     comboStateCurrentIndexChanged(0);
+    CacheRoom cr;
+    if (!cr.get(ui->leRoomCode->asInt())) {
+        return;
+    }
+    ui->btnDontDisturbe->setChecked(cr.fDoNotDisturbe());
 }
 
 int DlgHouseItem::addRow()
@@ -287,5 +293,24 @@ void DlgHouseItem::on_btnPaste_clicked()
         int row = addRow();
         ui->tblMain->lineEdit(row, 1)->setInitialValue(p.at(0));
         ui->tblMain->comboBox(row, 2)->setIndexForData(p.at(1).toInt());
+    }
+}
+
+void DlgHouseItem::on_btnDontDisturbe_clicked(bool checked)
+{
+    if (message_confirm(tr("Change the room state?")) != RESULT_YES) {
+        ui->btnDontDisturbe->setChecked(!checked);
+        return;
+    }
+    DoubleDatabase dd(true);
+    dd[":f_donotdisturbe"] = (int) checked;
+    dd[":f_id"] = ui->leRoomCode->asInt();
+    dd.exec("update f_room set f_donotdisturbe=:f_donotdisturbe where f_id=:f_id");
+    BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
+    dd[":f_room"] = ui->leRoomCode->asInt();
+    dd[":f_state"] = RESERVE_CHECKIN;
+    dd.exec("select f_id from f_reservation where f_state=:f_state and f_room=:f_room");
+    if (dd.nextRow()) {
+        BroadcastThread::cmdRefreshCache(cid_reservation, dd.getString(0));
     }
 }

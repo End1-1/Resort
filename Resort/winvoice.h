@@ -22,6 +22,9 @@ public:
     static void openInvoiceWindow(const QString &invoice);
     static void openInvoiceFromReservation(const QString &reserve);
 
+public slots:
+    void on_btnTaxPrint_clicked();
+
 protected:
     virtual void setupTab();
     virtual bool canClose();
@@ -43,7 +46,6 @@ private slots:
     void on_btnPostingCharges_clicked();
     void on_btnCheckout_clicked();
     void on_btnPaymentsDetails_clicked();
-    void on_btnTaxPrint_clicked();
     void on_btnCancel_clicked();
     void on_btnTransfer_clicked();
     void on_btnTrack_clicked();
@@ -64,6 +66,7 @@ private slots:
     void on_btnPostBreakfast_clicked();
     void on_btnPostMinibar_clicked();
     void on_btnWakeup_clicked();
+    void on_btnDoNotDisturbe_clicked(bool checked);
 
 private:
     Ui::WInvoice *ui;

@@ -58,12 +58,15 @@ void FCanceledReservations::apply(WReportGrid *rg)
             .setColumn(140, "", tr("Nationality"))
             .setColumn(200, "", tr("Guest"))
             .setColumn(80, "", tr("Room"))
+            .setColumn(100, "", tr("Rate"))
+            .setColumn(100, "", tr("Total"))
             .setColumn(250, "", tr("OP"))
             .setColumn(250, "", tr("Cancel by"))
             .setColumn(300, "", tr("Reason"))
             ;
-    QString query = QString("select r.f_id, r.f_startDate, r.f_endDate, r.f_cancelDate, n.f_name, concat(g.f_firstname, ' ', g.f_lastname) as guest, "
-            "r.f_room, concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
+    QString query = QString("select r.f_id, r.f_startDate, r.f_endDate, r.f_cancelDate, n.f_name, "
+            "concat(g.f_firstname, ' ', g.f_lastname) as guest, "
+            "r.f_room, r.f_pricepernight, r.f_grandtotal, concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
             "cr.f_reason "
             "from f_reservation r   "
             "left join f_guests g on g.f_id=r.f_guest "
@@ -78,7 +81,11 @@ void FCanceledReservations::apply(WReportGrid *rg)
     query.replace(":f_state", QString::number(RESERVE_REMOVED));
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
-
+    QList<int> col;
+    col << 8;
+    QList<double> val;
+    rg->fModel->sumOfColumns(col, val);
+    rg->setTblTotalData(col, val);
 }
 
 void FCanceledReservations::openReport()

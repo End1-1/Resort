@@ -24,6 +24,7 @@ public:
     inline QString fPrice() {return getString("f_rate"); }
     inline int fBuilding() {return getInt("f_building"); }
     inline QString fStateName() {return getString("f_statename");}
+    inline bool fDoNotDisturbe(){return getInt("f_donotdisturbe") > 0;}
 };
 
 bool CI_Romm_compare(QString &left, QString &right);

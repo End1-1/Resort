@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>970</width>
-    <height>669</height>
+    <width>945</width>
+    <height>505</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -49,207 +49,213 @@
         <number>20</number>
        </property>
        <item>
-        <widget class="EQCheckBox" name="chAllREservation">
-         <property name="text">
-          <string>All items</string>
+        <widget class="QScrollArea" name="scrollArea_2">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="Tag" stdset="0">
-          <number>4</number>
-         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_6">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>853</width>
+            <height>449</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_11">
+           <item>
+            <widget class="EQCheckBox" name="chAllREservation">
+             <property name="text">
+              <string>All items</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>4</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRoomChart">
+             <property name="text">
+              <string>Room chart</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chEditReservation">
+             <property name="text">
+              <string>Edit reservation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>2</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chUnlockReserve">
+             <property name="text">
+              <string>Unlock locked draft </string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>23</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCmnRepREservation">
+             <property name="text">
+              <string>Reservation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>3</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chEditViewGroupReservation">
+             <property name="text">
+              <string>Group reservation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>90</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chEndOfDay">
+             <property name="text">
+              <string>End of day</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>60</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRecheckin">
+             <property name="text">
+              <string>Recheckin</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>24</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chReservationCancel">
+             <property name="text">
+              <string>Cancel reservation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>45</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCheckout">
+             <property name="text">
+              <string>Checkout</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>46</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chReservLengthOfStay">
+             <property name="text">
+              <string>Length of stay</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>99</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chArrivalBirthDayPanel">
+             <property name="text">
+              <string>Arrivals and birthdays panel on Welcome</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>69</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCancelationNOShow">
+             <property name="text">
+              <string>Cancelation, no show fee report</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>82</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chEmailConfirmation">
+             <property name="text">
+              <string>Email confirmation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCategoryToSell">
+             <property name="text">
+              <string>Category to sell</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>103</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chForecastOccupancy">
+             <property name="text">
+              <string>Forecast occupancy</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>104</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chListOfSourceReservation">
+             <property name="text">
+              <string>List of source reservation</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>105</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chAvailableRooms">
+             <property name="text">
+              <string>Avaiable rooms</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>106</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRoomStateChange">
+             <property name="text">
+              <string>Changes of room states</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>83</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomChart">
-         <property name="text">
-          <string>Room chart</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chEditReservation">
-         <property name="text">
-          <string>Edit reservation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>2</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chUnlockReserve">
-         <property name="text">
-          <string>Unlock locked draft </string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>23</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCmnRepREservation">
-         <property name="text">
-          <string>Reservation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>3</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chEditViewGroupReservation">
-         <property name="text">
-          <string>Group reservation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>90</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chEndOfDay">
-         <property name="text">
-          <string>End of day</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>60</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRecheckin">
-         <property name="text">
-          <string>Recheckin</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>24</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chReservationCancel">
-         <property name="text">
-          <string>Cancel reservation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>45</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCheckout">
-         <property name="text">
-          <string>Checkout</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>46</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chReservLengthOfStay">
-         <property name="text">
-          <string>Length of stay</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>99</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chArrivalBirthDayPanel">
-         <property name="text">
-          <string>Arrivals and birthdays panel on Welcome</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>69</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCancelationNOShow">
-         <property name="text">
-          <string>Cancelation, no show fee report</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>82</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chEmailConfirmation">
-         <property name="text">
-          <string>Email confirmation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCategoryToSell">
-         <property name="text">
-          <string>Category to sell</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>103</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chForecastOccupancy">
-         <property name="text">
-          <string>Forecast occupancy</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>104</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chListOfSourceReservation">
-         <property name="text">
-          <string>List of source reservation</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>105</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chAvailableRooms">
-         <property name="text">
-          <string>Avaiable rooms</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>106</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomStateChange">
-         <property name="text">
-          <string>Changes of room states</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>83</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>267</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -262,277 +268,283 @@
         <number>20</number>
        </property>
        <item>
-        <widget class="EQCheckBox" name="chReceptionMenu">
-         <property name="text">
-          <string>All items</string>
+        <widget class="QScrollArea" name="scrollArea_3">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="Tag" stdset="0">
-          <number>28</number>
-         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>853</width>
+            <height>610</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_13">
+           <item>
+            <widget class="EQCheckBox" name="chReceptionMenu">
+             <property name="text">
+              <string>All items</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>28</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chQuickReservations">
+             <property name="text">
+              <string>Quick checkin </string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>132</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chQuickCheckout">
+             <property name="text">
+              <string>Quick checkout</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>133</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chExpectedArrivalsPax">
+             <property name="text">
+              <string>Expected arrivals / pax</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>118</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chExpectedArrivalsSimple">
+             <property name="text">
+              <string>Expected arrivals / simple</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>141</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chExpectedDeparturesSimple">
+             <property name="text">
+              <string>Expected departures / simple</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>140</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chExpectedArrivalsPax_2">
+             <property name="text">
+              <string>Expected arrivals / departures</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>119</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chDailyTransactions">
+             <property name="text">
+              <string>Daily transactions</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>124</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chInhouseGuest">
+             <property name="text">
+              <string>Inhouse guests</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>120</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chInhouseGuestAnyTime">
+             <property name="text">
+              <string>Inhouse guests, any period</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>115</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chInhouseGuestAnyTime_2">
+             <property name="text">
+              <string>Inhouse guests, future</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>136</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRoomAssignmen">
+             <property name="text">
+              <string>Room assignment</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>117</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRoomStatusChange">
+             <property name="text">
+              <string>Room status change</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>121</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCallHistory">
+             <property name="text">
+              <string>Calls history</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>47</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chNotes">
+             <property name="text">
+              <string>Notes</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>48</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chContacts">
+             <property name="text">
+              <string>Contacts</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>12</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRemarks">
+             <property name="text">
+              <string>Remarks</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>72</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chHotelStatus">
+             <property name="text">
+              <string>Hotel status</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>74</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRecetpionRoomInventory">
+             <property name="text">
+              <string>Room inventory</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>84</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chReceptionEditRoomInventory">
+             <property name="text">
+              <string>Edit room inventory list</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>142</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRoomInventoryViewer">
+             <property name="text">
+              <string>Room inventory viewer</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>144</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCheckinWithNotReadyRoomInventory">
+             <property name="text">
+              <string>Checkin with room incomplete inventory</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>143</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chListOfCheckingGuest">
+             <property name="text">
+              <string>List of checking guests</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>98</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chWakeupCalls">
+             <property name="text">
+              <string>Wakeup calls</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>122</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chHotelHierarchy">
+             <property name="text">
+              <string>Hotel hierarchy</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>123</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chStateOfTheRoom">
+             <property name="text">
+              <string>State of the rooms</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>139</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chQuickReservations">
-         <property name="text">
-          <string>Quick checkin </string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>132</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chQuickCheckout">
-         <property name="text">
-          <string>Quick checkout</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>133</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chExpectedArrivalsPax">
-         <property name="text">
-          <string>Expected arrivals / pax</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>118</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chExpectedArrivalsSimple">
-         <property name="text">
-          <string>Expected arrivals / simple</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>141</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chExpectedDeparturesSimple">
-         <property name="text">
-          <string>Expected departures / simple</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>140</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chExpectedArrivalsPax_2">
-         <property name="text">
-          <string>Expected arrivals / departures</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>119</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chDailyTransactions">
-         <property name="text">
-          <string>Daily transactions</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>124</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInhouseGuest">
-         <property name="text">
-          <string>Inhouse guests</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>120</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInhouseGuestAnyTime">
-         <property name="text">
-          <string>Inhouse guests, any period</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>115</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInhouseGuestAnyTime_2">
-         <property name="text">
-          <string>Inhouse guests, future</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>136</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomAssignmen">
-         <property name="text">
-          <string>Room assignment</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>117</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomStatusChange">
-         <property name="text">
-          <string>Room status change</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>121</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCallHistory">
-         <property name="text">
-          <string>Calls history</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>47</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chNotes">
-         <property name="text">
-          <string>Notes</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>48</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chContacts">
-         <property name="text">
-          <string>Contacts</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>12</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRemarks">
-         <property name="text">
-          <string>Remarks</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>72</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chHotelStatus">
-         <property name="text">
-          <string>Hotel status</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>74</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRecetpionRoomInventory">
-         <property name="text">
-          <string>Room inventory</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>84</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chReceptionEditRoomInventory">
-         <property name="text">
-          <string>Edit room inventory list</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>142</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRoomInventoryViewer">
-         <property name="text">
-          <string>Room inventory viewer</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>144</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCheckinWithNotReadyRoomInventory">
-         <property name="text">
-          <string>Checkin with room incomplete inventory</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>143</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chListOfCheckingGuest">
-         <property name="text">
-          <string>List of checking guests</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>98</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chWakeupCalls">
-         <property name="text">
-          <string>Wakeup calls</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>122</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chHotelHierarchy">
-         <property name="text">
-          <string>Hotel hierarchy</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>123</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chStateOfTheRoom">
-         <property name="text">
-          <string>State of the rooms</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>139</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>405</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -545,267 +557,273 @@
         <number>20</number>
        </property>
        <item>
-        <widget class="EQCheckBox" name="chMenuCashier">
-         <property name="text">
-          <string>All items</string>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="Tag" stdset="0">
-          <number>29</number>
-         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>-155</y>
+            <width>853</width>
+            <height>587</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="EQCheckBox" name="chMenuCashier">
+             <property name="text">
+              <string>All items</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>29</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chAdvanceReceipt">
+             <property name="text">
+              <string>Advance voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>39</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chAdvanceReceiptInvoice">
+             <property name="text">
+              <string>Advance voucher in invoice</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>127</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chReceiptVaucher">
+             <property name="text">
+              <string>Receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>40</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chPostCharge">
+             <property name="text">
+              <string>Post charging</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>41</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangePostChargeWorkingDate">
+             <property name="text">
+              <string>Change post charge working date</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>131</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chDiscountVaucher">
+             <property name="text">
+              <string>Discount voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>43</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chTransferAmount">
+             <property name="text">
+              <string>Transfer voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>42</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chRefundVoucher">
+             <property name="text">
+              <string>Refund voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>101</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chTransferAnyDirection">
+             <property name="text">
+              <string>Transfer amount, any direction</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>102</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCashReports">
+             <property name="text">
+              <string>Cash reports</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>44</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCurrencies">
+             <property name="text">
+              <string>Currencies</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>38</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chInvoiceExportToExcel">
+             <property name="text">
+              <string>Export invoice to excel</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>89</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chPrintInvoicePartialy">
+             <property name="text">
+              <string>Print invoice partialy</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>130</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chAdvanceReport">
+             <property name="text">
+              <string>Advance report</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <string>91</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangeRVDateBank">
+             <property name="text">
+              <string>Chage date for saved bank receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>93</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangeRVDateCash">
+             <property name="text">
+              <string>Change date for saved cash receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>94</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangeRVDateCL">
+             <property name="text">
+              <string>Change date for saved CL receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>95</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangeDateRVCard">
+             <property name="text">
+              <string>Change date for saved card receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>96</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCancelCurrentDate">
+             <property name="text">
+              <string>Voucher cancelation on current date</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>20</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chCancelPreviousDate">
+             <property name="text">
+              <string>Voucher cancelation on previous date</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>19</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chPSVoucherCancelFromInvoice">
+             <property name="text">
+              <string>PS voucher cancelation from invoice</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>137</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chTempReceipt">
+             <property name="text">
+              <string>Temporary receipts</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>128</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chTaxOfInvoices">
+             <property name="text">
+              <string>Print tax of invoices</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>135</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chManualTax">
+             <property name="text">
+              <string>Manual tax</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>145</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chAdvanceReceipt">
-         <property name="text">
-          <string>Advance voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>39</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chAdvanceReceiptInvoice">
-         <property name="text">
-          <string>Advance voucher in invoice</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>127</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chReceiptVaucher">
-         <property name="text">
-          <string>Receipt voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>40</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chPostCharge">
-         <property name="text">
-          <string>Post charging</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>41</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chChangePostChargeWorkingDate">
-         <property name="text">
-          <string>Change post charge working date</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>131</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chDiscountVaucher">
-         <property name="text">
-          <string>Discount voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>43</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chTransferAmount">
-         <property name="text">
-          <string>Transfer voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>42</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chRefundVoucher">
-         <property name="text">
-          <string>Refund voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>101</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chTransferAnyDirection">
-         <property name="text">
-          <string>Transfer amount, any direction</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>102</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCashReports">
-         <property name="text">
-          <string>Cash reports</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>44</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCurrencies">
-         <property name="text">
-          <string>Currencies</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>38</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chInvoiceExportToExcel">
-         <property name="text">
-          <string>Export invoice to excel</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>89</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chPrintInvoicePartialy">
-         <property name="text">
-          <string>Print invoice partialy</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>130</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chAdvanceReport">
-         <property name="text">
-          <string>Advance report</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <string>91</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chChangeRVDateBank">
-         <property name="text">
-          <string>Chage date for saved bank receipt voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>93</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chChangeRVDateCash">
-         <property name="text">
-          <string>Change date for saved cash receipt voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>94</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chChangeRVDateCL">
-         <property name="text">
-          <string>Change date for saved CL receipt voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>95</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chChangeDateRVCard">
-         <property name="text">
-          <string>Change date for saved card receipt voucher</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>96</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCancelCurrentDate">
-         <property name="text">
-          <string>Voucher cancelation on current date</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>20</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chCancelPreviousDate">
-         <property name="text">
-          <string>Voucher cancelation on previous date</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>19</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chPSVoucherCancelFromInvoice">
-         <property name="text">
-          <string>PS voucher cancelation from invoice</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>137</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chTempReceipt">
-         <property name="text">
-          <string>Temporary receipts</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>128</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chTaxOfInvoices">
-         <property name="text">
-          <string>Print tax of invoices</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>135</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="EQCheckBox" name="chManualTax">
-         <property name="text">
-          <string>Print tax of invoices</string>
-         </property>
-         <property name="Tag" stdset="0">
-          <number>145</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>405</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -1701,78 +1719,10 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>chAllREservation</tabstop>
-  <tabstop>chRoomChart</tabstop>
-  <tabstop>chEditReservation</tabstop>
-  <tabstop>chUnlockReserve</tabstop>
-  <tabstop>chCmnRepREservation</tabstop>
-  <tabstop>chEditViewGroupReservation</tabstop>
-  <tabstop>chEndOfDay</tabstop>
-  <tabstop>chRecheckin</tabstop>
-  <tabstop>chReservationCancel</tabstop>
-  <tabstop>chCheckout</tabstop>
-  <tabstop>chReservLengthOfStay</tabstop>
-  <tabstop>chArrivalBirthDayPanel</tabstop>
-  <tabstop>chCancelationNOShow</tabstop>
-  <tabstop>chEmailConfirmation</tabstop>
-  <tabstop>chCategoryToSell</tabstop>
-  <tabstop>chForecastOccupancy</tabstop>
-  <tabstop>chListOfSourceReservation</tabstop>
-  <tabstop>chAvailableRooms</tabstop>
-  <tabstop>chRoomStateChange</tabstop>
   <tabstop>btnCancel</tabstop>
   <tabstop>tw</tabstop>
   <tabstop>chCheckUncheck</tabstop>
   <tabstop>btnOk</tabstop>
-  <tabstop>chReceptionMenu</tabstop>
-  <tabstop>chQuickReservations</tabstop>
-  <tabstop>chQuickCheckout</tabstop>
-  <tabstop>chExpectedArrivalsPax</tabstop>
-  <tabstop>chExpectedArrivalsSimple</tabstop>
-  <tabstop>chExpectedDeparturesSimple</tabstop>
-  <tabstop>chExpectedArrivalsPax_2</tabstop>
-  <tabstop>chDailyTransactions</tabstop>
-  <tabstop>chInhouseGuest</tabstop>
-  <tabstop>chInhouseGuestAnyTime</tabstop>
-  <tabstop>chInhouseGuestAnyTime_2</tabstop>
-  <tabstop>chRoomAssignmen</tabstop>
-  <tabstop>chRoomStatusChange</tabstop>
-  <tabstop>chCallHistory</tabstop>
-  <tabstop>chNotes</tabstop>
-  <tabstop>chContacts</tabstop>
-  <tabstop>chRemarks</tabstop>
-  <tabstop>chHotelStatus</tabstop>
-  <tabstop>chRecetpionRoomInventory</tabstop>
-  <tabstop>chReceptionEditRoomInventory</tabstop>
-  <tabstop>chCheckinWithNotReadyRoomInventory</tabstop>
-  <tabstop>chListOfCheckingGuest</tabstop>
-  <tabstop>chWakeupCalls</tabstop>
-  <tabstop>chHotelHierarchy</tabstop>
-  <tabstop>chStateOfTheRoom</tabstop>
-  <tabstop>chMenuCashier</tabstop>
-  <tabstop>chAdvanceReceipt</tabstop>
-  <tabstop>chAdvanceReceiptInvoice</tabstop>
-  <tabstop>chReceiptVaucher</tabstop>
-  <tabstop>chPostCharge</tabstop>
-  <tabstop>chChangePostChargeWorkingDate</tabstop>
-  <tabstop>chDiscountVaucher</tabstop>
-  <tabstop>chTransferAmount</tabstop>
-  <tabstop>chRefundVoucher</tabstop>
-  <tabstop>chTransferAnyDirection</tabstop>
-  <tabstop>chCashReports</tabstop>
-  <tabstop>chCurrencies</tabstop>
-  <tabstop>chInvoiceExportToExcel</tabstop>
-  <tabstop>chPrintInvoicePartialy</tabstop>
-  <tabstop>chAdvanceReport</tabstop>
-  <tabstop>chChangeRVDateBank</tabstop>
-  <tabstop>chChangeRVDateCash</tabstop>
-  <tabstop>chChangeRVDateCL</tabstop>
-  <tabstop>chChangeDateRVCard</tabstop>
-  <tabstop>chCancelCurrentDate</tabstop>
-  <tabstop>chCancelPreviousDate</tabstop>
-  <tabstop>chPSVoucherCancelFromInvoice</tabstop>
-  <tabstop>chTempReceipt</tabstop>
-  <tabstop>chTaxOfInvoices</tabstop>
   <tabstop>chMenuCityLedger</tabstop>
   <tabstop>chCityLedgerBalance</tabstop>
   <tabstop>chAvailableCLAmounts</tabstop>
@@ -1841,7 +1791,6 @@
   <tabstop>chActiveReserve</tabstop>
   <tabstop>chDoNotUseSecondDB</tabstop>
   <tabstop>chExecFailedSql</tabstop>
-  <tabstop>chRoomInventoryViewer</tabstop>
  </tabstops>
  <resources/>
  <connections/>

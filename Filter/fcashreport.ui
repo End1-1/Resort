@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
+    <width>1014</width>
     <height>42</height>
    </rect>
   </property>
@@ -85,6 +85,9 @@
       </widget>
      </item>
      <item>
+      <widget class="EQLineEdit" name="lePayments"/>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -127,14 +130,17 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EDateEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">edateedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
+   <slots>
+    <signal>customButtonClicked(bool)</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>EDateEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">edateedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

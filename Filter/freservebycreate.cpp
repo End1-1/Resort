@@ -37,12 +37,12 @@ QString FReserveByCreate::reportTitle()
 
 void FReserveByCreate::apply(WReportGrid *rg)
 {
-    QString query = "select r.f_id, r.f_created, r.f_createTime, r.f_startDate, r.f_endDate, r.f_room, rs.f_en, g.guest, "
-            "u.f_username "
+    QString query = "select r.f_id, r.f_created, r.f_createTime, r.f_startDate, r.f_endDate, r.f_room, r.f_pricepernight, "
+            "r.f_grandtotal, rs.f_en, g.guest, u.f_username "
             "from f_reservation r "
-            "left join guests g on g.f_id=r.f_guest "
-            "left join f_reservation_state rs on rs.f_id=r.f_state "
-            "left join users u on u.f_id=r.f_author "
+            "inner join guests g on g.f_id=r.f_guest "
+            "inner join f_reservation_state rs on rs.f_id=r.f_state "
+            "inner join users u on u.f_id=r.f_author "
             "where r.f_state in (1, 2, 3) and r.f_created between " + ui->deStart->dateMySql() + " and " + ui->deEnd->dateMySql();
     rg->fModel->clearColumns();
     rg->fModel->setColumn(80, "r.f_id", tr("Code"))
@@ -51,11 +51,18 @@ void FReserveByCreate::apply(WReportGrid *rg)
             .setColumn(120, "r.f_startDate", tr("Entry"))
             .setColumn(120, "r.f_endDate", tr("Departure"))
             .setColumn(100, "r.f_room", tr("Room"))
+            .setColumn(100, "r.f_pricepernight", tr("Rate"))
+            .setColumn(100, "r.f_grandtotal", tr("Total"))
             .setColumn(150, "rs.f_en", tr("State"))
             .setColumn(200, "g.guest", tr("Guest"))
             .setColumn(200, "u.f_username", tr("Operator"));
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
+    QList<int> col;
+    col << 7;
+    QList<double> val;
+    rg->fModel->sumOfColumns(col, val);
+    rg->setTblTotalData(col, val);
 }
 
 void FReserveByCreate::openReport()

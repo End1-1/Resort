@@ -172,7 +172,32 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
     }
     maxWidth += 20;
     ui->tblCategory->setMaximumWidth(maxWidth);
+    //Availables rooms
+    ui->tblMain->setItemWithValue(3, 1, ui->tblMain->itemValue(1, 1).toInt()
+                         - ui->tblMain->itemValue(0, 3).toInt()
+                         - ui->tblMain->itemValue(2, 3).toInt()
+                         + ui->tblMain->itemValue(1, 3).toInt());
+    //Curr occ.
+    ui->tblMain->setItemWithValue(3, 5, float_str(ui->tblMain->itemValue(2, 3).toDouble()
+                                  / ui->tblMain->itemValue(1, 1).toDouble()
+                                  * 100, 0) + "%");
+    //Paid occ.
+    fDD[":f_state"] = RESERVE_CHECKIN;
+    fDD[":f_rate"] = 0;
+    fDD.exec("select count(f_id) from f_reservation where f_state=:f_state and f_pricepernight>:f_rate");
+    fDD.nextRow();
+    ui->tblMain->setItemWithValue(0, 7, float_str(fDD.getInt(0)
+                                                  / ui->tblMain->itemValue(2, 3).toDouble()
+                                                  * 100, 0) + "%");
 
+    //Comp occ.
+    fDD[":f_state"] = RESERVE_CHECKIN;
+    fDD[":f_rate"] = 0;
+    fDD.exec("select count(f_id) from f_reservation where f_state=:f_state and f_pricepernight=:f_rate");
+    fDD.nextRow();
+    ui->tblMain->setItemWithValue(1, 7, float_str(fDD.getInt(0)
+                                                  / ui->tblMain->itemValue(2, 3).toDouble()
+                                                  * 100, 0) + "%");
 }
 
 WHotelStatus::~WHotelStatus()

@@ -17,7 +17,9 @@ enum PAYMENT_MODE {PAYMENT_UNKNOWN = 0,
                    PAYMENT_ADVANCE,
                    PAYMENT_REFUND,
                    PAYMENT_COUPON,
-                   PAYMENT_BARTER
+                   PAYMENT_BARTER,
+                   PAYMENT_BREAKFAST,
+                   PAYMENT_PAYX
                    };
 
 

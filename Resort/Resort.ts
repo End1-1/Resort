@@ -845,6 +845,14 @@ name</source>
         <source>Invalid service item code</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Quantity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgCL</name>
@@ -1255,6 +1263,10 @@ name</source>
     </message>
     <message>
         <source>Show room description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do not disturbe color</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2798,6 +2810,10 @@ rooms</source>
         <source>Saved</source>
         <translation type="unfinished">Պահպանված է</translation>
     </message>
+    <message>
+        <source>Change the room state?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgInvoiceCancelation</name>
@@ -3494,6 +3510,10 @@ rooms</source>
     </message>
     <message>
         <source>Payment mode is credit card or city ledger, but account field is empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PayX</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4829,6 +4849,10 @@ for this operation</source>
     </message>
     <message>
         <source>Selected mode of payment is not allowed here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAYMENT PAYX</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6803,6 +6827,10 @@ for this operation</source>
         <source>Checkin with room incomplete inventory</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Manual tax</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -7623,6 +7651,14 @@ ee</source>
         <source>Nationality</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
+    </message>
 </context>
 <context>
     <name>FCardexSales</name>
@@ -7753,6 +7789,10 @@ ee</source>
     <message>
         <source>Nothing was selected</source>
         <translation type="unfinished">Ոչինչ նշված չէ</translation>
+    </message>
+    <message>
+        <source>Avg. rate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10038,6 +10078,10 @@ ee</source>
         <source>Invoice removed with all references. Refresh reports.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Booking</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FLengthOfStay</name>
@@ -10896,6 +10940,14 @@ ee</source>
         <source>Nothing is selected</source>
         <translation type="unfinished">Ոչինչ նշված չէ</translation>
     </message>
+    <message>
+        <source>Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
+    </message>
 </context>
 <context>
     <name>FReserveGroups</name>
@@ -11642,6 +11694,10 @@ ledger</source>
     </message>
     <message>
         <source>Remarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dont disturbe</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14763,6 +14819,10 @@ or contact to administrator</source>
         <source>Year</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished">Հերթ</translation>
+    </message>
 </context>
 <context>
     <name>REBanquetComment</name>
@@ -16528,6 +16588,14 @@ deviation</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Order</source>
+        <translation type="unfinished">Պատվեր</translation>
+    </message>
+    <message>
+        <source>f_queue</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -18998,6 +19066,14 @@ operator</source>
         <source>Advance</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Dont disturbe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change the room state?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WMainDesk</name>
@@ -20414,10 +20490,6 @@ if empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Jule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No month selected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20479,6 +20551,10 @@ if empty</source>
     </message>
     <message>
         <source>Avg. rooming</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>July</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

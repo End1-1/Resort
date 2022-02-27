@@ -34,7 +34,7 @@ public:
     double fPrepaid;
     QString fJson;
     int fTaxCode;
-    int fTaxback;
+    QString fTaxback;
     static bool printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json);
     static int printTaxback(int number, const QString &vaucher, int &taxCode);
 

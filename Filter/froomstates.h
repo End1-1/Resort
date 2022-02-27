@@ -21,6 +21,7 @@ public:
 
 private:
     Ui::FRoomStates *ui;
+    QColor getRowColor(int row) const;
 
 private slots:
     void dbClick(const QList<QVariant> &row);

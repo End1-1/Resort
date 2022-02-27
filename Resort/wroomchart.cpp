@@ -17,6 +17,9 @@ WRoomChart::WRoomChart(QWidget *parent) :
     fFirstDate = WORKING_DATE;
     fLastDate = fFirstDate.addYears(5);
     fVisibleDays = static_cast<int>(fFirstDate.daysTo(fLastDate));
+    message::info(QString::number(fVisibleDays));
+    message::info(WORKING_DATE.toString());
+    message::info(fLastDate.toString());
     FONT = qApp->font();
     if (DAYS_OF_WEEK.count() == 0) {
         DAYS_OF_WEEK[1] = "Mo";

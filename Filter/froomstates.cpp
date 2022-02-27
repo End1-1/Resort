@@ -43,11 +43,12 @@ void FRoomStates::apply(WReportGrid *rg)
             .setColumn(100, "", tr("Nation"))
             .setColumn(300, "", tr("Guest"))
             .setColumn(200, "", tr("Cardex"))
-            .setColumn(250, "", tr("Remarks"));
+            .setColumn(250, "", tr("Remarks"))
+            .setColumn(0, "", tr("Dont disturbe"));
     QString query = "select r.f_state, r.f_id, r.f_short, rs.f_en, "
             "rn.f_startdate, rn.f_enddate, rn.f_man+rn.f_woman, rn.f_child, "
             "na.f_name, CONCAT(g.f_title, ' ',g.f_firstName, ' ',g.f_lastName) as guest, ca.f_name, "
-            "rn.f_remarks "
+            "rn.f_remarks, r.f_donotdisturbe "
             "from f_room r "
             "left join f_reservation rn on rn.f_room=r.f_id and rn.f_state=1 "
             "left join f_guests g on g.f_id=rn.f_guest "
@@ -58,7 +59,7 @@ void FRoomStates::apply(WReportGrid *rg)
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
     for (int i = 0; i < rg->fModel->rowCount(); i++) {
-        rg->fModel->setBackgroundColor(i, fColorOfStates[rg->fModel->data(i, 0).toInt()]);
+        rg->fModel->setBackgroundColor(i, getRowColor(i));
     }
 }
 
@@ -75,6 +76,15 @@ QWidget *FRoomStates::lastElement()
 QString FRoomStates::reportTitle()
 {
     return QString("%1 %2").arg(tr("State of the rooms")).arg(QDateTime::currentDateTime().toString(def_date_time_format));
+}
+
+QColor FRoomStates::getRowColor(int row) const
+{
+    QColor c = fColorOfStates[fReportGrid->fModel->data(row, 0).toInt()];
+    if (fReportGrid->fModel->data(row, 12).toInt() > 0) {
+        c = QColor::fromRgb(__s.value("donotdisturbecolor", -5570689).toInt());
+    }
+    return c;
 }
 
 void FRoomStates::dbClick(const QList<QVariant> &row)
@@ -100,8 +110,9 @@ void FRoomStates::roomUpdated(int cacheid, const QString &name)
     for (int i = 0; i < fReportGrid->fModel->rowCount(); i++) {
         if (fReportGrid->fModel->data(i, 1).toInt() == cr.fCode().toInt()) {
             fReportGrid->fModel->setData(i, 0, cr.fState());
+            fReportGrid->fModel->setData(i, 12, (int) cr.fDoNotDisturbe());
             fReportGrid->fModel->setData(i, 3, cr.fStateName());
-            fReportGrid->fModel->setBackgroundColor(i, fColorOfStates[cr.fState()]);
+            fReportGrid->fModel->setBackgroundColor(i, getRowColor(i));
         }
     }
 }

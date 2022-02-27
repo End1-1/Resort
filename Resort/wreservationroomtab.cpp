@@ -398,8 +398,13 @@ bool WReservationRoomTab::save()
         result = fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
     }
     if (createUser > 0) {
+        fDD.exec("select * from f_reservation_last");
         fDD[":f_id"] = ui->leReservId->text();
-        fDD.exec("update f_reservation_last set f_id=:f_id");
+        if (fDD.nextRow()) {
+            fDD.exec("update f_reservation_last set f_id=:f_id");
+        } else {
+            fDD.insert("f_reservation_last", false);
+        }
     }
     if (result) {
         result = result && fDD.exec(QString("delete from f_reservation_guests where f_reservation='%1'").arg(ui->leReservId->text()));
@@ -1291,6 +1296,7 @@ void WReservationRoomTab::copyLast(const QString &lastId)
         }
     }
     loadReservation(last);
+    QString price = ui->leRooming->text();
     ui->leReservId->clear();
     ui->leInvoice->clear();
     ui->leReserveCode->setInt(RESERVE_RESERVE);
@@ -1298,7 +1304,9 @@ void WReservationRoomTab::copyLast(const QString &lastId)
     ui->deDeparture->setEnabled(true);
     ui->deCreated->setDate(QDate::currentDate());
     setGroupBoxesEnabled(true);
+    ui->leRooming->setText("0");
     fTrackControl->resetChanges();
+    ui->leRooming->setText(price);
     checkDatesCross();
 }
 
@@ -1739,7 +1747,9 @@ void WReservationRoomTab::setRoom(const QString &code)
     ui->leRoomCode->setText(r.fCode());
     ui->leRoomName->setText(r.fName());
     if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-        ui->leRooming->setText(r.fPrice());
+        if (fTrackControl->oldValue(ui->leRooming) == ui->leRooming->text()) {
+            ui->leRooming->setText(r.fPrice());
+        }
     }
     ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
     checkDatesCross();
@@ -1802,7 +1812,6 @@ void WReservationRoomTab::roomCacheUpdated(int cacheId, const QString &id)
 
 void WReservationRoomTab::roomSearch(bool v)
 {
-
     Q_UNUSED(v);
     DlgCreateGroupReservation *d = new DlgCreateGroupReservation(this);
     d->setSingleMode(true);
@@ -1944,7 +1953,9 @@ void WReservationRoomTab::room(const QString &code)
         ui->leRoomCode->setText(c.fCode());
         ui->leRoomName->setText(c.fName());
         if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-            ui->leRooming->setText(c.fPrice());
+            if (fTrackControl->oldValue(ui->leRooming) == ui->leRooming->text()) {
+                ui->leRooming->setText(c.fPrice());
+            }
         }
         ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
         checkDatesCross();
@@ -1966,8 +1977,10 @@ void WReservationRoomTab::on_leRoomCode_returnPressed()
     }
     ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
     ui->leRoomName->setText(r.fName());
-    if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-        ui->leRooming->setText(r.fPrice());
+    if (ui->leReserveCode->asInt() == RESERVE_SERVICE || ui->leReservId->isEmpty()) {
+        if (fTrackControl->oldValue(ui->leRooming) == ui->leRooming->text()) {
+            ui->leRooming->setText(r.fPrice());
+        }
     }
     emit roomChanged(r.fName(), fTabIndex);
     checkDatesCross();
@@ -2172,18 +2185,27 @@ void WReservationRoomTab::on_cbPaymentType_currentIndexChanged(int index)
 
 void WReservationRoomTab::on_leSearchGuest_returnPressed()
 {
-    if (ui->leSearchGuest->text().trimmed().isEmpty()) {
+    ui->leSearchGuest->setText(ui->leSearchGuest->text().simplified().trimmed());
+    if (ui->leSearchGuest->text().isEmpty()) {
         return;
     }
     QStringList fn = ui->leSearchGuest->text().split(" ");
     QString ln;
     if (fn.count() > 0) {
-        QString searchName = fn.at(0).toLower();
-        if (fn.count() > 1) {
-            searchName += " " + fn.at(1).toLower();
+        QString searchFirstName = fn.at(0).toLower();
+        QString searchLastName;
+        for (int i = 1; i < fn.count(); i++) {
+            searchLastName += " " + fn.at(i).toLower();
         }
+        searchLastName = searchLastName.trimmed();
         DoubleDatabase fDD(true, doubleDatabase);
-        fDD.exec("select f_id from f_guests where concat(lower(f_firstName), ' ', lower(f_lastName)) like '" + searchName + "%'");
+        QString sqlsearch = "select f_id from f_guests where lower(f_firstName)=:f_firstname ";
+        fDD[":f_firstname"] = searchFirstName.toLower();
+        if (!searchLastName.isEmpty()) {
+            fDD[":f_lastname"] = searchLastName.toLower();
+            sqlsearch += "and lower(f_lastname)=:f_lastname";
+        }
+        fDD.exec(sqlsearch);
         if (fDD.rowCount()  > 0) {
             ui->leSearchGuest->fCommonFilter.clear();
             ui->leSearchGuest->fCommonFilter << ui->leSearchGuest->text();

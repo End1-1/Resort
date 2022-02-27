@@ -78,6 +78,7 @@ void PTextRect::setRect(qreal x, qreal y, qreal w, qreal h)
 void PTextRect::setWrapMode(QTextOption::WrapMode mode)
 {
     fTextOption.setWrapMode(mode);
+    update();
 }
 
 void PTextRect::setBorders(bool l, bool t, bool r, bool b)

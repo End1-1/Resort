@@ -11,9 +11,11 @@ DlgChartColor::DlgChartColor(QWidget *parent) :
     ui->setupUi(this);
     ui->leReserveColor->setText(__s.value("reservecolor").toString());
     ui->leCheckinColor->setText(__s.value("checkincolor").toString());
+    ui->leDoNotDisturbeColor->setText(__s.value("donotdisturbecolor").toString());
     ui->chShowRoomDescription->setChecked(__s.value("showroomdescription", false).toBool());
     connect(ui->leReserveColor, SIGNAL(doubleClicked()), this, SLOT(selectColor()));
     connect(ui->leCheckinColor, SIGNAL(doubleClicked()), this, SLOT(selectColor()));
+    connect(ui->leDoNotDisturbeColor, SIGNAL(doubleClicked()), this, SLOT(selectColor()));
 }
 
 DlgChartColor::~DlgChartColor()
@@ -34,6 +36,7 @@ void DlgChartColor::on_btnSave_clicked()
 {
     __s.setValue("reservecolor", ui->leReserveColor->text());
     __s.setValue("checkincolor", ui->leCheckinColor->text());
+    __s.setValue("donotdisturbecolor", ui->leDoNotDisturbeColor->text());
     message_info(tr("The changes will applied in next time you logon"));
     accept();
 }

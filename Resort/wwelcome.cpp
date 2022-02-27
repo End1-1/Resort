@@ -27,14 +27,17 @@ void WWelcome::loadInfo()
     DoubleDatabase fDD(true, doubleDatabase);
     Utils::tableSetColumnWidths(ui->tblBirthDay, ui->tblBirthDay->columnCount(), 50, 200, 100);
     fDD[":f_state"] = RESERVE_CHECKIN;
-    fDD[":f_day"] = QDate::currentDate().day();
-    fDD[":f_month"] = QDate::currentDate().month();
+    fDD[":f_day1"] = QDate::currentDate().day();
+    fDD[":f_day2"] = QDate::currentDate().addDays(1).day();
+    fDD[":f_month1"] = QDate::currentDate().month();
+    fDD[":f_month2"] = QDate::currentDate().addDays(1).month();
     fDD.exec("select r.f_room, concat(g.f_firstName, ' ', g.f_lastName), g.f_dateBirth "
                "from f_reservation_guests rg "
                "left join f_reservation r on r.f_id=rg.f_reservation "
                "left join f_guests g on g.f_id=rg.f_guest "
                "where r.f_state=:f_state "
-               "and extract(day from g.f_dateBirth) = :f_day and extract(month from g.f_dateBirth)=:f_month");
+               "and ((extract(day from g.f_dateBirth) = :f_day1 and extract(month from g.f_dateBirth)=:f_month1) "
+                "or  (extract(day from g.f_dateBirth) = :f_day2 and extract(month from g.f_dateBirth)=:f_month2)) ");
     Utils::fillTableWithData(ui->tblBirthDay, fDD.fDbRows);
 
     Utils::tableSetColumnWidths(ui->tblArrival, ui->tblArrival->columnCount(), 50, 150, 50, 100);

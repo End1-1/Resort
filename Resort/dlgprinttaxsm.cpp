@@ -96,7 +96,7 @@ void DlgPrintTaxSM::load()
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;
     v[":f_order"] = fOrder;
-    v[":f_queryCode"] = opcode_PrintTaxN;
+    v[":f_queryCode"] = opcode_print_receipt;
     v[":f_queryJson"] = inJson;
     v[":f_replyJson"] = outJson;
     v[":f_replyResult"] = result;
@@ -144,7 +144,7 @@ void DlgPrintTaxSM::loadAdvance()
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;
     v[":f_order"] = fOrder;
-    v[":f_queryCode"] = opcode_PrintTaxN;
+    v[":f_queryCode"] = opcode_print_receipt;
     v[":f_queryJson"] = inJson;
     v[":f_replyJson"] = outJson;
     v[":f_replyResult"] = result;

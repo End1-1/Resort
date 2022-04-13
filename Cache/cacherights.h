@@ -152,7 +152,7 @@
 #define cr__checkin_with_not_ready_room_inventory 143
 #define cr__view_room_inventory_state 144
 #define cr__manualtax 145
-#define cr__1
+#define cr__change_rv_other_types 146
 #define cr__1
 #define cr__1
 #define cr__1

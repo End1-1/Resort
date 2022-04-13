@@ -13,6 +13,7 @@
 #include "dlgtransferanyamount.h"
 #include "dlgwelcomebuttonconfig.h"
 #include "dlggroupreservationfuck.h"
+#include "dlgexitbyversion.h"
 #include "winvoice.h"
 #include <QFile>
 #include <QProcess>
@@ -122,8 +123,9 @@ void WWelcome::handleBroadcast(const QMap<QString, QVariant> &data)
     switch (cmd) {
     case cmd_global_settings:
     case cmd_end_of_day:
-        message_info(tr("The global configuration of program was modified, you need to logout then login again to load new configuration"));
-        fMainWindow->logout();
+        //message_info(tr("The global configuration of program was modified, you need to logout then login again to load new configuration"));
+        //fMainWindow->logout();
+        DlgExitByVersion::exit(tr("The global configuration of program was modified, you need to close program, then login again to load new configuration"));
         break;
     case cmd_update_program: {
         QProcess *p = new QProcess();

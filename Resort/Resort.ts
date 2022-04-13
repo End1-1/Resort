@@ -6831,6 +6831,10 @@ for this operation</source>
         <source>Manual tax</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Change date for saved OTHER receipt voucher</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgUtils</name>
@@ -10877,6 +10881,10 @@ ee</source>
         <source>Cannot open invoice</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Extra bed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FReserveByCreate</name>
@@ -14342,6 +14350,14 @@ or contact to administrator</source>
     </message>
     <message>
         <source>You should to setup cashier and pin before to use fiscal printer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax error code</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

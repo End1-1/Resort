@@ -81,16 +81,16 @@ void DlgReceiptVaucher::setVoucher(const QString &id)
             cardVisible(true);
             break;
         default:
-            ui->deDate->setReadOnly(true);
+            ui->deDate->setReadOnly(!r__(cr__change_rv_other_types));
             break;
     }
     fixTabWidget();
     setBalance();
     ui->btnSave->setVisible(r__(cr__super_correction));
     ui->leAmountAMD->setReadOnly(!r__(cr__super_correction));
-    if (r__(cr__super_correction)) {
-        ui->deDate->setReadOnly(false);
-    }
+//    if (r__(cr__super_correction)) {
+//        ui->deDate->setReadOnly(false);
+//    }
     ui->btnPrint->setEnabled(true);
     adjustSize();
 }
@@ -416,6 +416,9 @@ void DlgReceiptVaucher::on_lePaymentCode_textChanged(const QString &arg1)
         break;
     case PAYMENT_CL:
         ro = !r__(cr__rv_change_date_cl);
+        break;
+    default:
+        ro = !r__(cr__change_rv_other_types);
         break;
     }
     ui->deDate->setReadOnly(ro);

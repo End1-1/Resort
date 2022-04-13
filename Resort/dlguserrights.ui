@@ -565,9 +565,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-155</y>
+            <y>0</y>
             <width>853</width>
-            <height>587</height>
+            <height>610</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -748,6 +748,16 @@
              </property>
              <property name="Tag" stdset="0">
               <number>95</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="EQCheckBox" name="chChangeRVDateCL_2">
+             <property name="text">
+              <string>Change date for saved OTHER receipt voucher</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>146</number>
              </property>
             </widget>
            </item>

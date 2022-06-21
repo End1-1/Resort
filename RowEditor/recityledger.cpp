@@ -16,6 +16,7 @@ RECityLedger::RECityLedger(QList<QVariant> &values, QWidget *parent) :
     addWidget(ui->leEmail, "Email");
     addWidget(ui->leExtra1, "Extra1");
     addWidget(ui->leExtra2, "Extra2");
+    addWidget(ui->chAlwaysInvoice, "Always invoice");
     fCacheId = cid_city_ledger;
     fTable = "f_city_ledger";
     ui->btnRemove->setVisible(r__(cr__super_correction));

@@ -12,7 +12,7 @@ class DlgSinglePrintTax : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgSinglePrintTax(QWidget *parent = nullptr);
+    explicit DlgSinglePrintTax(const QString &invoice, QWidget *parent = nullptr);
     ~DlgSinglePrintTax();
     int fTaxCode;
     virtual void callback(int sel, const QString &code);
@@ -24,6 +24,7 @@ private slots:
 
 private:
     Ui::DlgSinglePrintTax *ui;
+    QString fInvoice;
 };
 
 #endif // DLGSINGLEPRINTTAX_H

@@ -61,8 +61,19 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     int top = 310;
     int rowHeight = 60;
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("To") + ":", &th, f));
-    r = ps->addTextRect(new PTextRect(300, top, 2100, rowHeight, fSource->mainGuest(), &th, f));
-    top += r->textHeight();
+    DoubleDatabase dguest(true);
+    dguest[":f_invoice"] = fSource->invoiceId();
+    dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name) "
+                "from f_reservation_guests rg "
+                "left join f_guests g on g.f_id=rg.f_guest "
+                "left join f_nationality n on n.f_short=g.f_nation "
+                "where rg.f_reservation in "
+                    "(select f_id from f_reservation where f_invoice=:f_invoice) "
+                "order by rg.f_first desc ");
+    while (dguest.nextRow()) {
+        r = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f));
+        top += r->textHeight();
+    }
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Date") + ":", &th, f));
     r = ps->addTextRect(new PTextRect(300, top, 2100, rowHeight, fSource->valueForWidget("Created") + ":", &th, f));
     top += r->textHeight();
@@ -153,7 +164,22 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     int rowHeight = 60;
     top += 5;
     top += ps->addTextRect(20, top, 2100, rowHeight, tr("Date") + " " + QDate::currentDate().toString(def_date_format), &th)->textHeight();
-    top += ps->addTextRect(20, top, 2000, rowHeight, tr("Guest name") + " " + fSource->mainGuest(), &th)->textHeight();
+
+    DoubleDatabase dguest(true);
+    dguest[":f_invoice"] = fSource->invoiceId();
+    dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name) "
+                "from f_reservation_guests rg "
+                "left join f_guests g on g.f_id=rg.f_guest "
+                "left join f_nationality n on n.f_short=g.f_nation "
+                "where rg.f_reservation in "
+                    "(select f_id from f_reservation where f_invoice=:f_invoice) "
+                "order by rg.f_first desc ");
+    top += ps->addTextRect(20, top, 2000, rowHeight, tr("Guests:"), &th)->textHeight();
+    while (dguest.nextRow()) {
+        top += ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f))->textHeight();
+    }
+
+    //top += ps->addTextRect(20, top, 2000, rowHeight, tr("Guest name") + " " + fSource->mainGuest(), &th)->textHeight();
     ps->addLine(20, top, 2100, top, boldPen);
     top += 20;
     th.setBorders(true, true, true, true);
@@ -231,7 +257,9 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     ps->addTableRow(top, rowHeight, col, val, &th);
     top += 60;
     th.setBorders(false, false, false, false);
-    top += ps->addTextRect(20, top, 200, rowHeight, tr("Signature"), &th)->textHeight();
+    int textheight = ps->addTextRect(20, top, 200, rowHeight, tr("Signature"), &th)->textHeight();
+    top += textheight;
+    ps->addTextRect(20, top + textheight, 2000, rowHeight, fSource->mainGuest(), &th)->textHeight();
     ps->addLine(20, top, 600, top, QPen(QBrush(Qt::SolidPattern), 3));
     top += 30;
     top += ps->addTextRect(20, top, 2100, rowHeight * 10, tr("Remarks: ") + fSource->valueForWidget("Remarks"), &th)->textHeight();

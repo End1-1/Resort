@@ -221,6 +221,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->chothTaxGuestDetailed->setChecked(fPreferences.getDb(def_append_tax_inhouse_detailed).toBool());
     ui->chAutoSession->setChecked(fPreferences.getDb(def_user_auto_session).toBool());
     ui->leRemovalVoucherId->setText(fPreferences.getDb(def_removal_vaucher_id).toString());
+    ui->chPrintTaxAfterReceipt->setChecked(fPreferences.getDb(def_print_tax_after_receipt).toBool());
 
     fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
@@ -276,6 +277,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->chothTaxGuestDetailed, ui->chothTaxGuestDetailed->text())
             .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
             .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
+            .addWidget(ui->chPrintTaxAfterReceipt, "Print tax after receipt")
             ;
 
     getCompSettings();
@@ -376,6 +378,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_append_tax_inhouse_detailed, ui->chothTaxGuestDetailed->isChecked() ? "1" : "0");
     values.insert(def_user_auto_session, ui->chAutoSession->isChecked() ? "1" : "0");
     values.insert(def_removal_vaucher_id, ui->leRemovalVoucherId->text());
+    values.insert(def_print_tax_after_receipt, ui->chPrintTaxAfterReceipt->isChecked() ? "1" : "0");
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
@@ -388,8 +391,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
             query += ",";
         }
         query += QString("(1, '%1', '%2')")
-                .arg(it.key())
-                .arg(it.value());
+                .arg(it.key(),it.value());
     }
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC', 'dd')");

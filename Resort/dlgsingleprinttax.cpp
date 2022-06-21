@@ -6,9 +6,10 @@
 #include "cachetaxmap.h"
 #include "dlgprinttaxsm.h"
 
-DlgSinglePrintTax::DlgSinglePrintTax(QWidget *parent) :
+DlgSinglePrintTax::DlgSinglePrintTax(const QString &invoice, QWidget *parent) :
     BaseDialog (parent),
-    ui(new Ui::DlgSinglePrintTax)
+    ui(new Ui::DlgSinglePrintTax),
+    fInvoice(invoice)
 {
     ui->setupUi(this);
     Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 30, 50, 200, 200, 80, 80, 50, 100, 0, 0);
@@ -153,10 +154,16 @@ void DlgSinglePrintTax::on_btnPrint_clicked()
             DoubleDatabase dd(true, doubleDatabase);
             foreach (QString r, rows) {
                 dd[":f_fiscal"] = d->fTaxCode;
-                dd[":f_id"] = ui->tbl->itemValue(r.toInt(), 9).toString();
-                dd.exec("update m_register set f_fiscal=:f_fiscal where f_id=:f_id");
+                dd[":f_fiscaldate"] = QDate::currentDate();
+                dd[":f_fiscaltime"] = QTime::currentTime();
+                dd.update("m_register", where_id(ap(ui->tbl->itemValue(r.toInt(), 9).toString())));
             }
             fTaxCode = d->fTaxCode;
+            if (prepaid > 0.01 && !fInvoice.isEmpty()) {
+                dd[":f_invoice"] = fInvoice;
+                dd[":f_amount"] = prepaid;
+                dd.insert("f_used_advance");
+            }
             accept();
         }
     } else {

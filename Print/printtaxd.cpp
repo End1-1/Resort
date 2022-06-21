@@ -149,6 +149,7 @@ void PrintTaxD::on_btnPrint_clicked()
     if (!print()) {
         return;
     }
+    DoubleDatabase fDD(true, doubleDatabase);
     double pre = ui->lePre->asDouble();
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (!ui->tblData->itemChecked(i, 4)) {
@@ -162,8 +163,10 @@ void PrintTaxD::on_btnPrint_clicked()
             }
             pre -= usedPre;
         }
-        DoubleDatabase fDD(true, doubleDatabase);
+
         fDD[":f_fiscal"] = fTaxCode;
+        fDD[":f_fiscaldate"] = QDate::currentDate();
+        fDD[":f_fiscaltime"] = QTime::currentTime();
         fDD[":f_usedPrepaid"] = usedPre;
         fDD.update("m_register", where_id(ap(ui->tblData->toString(i, 0))));
 
@@ -182,6 +185,12 @@ void PrintTaxD::on_btnPrint_clicked()
         fDD.insert("m_tax_history");
     }
     //TODO IN FUTURE UPDATE TAX PREPAID AMOUNT
+    if (ui->lePre->asDouble() > 0.001) {
+        fDD[":f_invoice"] = fInvoice;
+        fDD[":f_amount"] = ui->lePre->asDouble();
+        fDD.insert("f_used_advance");
+    }
+
 
     accept();
 }

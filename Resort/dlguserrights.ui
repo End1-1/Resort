@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -565,9 +565,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-178</y>
             <width>853</width>
-            <height>610</height>
+            <height>633</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -822,6 +822,16 @@
             </widget>
            </item>
            <item>
+            <widget class="EQCheckBox" name="chTaxReport">
+             <property name="text">
+              <string>Fiscal report</string>
+             </property>
+             <property name="Tag" stdset="0">
+              <number>150</number>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="EQCheckBox" name="chManualTax">
              <property name="text">
               <string>Manual tax</string>
@@ -995,6 +1005,26 @@
          </property>
          <property name="Tag" stdset="0">
           <number>109</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chEditASConString">
+         <property name="text">
+          <string>Edit ArmSoft connection string</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>147</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chExportDataToAS">
+         <property name="text">
+          <string>Export data to ArmSoft</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>148</number>
          </property>
         </widget>
        </item>

@@ -7,17 +7,31 @@
     <x>0</x>
     <y>0</y>
     <width>446</width>
-    <height>241</height>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>City ledger</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Code</string>
+      <string>Address</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Email</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Extra1</string>
      </property>
     </widget>
    </item>
@@ -34,52 +48,10 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="EQLineEdit" name="leName">
+   <item row="6" column="1">
+    <widget class="EQLineEdit" name="leExtra2">
      <property name="Field" stdset="0">
-      <string>f_name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Address</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Phone</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="EQLineEdit" name="leAddress">
-     <property name="Field" stdset="0">
-      <string>f_address</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="EQLineEdit" name="lePhone">
-     <property name="Field" stdset="0">
-      <string>f_phone</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Email</string>
+      <string>f_extra2</string>
      </property>
     </widget>
    </item>
@@ -90,7 +62,14 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="2">
+   <item row="1" column="1">
+    <widget class="EQLineEdit" name="leName">
+     <property name="Field" stdset="0">
+      <string>f_name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -150,6 +129,41 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Code</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Phone</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="EQLineEdit" name="lePhone">
+     <property name="Field" stdset="0">
+      <string>f_phone</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="EQLineEdit" name="leAddress">
+     <property name="Field" stdset="0">
+      <string>f_address</string>
+     </property>
+    </widget>
+   </item>
    <item row="5" column="1">
     <widget class="EQLineEdit" name="leExtra1">
      <property name="Field" stdset="0">
@@ -157,24 +171,27 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
-    <widget class="EQLineEdit" name="leExtra2">
-     <property name="Field" stdset="0">
-      <string>f_extra2</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Extra1</string>
-     </property>
-    </widget>
-   </item>
    <item row="6" column="0">
     <widget class="QLabel" name="label_7">
      <property name="text">
       <string>Extra2</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="EQCheckBox" name="chAlwaysInvoice">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="Field" stdset="0">
+      <string>f_alwaysinvoice</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Always invoice</string>
      </property>
     </widget>
    </item>
@@ -188,6 +205,11 @@
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

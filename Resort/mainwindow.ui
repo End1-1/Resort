@@ -130,6 +130,7 @@
     <addaction name="actionYearly_financial_report"/>
     <addaction name="actionInvoices"/>
     <addaction name="actionCheckout_invoices_free_rooming"/>
+    <addaction name="actionArmSoft"/>
    </widget>
    <widget class="QMenu" name="menuDirectory">
     <property name="title">
@@ -252,6 +253,7 @@
     <addaction name="actionCurrencies"/>
     <addaction name="actionTemporary_receipts"/>
     <addaction name="actionPrint_tax_of_checkout_invoices"/>
+    <addaction name="actionFiscal_report"/>
    </widget>
    <widget class="QMenu" name="menuAnalytics">
     <property name="title">
@@ -1565,6 +1567,20 @@
    </property>
    <property name="text">
     <string>Expected arrivals / simple</string>
+   </property>
+  </action>
+  <action name="actionArmSoft">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
+   </property>
+   <property name="text">
+    <string>ArmSoft</string>
+   </property>
+  </action>
+  <action name="actionFiscal_report">
+   <property name="text">
+    <string>Fiscal report</string>
    </property>
   </action>
  </widget>

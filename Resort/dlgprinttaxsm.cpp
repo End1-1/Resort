@@ -167,6 +167,8 @@ void DlgPrintTaxSM::loadAdvance()
         v.exec("update tax_print set f_replyTaxCode=:f_replyTaxCode where f_id=:f_id");
         DoubleDatabase fDD(true, doubleDatabase);
         fDD[":f_fiscal"] = fTaxCode;
+        fDD[":f_fiscaldate"] = QDate::currentDate();
+        fDD[":f_fiscaltime"] = QTime::currentTime();
         fDD.update("m_register", where_id(ap(fOrder)));
         done(TAX_OK);
         return;

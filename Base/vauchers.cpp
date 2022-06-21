@@ -45,6 +45,9 @@ QString vaucherPaymentName(int code, const QString &cardcode, const QString &clc
     case PAYMENT_CREDIT:
         payment = "CREDIT";
         break;
+    case PAYMENT_PAYX:
+        payment = "PAY X";
+        break;
     default:
         payment = "UNKNOWN";
         break;

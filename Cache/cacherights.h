@@ -153,9 +153,9 @@
 #define cr__view_room_inventory_state 144
 #define cr__manualtax 145
 #define cr__change_rv_other_types 146
-#define cr__1
-#define cr__1
-#define cr__1
+#define cr__edit_as_connection_string 147
+#define cr__export_data_to_as 148
+#define cr__fiscal_report 149
 #define cr__1
 #define cr__1
 #define cr__1

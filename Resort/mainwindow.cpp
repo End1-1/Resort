@@ -23,12 +23,14 @@
 #include "guestcheckin.h"
 #include "fexpecteddeparturesimple.h"
 #include "dlgquickroomassignment.h"
+#include "dlgexportas.h"
 #include "froomstates.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
 #include "wcardexlist.h"
 #include "dlgtransferlog.h"
 #include "fexpectedsimple.h"
+#include "ftaxreport.h"
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
 #include "fcashreportbyitem.h"
@@ -630,6 +632,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionIn_house_detailed_balance->setVisible(r__(cr__bookeeping_inhouse_detailed));
     ui->actionYearly_financial_report->setVisible(r__(cr__bookeeping_yearly_financial_report));
     ui->actionCheckout_invoices_free_rooming->setVisible(r__(cr__report_checkout_invoices));
+    ui->actionArmSoft->setVisible(r__(cr__export_data_to_as));
 
     ui->menuBar->actions().at(6)->setVisible(r__(cr__menu_restaurant_reports)); //Restaurant
     ui->actionOpen_breakfast->setVisible(r__(cr__menu_restaurant_reports));
@@ -681,7 +684,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->menuBar->actions().at(11)->setVisible(r__(cr__menu_application)); //Application
     ui->actionUsers_groups->setVisible(r__(cr__users_groups));
     ui->actionUsers->setVisible(r__(cr__users));
-    ui->actionTrack_changes->setVisible(r__(cr_trackin_changes));
+    ui->actionTrack_changes->setVisible(r__(cr_trackin_changes) && fPreferences.getDb(def_show_logs).toBool());
     ui->actionGlobal_config->setVisible(r__(cr__global_config));
     ui->actionPreferences->setVisible(r__(cr__global_config));
     ui->actionUpdate_program->setVisible(r__(cr__update_program));
@@ -1462,6 +1465,7 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << 200
            << 100
            << 100
+           << 80
               ;
     QStringList fields;
     fields << "f_id"
@@ -1471,6 +1475,7 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << "f_email"
            << "f_extra1"
            << "f_extra2"
+           << "f_alwaysinvoice"
               ;
     QStringList titles;
     titles << tr("Code")
@@ -1480,10 +1485,11 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << tr("Email")
            << tr("Extra1")
            << tr("Extra2")
+           << tr("Always invoice")
               ;
     QString title = actionTitle(sender());
     QString icon = ":/images/currency.png";
-    QString query = "select f_id, f_name, f_address, f_phone, f_email, f_extra1, f_extra2 from f_city_ledger";
+    QString query = "select f_id, f_name, f_address, f_phone, f_email, f_extra1, f_extra2, f_alwaysinvoice from f_city_ledger";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RECityLedger>(widths, fields, titles, title, icon, query);
 }
@@ -2189,4 +2195,14 @@ void MainWindow::on_actionExpected_departures_simple_triggered()
 void MainWindow::on_actionExpected_arivals_simple_triggered()
 {
     FExpectedSimple::openFilterReport<FExpectedSimple, WReportGrid>();
+}
+
+void MainWindow::on_actionArmSoft_triggered()
+{
+    DlgExportAS(this).exec();
+}
+
+void MainWindow::on_actionFiscal_report_triggered()
+{
+    FTaxReport::openFilterReport<FTaxReport, WReportGrid>();
 }

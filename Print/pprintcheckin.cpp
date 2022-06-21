@@ -25,18 +25,6 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     PPrintPreview pv(fMainWindow->fPreferences.getDefaultParentForMessage());
     PPrintScene *ps = pv.addScene(0, Portrait);
 
-    int top = 30;
-    PImage *logo = new PImage("logo_print.png");
-    ps->addItem(logo);
-    logo->setRect(QRectF(20, 10, 500, 300));
-
-    /* Header */
-    PTextRect trHeader;
-    trHeader.setBorders(false, false, false, false);
-    trHeader.setFontSize(40);
-    trHeader.setFontBold(true);
-    trHeader.setTextAlignment(Qt::AlignCenter);
-    top += ps->addTextRect(0, top, 2100, 80, tr("REGISTRATION CARD"), &trHeader)->textHeight();
     /* Data */
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_id"] = id;
@@ -45,10 +33,18 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
         message_error(QObject::tr("Could not open reservation"));
         return;
     }
-    trHeader.setFontSize(30);
-    ps->addTextRect(0, top, 2100, 80, QString("%1 / %2").arg(fDD.getValue("f_id").toString()).arg(fDD.getValue("f_invoice").toString()), &trHeader);
 
-    top = 300;
+    PPrintHeader(ps, tr("REGISTRATION CARD"), QString("%1 / %2").arg(fDD.getValue("f_id").toString(), fDD.getValue("f_invoice").toString()));
+    int top = 310;
+
+    /* Header */
+    PTextRect trHeader;
+    trHeader.setBorders(false, false, false, false);
+    trHeader.setFontSize(40);
+    trHeader.setFontBold(true);
+    trHeader.setTextAlignment(Qt::AlignCenter);
+
+    top = 320;
     PTextRect trData;
     trData.setFontName("Times");
     trData.setFontSize(20);
@@ -86,15 +82,27 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     trGuest.setBorders(false, false, false, false);
     trGuest.setFontName("Times");
     trGuest.setFontSize(24);
-    CacheGuest g;
-    g.get(fDD.getValue("f_guest").toString());
-    ps->addTextRect(20, top, 230, 80, tr("LAST NAME"), &trGuest);
-    trGuest.setFontItalic(true);
-    ps->addTextRect(240, top, 700, 80, g.fLastName(), &trGuest);
-    trGuest.setFontItalic(false);
-    ps->addTextRect(710, top, 230, 80, tr("FIRST NAME"), &trGuest);
-    trGuest.setFontItalic(true);
-    top += ps->addTextRect(1000, top, 700, 80, g.fFirstName(), &trGuest)->textHeight();
+
+    DoubleDatabase dguest(true);
+    dguest[":f_id"] = id;
+    dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name), if(length(coalesce(g.f_passport, 'N/A'))=0,'N/A',coalesce(g.f_passport, 'N/A')) as f_passport "
+                "from f_reservation_guests rg "
+                "left join f_guests g on g.f_id=rg.f_guest "
+                "left join f_nationality n on n.f_short=g.f_nation "
+                "where rg.f_reservation in "
+                    "(select f_id from f_reservation where f_id=:f_id) "
+                "order by rg.f_first desc ");
+    top += ps->addTextRect(20, top, 2000, 70, tr("Guests:"), &trGuest)->textHeight();
+    while (dguest.nextRow()) {
+        top += ps->addTextRect(20, top, 2000, 70, QString("%1, Passport: %2").arg(dguest.getString(0), dguest.getString(1)), &trGuest)->textHeight();
+    }
+//    ps->addTextRect(20, top, 230, 80, tr("LAST NAME"), &trGuest);
+//    trGuest.setFontItalic(true);
+//    ps->addTextRect(240, top, 700, 80, g.fLastName(), &trGuest);
+//    trGuest.setFontItalic(false);
+//    ps->addTextRect(710, top, 230, 80, tr("FIRST NAME"), &trGuest);
+//    trGuest.setFontItalic(true);
+//    top += ps->addTextRect(1000, top, 700, 80, g.fFirstName(), &trGuest)->textHeight();
 
     trData.setBorders(false, false, false, false);
     trData.setTextAlignment(Qt::AlignLeft);
@@ -131,11 +139,6 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 10;
 
-    ps->addTextRect(20, top, 230, 80, tr("NATIONALITY"), &trData);
-    top += ps->addTextRect(235, top, 800, 80, g.fNatShort() + " " + g.fNatFull(), &trData)->textHeight();
-    ps->addTextRect(20, top, 230, 80, tr("PASSPORT"), &trData);
-    ps->addTextRect(235, top, 500, 80, g.fPassport(), &trData);
-    top += 80;
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 80;
 

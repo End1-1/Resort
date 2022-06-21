@@ -68,6 +68,7 @@ private slots:
     void on_btnViewReserv_clicked();
     void on_btnGuestInfo_clicked();
     void on_btnNext_clicked();
+    void on_btnExportAS_clicked();
 };
 
 #endif // WACCINVOICE_H

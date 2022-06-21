@@ -822,35 +822,11 @@ name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Print as advance</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Print as service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Reservation must be defined</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Card is not selected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Service name cannot be empty</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Invalid service item code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4083,10 +4059,6 @@ rooms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Guest name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Number of nights</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4188,6 +4160,10 @@ rooms</source>
     </message>
     <message>
         <source>Printed: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6833,6 +6809,18 @@ for this operation</source>
     </message>
     <message>
         <source>Change date for saved OTHER receipt voucher</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit ArmSoft connection string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export data to ArmSoft</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13647,6 +13635,14 @@ or contact to administrator</source>
         <source>Expected arrivals / pax</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Fiscal report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>
@@ -13827,14 +13823,6 @@ or contact to administrator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>LAST NAME</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>FIRST NAME</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>ADDRESS</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13860,14 +13848,6 @@ or contact to administrator</source>
     </message>
     <message>
         <source>MARKET SIGMENT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NATIONALITY</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PASSPORT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -13932,6 +13912,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Guests:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -15231,6 +15215,14 @@ or contact to administrator</source>
     </message>
     <message>
         <source>The city ledger removed from databases, refresh current report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_alwaysinvoice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always invoice</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17542,6 +17534,14 @@ Reserve</source>
         <source>CHECKOUT C/L </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>AS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WActiveGroup</name>
@@ -18383,6 +18383,10 @@ Reserve</source>
         <source>Removal voucher id</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Prnit tax after receipt</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -19088,6 +19092,10 @@ operator</source>
     </message>
     <message>
         <source>Change the room state?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advance balance exists </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -22333,10 +22341,6 @@ voucher</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The global configuration of program was modified, you need to logout then login again to load new configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Wakeup
 calls</source>
         <translation type="unfinished"></translation>
@@ -22359,6 +22363,10 @@ departures 2</source>
     <message>
         <source>Room chart
 Experemental</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The global configuration of program was modified, you need to close program, then login again to load new configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

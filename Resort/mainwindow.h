@@ -193,6 +193,10 @@ private slots:
     void on_actionExpected_departures_simple_triggered();
     void on_actionExpected_arivals_simple_triggered();
 
+    void on_actionArmSoft_triggered();
+
+    void on_actionFiscal_report_triggered();
+
 private:
     Listener fServer2Listener;
     Ui::MainWindow *ui;

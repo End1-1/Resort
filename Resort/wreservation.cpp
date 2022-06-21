@@ -32,6 +32,7 @@ WReservation::WReservation(QWidget *parent) :
     ui->tab->setCornerWidget(b, Qt::TopRightCorner);
     connect(ui->tab, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequest(int)));
     connect(ui->tab, SIGNAL(currentChanged(int)), this, SLOT(tabIndexChanged(int)));
+    ui->btnTracking->setVisible(fPreferences.getDb(def_show_logs).toBool());
 }
 
 WReservation::~WReservation()

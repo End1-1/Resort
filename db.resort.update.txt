@@ -38,3 +38,12 @@ update s_app set f_version='8' where f_app='DB';
 ALTER TABLE `f_room` ADD COLUMN `f_donotdisturbe` TINYINT default 0 AFTER `f_phone` ;
 ALTER TABLE `f_reservation` ADD INDEX `idx_room` (`f_room` ASC) ;
 
+
+/*DB - 9 */
+update s_app set f_version='9' where f_app='DB';
+alter table f_city_ledger add column f_alwaysinvoice tinyint;
+
+/*DB - 10 */
+update s_app set f_version='10' where f_app='DB';
+create table f_used_advance (f_id integer primary key auto_increment, f_invoice char(16), f_amount decimal(14,2));
+alter table m_register add column f_fiscaldate date after f_fiscal, add column f_fiscaltime time after f_fiscaldate;

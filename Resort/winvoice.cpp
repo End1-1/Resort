@@ -84,6 +84,7 @@ WInvoice::WInvoice(QWidget *parent) :
     ui->leTotalRight->setFont(font);
     font.setPointSize(font.pointSize() + 1);
     ui->leGranTotal->setFont(font);
+    ui->btnTrack->setVisible(fPreferences.getDb(def_show_logs).toBool());
 }
 
 WInvoice::~WInvoice()
@@ -263,6 +264,10 @@ void WInvoice::loadInvoice(const QString &id)
     if (fDD.nextRow()) {
         ui->lePrepaid->setDouble(fDD.getDouble(0));
     }
+    fDD[":f_invoice"] = ui->leInvoice->text();
+    fDD.exec("select sum(f_amount) from f_used_advance where f_invoice=:f_invoice");
+    fDD.nextRow();
+    ui->lePrepaid->setDouble(ui->lePrepaid->asDouble() - fDD.getDouble(0));
     /* end advance */
 
     countTotals();
@@ -567,6 +572,10 @@ void WInvoice::on_btnCheckout_clicked()
     o->deleteLater();
     loadInvoice(ui->leInvoice->text());
     ////////////////////////////////////// check balance
+    if (ui->lePrepaid->asDouble() > 0.001) {
+        message_error(tr("Advance balance exists "));
+        return;
+    }
     if (ui->leGranTotal->asDouble() > 0.1 || ui->leGranTotal->asDouble() < -0.1) {
         DlgPaymentsDetails *d = new DlgPaymentsDetails(this);
         d->setInvoice(ui->leInvoice->text());
@@ -760,7 +769,9 @@ void WInvoice::on_btnPaymentsDetails_clicked()
     loadInvoice(ui->leInvoice->text());
     delete d;
     if (ui->leGranTotal->text() != amount) {
-        on_btnTaxPrint_clicked();
+        if (fPreferences.getDb(def_print_tax_after_receipt).toBool()) {
+            on_btnTaxPrint_clicked();
+        }
     }
 }
 

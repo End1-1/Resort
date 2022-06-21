@@ -1325,6 +1325,11 @@ int WReservationRoomTab::reserveState()
     return ui->leReserveCode->asInt();
 }
 
+QString WReservationRoomTab::invoiceId()
+{
+    return ui->leInvoice->text();
+}
+
 QString WReservationRoomTab::reserveId()
 {
     return ui->leReservId->text();

@@ -67,6 +67,7 @@ public:
     QString author();
     QString lastModify();
     int reserveState();
+    QString invoiceId();
     QString reserveId();
     void startTrackControl();
     TrackControl *trackControl();

@@ -30,9 +30,7 @@ QWidget *FDailyMovementCommon::lastElement()
 QString FDailyMovementCommon::reportTitle()
 {
     return QString("%1 %2 - %3").
-            arg(tr("Daily financial report"))
-            .arg(ui->deDate->text())
-            .arg(ui->leEnd->text());
+            arg(tr("Daily financial report"), ui->deDate->text(), ui->leEnd->text());
 }
 
 void FDailyMovementCommon::apply(WReportGrid *rg)

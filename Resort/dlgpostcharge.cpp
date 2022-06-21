@@ -382,7 +382,7 @@ void DlgPostCharge::on_btnPrintTax_clicked()
     if (ui->tabWidget->currentIndex() == 2) {
         mp = ui->lePayment->asInt();
     }
-    DlgSinglePrintTax *d = new DlgSinglePrintTax(this);
+    DlgSinglePrintTax *d = new DlgSinglePrintTax(ui->wRoom->invoice(), this);
     d->addItem(ui->leItem->text(), ui->leAmount->asDouble(), mp, ui->leVoucher->text());
     if (d->exec() == QDialog::Accepted) {
         ui->btnPrintTax->setEnabled(false);

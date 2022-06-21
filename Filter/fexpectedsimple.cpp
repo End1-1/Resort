@@ -64,7 +64,7 @@ QWidget *FExpectedSimple::lastElement()
 
 QString FExpectedSimple::reportTitle()
 {
-    return QString("%1, %2").arg(tr("Expected arrivals")).arg(WORKING_DATE.toString(def_date_format));
+    return QString("%1, %2").arg(tr("Expected arrivals"), WORKING_DATE.toString(def_date_format));
 }
 
 void FExpectedSimple::refresh()

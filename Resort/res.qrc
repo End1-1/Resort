@@ -150,5 +150,6 @@
         <file>images/chart.png</file>
         <file>images/paste.png</file>
         <file>images/do-not-disturbe.png</file>
+        <file>images/AS.png</file>
     </qresource>
 </RCC>

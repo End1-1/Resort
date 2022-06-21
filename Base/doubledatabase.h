@@ -94,6 +94,7 @@ public:
     void setValue(int row, const QString &columnName, const QVariant &value);
     void resetDoNotUse(bool v = false);
     void setNoSqlErrorLogMode(bool v = true);
+    static QString lastQuery(QSqlQuery *q);
     static void logEvent(const QString &event);
 private:
     bool fIsReady;
@@ -109,7 +110,6 @@ private:
     QSqlDatabase fDb1;
     QSqlDatabase fDb2;
     void configureDatabase(QSqlDatabase &cn, const QString &host, const QString &db, const QString &user, const QString &password);
-    QString lastQuery(QSqlQuery *q);
     bool exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect);
     QMap<QString, int> fNameColumnMap;
 signals:

@@ -8,6 +8,8 @@ class PPrintScene;
 class PPrintHeader : public Base
 {
 public:
+    PPrintHeader(PPrintScene *ps, const QString &headerText, const QString &number);
+
     PPrintHeader(PPrintScene *ps, const QString &headerText, int number);
 };
 

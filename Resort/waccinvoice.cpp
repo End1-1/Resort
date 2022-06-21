@@ -25,6 +25,7 @@
 #include "dlgremotinvoices.h"
 #include "dlgreserveshortinfo.h"
 #include "wvauchereditor.h"
+#include "dlgexportas.h"
 #include <QSqlRecord>
 #include <QInputDialog>
 
@@ -72,6 +73,8 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->leVatCode->setSelector(this, cache(cid_vat_mode), ui->leVATMode, sel_vat_mode);
     ui->leCardexCode->setEnabled(r__(cr__super_correction));
     ui->leVatCode->setEnabled(r__(cr__super_correction));
+    ui->btnTracking->setVisible(fPreferences.getDb(def_show_logs).toBool());
+    ui->btnExportAS->setVisible(r__(cr__export_data_to_as));
 }
 
 WAccInvoice::~WAccInvoice()
@@ -729,11 +732,11 @@ void WAccInvoice::on_btnEliminate_clicked()
         fDD.exec("delete from o_event where f_id=:f_id");
     }
     QString oldValue = QString("%1 %2(%3) %4 %5")
-            .arg(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString())
-            .arg(ui->tblData->item(rows.at(0).row(), 5)->data(Qt::EditRole).toString())
-            .arg(ui->tblData->item(rows.at(0).row(), 6)->data(Qt::EditRole).toString())
-            .arg(ui->tblData->item(rows.at(0).row(), 2)->data(Qt::EditRole).toDate().toString(def_date_format))
-            .arg(ui->tblData->item(rows.at(0).row(), 4)->data(Qt::EditRole).toString());
+            .arg(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString(),
+                 ui->tblData->item(rows.at(0).row(), 5)->data(Qt::EditRole).toString(),
+                 ui->tblData->item(rows.at(0).row(), 6)->data(Qt::EditRole).toString(),
+                 ui->tblData->item(rows.at(0).row(), 2)->data(Qt::EditRole).toDate().toString(def_date_format),
+                 ui->tblData->item(rows.at(0).row(), 4)->data(Qt::EditRole).toString());
     fTrackControl->insert("Entry eliminated", oldValue, "");
     fTrackControl->saveChanges();
     correctCOCL();
@@ -980,4 +983,15 @@ void WAccInvoice::on_btnGuestInfo_clicked()
 void WAccInvoice::on_btnNext_clicked()
 {
 
+}
+
+void WAccInvoice::on_btnExportAS_clicked()
+{
+    QMap<int, QMap<QString, QVariant> > partnersMap;
+    QMap<QString, QMap<QString, QVariant> > servicesMap;
+    QMap<QString, QMap<QString, QVariant> > goodsMap;
+    QMap<QString, QMap<QString, QVariant> > unitsMap;
+    DlgExportAS::getAsDataMap(partnersMap, servicesMap, goodsMap, unitsMap);
+    DlgExportAS::exportInvoiceToAs(ui->leInvoice->text(), partnersMap, servicesMap, unitsMap, true);
+    message_info(tr("Done."));
 }

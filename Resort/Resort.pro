@@ -17,6 +17,7 @@ DEFINES += _RESORT_
 DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
+    ../../XLSX/src/xlsxborder.cpp \
     ../Base/dlgexitbyversion.cpp \
     ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
@@ -442,6 +443,7 @@ SOURCES += main.cpp\
     ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
+    ../../XLSX/src/xlsxborder.h \
     ../Base/dlgexitbyversion.h \
     ../Base/dlgselector.h \
     ../Base/doubleutils.h \

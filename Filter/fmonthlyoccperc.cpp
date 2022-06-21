@@ -31,10 +31,7 @@ QWidget *FMonthlyOccPerc::lastElement()
 
 QString FMonthlyOccPerc::reportTitle()
 {
-    return QString("%1: %2 - %3")
-            .arg(tr("Yearly summary occupancy report"))
-            .arg(ui->deDate1->text())
-            .arg(ui->deDate2->text());
+    return QString("%1: %2 - %3").arg(tr("Yearly summary occupancy report"), ui->deDate1->text(), ui->deDate2->text());
 }
 
 void FMonthlyOccPerc::apply(WReportGrid *rg)

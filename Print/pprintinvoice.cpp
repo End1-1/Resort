@@ -110,13 +110,10 @@ void PPrintInvoice::previewInvoice()
     QString inv;
     if (fPreferences.getDb(def_invoice_header_mode).toInt() == 0) {
         inv = QString("%1 #%2, %3")
-            .arg(tr("ROOM"))
-            .arg(QString("%1").arg(dh.getString("f_room")))
-            .arg(fId);
+            .arg(tr("ROOM"), QString("%1").arg(dh.getString("f_room")), fId);
     } else {
         inv = QString("%1 #%2")
-                .arg(tr("S/N"))
-                .arg(fId);
+                .arg(tr("S/N"), fId);
     }
     PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, nullptr, QFont(qApp->font().family(), 30, 75));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
@@ -143,18 +140,25 @@ void PPrintInvoice::previewInvoice()
     th.setRectPen(pline);
     int top = 310;
     int rowHeight = 60;
-    r = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dh.getString("f_guest"), &th, f));
-    top += r->textHeight();
+//    r = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dh.getString("f_guest"), &th, f));
+//    top += r->textHeight();
     DoubleDatabase dguest(true);
     dguest[":f_invoice"] = fId;
-    dguest.exec("select g.guest from f_reservation_guests rg \
-                 left join guests g on g.f_id=rg.f_guest \
-                where rg.f_first=0 and rg.f_reservation in (select f_id from f_reservation where f_invoice=:f_invoice) ");
+    dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname) as f_guestname, n.f_name "
+                "from f_reservation_guests rg "
+                "left join f_guests g on g.f_id=rg.f_guest "
+                "left join f_nationality n on n.f_short=g.f_nation "
+                "where rg.f_reservation in "
+                    "(select f_id from f_reservation where f_invoice=:f_invoice) "
+                "order by rg.f_first desc ");
     while (dguest.nextRow()) {
         th.setWrapMode(QTextOption::WordWrap);
-        PTextRect *tre = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f));
+        PTextRect *tre = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0) + ", " + dguest.getString(1), &th, f));
         th.setWrapMode(QTextOption::NoWrap);
         top += tre->textHeight();
+        if (!r) {
+            r = tre;
+        }
     }
     if (!dh.getString("f_address").isEmpty()) {
         th.setWrapMode(QTextOption::WordWrap);
@@ -402,6 +406,21 @@ void PPrintInvoice::previewInvoice()
     th.setFont(f);
     th.setWrapMode(QTextOption::WordWrap);
     ps->addTextRect(new PTextRect(20, top, 2000, rowHeight * 3, fPreferences.getDb(def_vouchers_invoice_footer).toString(), &th, f));
+
+    top += r->textHeight();
+    top += r->textHeight();
+    if (top > 2800) {
+        top = 30;
+        ps = pp->addScene(0, Portrait);
+    }
+    f.setPointSize(18);
+    f.setBold(false);
+    th.setFont(f);
+    top += ps->addTextRect(10, top, 680, rowHeight, QString("Printed %1").arg(QDateTime::currentDateTime().toString(def_date_time_format)), &th)->textHeight();
+    CacheUsers u;
+    if (u.get(__preferences.getLocal(def_working_user_id).toUInt())) {
+        top += ps->addTextRect(10, top, 680, rowHeight, QString("By ") + u.fFull(), &th)->textHeight();
+    }
     TrackControl tc(0);
     tc.insert("Print invoice request", fId, "");
     pp->exec(fNoPreview);

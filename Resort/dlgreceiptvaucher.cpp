@@ -53,6 +53,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     fDoc.setleAmountUSD(ui->leAmountUSD);
     fDoc.setleCreditCard(ui->leCardCode, ui->leCardName);
     fDoc.setleRemarks(ui->teRemarks);
+    ui->btnLog->setVisible(fPreferences.getDb(def_show_logs).toBool());
     on_tabWidget_currentChanged(0);
 }
 

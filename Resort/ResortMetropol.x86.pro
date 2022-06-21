@@ -18,6 +18,7 @@ DEFINES += _HOTEL_
 DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
+    ../../XLSX/src/xlsxborder.cpp \
     ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
     ../Base/monthnames.cpp \
@@ -33,6 +34,7 @@ SOURCES += main.cpp\
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Filter/froomstates.cpp \
+    ../Filter/ftaxreport.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -40,6 +42,7 @@ SOURCES += main.cpp\
     ../Threads/objectthread.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
+    dlgexportas.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
@@ -441,6 +444,7 @@ SOURCES += main.cpp\
     ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
+    ../../XLSX/src/xlsxborder.h \
     ../Base/dlgselector.h \
     ../Base/doubleutils.h \
     ../Base/monthnames.h \
@@ -456,6 +460,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
     ../Filter/froomstates.h \
+    ../Filter/ftaxreport.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -463,6 +468,7 @@ HEADERS  += mainwindow.h \
     ../Threads/objectthread.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
+    dlgexportas.h \
     dlginvoicepaymentoptions.h \
     dlgoptions.h \
     dlgprintvoucherasinvoice.h \
@@ -877,7 +883,9 @@ FORMS    += mainwindow.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
     ../Filter/froomstates.ui \
+    ../Filter/ftaxreport.ui \
     dlgconfigtaxserver.ui \
+    dlgexportas.ui \
     dlginvoicepaymentoptions.ui \
     dlgoptions.ui \
     dlgprintvoucherasinvoice.ui \

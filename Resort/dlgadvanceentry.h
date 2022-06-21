@@ -25,14 +25,11 @@ private slots:
     void on_btnPrint_clicked();
     void on_btnNew_clicked();
     void on_btnPrintTax_clicked();
-    void on_rbAdvance_clicked(bool checked);
-    void on_btnService_clicked(bool checked);
     void on_btnLog_clicked();
 
 private:
     Ui::DlgAdvanceEntry *ui;
     DBMRegister fDoc;
-    void changeTaxMode(bool mode);
     void clearSelector();
 };
 

@@ -34,11 +34,9 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
                   << PAYMENT_PAYX;
     ui->wPayment->setPaymentFilter(paymentFilter);
     ui->wPayment->hideVAT(true);
-    ui->leService->setSelector(this, cache(cid_invoice_item), ui->leServiceName);
     ui->wInvoice->setDBMRegister(&fDoc);
     ui->wInvoice->setReservationMode(reserveId);
     ui->wPayment->setDBMRegister(&fDoc);
-    ui->leServiceQty->setValidator(new QIntValidator());
     fDoc.setleID(ui->leVoucher);
     fDoc.setleWDate(ui->deDate);
     fDoc.setleUser(ui->leUser, ui->leUsername);
@@ -50,13 +48,8 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     fDoc.fSign = -1;
     fDoc.fFinance = 1;
     fDoc.setleRemarks(ui->teRemarks);
+    ui->btnLog->setVisible(fPreferences.getDb(def_show_logs).toBool());
     adjustSize();
-}
-
-void DlgAdvanceEntry::changeTaxMode(bool mode)
-{
-    ui->leService->setEnabled(mode);
-    ui->leServiceQty->setEnabled(mode);
 }
 
 void DlgAdvanceEntry::clearSelector()
@@ -169,58 +162,16 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     double cash = ui->wPayment->paymentCode() == PAYMENT_CASH ? ui->wPayment->amount() : 0;
     double card = ui->wPayment->paymentCode() == PAYMENT_CASH ? 0 : ui->wPayment->amount();
     int taxCode = 0;
-    if (ui->rbAdvance->isChecked()) {
-        QString outJson;
-        if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode, outJson)) {
-            return;
-        }
-        ui->leTax->setInt(taxCode);
-        DoubleDatabase dd(true, doubleDatabase);
-        if (!fDoc.save(dd)) {
-            message_error(fDoc.fError);
-            return;
-        }
-    } else {
-        if (ui->leService->asInt() == 0) {
-            message_error(tr("Service name cannot be empty"));
-            return;
-        }
-        DlgPrintTaxSM dpt(this);
-        CacheInvoiceItem inv;
-        if (!inv.get(ui->leService->text())) {
-            message_error(tr("Invalid service item code"));
-            return;
-        }
-        dpt.addGoods(inv.fVatDept(), inv.fAdgt(), inv.fCode(), inv.fTaxName(), ui->wPayment->amount() / ui->leServiceQty->asDouble(), ui->leServiceQty->asDouble());
-        dpt.fOrder = ui->wInvoice->invoice();
-        if (ui->wPayment->paymentCode() == PAYMENT_CARD) {
-            dpt.fCardAmount = ui->wPayment->amount();
-        } else {
-            dpt.fCardAmount = 0;
-        }
-        dpt.fPrepaid = 0;
-
-        int result = dpt.exec();
-        if (result == TAX_OK) {
-            taxCode = dpt.fTaxCode;
-            ui->leTax->setInt(taxCode);
-            DoubleDatabase dd(true, doubleDatabase);
-            if (!fDoc.save(dd)) {
-                message_error(fDoc.fError);
-                return;
-            }
-        }
+    QString outJson;
+    if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode, outJson)) {
+        return;
     }
-}
-
-void DlgAdvanceEntry::on_rbAdvance_clicked(bool checked)
-{
-    changeTaxMode(!checked);
-}
-
-void DlgAdvanceEntry::on_btnService_clicked(bool checked)
-{
-    changeTaxMode(checked);
+    ui->leTax->setInt(taxCode);
+    DoubleDatabase dd(true, doubleDatabase);
+    if (!fDoc.save(dd)) {
+        message_error(fDoc.fError);
+        return;
+    }
 }
 
 void DlgAdvanceEntry::on_btnLog_clicked()

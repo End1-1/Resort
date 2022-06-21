@@ -205,6 +205,9 @@ void DlgMain::processLine(const QString &line)
     if (lines.count() < 9) {
         lines.insert(2, "-");
     }
+    while (lines.count() < 9) {
+        lines.append("-");
+    }
     int isLocal = 1;
     QString o = lines[6];
     lines.insert(6, o.mid(0, 1));
@@ -219,7 +222,7 @@ void DlgMain::processLine(const QString &line)
             if (area.isEmpty()) {
                 break;
             }
-            for (QMap<QString, double>::const_iterator it = rates.begin(); it != rates.end(); it++) {
+            for (QMap<QString, double>::const_iterator it = rates.constBegin(); it != rates.constEnd(); it++) {
                 if (it.key() == area) {
                     found = true;
                     price = rates[area];

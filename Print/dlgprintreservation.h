@@ -27,6 +27,7 @@ private slots:
 
 private:
     Ui::DlgPrintReservation *ui;
+
     WReservationRoomTab *fSource;
 };
 

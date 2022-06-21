@@ -182,6 +182,9 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chRoomInventoryViewer, QString::number(fGroupId) + ": " + ui->chRoomInventoryViewer->text())
             .addWidget(ui->chManualTax, QString::number(fGroupId) + ": " + ui->chManualTax->text())
             .addWidget(ui->chChangeRVDateCL_2, QString::number(fGroupId) + ": " + ui->chChangeRVDateCL_2->text())
+            .addWidget(ui->chEditASConString, QString::number(fGroupId) + ": " + "AS connection string")
+            .addWidget(ui->chExportDataToAS, QString::number(fGroupId) + ": " + "Export data to AS")
+            .addWidget(ui->chTaxReport, QString::number(fGroupId) + ": " + "Fiscal report")
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

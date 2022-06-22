@@ -136,7 +136,7 @@ void DlgExportAS::exportInvoiceToAs(const QString &invoice,
     dd[":f_inv"] = invoice;
     dd.exec("select f_itemcode, f_finalname, f_amountamd "
             "from m_register "
-            "where f_paymentmode=9 and f_finance=1 and f_side=1 and f_inv=:f_inv");
+            "where f_paymentmode=9 and f_finance=1 and f_side=1 and f_inv=:f_inv and f_fiscal=0 and f_source in ('RM', 'CH', 'PS')");
     double total = 0;
     QList<QMap<QString, QVariant> > items;
     while (dd.nextRow()) {
@@ -174,7 +174,7 @@ void DlgExportAS::exportInvoiceToAs(const QString &invoice,
     q.bindValue(":fCUR", "AMD");
     q.bindValue(":fSUMM", total);
     q.bindValue(":fCOMMENT", QString("%1 %2, %3").arg(tr("Invoice"), invoice, guest));
-    q.bindValue(":fBODY", QString("\r\nPREPAYMENTACC:5231\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:2211\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
+    q.bindValue(":fBODY", QString("\r\nPREPAYMENTACC:5231\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:2211\r\nCUREXCHNG:1.0000\r\nCOURSECOUNT:1.0000\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
             .arg(items.count())
             .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * total : 0));
     q.bindValue(":fPARTNAME", partnersMap[cityledger]["fcaption"]); // set to kamar
@@ -186,7 +186,7 @@ void DlgExportAS::exportInvoiceToAs(const QString &invoice,
     q.bindValue(":fENTRYSTATE", 0);
     q.bindValue(":fEMPLIDRESPIN", -1);
     q.bindValue(":fEMPLIDRESPOUT", -1);
-    q.bindValue(":fVATTYPE", "1");
+    q.bindValue(":fVATTYPE", "2");
     q.bindValue(":fSPEC", "                    00"); // <--- Tax receipt id
 //        if (card > 0.001) {
 //            dbas[":fBODY"] = dbas[":fBODY"].toString() +

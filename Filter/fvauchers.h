@@ -45,6 +45,7 @@ private slots:
     void on_chCanceled_clicked(bool checked);
     void on_toolButton_2_clicked();
     void on_toolButton_clicked();
+    void tblMainDblClick(const QModelIndex &index);
 };
 
 #endif // FVAUCHERS_H

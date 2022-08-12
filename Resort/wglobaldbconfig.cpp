@@ -362,7 +362,6 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
     values.insert(def_daily_movement_items, ui->teDailyMovement->toPlainText());
     values.insert(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? "0" : "1");
-    values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
     values.insert(def_transfer_amount_id , ui->leTransferAmountVoucherId->text());
     values.insert(def_rooming_eod_default_side, QString::number(ui->leRoomingEODSide->text().toInt()));
     values.insert(def_extrarooming_id, ui->leExtraRooming->text());

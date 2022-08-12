@@ -35,7 +35,8 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
                                      << QString::number(PAYMENT_CARD)
                                      << QString::number(PAYMENT_BANK)
                                      << QString::number(PAYMENT_BARTER)
-                                     << QString::number(PAYMENT_PAYX);
+                                     << QString::number(PAYMENT_PAYX)
+                                     << QString::number(PAYMENT_TERMINAL);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
     clVisible(false);
@@ -118,6 +119,10 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
             case PAYMENT_PAYX:
                 cardVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT PAYX"));
+                break;
+            case PAYMENT_TERMINAL:
+                cardVisible(false);
+                ui->leFinalName->setText(tr("PAYMENT TERMINAL"));
                 break;
             case PAYMENT_CL:
                 clVisible(true);
@@ -221,6 +226,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
         case PAYMENT_PAYX:
             finalName += "PAYX";
             break;
+        case PAYMENT_TERMINAL:
+            finalName += "TERMINAL";
+            break;
         default:
             errors += tr("Selected mode of payment is not allowed here") + "<br>";
             break;
@@ -251,6 +259,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             break;
         case PAYMENT_PAYX:
             finalName += "PAYX";
+            break;
+        case PAYMENT_TERMINAL:
+            finalName += "TERMINAL";
             break;
         default:
             errors += tr("Selected payment mode is not allowed here") + "<br>";

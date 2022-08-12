@@ -188,6 +188,7 @@ signals:
     void doubleClickOnRow(const QList<QVariant> &values);
     void clickOnRow(int row);
     void newBtn();
+    void tblMainDoubleClick(const QModelIndex &);
 };
 
 #endif // WREPORTGRID_H

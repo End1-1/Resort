@@ -68,6 +68,8 @@ private slots:
     void on_btnWakeup_clicked();
     void on_btnDoNotDisturbe_clicked(bool checked);
 
+    void on_btnResetAdvanceAmount_clicked();
+
 private:
     Ui::WInvoice *ui;
     void save();

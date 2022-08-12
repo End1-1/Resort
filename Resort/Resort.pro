@@ -35,6 +35,7 @@ SOURCES += main.cpp\
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Filter/froomstates.cpp \
+    ../Filter/ftaxreport.cpp \
     ../Server2/datahandler.cpp \
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
@@ -42,6 +43,8 @@ SOURCES += main.cpp\
     ../Threads/objectthread.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
+    dlgexportas.cpp \
+    dlghdmviewer.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgofferinvoiceextra.cpp \
     dlgoptions.cpp \
@@ -461,6 +464,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
     ../Filter/froomstates.h \
+    ../Filter/ftaxreport.h \
     ../Server2/datahandler.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
@@ -468,6 +472,8 @@ HEADERS  += mainwindow.h \
     ../Threads/objectthread.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
+    dlgexportas.h \
+    dlghdmviewer.h \
     dlginvoicepaymentoptions.h \
     dlgofferinvoiceextra.h \
     dlgoptions.h \
@@ -883,7 +889,10 @@ FORMS    += mainwindow.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
     ../Filter/froomstates.ui \
+    ../Filter/ftaxreport.ui \
     dlgconfigtaxserver.ui \
+    dlgexportas.ui \
+    dlghdmviewer.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \
     dlgoptions.ui \

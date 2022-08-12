@@ -43,7 +43,7 @@ void FDailyMovementCommon::apply(WReportGrid *rg)
             "left join f_invoice_item p on p.f_id=m.f_itemCode "
             "left join serv_daily_movement sdm  on sdm.f_itemCode=m.f_itemCode "
             "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 and f_finance=1 " //and m.f_sign=1
-            "and p.f_group=1 :itemCode "
+            "and p.f_group=1 :itemCode :fiscal "
             "group by 1, 2, 3 :groupDate "
             "order by m.f_itemCode, m.f_wdate";
     QString query = rg->fStaticQuery;
@@ -60,6 +60,11 @@ void FDailyMovementCommon::apply(WReportGrid *rg)
         query.replace(":itemCode", "");
     } else {
         query.replace(":itemCode", QString(" and m.f_itemCode in(%1)").arg(ui->leTypeOfSale->fHiddenText));
+    }
+    if (ui->chFiscal->isChecked()) {
+        query.replace(":fiscal", " and m.f_fiscal>0 ");
+    } else {
+        query.replace(":fiscal", "");
     }
     fReportGrid->fModel->setColumn(50, "", tr("Source"))
             .setColumn(50, "", tr("Code"))

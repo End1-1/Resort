@@ -68,7 +68,7 @@ void FCashReport::apply(WReportGrid *rg)
             query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
         }
         if (ui->lePayments->isEmpty()) {
-            query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15)");
+            query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15, 16)");
         } else {
             query.replace(":payment", "and m.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }

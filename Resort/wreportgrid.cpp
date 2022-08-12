@@ -320,6 +320,7 @@ void WReportGrid::on_tblMain_doubleClicked(const QModelIndex &index)
         fillRowValues(index.row());
         processValues(index.row(), false);
     }
+    emit tblMainDoubleClick(index);
 }
 
 void WReportGrid::on_btnNew_clicked()
@@ -1037,6 +1038,8 @@ void WReportGrid::on_btnConfigGrid_clicked()
         fBold = false;
         printOnly = false;
         rowHeight = 21;
+        QSettings s(_ORGANIZATION_, _APPLICATION_ + QString("\\Grid\\") + fGridClassName);
+        s.remove("ColumnsWidths");
     }
     dd[":f_report"] = fGridClassName;
     dd[":f_group"] = WORKING_USERGROUP;

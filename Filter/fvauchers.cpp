@@ -8,6 +8,8 @@
 #include "wvauchereditor.h"
 #include "cachevaucher.h"
 #include "dlgprintvoucherasinvoice.h"
+#include "tablemodel.h"
+#include "dlghdmviewer.h"
 #include <QInputDialog>
 
 #define SEL_VAUCHER 1
@@ -71,8 +73,9 @@ FVauchers::FVauchers(QWidget *parent) :
         where f_wdate between :f_date1 and :f_date2 ";
 
         ui->leVaucherCode->setSelector(this, cache(cid_vaucher), ui->leVacherName);
-        connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRow(QList<QVariant>)));
+        //connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRow(QList<QVariant>)));
         connect(fReportGrid, SIGNAL(clickOnRow(int)), this, SLOT(clickOnRow(int)));
+        connect(fReportGrid, SIGNAL(tblMainDoubleClick(QModelIndex)), this, SLOT(tblMainDblClick(QModelIndex)));
 }
 
 FVauchers::~FVauchers()
@@ -413,4 +416,25 @@ void FVauchers::on_toolButton_clicked()
     ui->deFrom->setDate(ui->deFrom->date().addDays(-1));
     ui->deTo->setDate(ui->deTo->date().addDays(-1));
     apply(fReportGrid);
+}
+
+void FVauchers::tblMainDblClick(const QModelIndex &index)
+{
+    if (!index.isValid()) {
+        return;
+    }
+    if (index.column() == 14) {
+        DoubleDatabase dd(true, false);
+        dd[":f_replyTaxCode"] = fReportGrid->fModel->data(index.row(), 14, Qt::EditRole).toInt();
+        dd.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");
+        if (dd.nextRow()) {
+            DlgHDMViewer(fReportGrid->fModel->data(index.row(), 14, Qt::EditRole).toString(), dd.getString("f_queryjson"), this).exec();
+        } else {
+            message_error(tr("Invalid fiscal code"));
+            return;
+        }
+    } else {
+        openVaucher(fReportGrid->fModel->data(index.row(), 1, Qt::EditRole).toString(),
+                    fReportGrid->fModel->data(index.row(), 0, Qt::EditRole).toString());
+    }
 }

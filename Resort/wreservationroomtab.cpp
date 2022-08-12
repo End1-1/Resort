@@ -1495,7 +1495,7 @@ void WReservationRoomTab::countTotal()
 
     ui->lePricePerNight->setDouble(total);
     total *= ui->sbNights->value();
-    ui->leTotal->setText(QString::number(total, 'f', 2));
+    ui->leTotal->setDouble(total);
     switch (ui->cbVAT->asInt()) {
     case VAT_INCLUDED: {
         double vat = total - (total / ((def_vat / 100) + 1));

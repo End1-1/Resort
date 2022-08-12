@@ -700,7 +700,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionExecute_failed_sql->setVisible(r__(cr__exec_failed_sql_queries));
     ui->actionRecover_invoice->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__super_correction));
     ui->actionTransfer_log->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
-
+    ui->actionUpload_menu_from_FrontDesk->setVisible(r__(cr__update_menu_from_frontdesk));
     ui->menuBar->actions().at(12)->setVisible(r__(cr__storehouse_all_items)); // Storehouse
 
     ui->menuBar->actions().at(13)->setVisible(false); // Discount system
@@ -2205,4 +2205,71 @@ void MainWindow::on_actionArmSoft_triggered()
 void MainWindow::on_actionFiscal_report_triggered()
 {
     FTaxReport::openFilterReport<FTaxReport, WReportGrid>();
+}
+
+void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
+{
+    DoubleDatabase dd(true, doubleDatabase);
+//    dd.exec("delete from r_dish");
+//    dd.exec("delete from r_dish_type");
+
+    DoubleDatabase dr(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
+    if (!dr.open(true, false)) {
+        message_error(dr.fLastError);
+        return;
+    }
+    QMap<int, QString> adg;
+    dr.exec("select f_id, f_name, f_adgcode from d_part2");
+    while (dr.nextRow()) {
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_part"] = 1;
+        dd[":f_en"] = dr.getString(1);
+        dd[":f_am"] = dr.getString(1);
+        dd[":f_ru"] = dr.getString(1);
+        adg[dr.getInt(0)] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_active"] = 1;
+        dd.insert("r_dish_type", false);
+
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_part"] = 1;
+        dd[":f_en"] = dr.getString(1);
+        dd[":f_am"] = dr.getString(1);
+        dd[":f_ru"] = dr.getString(1);
+        adg[dr.getInt(0)] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_active"] = 1;
+        dd.update("r_dish_type", where_id(dr.getInt(0)));
+    }
+    dr.exec("select f_id, f_part, f_name from d_dish");
+    while (dr.nextRow()) {
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_type"] = dr.getInt(1);
+        dd[":f_en"] = dr.getString(2);
+        dd[":f_am"] = dr.getString(2);
+        dd[":f_ru"] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_unit"] = 1;
+        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd.insert("r_dish", false);
+
+        dd[":f_id"] = dr.getInt(0);
+        dd[":f_type"] = dr.getInt(1);
+        dd[":f_en"] = dr.getString(2);
+        dd[":f_am"] = dr.getString(2);
+        dd[":f_ru"] = dr.getString(2);
+        dd[":f_bgcolor"] = -1;
+        dd[":f_textcolor"] = -16777216;
+        dd[":f_queue"] = dr.getInt(0);
+        dd[":f_unit"] = 1;
+        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd.update("r_dish", where_id(dr.getInt(0)));
+    }
+    message_info(tr("Done."));
 }

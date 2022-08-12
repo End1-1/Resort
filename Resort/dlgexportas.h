@@ -25,6 +25,8 @@ private slots:
 
     void on_btnUploadInvoices_clicked();
 
+    void on_btnUploadPayments_clicked();
+
 private:
     Ui::DlgExportAS *ui;
 

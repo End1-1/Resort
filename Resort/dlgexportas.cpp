@@ -21,6 +21,10 @@ DlgExportAS::DlgExportAS(QWidget *parent) :
     ui->leVatInvoice->setText(__s.value("asvatinv").toString());
     ui->leServiceExpenseAccInvoice->setText(__s.value("asserviceexpenseaccinv").toString());
     ui->leServiceIncomeAccInvoice->setText(__s.value("asserviceincomeaccinv").toString());
+    ui->leExportPaymentAVCredit->setText(__s.value("leExportPaymentAVCredit").toString());
+    ui->leExportPaymentAVDebet->setText(__s.value("leExportPaymentAVDebet").toString());
+    ui->leExportPaymentRVCredit->setText(__s.value("leExportPaymentRVCredit").toString());
+    ui->leExportPaymentRVDebet->setText(__s.value("leExportPaymentRVDebet").toString());
 }
 
 DlgExportAS::~DlgExportAS()
@@ -431,5 +435,134 @@ void DlgExportAS::on_btnUploadInvoices_clicked()
         exportInvoiceToAs(invoices.at(i), partnersMap, servicesMap, unitsMap, false);
         ui->lbProgress->setText(QString("%1/%2").arg(i + 1).arg(invoices.count()));
     }
+    message_info(tr("Done."));
+}
+
+void DlgExportAS::on_btnUploadPayments_clicked()
+{
+    __s.setValue("leExportPaymentAVCredit", ui->leExportPaymentAVCredit->text());
+    __s.setValue("leExportPaymentAVDebet", ui->leExportPaymentAVDebet->text());
+    __s.setValue("leExportPaymentRVCredit", ui->leExportPaymentRVCredit->text());
+    __s.setValue("leExportPaymentRVDebet", ui->leExportPaymentRVDebet->text());
+
+    QSqlDatabase dbas = QSqlDatabase::addDatabase("QODBC3", "asss");
+    dbas.setDatabaseName(__s.value("asconnectionstring").toString());
+    if (!dbas.open()) {
+        message_error(dbas.lastError().databaseText());
+        return;
+    }
+    QSqlQuery q(dbas);
+    dbas.transaction();
+    QMap<QString, int> asPartnerMap;
+    q.exec("select fPARTCODE, fPARTID from PARTNERS");
+    while (q.next()) {
+        asPartnerMap[q.value(0).toString()] = q.value(1).toInt();
+    }
+
+    QMap<int, QString> fpartners;
+    DoubleDatabase dbs(true, false);
+    dbs.exec("select f_id, f_aspartner from f_room");
+    while (dbs.nextRow()) {
+        fpartners[dbs.getInt(0)] = dbs.getString(1);
+    }
+    for (int i = 0, count = ui->deStart->date().daysTo(ui->deEnd->date()) + 1; i < count; i++) {
+        QDate wdate = ui->deStart->date().addDays(i);
+        double total = 0;
+        dbs[":f_wdate"] = wdate;
+        dbs.exec("SELECT sum(f_amountamd) FROM m_register WHERE f_canceled=0 and f_creditcard>0 AND f_source IN ('RV', 'AV') and f_wdate=:f_wdate");
+        if (dbs.nextRow()) {
+            total = dbs.getDouble(0);
+        } else {
+            continue;
+        }
+
+        bool header = false;
+        QString docid = QUuid::createUuid().toString().replace("{", "").replace("}", "");
+        dbs[":f_wdate"] = wdate;
+        dbs.exec("SELECT * FROM m_register WHERE f_canceled=0 and f_creditcard>0 AND f_source IN ('RV', 'AV') and f_wdate=:f_wdate");
+        int rowid = 1;
+        while (dbs.nextRow()){
+            if (!header) {
+                header = true;
+                if (q.prepare("insert into DOCUMENTS ("
+                              "fISN, fDOCTYPE, fDOCSTATE, fDATE, fORDERNUM, fDOCNUM, fCUR, fSUMM, fCOMMENT, fBODY, fPARTNAME, "
+                              "fUSERID, fPARTID, fCRPARTID, fMTID, fEXPTYPE, fINVN, fENTRYSTATE, "
+                              "fEMPLIDRESPIN, fEMPLIDRESPOUT, fVATTYPE, fSPEC, fCHANGEDATE,fEXTBODY,fETLSTATE) VALUES ("
+                              ":fISN, :fDOCTYPE, :fDOCSTATE, '" + wdate.toString("yyyy-MM-dd") + "', "
+                              ":fORDERNUM, :fDOCNUM, :fCUR, :fSUMM, :fCOMMENT, :fBODY, :fPARTNAME, "
+                              ":fUSERID, :fPARTID, :fCRPARTID, :fMTID, '', :fINVN, :fENTRYSTATE, "
+                              ":fEMPLIDRESPIN, :fEMPLIDRESPOUT, :fVATTYPE, :fSPEC, current_timestamp,'', '')") == false) {
+                    dbas.rollback();
+                    message_error(q.lastError().databaseText());
+                    return;
+                }
+                q.bindValue(":fISN", docid);
+                q.bindValue(":fDOCTYPE", 1);
+                q.bindValue(":fDOCSTATE", 1);
+                q.bindValue(":fORDERNUM", "");
+                q.bindValue(":fDOCNUM", "");
+                q.bindValue(":fCUR", "AMD");
+                q.bindValue(":fSUMM", total);
+                q.bindValue(":fCOMMENT", "");
+                q.bindValue(":fBODY", "\r\nRATE:1.0000\r\nRATEBASE:1.0000\r\n");
+                q.bindValue(":fPARTNAME", ""); // set to kamar
+                q.bindValue(":fUSERID", 0);
+                q.bindValue(":fPARTID", -1);
+                q.bindValue(":fCRPARTID", -1);
+                q.bindValue(":fMTID", -1);
+                q.bindValue(":fINVN", "");
+                q.bindValue(":fENTRYSTATE", 0);
+                q.bindValue(":fEMPLIDRESPIN", -1);
+                q.bindValue(":fEMPLIDRESPOUT", -1);
+                q.bindValue(":fVATTYPE", "2");
+                q.bindValue(":fSPEC", "                    00"); // <--- Tax receipt id
+                if (!q.exec()) {
+                    dbas.rollback();
+                    message_error(q.lastError().databaseText());
+                    return;
+                }
+            }
+            QString db, cr;
+            if (dbs.getString("f_source") == "RV") {
+                db = ui->leExportPaymentRVDebet->text();
+                cr = ui->leExportPaymentRVCredit->text();
+            } else {
+                db = ui->leExportPaymentAVDebet->text();
+                cr = ui->leExportPaymentAVCredit->text();
+            }
+            int partner = asPartnerMap[fpartners[dbs.getInt("f_room")]];
+            if (partner == 0) {
+#ifdef QT_DEBUG
+                partner = 100000;
+#else
+                message_error(tr("Partner code undefined"));
+                dbas.rollback();
+                return;
+#endif
+            }
+            q.prepare("insert into DRAFTENTRIES ( "
+                      "fACCDB, fACCCR, fPARTDBID, fPARTCRID, fCURRCODEDB, fCURRCODECR, fSUMM, "
+                      "fCURSUMM, fCOMMENT, fBASE, fOP, fTRANS, "
+                      "fANALYTIC1DB, fANALYTIC1CR, fANALYTIC2DB, fANALYTIC2CR) values ("
+                      ":fACCDB, :fACCCOR, :fPARTDBID, :fPARTCRID, 'AMD', 'AMD', :fSUMM, "
+                      ":fCURSUMM, :fCOMMENT, :fBASE, 'M', :fTRANS, "
+                      "'', '', '', '')");
+            q.bindValue(":fACCDB", db);
+            q.bindValue(":fACCCOR", cr);
+            q.bindValue(":fPARTDBID", -1);
+            q.bindValue(":fPARTCRID", partner);
+            q.bindValue(":fSUMM", dbs.getDouble("f_amountamd"));
+            q.bindValue(":fCURSUMM", dbs.getDouble("f_amountamd"));
+            q.bindValue(":fBASE", docid);
+            q.bindValue(":fCOMMENT", dbs.getString("f_finalname"));
+            q.bindValue(":fTRANS", rowid++);
+            if (!q.exec()) {
+                message_error(q.lastError().databaseText());
+                dbas.rollback();
+                return;
+            }
+        }
+    }
+    dbas.commit();
     message_info(tr("Done."));
 }

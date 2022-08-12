@@ -185,6 +185,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chEditASConString, QString::number(fGroupId) + ": " + "AS connection string")
             .addWidget(ui->chExportDataToAS, QString::number(fGroupId) + ": " + "Export data to AS")
             .addWidget(ui->chTaxReport, QString::number(fGroupId) + ": " + "Fiscal report")
+            .addWidget(ui->chInitRestaurantFromOffice, QString::number(fGroupId) + ": " + "Init restaurant dishes from external db");
             ;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD[":f_group"] = fGroupId;

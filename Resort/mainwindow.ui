@@ -181,6 +181,7 @@
     <addaction name="actionExecute_failed_sql"/>
     <addaction name="actionTransfer_log"/>
     <addaction name="actionRecover_invoice"/>
+    <addaction name="actionUpload_menu_from_FrontDesk"/>
    </widget>
    <widget class="QMenu" name="menuRestaurant">
     <property name="title">
@@ -1581,6 +1582,15 @@
   <action name="actionFiscal_report">
    <property name="text">
     <string>Fiscal report</string>
+   </property>
+  </action>
+  <action name="actionUpload_menu_from_FrontDesk">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/storehouse.png</normaloff>:/images/storehouse.png</iconset>
+   </property>
+   <property name="text">
+    <string>Upload menu from FrontDesk</string>
    </property>
   </action>
  </widget>

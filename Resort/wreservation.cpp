@@ -328,7 +328,7 @@ void WReservation::tabCloseRequest(int index)
                 fMainWindow->setCurrentWidget(this);
                 ui->tab->setCurrentIndex(index);
                 QString errorMsg;
-                for (QStringList::const_iterator it = errors.begin(); it != errors.end(); it++) {
+                for (QStringList::const_iterator it = errors.constBegin(); it != errors.constEnd(); it++) {
                     errorMsg += *it + "<br>";
                 }
                 message_error(errorMsg);
@@ -376,7 +376,7 @@ void WReservation::roomNameChanged(const QString &name, int index)
             rooms += "#" + r->roomName();
         }
     }
-    setupTabTextAndIcon(QString("%1 %2").arg(tr("Reservation")).arg(rooms), ":/images/checkin.png");
+    setupTabTextAndIcon(QString("%1 %2").arg(tr("Reservation"), rooms), ":/images/checkin.png");
 }
 
 void WReservation::on_btnSave_clicked()
@@ -388,7 +388,7 @@ void WReservation::on_btnSave_clicked()
     }
     if (errors.count() > 0) {
         QString errorMessage;
-        for (QStringList::const_iterator it = errors.begin(); it != errors.end(); it++) {
+        for (QStringList::const_iterator it = errors.constBegin(); it != errors.constEnd(); it++) {
             errorMessage += *it + "<br>";
         }
         message_error(errorMessage);

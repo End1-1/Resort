@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>8</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -565,7 +565,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-178</y>
+            <y>0</y>
             <width>853</width>
             <height>633</height>
            </rect>
@@ -1604,6 +1604,16 @@
          </property>
          <property name="Tag" stdset="0">
           <number>26</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="EQCheckBox" name="chInitRestaurantFromOffice">
+         <property name="text">
+          <string>Init restaurant dishes from external db</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>150</number>
          </property>
         </widget>
        </item>

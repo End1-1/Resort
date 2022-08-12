@@ -197,6 +197,8 @@ private slots:
 
     void on_actionFiscal_report_triggered();
 
+    void on_actionUpload_menu_from_FrontDesk_triggered();
+
 private:
     Listener fServer2Listener;
     Ui::MainWindow *ui;

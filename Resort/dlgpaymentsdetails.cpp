@@ -7,6 +7,7 @@
 #include "cacheinvoiceitem.h"
 #include "cacheactiveroom.h"
 #include "pprintheader.h"
+#include "dlgrefundvaucher.h"
 #include "pprintvaucher.h"
 #include "printtax.h"
 #include "paymentmode.h"
@@ -416,6 +417,9 @@ void DlgPaymentsDetails::newPaidRow(int mode)
 
 void DlgPaymentsDetails::newRefundRow(int mode)
 {
+    DlgRefundVaucher::refundVaucher("", ui->leReservation->text());
+    setInvoice(ui->leInvoice->text());
+    return;
     int side = 0;
     switch (mode) {
     case PAYMENT_CASH:
@@ -742,4 +746,9 @@ void DlgPaymentsDetails::on_btnOptions_clicked()
 void DlgPaymentsDetails::on_btnBankPayX_clicked()
 {
     newPaidRow(PAYMENT_PAYX);
+}
+
+void DlgPaymentsDetails::on_btnBankPayX_2_clicked()
+{
+    newPaidRow(PAYMENT_TERMINAL);
 }

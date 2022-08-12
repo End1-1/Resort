@@ -2,6 +2,7 @@
 #include "ui_dlgrefundvaucher.h"
 #include "cacheredreservation.h"
 #include "cachepaymentmode.h"
+#include "cachereservation.h"
 #include "message.h"
 #include "pprintvaucher.h"
 #include "paymentmode.h"
@@ -82,6 +83,11 @@ void DlgRefundVaucher::on_btnSave_clicked()
     fDD[":f_side"] = 0;
     fDD[":f_rb"] = 0;
     fDD.update("m_register", where_id(ap(ui->leVaucher->text())));
+    if (ui->chDecreaseAdvance->isChecked()) {
+        fDD[":f_invoice"] = ui->leInvoice->text();
+        fDD[":f_amount"] = ui->leAmount->asDouble();
+        fDD.insert("f_used_advance", false);
+    }
     getBalance();
     message_info(tr("Saved"));
 }
@@ -94,6 +100,14 @@ void DlgRefundVaucher::setReservation(const QString &reserv)
         ui->leInvoice->setText(ci.fInvoice());
         ui->leGuest->setText(ci.fGuest());
         ui->leRoom->setText(ci.fRoom());
+    } else {
+        CacheReservation cr;
+        if (cr.get(reserv)) {
+            ui->leReserve->setText(reserv);
+            ui->leInvoice->setText(cr.fInvoice());
+            ui->leGuest->setText(cr.fGuest());
+            ui->leRoom->setText(cr.fRoom());
+        }
     }
     getBalance();
 }

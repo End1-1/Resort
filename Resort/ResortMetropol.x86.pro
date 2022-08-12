@@ -43,6 +43,7 @@ SOURCES += main.cpp\
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlgexportas.cpp \
+    dlghdmviewer.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
@@ -469,6 +470,7 @@ HEADERS  += mainwindow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlgexportas.h \
+    dlghdmviewer.h \
     dlginvoicepaymentoptions.h \
     dlgoptions.h \
     dlgprintvoucherasinvoice.h \
@@ -886,6 +888,7 @@ FORMS    += mainwindow.ui \
     ../Filter/ftaxreport.ui \
     dlgconfigtaxserver.ui \
     dlgexportas.ui \
+    dlghdmviewer.ui \
     dlginvoicepaymentoptions.ui \
     dlgoptions.ui \
     dlgprintvoucherasinvoice.ui \

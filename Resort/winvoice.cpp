@@ -1416,3 +1416,21 @@ void WInvoice::on_btnDoNotDisturbe_clicked(bool checked)
     BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
     BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReserveID->text());
 }
+
+void WInvoice::on_btnResetAdvanceAmount_clicked()
+{
+    if (ui->lePrepaid->asDouble() < 0.01) {
+        return;
+    }
+    if (message_confirm(tr("Reset available amount of advance?")) != QDialog::Accepted) {
+        return;
+    }
+    DoubleDatabase dd(true);
+    dd[":f_invoice"] = ui->leInvoice->text();
+    dd[":f_amount"] = ui->lePrepaid->asDouble();
+    dd.insert("f_used_advance", false);
+    TrackControl::insert(1, "Reset available amount of advance", ui->lePrepaid->text(), "", "", ui->leInvoice->text(), ui->leReserveID->text());
+    if (ui->leInvoice->notEmpty()) {
+        loadInvoice(ui->leInvoice->text());
+    }
+}

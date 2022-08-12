@@ -31,7 +31,8 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     paymentFilter << PAYMENT_CASH
                   << PAYMENT_CARD
                   << PAYMENT_BANK
-                  << PAYMENT_PAYX;
+                  << PAYMENT_PAYX
+                  << PAYMENT_TERMINAL;
     ui->wPayment->setPaymentFilter(paymentFilter);
     ui->wPayment->hideVAT(true);
     ui->wInvoice->setDBMRegister(&fDoc);
@@ -110,6 +111,9 @@ void DlgAdvanceEntry::on_btnSave_clicked()
         break;
     case PAYMENT_PAYX:
         finalName = "PAYX";
+        break;
+    case PAYMENT_TERMINAL:
+        finalName = "TERMINAL";
         break;
     default:
         message_error(tr("Selected mode of payment is not allowed here"));

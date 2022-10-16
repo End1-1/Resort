@@ -37,13 +37,18 @@ void FDailyMovementCommon::apply(WReportGrid *rg)
 {
     fReportGrid->fStaticQuery =
             "select :date m.f_source, m.f_itemCode, p.f_en, "
-            "sum(m.f_amountAmd), sum(m.f_amountAmd / m.f_amountUsd) "
+            "sum(m.f_amountAmd), sum(m.f_amountAmd / m.f_amountUsd), "
+            "m1.f_amountamd, m1.f_amountusd "
             "from m_register m "
             "left join users u on u.f_id=m.f_user "
             "left join f_invoice_item p on p.f_id=m.f_itemCode "
             "left join serv_daily_movement sdm  on sdm.f_itemCode=m.f_itemCode "
-            "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 and f_finance=1 " //and m.f_sign=1
-            "and p.f_group=1 :itemCode :fiscal "
+            "left join (select m1.f_itemcode, sum(m1.f_amountamd) as f_amountamd, sum(m1.f_amountamd/m1.f_amountusd) as f_amountusd "
+                " from m_register m1 "
+                " where m1.f_wdate between :f_wdate1 and :f_wdate2 and m1.f_canceled=0 and m1.f_finance=1 and m1.f_fiscal>0 "
+                " group by 1) m1 on m1.f_itemcode=m.f_itemcode "
+            "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 and f_finance=1 "
+            "and p.f_group=1 :itemCode  "
             "group by 1, 2, 3 :groupDate "
             "order by m.f_itemCode, m.f_wdate";
     QString query = rg->fStaticQuery;
@@ -61,16 +66,13 @@ void FDailyMovementCommon::apply(WReportGrid *rg)
     } else {
         query.replace(":itemCode", QString(" and m.f_itemCode in(%1)").arg(ui->leTypeOfSale->fHiddenText));
     }
-    if (ui->chFiscal->isChecked()) {
-        query.replace(":fiscal", " and m.f_fiscal>0 ");
-    } else {
-        query.replace(":fiscal", "");
-    }
     fReportGrid->fModel->setColumn(50, "", tr("Source"))
             .setColumn(50, "", tr("Code"))
             .setColumn(300, "", tr("Name"))
-            .setColumn(100, "", tr("Amount, AMD"))
-            .setColumn(100, "", tr("Amount, USD"));
+            .setColumn(100, "", tr("Amount 1, AMD"))
+            .setColumn(100, "", tr("Amount 1, USD"))
+            .setColumn(100, "", tr("Amount 2, AMD"))
+            .setColumn(100, "", tr("Amount 2, USD"));
 
     query.replace(":f_wdate1", ui->deDate->dateMySql())
             .replace(":f_wdate2", ui->leEnd->dateMySql());

@@ -20,6 +20,7 @@ public:
     static void openWindow(int room);
 
 private slots:
+    void onOffClicked();
     void comboStateCurrentIndexChanged(int index);
     void on_btnAddItem_clicked();
     void on_btnSave_clicked();

@@ -13,6 +13,7 @@
 #include "paymentmode.h"
 #include "pprintvaucher.h"
 #include "cacheusers.h"
+#include "databaserow.h"
 #include "winvoice.h"
 
 #define HINT_ACTIVE_ROOM 1
@@ -20,7 +21,7 @@
 #define HINT_PAYMENT_MODE 3
 #define HINT_CARD 4
 
-DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
+DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, int side, QWidget *parent) :
     BaseExtendedDialog(parent),
     ui(new Ui::DlgReceiptVaucher)
 {
@@ -31,12 +32,17 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     ui->deDate->setDate(WORKING_DATE);
     ui->leCL->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->lePaymentCode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName, HINT_PAYMENT_MODE);
+    if (side == 0) {
     ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
                                      << QString::number(PAYMENT_CARD)
                                      << QString::number(PAYMENT_BANK)
                                      << QString::number(PAYMENT_BARTER)
+                                     << QString::number(PAYMENT_CL)
                                      << QString::number(PAYMENT_PAYX)
                                      << QString::number(PAYMENT_TERMINAL);
+    } else {
+        ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CL);
+    }
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
     clVisible(false);
@@ -48,6 +54,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     fDoc.setleWDate(ui->deDate);
     fDoc.fItemCode = fPreferences.getDb(def_receip_vaucher_id).toUInt();
     fDoc.fFinance = 1;
+    fDoc.fSide = side;
     fDoc.setleFinalName(ui->leFinalName);
     fDoc.setlePaymentMode(ui->lePaymentCode, ui->lePaymentName);
     fDoc.setleAmountAMD(ui->leAmountAMD);
@@ -56,6 +63,18 @@ DlgReceiptVaucher::DlgReceiptVaucher(QWidget *parent) :
     fDoc.setleRemarks(ui->teRemarks);
     ui->btnLog->setVisible(fPreferences.getDb(def_show_logs).toBool());
     on_tabWidget_currentChanged(0);
+    fDoc.fFiscalMachine = fiscalmachine;
+    DoubleDatabase dd(true, false);
+    if (fDoc.fFiscalMachine > 0) {
+        if (row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
+            ui->leFiscalMachine->setText(dd.getString("f_name"));
+        }
+    }
+    fSuggestAmount = suggestAmount;
+    ui->btnSuggestAmount->setText(float_str(suggestAmount));
+    ui->lbSuggestAmount->setVisible(suggestAmount > 0.01);
+    ui->btnSuggestAmount->setVisible(suggestAmount > 0.01);
+    adjustSize();
 }
 
 DlgReceiptVaucher::~DlgReceiptVaucher()
@@ -86,6 +105,11 @@ void DlgReceiptVaucher::setVoucher(const QString &id)
             ui->deDate->setReadOnly(!r__(cr__change_rv_other_types));
             break;
     }
+    if (fDoc.fFiscalMachine > 0) {
+        if (row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
+            ui->leFiscalMachine->setText(dd.getString("f_name"));
+        }
+    }
     fixTabWidget();
     setBalance();
     ui->btnSave->setVisible(r__(cr__super_correction));
@@ -107,21 +131,27 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
             switch (c.fCode().toInt()) {
             case PAYMENT_CASH:
                 cardVisible(false);
+                clVisible(false);
+
                 ui->leFinalName->setText(tr("PAYMENT CASH"));
                 break;
             case PAYMENT_CARD:
+                clVisible(false);
                 cardVisible(true);
                 break;
             case PAYMENT_BANK:
+                clVisible(false);
                 cardVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT BANK"));
                 break;
             case PAYMENT_PAYX:
                 cardVisible(false);
+                clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT PAYX"));
                 break;
             case PAYMENT_TERMINAL:
                 cardVisible(false);
+                clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT TERMINAL"));
                 break;
             case PAYMENT_CL:
@@ -157,6 +187,12 @@ void DlgReceiptVaucher::setSide(quint32 side)
                                          << QString::number(PAYMENT_BARTER)
                                          << QString::number(PAYMENT_CL);
     }
+}
+
+void DlgReceiptVaucher::setCL(int cl)
+{
+    ui->lePaymentCode->setInitialValue(PAYMENT_CL);
+    ui->leCL->setInitialValue(cl);
 }
 
 void DlgReceiptVaucher::setInvoice(const QString &invoice)
@@ -324,10 +360,12 @@ void DlgReceiptVaucher::on_btnSave_clicked()
 
 void DlgReceiptVaucher::on_btnCancel_clicked()
 {
-    if (!ui->leVaucher->text().isEmpty()) {
-        WInvoice w(this);
-        w.loadInvoice(ui->wRoom->invoice());
-        w.on_btnTaxPrint_clicked();
+    if (ui->lePaymentCode->asInt() != PAYMENT_CL) {
+        if (!ui->leVaucher->text().isEmpty()) {
+            WInvoice w(this);
+            w.loadInvoice(ui->wRoom->invoice());
+            w.on_btnTaxPrint_clicked();
+        }
     }
     reject();
 }
@@ -402,15 +440,13 @@ void DlgReceiptVaucher::on_btnPrint_clicked()
 
 void DlgReceiptVaucher::on_leAmountAMD_textEdited(const QString &arg1)
 {
-    ui->leAmountUSD->setDouble(arg1.toDouble() / def_usd);
+    ui->leAmountUSD->setDouble(str_float(arg1) / def_usd);
 }
 
 void DlgReceiptVaucher::on_btnNew_clicked()
 {
     accept();
-    DlgReceiptVaucher *d = new DlgReceiptVaucher(this);
-    d->exec();
-    delete d;
+    DlgReceiptVaucher(fDoc.fFiscalMachine, 0, 0, this).exec();
 }
 
 void DlgReceiptVaucher::on_lePaymentCode_textChanged(const QString &arg1)
@@ -458,4 +494,10 @@ void DlgReceiptVaucher::on_tabWidget_currentChanged(int index)
         break;
     }
     adjustSize();
+}
+
+void DlgReceiptVaucher::on_btnSuggestAmount_clicked()
+{
+    ui->leAmountAMD->setDouble(fSuggestAmount);
+    on_leAmountAMD_textEdited(ui->leAmountAMD->text());
 }

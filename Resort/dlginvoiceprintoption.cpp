@@ -7,6 +7,14 @@ DlgInvoicePrintOption::DlgInvoicePrintOption(QWidget *parent) :
 {
     ui->setupUi(this);
     fResult = pio_none;
+    DoubleDatabase db(true, false);
+    db.exec("select * from f_acc_currencies");
+    QList<QVariant> row;
+    while (db.nextRow(row)) {
+        ui->cbCurrency->addItem(row.at(1).toString(), row.at(0));
+        ui->cbCurrency->setItemData(ui->cbCurrency->count() - 1, row.at(3), Qt::UserRole + 1);
+    }
+    ui->cbCurrency->setCurrentIndex(1);
 }
 
 DlgInvoicePrintOption::~DlgInvoicePrintOption()
@@ -14,11 +22,14 @@ DlgInvoicePrintOption::~DlgInvoicePrintOption()
     delete ui;
 }
 
-int DlgInvoicePrintOption::getOption()
+int DlgInvoicePrintOption::getOption(QString &currName, double &rate, bool &meal)
 {
     DlgInvoicePrintOption *d = new DlgInvoicePrintOption(fPreferences.getDefaultParentForMessage());
     d->exec();
     int result = d->fResult;
+    currName = d->ui->cbCurrency->currentText();
+    rate = d->ui->cbCurrency->itemData(d->ui->cbCurrency->currentIndex(), Qt::UserRole + 1).toDouble();
+    meal = d->ui->cbPrintMeal->currentIndex() == 0;
     delete d;
     return result;
 }

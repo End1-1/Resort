@@ -42,13 +42,6 @@ int main(int argc, char *argv[])
     a.setStyle(QStyleFactory::create("fusion"));
     a.setFont(QFont("Arial", 9));
 
-    QFile styleFile("./style.css");
-    if (styleFile.exists()) {
-        styleFile.open(QIODevice::ReadOnly);
-        a.setStyleSheet(styleFile.readAll());
-        styleFile.close();
-    }
-
     QStringList params;
     for (int i = 0; i < argc; i++) {
         params << argv[i];
@@ -63,13 +56,29 @@ int main(int argc, char *argv[])
         QMessageBox::information(nullptr, "No version", "No check version mode");
         DO_NOT_CHECK_VERSION = true;
     }
+
+    QFile styleFile("./style.css");
+    if (styleFile.exists()) {
+        styleFile.open(QIODevice::ReadOnly);
+        a.setStyleSheet(styleFile.readAll());
+        styleFile.close();
+    }
+    if (params.contains("--touchscreen")) {
+        QFile styleFile(a.applicationDirPath() + "/SmartHotelTouch.qss");
+        if (styleFile.exists()) {
+            styleFile.open(QIODevice::ReadOnly);
+            a.setStyleSheet(styleFile.readAll());
+            styleFile.close();
+        }
+    }
+
 #ifdef QT_DEBUG
     logEnabled = true;
     writelog("Logging enabled");
 #endif
 
     a.setWindowIcon(QIcon(":/images/app.ico"));
-    MainWindow w;
+    MainWindow w(params.contains("--touchscreen"));
     p.setDefaultParentForMessage(&w);
     w.show();
     //w.show(); 778842034

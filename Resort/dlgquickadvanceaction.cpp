@@ -176,7 +176,29 @@ void DlgQuickAdvanceAction::on_btnPrint_clicked()
         if (ui->tbl->rowCount() == 0) {
             return;
         }
-        DlgPrintTaxSM *d = new DlgPrintTaxSM(this);
+        QSet<int> taxs;
+        for (int i = 0; i < ui->tbl->rowCount(); i++) {
+            CacheInvoiceItem c;
+            if (!c.get(ui->tbl->toString(i, 0))) {
+                message_error(tr("Error in tax print. c == 0, case 1."));
+                continue;
+            }
+            CacheTaxMap ci;
+            if (!ci.get(c.fCode())) {
+                message_error(tr("Tax department undefined for ") + c.fName());
+                return;
+            }
+            taxs.insert(ci.fTax());
+        }
+        if (taxs.count() == 0) {
+            message_error(tr("No fiscal machines"));
+            return;
+        }
+        if (taxs.count() > 1) {
+            message_error(tr("Cannot mix fiscal machines here"));
+            return;
+        }
+        DlgPrintTaxSM *d = new DlgPrintTaxSM(taxs.toList().at(0), this);
         for (int i = 0; i < ui->tbl->rowCount(); i++) {
             d->addGoods(ui->tbl->toString(i, 3),
                         ui->tbl->toString(i, 2),
@@ -199,7 +221,17 @@ void DlgQuickAdvanceAction::on_btnPrint_clicked()
         delete d;
     } else {
         int taxCode;
-        if (!DlgPrintTaxSM::printAdvance(ui->leaCash->getDouble(), ui->leaCard->getDouble(), "TEMP", taxCode, fJson)) {
+        CacheInvoiceItem ci;
+        if (!ci.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
+            message_error(tr("Error in tax print. c == 0, case 1."));
+            return;
+        }
+        CacheTaxMap cm;
+        if (!cm.get(ci.fCode())) {
+            message_error(tr("Tax department undefined for ") + ci.fName());
+            return;
+        }
+        if (!DlgPrintTaxSM::printAdvance(cm.fTax(), ui->leaCash->getDouble(), ui->leaCard->getDouble(), "TEMP", taxCode, fJson)) {
             return;
         }
         ui->tabWidget->removeTab(0);

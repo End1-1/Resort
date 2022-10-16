@@ -7,10 +7,12 @@
 #include "cacheroom.h"
 #include "dlginvoicecancelation.h"
 #include "dlggposorderinfo.h"
+#include "dlgselectfiscalmachin.h"
 #include "dlgtransfer.h"
 #include "dlgtracking.h"
 #include "dlgdiscount.h"
 #include "pprintinvoice.h"
+#include "dlgreceiptvaucher.h"
 #include "printtaxd.h"
 #include "dlginvoiceprintoption.h"
 #include "dlginvoicepaymentoptions.h"
@@ -199,7 +201,7 @@ void WInvoice::loadInvoice(const QString &id)
     //////////////////////////////////////////////////////////////////////////////  content
     query = "select m.f_id, m.f_sign, m.f_wdate, m.f_finalName, "
             "m.f_amountAmd, m.f_amountVat, m.f_fiscal, m.f_remarks, m.f_source, m.f_doc, "
-            "m.f_side, m.f_itemCode, m.f_source, m.f_paymentMode "
+            "m.f_side, m.f_itemCode, m.f_source, m.f_paymentMode, m.f_fiscalmachine "
             "from m_register m "
             "where m.f_inv=" + ap(ui->leInvoice->text()) + " " +
             "and m.f_canceled=0 and m.f_finance=1 "
@@ -235,6 +237,7 @@ void WInvoice::loadInvoice(const QString &id)
         side->setItem(r, 11, new C5TableWidgetItem(row1.at(11).toString())); // item id
         side->setItem(r, 12, new C5TableWidgetItem(row1.at(12).toString())); // item group
         side->setItem(r, 13, new C5TableWidgetItem(row1.at(13).toString())); // Payment mode
+        side->setItem(r, 14, new C5TableWidgetItem(row1.at(14).toString())); //Fiscal machine
         /// tax chebox
         side->item(r, 6)->setCheckState(row1.at(6).toInt() > 0 ? Qt::Checked : Qt::Unchecked);
         side->item(r, 6)->setFlags(side->item(r, 6)->flags() ^ Qt::ItemIsUserCheckable);
@@ -737,10 +740,10 @@ void WInvoice::on_btnCheckout_clicked()
         fDD.commit();
 
         if (ui->tblInvLeft->rowCount() > 0) {
-            PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
+            PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), "USD", def_usd, true, this);
         }
         if (ui->tblInvRight->rowCount() > 0) {
-            PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
+            PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), "USD", def_usd, true, this);
         }
         CacheReservation r;
         if (r.get(ui->leReserveID->text())) {
@@ -794,7 +797,42 @@ void WInvoice::on_btnTaxPrint_clicked()
     if (fPreferences.getDb(def_tax_port).toInt() == 0) {
         message_error(tr("Setup tax printer first"));
     }
-    PrintTaxD *pt = new PrintTaxD(this);
+
+    QSet<int> taxs;
+    for (int i = 0; i < t->rowCount(); i++) {
+        if (!isTaxPay(t->toString(i, 12))) {
+            continue;
+        }
+        if (t->itemChecked(i, 6)) {
+            continue;
+        }
+
+        CacheInvoiceItem c;
+        if (!c.get(t->toString(i, 11))) {
+            message_error(tr("Error in tax print. c == 0, case 1."));
+            continue;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        taxs.insert(ci.fTax());
+    }
+
+    int taxnumber = 0;
+    if (taxs.count() == 1) {
+        taxnumber = taxs.toList().at(0);
+    } else if (taxs.count() > 1){
+        DlgSelectFiscalMachin ds(taxs, this);
+        ds.exec();
+        taxnumber = ds.fSelectedMachine;
+    }
+    if (taxnumber == 0) {
+        return;
+    }
+
+    PrintTaxD *pt = new PrintTaxD(taxnumber, this);
     pt->fInvoice = ui->leInvoice->text();
     for (int i = 0; i < t->rowCount(); i++) {
         if (!isTaxPay(t->toString(i, 12))) {
@@ -815,6 +853,9 @@ void WInvoice::on_btnTaxPrint_clicked()
             if (!ci.get(c.fCode())) {
                 message_error(tr("Tax department undefined for ") + c.fName());
                 return;
+            }
+            if (ci.fTax() != taxnumber) {
+                continue;
             }
             QString qty = "1";
             QString price = QString::number(t->toDouble(i, 4));
@@ -848,6 +889,9 @@ void WInvoice::on_btnTaxPrint_clicked()
             if (!ci.get(c.fCode())) {
                 message_error(tr("Tax department undefined for ") + c.fName());
                 return;
+            }
+            if (ci.fTax() != taxnumber) {
+                continue;
             }
             fDD[":f_header"] = orderId;
             fDD[":f_state"] = DISH_STATE_READY;
@@ -1082,21 +1126,24 @@ void WInvoice::on_btnTransferAmount_clicked()
 
 void WInvoice::on_btnPrintInvoice_clicked()
 {
-    switch (DlgInvoicePrintOption::getOption()) {
+    QString curr;
+    double rate;
+    bool printMeal;
+    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
     case pio_none:
         break;
     case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, curr, rate, printMeal, this);
         break;
     case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, curr, rate, printMeal, this);
         break;
     case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, this);
-        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, QStringList(), false, curr, rate, printMeal, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, QStringList(), false, curr, rate, printMeal, this);
         break;
     case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, QStringList(), false, this);
+        PPrintInvoice(ui->leInvoice->text(), -1, QStringList(), false, curr, rate, printMeal, this);
         break;
     }
 }
@@ -1433,4 +1480,84 @@ void WInvoice::on_btnResetAdvanceAmount_clicked()
     if (ui->leInvoice->notEmpty()) {
         loadInvoice(ui->leInvoice->text());
     }
+}
+
+void WInvoice::on_btnPayment_clicked()
+{
+    EQTableWidget *t = nullptr;
+    int result = DlgPrintTaxSideOption::printTaxSide();
+    switch (result) {
+    case pts_none:
+        return;
+    case pts_guest:
+        t = ui->tblInvLeft;
+        break;
+    case pts_company:
+        t = ui->tblInvRight;
+        break;
+    }
+
+    if (fPreferences.getDb(def_tax_port).toInt() == 0) {
+        message_error(tr("Setup tax printer first"));
+    }
+
+    QSet<int> taxs;
+    for (int i = 0; i < t->rowCount(); i++) {
+        if (!isTaxPay(t->toString(i, 12))) {
+            continue;
+        }
+        if (t->itemChecked(i, 6)) {
+            continue;
+        }
+
+        CacheInvoiceItem c;
+        if (!c.get(t->toString(i, 11))) {
+            message_error(tr("Error in tax print. c == 0, case 1."));
+            continue;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        taxs.insert(ci.fTax());
+    }
+
+    int taxnumber = 0;
+    if (taxs.count() == 1) {
+        taxnumber = taxs.toList().at(0);
+    } else if (taxs.count() > 1){
+        DlgSelectFiscalMachin ds(taxs, this);
+        ds.exec();
+        taxnumber = ds.fSelectedMachine;
+    }
+    if (taxnumber == 0) {
+        return;
+    }
+
+    double suggestAmount = 0;
+    for (int i = 0; i < t->rowCount(); i++) {
+        CacheInvoiceItem c;
+        if (!c.get(t->toString(i, 11))) {
+            message_error(tr("Error in payment. c == 0, case 1."));
+            return;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber) {
+            continue;
+        }
+        suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
+    }
+
+    DlgReceiptVaucher d(taxnumber, suggestAmount, result - 1, this);
+    d.setRoom(ui->leRoomCode->asInt());
+    if (result == 2) {
+        d.setCL(ui->leCityLedgerCode->asInt());
+    }
+    d.exec();
+    loadInvoice(ui->leInvoice->text());
 }

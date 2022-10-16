@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow, public Base
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(bool touchscreen, QWidget *parent = nullptr);
     ~MainWindow();
     void login();
     void logout();
@@ -103,7 +103,6 @@ public slots:
     void on_actionRe_checkin_triggered();
     void on_actionTransfer_amount_triggered();
     void on_actionExpected_arrivals_simple_triggered();
-    void on_actionReceipt_vaucher_triggered();
     void on_actionNotes_triggered();
     void on_actionEvent_triggered();
     void on_actionDaily_financial_report_triggered();
@@ -143,6 +142,8 @@ public slots:
     void on_actionHotel_hierarchy_triggered();
     void on_actionNew_room_chart_triggered();
     void on_actionExpected_arrivals_departures_2_triggered();
+    void on_actionState_of_the_room_triggered();
+    void on_actionExpected_departures_simple_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -189,15 +190,11 @@ private slots:
     void on_actionOptions_triggered();
     void on_actionInhouse_guest_future_triggered();
     void on_actionForecast_occupancy_by_category_triggered();
-    void on_actionState_of_the_room_triggered();
-    void on_actionExpected_departures_simple_triggered();
     void on_actionExpected_arivals_simple_triggered();
-
     void on_actionArmSoft_triggered();
-
     void on_actionFiscal_report_triggered();
-
     void on_actionUpload_menu_from_FrontDesk_triggered();
+    void on_actionReceipt_voucher_triggered();
 
 private:
     Listener fServer2Listener;
@@ -205,6 +202,7 @@ private:
     QTimer fTimer;
     QTimer fTimeErrLabel;
     bool fTimeErrLableValue;
+    bool fTouchscreen;
     Command fCommand;
     QTcpSocket fSocket;
     QUdpSocket fUdpSocket;

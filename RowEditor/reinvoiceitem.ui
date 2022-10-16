@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>436</width>
-    <height>450</height>
+    <height>493</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="ArmSoft">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -26,10 +26,38 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_12">
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Voucher type</string>
+            <string>Group</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leTaxName">
+           <property name="Field" stdset="0">
+            <string>f_taxName</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Name, am</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="EQLineEdit" name="leASCode">
+           <property name="Field" stdset="0">
+            <string>f_ascode</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1" colspan="2">
+          <widget class="EQLineEdit" name="lePrice">
+           <property name="Field" stdset="0">
+            <string>f_price</string>
            </property>
           </widget>
          </item>
@@ -40,75 +68,31 @@
            </property>
           </widget>
          </item>
-         <item row="12" column="2">
-          <widget class="EQCheckBox" name="chRest">
-           <property name="layoutDirection">
-            <enum>Qt::RightToLeft</enum>
-           </property>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Available in restaurant</string>
-           </property>
-           <property name="Field" stdset="0">
-            <string>f_rest</string>
+            <string>Price</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leNameEn">
-           <property name="Field" stdset="0">
-            <string>f_en</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leTaxName">
-           <property name="Field" stdset="0">
-            <string>f_taxName</string>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Voucher type</string>
            </property>
           </widget>
          </item>
          <item row="12" column="0">
-          <widget class="QLabel" name="label_10">
+          <widget class="QLabel" name="label_13">
            <property name="text">
-            <string>No manual charge</string>
+            <string>Tax, reception</string>
            </property>
           </widget>
          </item>
          <item row="7" column="0">
-          <widget class="QLabel" name="label_11">
+          <widget class="QLabel" name="label_14">
            <property name="text">
-            <string>Tax name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="1">
-          <widget class="EQCheckBox" name="chAuto">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="Field" stdset="0">
-            <string>f_auto</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leNameAm">
-           <property name="Field" stdset="0">
-            <string>f_am</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leNameRu">
-           <property name="Field" stdset="0">
-            <string>f_ru</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leNoVATDept">
-           <property name="Field" stdset="0">
-            <string>f_noVatDept</string>
+            <string>AS code</string>
            </property>
           </widget>
          </item>
@@ -128,6 +112,65 @@
            </property>
           </widget>
          </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>AS type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Name, ru</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="EQCheckBox" name="chAuto">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="Field" stdset="0">
+            <string>f_auto</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Tax an AS name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leADGT">
+           <property name="Field" stdset="0">
+            <string>f_adgt</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>No manual charge</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leNameRu">
+           <property name="Field" stdset="0">
+            <string>f_ru</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Name, en</string>
+           </property>
+          </widget>
+         </item>
          <item row="2" column="2">
           <widget class="EQLineEdit" name="leGroupName">
            <property name="focusPolicy">
@@ -135,6 +178,23 @@
            </property>
            <property name="readOnly">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leNameEn">
+           <property name="Field" stdset="0">
+            <string>f_en</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="EQLineEdit" name="leASType">
+           <property name="Field" stdset="0">
+            <string>f_astype</string>
+           </property>
+           <property name="Type" stdset="0">
+            <number>1</number>
            </property>
           </widget>
          </item>
@@ -151,6 +211,43 @@
            </property>
           </widget>
          </item>
+         <item row="13" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Tax No VAT dept</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Tax VAT dept</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="2">
+          <widget class="EQCheckBox" name="chRest">
+           <property name="layoutDirection">
+            <enum>Qt::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Available in restaurant</string>
+           </property>
+           <property name="Field" stdset="0">
+            <string>f_rest</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leNameAm">
+           <property name="Field" stdset="0">
+            <string>f_am</string>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="EQLineEdit" name="leReceptionTax"/>
+         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
@@ -158,92 +255,26 @@
            </property>
           </widget>
          </item>
-         <item row="6" column="1" colspan="2">
-          <widget class="EQLineEdit" name="lePrice">
-           <property name="Field" stdset="0">
-            <string>f_price</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Group</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="0">
-          <widget class="QLabel" name="label_8">
-           <property name="text">
-            <string>Tax VAT dept</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLabel" name="label_7">
-           <property name="text">
-            <string>ADGT code</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Price</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1" colspan="2">
+         <item row="11" column="1" colspan="2">
           <widget class="EQLineEdit" name="leVATDept">
            <property name="Field" stdset="0">
             <string>f_vatDept</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="1" colspan="2">
-          <widget class="EQLineEdit" name="leADGT">
+         <item row="13" column="1" colspan="2">
+          <widget class="EQLineEdit" name="leNoVATDept">
            <property name="Field" stdset="0">
-            <string>f_adgt</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0">
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string>Tax No VAT dept</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Name, am</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Name, en</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Name, ru</string>
+            <string>f_noVatDept</string>
            </property>
           </widget>
          </item>
          <item row="10" column="0">
-          <widget class="QLabel" name="label_13">
+          <widget class="QLabel" name="label_7">
            <property name="text">
-            <string>Tax, reception</string>
+            <string>ADGT code</string>
            </property>
           </widget>
-         </item>
-         <item row="10" column="1">
-          <widget class="EQLineEdit" name="leReceptionTax"/>
          </item>
         </layout>
        </item>
@@ -266,6 +297,96 @@
            <string>Department</string>
           </property>
          </column>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>ArmSoft</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Acc income</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="EQLineEdit" name="leAccIncome">
+         <property name="Field" stdset="0">
+          <string>f_asaccincome</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>Acc income no VAT</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="EQLineEdit" name="leAccIncomeNoVat">
+         <property name="Field" stdset="0">
+          <string>f_accincome_novat</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>Acc VAT type</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="EQLineEdit" name="leAccVAT">
+         <property name="Field" stdset="0">
+          <string>f_accvat</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>Acc no VAT type</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="EQLineEdit" name="leAccNOVAT">
+         <property name="Field" stdset="0">
+          <string>f_accnovat</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="EQLineEdit" name="leByerAcc">
+         <property name="Field" stdset="0">
+          <string>f_byeracc</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>295</width>
+           <height>251</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>Acc no VAT type</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -341,13 +462,14 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>leVaucher</tabstop>
   <tabstop>leGroupCode</tabstop>
   <tabstop>leNameAm</tabstop>
   <tabstop>leNameEn</tabstop>
   <tabstop>leNameRu</tabstop>
   <tabstop>lePrice</tabstop>
+  <tabstop>leASCode</tabstop>
+  <tabstop>leASType</tabstop>
   <tabstop>leTaxName</tabstop>
   <tabstop>leADGT</tabstop>
   <tabstop>leVATDept</tabstop>
@@ -358,6 +480,7 @@
   <tabstop>btnOk</tabstop>
   <tabstop>tnCancel</tabstop>
   <tabstop>tblTaxPrint</tabstop>
+  <tabstop>ArmSoft</tabstop>
  </tabstops>
  <resources/>
  <connections/>

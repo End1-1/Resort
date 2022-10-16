@@ -13,11 +13,12 @@ class DlgReceiptVaucher : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgReceiptVaucher(QWidget *parent = nullptr);
+    explicit DlgReceiptVaucher(int fiscalmachine, double suggestAmount, int side, QWidget *parent = nullptr);
     ~DlgReceiptVaucher();
     void setVoucher(const QString &id);
     virtual void callback(int sel, const QString &code);
     void setSide(quint32 side);
+    void setCL(int cl);
     void setInvoice(const QString &invoice);
     void setRoom(int room);
     void setPaymentMode(int mode, int cl);
@@ -33,6 +34,8 @@ private slots:
     void on_btnLog_clicked();
     void on_tabWidget_currentChanged(int index);
 
+    void on_btnSuggestAmount_clicked();
+
 private:
     Ui::DlgReceiptVaucher *ui;
     void cardVisible(bool v);
@@ -41,6 +44,7 @@ private:
     void fixTabWidget();
     void setBalance();
     DBMRegister fDoc;
+    double fSuggestAmount;
 };
 
 #endif // DLGRECEIPTVAUCHER_H

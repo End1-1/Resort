@@ -259,7 +259,7 @@ void DlgNoShow::on_btnPrintTax_clicked()
     int pm = ui->lePaymentMode->asInt();
     double card = pm == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
     double prepaid = pm == PAYMENT_ADVANCE ? ui->leAmount->asDouble() : 0;
-    DlgPrintTaxSM dpt;
+    DlgPrintTaxSM dpt(tm.fTax(), this);
     QString dep = ii.fVatDept();
     if (ui->leVATCode->asInt() == VAT_NOVAT) {
         dep = ii.fNoVatDept();

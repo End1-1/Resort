@@ -70,6 +70,8 @@ private slots:
 
     void on_btnResetAdvanceAmount_clicked();
 
+    void on_btnPayment_clicked();
+
 private:
     Ui::WInvoice *ui;
     void save();

@@ -117,6 +117,9 @@
          <iconset resource="res.qrc">
           <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
         </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -139,6 +142,9 @@
         <property name="icon">
          <iconset resource="res.qrc">
           <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
+        </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
         </property>
        </widget>
       </item>
@@ -163,6 +169,9 @@
          <iconset resource="res.qrc">
           <normaloff>:/images/copy.png</normaloff>:/images/copy.png</iconset>
         </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -186,6 +195,9 @@
          <iconset resource="res.qrc">
           <normaloff>:/images/paste.png</normaloff>:/images/paste.png</iconset>
         </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -208,6 +220,9 @@
         <property name="icon">
          <iconset resource="res.qrc">
           <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+        </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
         </property>
        </widget>
       </item>
@@ -234,6 +249,9 @@
         </property>
         <property name="checkable">
          <bool>true</bool>
+        </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
         </property>
        </widget>
       </item>
@@ -281,6 +299,9 @@
          <iconset resource="res.qrc">
           <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
         </property>
+        <property name="touchscreen" stdset="0">
+         <string>1</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -288,6 +309,12 @@
    </item>
    <item>
     <widget class="EQTableWidget" name="tblMain">
+     <property name="styleSheet">
+      <string notr="true">padding: 3px;</string>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
      <column>
       <property name="text">
        <string>Rec code</string>

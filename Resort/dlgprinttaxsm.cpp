@@ -1,9 +1,10 @@
 #include "dlgprinttaxsm.h"
 #include "ui_dlgprinttaxsm.h"
+#include "taxhelper.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 
-DlgPrintTaxSM::DlgPrintTaxSM(QWidget *parent) :
+DlgPrintTaxSM::DlgPrintTaxSM(int taxid, QWidget *parent) :
     BaseExtendedDialog(parent),
     ui(new Ui::DlgPrintTaxSM)
 {
@@ -12,6 +13,7 @@ DlgPrintTaxSM::DlgPrintTaxSM(QWidget *parent) :
     fCashAmount = 0;
     fCardAmount = 0;
     fPrepaid = 0;
+    fTaxID = taxid;
 }
 
 DlgPrintTaxSM::~DlgPrintTaxSM()
@@ -54,9 +56,9 @@ int DlgPrintTaxSM::execTaxback()
     return BaseExtendedDialog::exec();
 }
 
-bool DlgPrintTaxSM::printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json)
+bool DlgPrintTaxSM::printAdvance(int taxid, double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json)
 {
-    DlgPrintTaxSM *d = new DlgPrintTaxSM(fPreferences.getDefaultParentForMessage());
+    DlgPrintTaxSM *d = new DlgPrintTaxSM(taxid, fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(tr("Printing advance") + " " + vaucher);
     d->fOrder = vaucher;
     d->fCashAmount = amountCash;
@@ -68,9 +70,9 @@ bool DlgPrintTaxSM::printAdvance(double amountCash, double amountCard, const QSt
     return result;
 }
 
-int DlgPrintTaxSM::printTaxback(int number, const QString &vaucher, int &taxCode)
+int DlgPrintTaxSM::printTaxback(int taxid, int number, const QString &vaucher, int &taxCode)
 {
-    DlgPrintTaxSM *d = new DlgPrintTaxSM(fPreferences.getDefaultParentForMessage());
+    DlgPrintTaxSM *d = new DlgPrintTaxSM(taxid, fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(tr("Tax back") + " " + vaucher);
     d->fOrder = vaucher;
     d->fTaxback = number;
@@ -83,9 +85,8 @@ int DlgPrintTaxSM::printTaxback(int number, const QString &vaucher, int &taxCode
 void DlgPrintTaxSM::load()
 {
     fTimer.stop();
-    fPrintTax.setParams(fPreferences.getDb(def_tax_address).toString(),
-                fPreferences.getDb(def_tax_port).toInt(),
-                fPreferences.getDb(def_tax_password).toString());
+    TaxPoint tp = TaxHelper::fInstance->fTaxPoints[fTaxID];
+    fPrintTax.setParams(tp.ip, tp.port, tp.password);
     QString inJson, outJson, err;
     int result = fPrintTax.makeJsonAndPrint(fCardAmount, fPrepaid, inJson, outJson, err);
 

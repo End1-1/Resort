@@ -24,8 +24,11 @@ void FExpectedArrivalSimple::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "", tr("Room"))
-            .setColumn(100, "", tr("Guests"));
-    rg->fModel->setSqlQuery("select f_short, f_man+f_woman + f_child "
+            .setColumn(100, "", tr("Guests"))
+            .setColumn(120, "", tr("Entry"))
+            .setColumn(120, "", tr("Departure"))
+            .setColumn(300, "", tr("Remarks"));
+    rg->fModel->setSqlQuery("select f_short, f_man+f_woman + f_child,r.f_startdate, r.f_enddate, r.f_remarks "
                             "from f_reservation r "
                             "inner join f_room rm on rm.f_id=r.f_room "
                             "where f_startDate between " + ui->wd->ds1() + " and " + ui->wd->ds2() + " "

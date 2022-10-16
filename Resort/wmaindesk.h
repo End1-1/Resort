@@ -64,7 +64,6 @@ private slots:
     void on_tblRoom_doubleClicked(const QModelIndex &index);
     void on_btnInvoice_clicked();
     void on_btnPostCharge_clicked();
-    void on_btnReceipt_clicked();
     void on_btnTransferRoom_clicked();
     void on_btnAirReserve_clicked();
     void on_leFilterGuest_textEdited(const QString &arg1);

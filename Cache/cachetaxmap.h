@@ -11,6 +11,7 @@ public:
     CacheTaxMap();
     inline QString fCode() { return getString("f_id"); }
     inline QString fName() { return getString("f_dept"); }
+    inline int fTax() {return getInt("f_tax");}
 };
 
 #endif // CACHETAXMAP_H

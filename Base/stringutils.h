@@ -7,5 +7,6 @@
 #define where_field(field, value) QString("where %1=%2").arg(field).arg(value)
 #define ap(x) QString("'%1'").arg(x)
 QString float_str(double value, int f = 2);
+double str_float(const QString &text);
 
 #endif // STRINGUTILS_H

@@ -34,6 +34,7 @@
 #include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
 #include "fcashreportbyitem.h"
+#include "taxhelper.h"
 #include "wquickreservations.h"
 #include "wwelcome.h"
 #include "fhouseitems.h"
@@ -169,7 +170,7 @@
 #include <QNetworkProxy>
 #include <QDesktopServices>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     fCommand(nullptr)
@@ -227,7 +228,11 @@ MainWindow::MainWindow(QWidget *parent) :
     fTimeErrLabel.start(1000);
     connect(this, SIGNAL(updateCache(int,QString)), &fCacheOne, SLOT(updateCache(int,QString)));
     __mainWindow = this;
-
+    if (fPreferences.getDb(def_debug_mode).toInt() > 0) {
+        logEnabled = true;
+    }
+    fTouchscreen = touchscreen;
+    fPreferences.setDb(def_touchscreen, fTouchscreen);
 }
 
 MainWindow::~MainWindow()
@@ -337,6 +342,17 @@ void MainWindow::login()
     btnMenu->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
     //btnMenu->show();
     //ui->tabWidget->setCornerWidget(btnMenu, Qt::TopLeftCorner);
+#ifndef QT_DEBUG
+    logEnabled = fPreferences.getDb(def_debug_mode).toInt() > 0;
+#endif
+    TaxHelper::init();
+    DoubleDatabase dd(true, false);
+    dd[":f_comp"] = "SmartHotel: " + HOSTNAME;
+    dd.exec("select f_default from serv_tax where f_comp=:f_comp");
+    if (dd.nextRow()) {
+        fPreferences.setDb(def_default_fiscal_machine, dd.getInt("f_default"));
+    }
+    fPreferences.setDb(def_touchscreen, fTouchscreen);
 }
 
 void MainWindow::addTabWidget(BaseWidget *widget)
@@ -600,6 +616,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionCurrencies->setVisible(r__(cr__currencies));
     ui->actionNew_advance_entry->setVisible(r__(cr__advance_vaucher));
     ui->actionPosting_charge->setVisible(r__(cr__postchage_vaucher));
+    ui->actionReceipt_vaucher->setVisible(r__(cr__receipt_vaucher));
     ui->actionPosting_charge_2->setVisible(r__(cr__postchage_vaucher) && r__(cr__super_correction));
     ui->actionReceipt_vaucher->setVisible(r__(cr__receipt_vaucher));
     ui->actionDiscount->setVisible(r__(cr__discount_vaucher));
@@ -650,11 +667,9 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
     ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
 
-//    if (fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
-//        ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
-//    } else {
-//        //ui->menuBar->actions().at(9)->setVisible(false);
-//    }
+
+    ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
+
 
     ui->menuBar->actions().at(10)->setVisible(r__(cr__menu_direcotory)); //Directory hotel
     ui->actionContacts->setVisible(r__(cr__contacts));
@@ -1555,6 +1570,13 @@ void MainWindow::on_actionInvoice_items_triggered()
            << 30
            << 30
            << 0
+           << 80
+           << 80
+           << 80
+           << 80
+           << 80
+           << 80
+           << 80
               ;
     QStringList fields;
     fields << "i.f_id"
@@ -1572,6 +1594,13 @@ void MainWindow::on_actionInvoice_items_triggered()
            << "i.f_auto"
            << "i.f_rest"
            << "i.f_vatReception"
+            << "i.f_ascode"
+            << "i.f_astype"
+<< "i.f_asaccincome"
+<< "i.f_accincome_novat"
+<< "i.f_accvat"
+<< "i.f_accnovat"
+<< "i.f_byeracc"
               ;
     QStringList titles;
     titles << tr("Code")
@@ -1589,11 +1618,19 @@ void MainWindow::on_actionInvoice_items_triggered()
            << tr("Manual charge")
            << tr("Restaurant")
            << tr("Vat Reception")
+           << tr("AS code")
+           << tr("AS type")
+           << tr("Acc income")
+           << tr("Acc income no VAT")
+           << tr("Acc VAT type")
+           << tr("Acc no VAT type")
+           << tr("Byer acc")
               ;
     QString title = tr("Invoice items");
     QString icon = ":/images/list.png";
     QString query = "select i.f_id, i.f_vaucher, i.f_group, g.f_" +def_lang + ", i.f_am, i.f_en, i.f_ru, i.f_price, "
-            "i.f_taxName, i.f_adgt, i.f_vatDept, i.f_noVatDept, i.f_auto, i.f_rest, i.f_vatReception "
+            "i.f_taxName, i.f_adgt, i.f_vatDept, i.f_noVatDept, i.f_auto, i.f_rest, i.f_vatReception, i.f_ascode, i.f_astype,  "
+            "i.f_asaccincome, i.f_accincome_novat, i.f_accvat, i.f_accnovat, i.f_byeracc "
             "from f_invoice_item i "
             "inner join f_invoice_item_group g on g.f_id=i.f_group ";
     WReportGrid *r = addTab<WReportGrid>();
@@ -1646,13 +1683,6 @@ void MainWindow::on_actionExpected_arrivals_simple_triggered()
 void MainWindow::on_actionCash_report_total_triggered()
 {
     addTab<WReportGrid>()->setQueryModel<FCashReportSummary>();
-}
-
-void MainWindow::on_actionReceipt_vaucher_triggered()
-{
-    DlgReceiptVaucher *d = new DlgReceiptVaucher(this);
-    d->exec();
-    delete d;
 }
 
 void MainWindow::on_actionCity_Ledger_detailed_balance_triggered()
@@ -2272,4 +2302,9 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
         dd.update("r_dish", where_id(dr.getInt(0)));
     }
     message_info(tr("Done."));
+}
+
+void MainWindow::on_actionReceipt_voucher_triggered()
+{
+    DlgReceiptVaucher(0, 0, 0, this).exec();
 }

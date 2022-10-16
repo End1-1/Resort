@@ -69,6 +69,7 @@ private slots:
     void on_btnGuestInfo_clicked();
     void on_btnNext_clicked();
     void on_btnExportAS_clicked();
+    void on_btnExportASRetail_clicked();
 };
 
 #endif // WACCINVOICE_H

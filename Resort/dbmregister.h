@@ -65,6 +65,7 @@ public:
     QDateTime fCancelDate;
     int fRb;
     int fSession;
+    int fFiscalMachine;
 
     QString fError;
     TrackControl *fTc;

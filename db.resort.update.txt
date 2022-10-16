@@ -47,3 +47,33 @@ alter table f_city_ledger add column f_alwaysinvoice tinyint;
 update s_app set f_version='10' where f_app='DB';
 create table f_used_advance (f_id integer primary key auto_increment, f_invoice char(16), f_amount decimal(14,2));
 alter table m_register add column f_fiscaldate date after f_fiscal, add column f_fiscaltime time after f_fiscaldate;
+
+
+/*db 11 12.08.2022 */
+update s_app set f_version='11' where f_app='DB';
+alter table f_room add f_aspartner tinytext;
+
+/*db 11 04.09.2022 */
+update s_app set f_version='12' where f_app='DB';
+alter table f_invoice_item add column f_ascode tinytext;
+alter table f_invoice_item add column f_astype tinyint;
+create table s_query_log (f_id integer primary key, f_date timestamp, f_elapsed int, f_comp tinytext, f_query text);
+alter table f_invoice_item add column f_asaccincome tinytext;
+create table s_tax_map(f_id integer primary key auto_increment, f_ip tinytext, f_port smallint, f_password tinytext, f_dept tinyint);
+alter table f_invoice_item_tax add column f_vat smallint, f_novat smallint;
+alter table f_invoice_Item_tax drop column f_vat, drop column f_novat, add column f_tax smallint;
+alter table s_tax_map drop column f_dept;
+alter table s_tax_map add column f_name tinytext;
+alter table serv_tax add column f_default smallint ;
+
+
+/* db 13 26.09.2022 */
+update s_app set f_version='13' where f_app='DB';
+alter table f_invoice_item add column f_accincome_novat tinytext, add column  f_accvat varchar(2);
+alter table f_invoice_item add column f_accnovat varchar(2);
+alter table f_invoice_item add column f_byeracc tinytext;
+
+
+/* db 14 26.09.2022 */
+update s_app set f_version='14' where f_app='DB';
+alter table m_register add column f_fiscalmachine tinyint;

@@ -40,6 +40,7 @@ private slots:
     void on_btnAddrpGroup_clicked();
     void on_lwrpGroups_currentRowChanged(int currentRow);
     void on_lwrpReports_currentRowChanged(int currentRow);
+    void on_chDebug_clicked(bool checked);
 
 private:
     Ui::WGlobalDbConfig *ui;

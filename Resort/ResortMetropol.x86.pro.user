@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.14.0, 2022-08-12T12:14:03. -->
+<!-- Written by QtCreator 4.14.0, 2022-10-03T22:34:08. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -291,6 +291,7 @@
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Projects/Resort/Resort/ResortMetropol.x86.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Projects/Resort/Resort/ResortMetropol.x86.pro</value>
+    <value type="QString" key="RunConfiguration.Arguments">--touchscreen</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>

@@ -660,13 +660,6 @@ void WMainDesk::on_btnPostCharge_clicked()
     delete d;
 }
 
-void WMainDesk::on_btnReceipt_clicked()
-{
-    DlgReceiptVaucher *d = new DlgReceiptVaucher(this);
-    d->exec();
-    delete d;
-}
-
 void WMainDesk::on_btnTransferRoom_clicked()
 {
     DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);

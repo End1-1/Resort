@@ -133,7 +133,7 @@ void DlgPrintRandomTax::on_btnPrint_clicked()
         message_error(tr("Nothing to print"));
         return;
     }
-    DlgPrintTaxSM dpt(this);
+    DlgPrintTaxSM dpt(fPreferences.getDb(def_default_fiscal_machine).toInt(), this);
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         CacheInvoiceItem ii;
         ii.get(ui->tblData->toString(i, 0));

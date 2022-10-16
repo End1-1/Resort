@@ -10,6 +10,7 @@
 #include "cacherestfullmenu.h"
 #include "cachecreditcard.h"
 #include "paymentmode.h"
+#include "cachetaxmap.h"
 
 #define SEL_TABLE 1
 #define SEL_DISH 2
@@ -341,8 +342,12 @@ void DlgPostBreakfast::on_btnPrintTax_clicked()
         message_error(tr("Application error. Contact to developer. Message DlgPostBreakfast invoice item = 0"));
         return;
     }
+    CacheTaxMap cm;
+    if (!cm.get(ii.fCode())) {
+            return;
+    }
 
-    DlgPrintTaxSM dpt;
+    DlgPrintTaxSM dpt(cm.fTax(), this);
     dpt.addGoods(ii.fVatDept(),
                  ii.fAdgt(),
                  ii.fCode(),

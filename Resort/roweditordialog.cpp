@@ -174,7 +174,13 @@ bool RowEditorDialog::saveOnly()
                 id = l;
             } else {
                 if (!l->getField().isEmpty()) {
-                    fDD[":" + l->getField()] = l->text();
+                    switch (l->property("Type").toInt()) {
+                    case 1:
+                        fDD[":" + l->getField()] = l->text().toInt();
+                        break;
+                    default:
+                        fDD[":" + l->getField()] = l->text();
+                    }
                 }
             }
         } else if (isColorLineEdit(w)) {
@@ -226,7 +232,7 @@ bool RowEditorDialog::saveOnly()
         int newid = dd1.insert(fTable, true);
         DoubleDatabase dd2(true, doubleDatabase);
         dd2[":" + id->getField()] = newid;
-        dd2.exec(QString("delete from %1 where %2=:%2").arg(fTable).arg(id->getField()));
+        dd2.exec(QString("delete from %1 where %2=:%2").arg(fTable, id->getField()));
         id->setInt(newid);
         fDD[":" + id->getField()] = newid;
         fDD.insert(fTable, false);

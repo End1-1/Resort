@@ -90,10 +90,13 @@
 #define def_long_open_order_time "Long open order time"
 #define def_removal_vaucher_id "Removal vaucher id"
 #define def_print_tax_after_receipt "Print tax after receipt"
+#define def_debug_mode "Debug mode"
+#define def_default_fiscal_machine "Default fiscal machine"
+#define def_touchscreen "Touchscreen"
 
 #define INVOICE_HOTEL 1
 #define DATAGRAM_PORT 33110
-#define HOSTNAME QHostInfo().localHostName()
+#define HOSTNAME QHostInfo().localHostName().toUpper()
 
 #define VAT_INCLUDED 1
 #define VAT_WITHOUT 2

@@ -22,7 +22,7 @@ class DlgPrintTaxSM : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit DlgPrintTaxSM(QWidget *parent = nullptr);
+    explicit DlgPrintTaxSM(int taxid, QWidget *parent = nullptr);
     ~DlgPrintTaxSM();
     void addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty);
     virtual int exec();
@@ -35,8 +35,9 @@ public:
     QString fJson;
     int fTaxCode;
     QString fTaxback;
-    static bool printAdvance(double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json);
-    static int printTaxback(int number, const QString &vaucher, int &taxCode);
+    int fTaxID;
+    static bool printAdvance(int taxid, double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json);
+    static int printTaxback(int taxid, int number, const QString &vaucher, int &taxCode);
 
 private slots:
     void on_btnCancel_clicked();

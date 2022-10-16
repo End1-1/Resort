@@ -2134,6 +2134,121 @@ rooms</source>
     </message>
 </context>
 <context>
+    <name>DlgExportAS</name>
+    <message>
+        <source>Export to AS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AS connection string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Պահպանել</translation>
+    </message>
+    <message>
+        <source>Common options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export post charges (Retail sale)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service expense account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partner code</source>
+        <translation type="unfinished">Գործընկերոչ կոդ</translation>
+    </message>
+    <message>
+        <source>Service income account</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Store code</source>
+        <translation type="unfinished">Պահեստի կոդ</translation>
+    </message>
+    <message>
+        <source>Export invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0/0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export payments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Payment Debet/Credit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advance Debet/Credit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload payments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No checkout for cityledger for this invoice exists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid cityledger code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Empty invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Revenue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partner code undefined</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DlgExportOther</name>
     <message>
         <source>Export data</source>
@@ -2734,6 +2849,65 @@ rooms</source>
     </message>
     <message>
         <source>Nothing to revive</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DlgHDMViewer</name>
+    <message>
+        <source>Fiscal viewer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount prepaid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Items</source>
+        <translation type="unfinished">Ապրանքներ</translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Adgt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished">Անվանում</translation>
+    </message>
+    <message>
+        <source>Qty</source>
+        <translation type="unfinished">Քնկ</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Price</source>
+        <translation type="unfinished">Գին</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation type="unfinished">Ընդամենը</translation>
+    </message>
+    <message>
+        <source>Dep</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3490,6 +3664,10 @@ rooms</source>
     </message>
     <message>
         <source>PayX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Terminal</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4831,6 +5009,10 @@ for this operation</source>
         <source>PAYMENT PAYX</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>PAYMENT TERMINAL</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgRecoverInvoice</name>
@@ -4947,6 +5129,10 @@ for this operation</source>
     </message>
     <message>
         <source>Voucher is not saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease advance</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6821,6 +7007,10 @@ for this operation</source>
     </message>
     <message>
         <source>Export data to ArmSoft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Init restaurant dishes from external db</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8761,6 +8951,10 @@ ee</source>
     </message>
     <message>
         <source>Amount, USD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -11944,6 +12138,61 @@ ledger</source>
     </message>
 </context>
 <context>
+    <name>FTaxReport</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Canceled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="unfinished">Կոդ</translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Fiscal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time</source>
+        <translation type="unfinished">Ժամ</translation>
+    </message>
+    <message>
+        <source>Purpose</source>
+        <translation type="unfinished">Նշանակություն</translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Գումար</translation>
+    </message>
+    <message>
+        <source>Printed fiscals</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FTrackChanges</name>
     <message>
         <source>Form</source>
@@ -12223,6 +12472,10 @@ ledger</source>
     <message>
         <source>Invoice</source>
         <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Invalid fiscal code</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13641,6 +13894,14 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Always invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload menu from FrontDesk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19096,6 +19357,15 @@ operator</source>
     </message>
     <message>
         <source>Advance balance exists </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset advance
+amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset available amount of advance?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

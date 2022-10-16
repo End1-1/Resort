@@ -158,7 +158,6 @@ void tableSetColumnWidths(QTableWidget *tw, int count, ...)
         w += va_arg(vl, int);
     }
     va_end(vl);
-    qDebug() << "Table width" << w;
 #endif
 }
 

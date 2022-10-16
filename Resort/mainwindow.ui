@@ -241,8 +241,8 @@
      <string>Cashier</string>
     </property>
     <addaction name="actionNew_advance_entry"/>
-    <addaction name="actionReceipt_vaucher"/>
     <addaction name="actionPosting_charge"/>
+    <addaction name="actionReceipt_voucher"/>
     <addaction name="actionCancelation_No_show_fee"/>
     <addaction name="actionDiscount"/>
     <addaction name="actionTransfer_amount"/>
@@ -1591,6 +1591,11 @@
    </property>
    <property name="text">
     <string>Upload menu from FrontDesk</string>
+   </property>
+  </action>
+  <action name="actionReceipt_voucher">
+   <property name="text">
+    <string>Receipt voucher</string>
    </property>
   </action>
  </widget>

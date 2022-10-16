@@ -7,12 +7,15 @@
 #include "cacheusers.h"
 #include <QApplication>
 
-PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids, bool noPreview, QWidget *parent) :
+PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids, bool noPreview, const QString &currName, double rate, bool printMeal, QWidget *parent) :
     BaseWidget(parent)
 {
     fId = id;
     fSide = side;
     fNoPreview = noPreview;
+    fCurrName = currName;
+    fRate = rate;
+    fPrintMeal = printMeal;
     bool first = true;
     foreach (QString s, ids) {
         if (first) {
@@ -281,9 +284,13 @@ void PPrintInvoice::previewInvoice()
             credit = fDD.getDouble(4);
         }
 
+        QString finalName = fDD.getString(3);
+        if (!fPrintMeal) {
+            finalName.replace(" - B/B", "").replace(" - B/O", "");
+        }
         ps->addTextRect(new PTextRect(20, top, 60, rowHeight, QString::number(rowNum++), &th, f));
         ps->addTextRect(new PTextRect(80, top, 200, rowHeight, fDD.getDate(1).toString(def_date_format), &th, f));
-        ps->addTextRect(new PTextRect(250, top, 850, rowHeight, fDD.getString(3) + " " + fDD.getString(7), &th, f));
+        ps->addTextRect(new PTextRect(250, top, 850, rowHeight, finalName + " " + fDD.getString(7), &th, f));
         ps->addTextRect(new PTextRect(1100, top, 100, rowHeight, "AMD", &th, f));
 
         int pMode = fDD.getInt(2);
@@ -357,11 +364,11 @@ void PPrintInvoice::previewInvoice()
     }
 
     th.setTextAlignment(Qt::AlignRight);
-    ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of USD"), &th, f));
+    ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of ") + fCurrName, &th, f));
     th.setTextAlignment(Qt::AlignLeft);
-    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit / def_usd), &th, f));
-    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance / def_usd), &th, f));
+    ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, float_str(totalDebet / fRate), &th, f));
+    ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit / fRate), &th, f));
+    ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance / fRate), &th, f));
     top += rowHeight;
     if (top > 2800) {
         top = 30;

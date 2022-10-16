@@ -44,12 +44,14 @@ SOURCES += main.cpp\
     dlgconfigtaxserver.cpp \
     dlgexportas.cpp \
     dlghdmviewer.cpp \
+    dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
     dlgquickadvanceaction.cpp \
     dlgrecoverinvoice.cpp \
     dlgseachfromdatabase.cpp \
+    dlgselectfiscalmachin.cpp \
     dlgsingleprinttax.cpp \
     dlgtransferlog.cpp \
         mainwindow.cpp \
@@ -59,6 +61,7 @@ SOURCES += main.cpp\
     databasesconnections.cpp \
     databaseconnection.cpp \
     databasepasswordchange.cpp \
+    taxhelper.cpp \
     wactivegroup.cpp \
     wchart.cpp \
     wcheckboxgroup.cpp \
@@ -471,12 +474,14 @@ HEADERS  += mainwindow.h \
     dlgconfigtaxserver.h \
     dlgexportas.h \
     dlghdmviewer.h \
+    dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
     dlgoptions.h \
     dlgprintvoucherasinvoice.h \
     dlgquickadvanceaction.h \
     dlgrecoverinvoice.h \
     dlgseachfromdatabase.h \
+    dlgselectfiscalmachin.h \
     dlgsingleprinttax.h \
     dlgtransferlog.h \
     login.h \
@@ -485,6 +490,7 @@ HEADERS  += mainwindow.h \
     databasesconnections.h \
     databaseconnection.h \
     databasepasswordchange.h \
+    taxhelper.h \
     wactivegroup.h \
     wchart.h \
     wcheckboxgroup.h \
@@ -889,12 +895,14 @@ FORMS    += mainwindow.ui \
     dlgconfigtaxserver.ui \
     dlgexportas.ui \
     dlghdmviewer.ui \
+    dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
     dlgoptions.ui \
     dlgprintvoucherasinvoice.ui \
     dlgquickadvanceaction.ui \
     dlgrecoverinvoice.ui \
     dlgseachfromdatabase.ui \
+    dlgselectfiscalmachin.ui \
     dlgsingleprinttax.ui \
     dlgtransferlog.ui \
     login.ui \

@@ -5,6 +5,7 @@
 #include "cacheroomstate.h"
 #include "cacheroom.h"
 #include "cachereservation.h"
+#include "dlghouseitemonoffwidget.h"
 #include <QMutex>
 #include <QClipboard>
 
@@ -35,6 +36,23 @@ DlgHouseItem::DlgHouseItem(QWidget *parent) :
         ui->btnPaste->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
         ui->btnSave->setVisible(r__(cr__edit_room_inventory_list) && !r__(cr__view_room_inventory_state));
         ui->btnSaveStates->setVisible(!r__(cr__view_room_inventory_state));
+    }
+
+    if (fPreferences.getDb(def_touchscreen).toBool()) {
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(40);
+        QFont f(qApp->font());
+        f.setPointSize(f.pointSize() + 4);
+        setFont(f);
+        QSize s(60, 60);
+        ui->btnAddItem->setMinimumSize(s);
+        ui->btnCopy->setMinimumSize(s);
+        ui->btnDontDisturbe->setMinimumSize(s);
+        ui->btnPaste->setMinimumSize(s);
+        ui->btnRemoveItem->setMinimumSize(s);
+        ui->btnSave->setMinimumSize(s);
+        ui->btnSaveStates->setMinimumSize(s);
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(50);
+        ui->tblMain->horizontalHeader()->setFixedHeight(40);
     }
 }
 
@@ -69,6 +87,22 @@ void DlgHouseItem::openWindow(int room)
     }
     d->exec();
     delete d;
+}
+
+void DlgHouseItem::onOffClicked()
+{
+    bool ok = true;
+    for (int i = 0; i < ui->tblMain->rowCount(); i++) {
+        ok = ok && static_cast<DlgHouseItemOnOffWidget*>(ui->tblMain->cellWidget(i, 2))->isChecked();
+        if (!ok) {
+            break;
+        }
+    }
+    if (ok) {
+        ui->lbStatus->setPixmap(QPixmap(":/images/ball-green.png"));
+    } else {
+        ui->lbStatus->setPixmap(QPixmap(":/images/ball-red.png"));
+    }
 }
 
 void DlgHouseItem::comboStateCurrentIndexChanged(int index)
@@ -123,11 +157,19 @@ void DlgHouseItem::loadRoom()
             ui->tblMain->lineEdit(row, 1)->clearSelector();
             ui->tblMain->lineEdit(row, 1)->setHiddenTextEnabled(false);
         }
-        ui->tblMain->comboBox(row, 2)->setIndexForData(db.getValue("f_state").toInt());
+        if (fPreferences.getDb(def_touchscreen).toBool()) {
+            static_cast<DlgHouseItemOnOffWidget*>(ui->tblMain->cellWidget(row, 2))->setChecked(db.getValue("f_state").toInt() == 1);
+        } else {
+            ui->tblMain->comboBox(row, 2)->setIndexForData(db.getValue("f_state").toInt());
+        }
         ui->tblMain->dateEdit(row, 3)->setDate(db.getValue("f_date").toDate());
         ui->tblMain->lineEdit(row, 4)->setText(db.getValue("f_comment").toString());
     }
-    comboStateCurrentIndexChanged(0);
+    if (fPreferences.getDb(def_touchscreen).toBool()) {
+        onOffClicked();
+    } else {
+        comboStateCurrentIndexChanged(0);
+    }
     CacheRoom cr;
     if (!cr.get(ui->leRoomCode->asInt())) {
         return;
@@ -142,9 +184,15 @@ int DlgHouseItem::addRow()
     ui->tblMain->setItemWithValue(row, 0, 0);
     EQLineEdit *l = ui->tblMain->addLineEdit(row, 1, false);
     l->setSelector(this, cache(cid_room_inventory), l);
-    EQComboBox *c = ui->tblMain->addComboBox(row, 2);
-    c->setCache(cid_room_inventory_state);
-    connect(c, SIGNAL(currentIndexChanged(int)), this, SLOT(comboStateCurrentIndexChanged(int)));
+    if (fPreferences.getDb(def_touchscreen).toBool()) {
+        auto *w = new DlgHouseItemOnOffWidget();
+        connect(w, &DlgHouseItemOnOffWidget::clicked, this, &DlgHouseItem::onOffClicked);
+        ui->tblMain->setCellWidget(row, 2, w);
+    } else {
+        EQComboBox *c = ui->tblMain->addComboBox(row, 2);
+        c->setCache(cid_room_inventory_state);
+        connect(c, SIGNAL(currentIndexChanged(int)), this, SLOT(comboStateCurrentIndexChanged(int)));
+    }
     ui->tblMain->addDateEdit(row, 3, false);
     ui->tblMain->addLineEdit(row, 4, false);
     return row;
@@ -155,7 +203,7 @@ void DlgHouseItem::checkForReady()
     CacheRoomState rs;
     DoubleDatabase db(true, false);
     db[":f_room"] = ui->leRoomCode->asInt();
-    db.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state = 2");
+    db.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state <> 1");
     if (db.nextRow()) {
         db[":f_id"] = ui->leRoomCode->asInt();
         db.exec("select f_state from f_room where f_id=:f_id");
@@ -257,7 +305,11 @@ void DlgHouseItem::on_btnSaveStates_clicked()
 {
     DoubleDatabase fDD(true, doubleDatabase);
     for (int i = 0; i < ui->tblMain->rowCount(); i++) {
-        fDD[":f_state"] = ui->tblMain->comboBox(i, 2)->currentData();
+        if (fPreferences.getDb(def_touchscreen).toBool()) {
+            fDD[":f_state"] = static_cast<DlgHouseItemOnOffWidget*>(ui->tblMain->cellWidget(i, 2))->isChecked() ? 1 : 0;
+        } else {
+            fDD[":f_state"] = ui->tblMain->comboBox(i, 2)->currentData();
+        }
         fDD[":f_date"] = ui->tblMain->dateEdit(i, 3)->date();
         fDD[":f_comment"] = ui->tblMain->lineEdit(i, 4)->text();
         fDD.update("f_room_inventory_journal", where_id(ui->tblMain->item(i, 0)->data(Qt::EditRole).toInt()));

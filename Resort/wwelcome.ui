@@ -48,7 +48,7 @@
         </property>
         <widget class="QWidget" name="tab_2">
          <attribute name="icon">
-          <iconset>
+          <iconset resource="res.qrc">
            <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
          </attribute>
          <attribute name="title">
@@ -92,7 +92,7 @@
         </widget>
         <widget class="QWidget" name="tab_3">
          <attribute name="icon">
-          <iconset>
+          <iconset resource="res.qrc">
            <normaloff>:/images/balloons.png</normaloff>:/images/balloons.png</iconset>
          </attribute>
          <attribute name="title">
@@ -339,7 +339,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="btnRoomChart">
+          <widget class="EToolbarButton" name="btnRoomChart">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -356,7 +356,7 @@
             <string>Room chart</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/analytics.png</normaloff>:/images/analytics.png</iconset>
            </property>
            <property name="iconSize">
@@ -377,7 +377,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnNewReservation">
+          <widget class="EToolbarButton" name="btnNewReservation">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -395,7 +395,7 @@
 reservation</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/checkin.png</normaloff>:/images/checkin.png</iconset>
            </property>
            <property name="iconSize">
@@ -413,7 +413,7 @@ reservation</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnNewGroupResevation">
+          <widget class="EToolbarButton" name="btnNewGroupResevation">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -431,7 +431,7 @@ reservation</string>
 reservation</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/groupreservation.png</normaloff>:/images/groupreservation.png</iconset>
            </property>
            <property name="iconSize">
@@ -467,7 +467,7 @@ reservation</string>
 Status</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/info.png</normaloff>:/images/info.png</iconset>
            </property>
            <property name="iconSize">
@@ -488,7 +488,7 @@ Status</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnReservations">
+          <widget class="EToolbarButton" name="btnReservations">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -505,7 +505,7 @@ Status</string>
             <string>Reservations</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/bed.png</normaloff>:/images/bed.png</iconset>
            </property>
            <property name="iconSize">
@@ -523,7 +523,7 @@ Status</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnInhouseGuest">
+          <widget class="EToolbarButton" name="btnInhouseGuest">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -541,7 +541,7 @@ Status</string>
 in house</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/bed.png</normaloff>:/images/bed.png</iconset>
            </property>
            <property name="iconSize">
@@ -559,7 +559,7 @@ in house</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnArrivalDeparture">
+          <widget class="EToolbarButton" name="btnArrivalDeparture">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -577,7 +577,7 @@ in house</string>
 departures</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
            </property>
            <property name="iconSize">
@@ -595,7 +595,7 @@ departures</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnArrivalDeparture_2">
+          <widget class="EToolbarButton" name="btnArrivalDeparture_2">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -613,7 +613,7 @@ departures</string>
 departures 2</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
            </property>
            <property name="iconSize">
@@ -631,7 +631,7 @@ departures 2</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnCheckoutInvoices">
+          <widget class="EToolbarButton" name="btnCheckoutInvoices">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -649,7 +649,7 @@ departures 2</string>
 Invoices</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
            </property>
            <property name="iconSize">
@@ -670,7 +670,7 @@ Invoices</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnVauchers">
+          <widget class="EToolbarButton" name="btnVauchers">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -687,7 +687,7 @@ Invoices</string>
             <string>Vouchers</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/file.png</normaloff>:/images/file.png</iconset>
            </property>
            <property name="iconSize">
@@ -708,7 +708,7 @@ Invoices</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnCallHistory">
+          <widget class="EToolbarButton" name="btnCallHistory">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -725,7 +725,7 @@ Invoices</string>
             <string>Daily calls</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/phone-call.png</normaloff>:/images/phone-call.png</iconset>
            </property>
            <property name="iconSize">
@@ -807,7 +807,7 @@ Invoices</string>
 voucher</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/advance.png</normaloff>:/images/advance.png</iconset>
            </property>
            <property name="iconSize">
@@ -843,7 +843,7 @@ voucher</string>
 charge</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/charge.png</normaloff>:/images/charge.png</iconset>
            </property>
            <property name="iconSize">
@@ -857,42 +857,6 @@ charge</string>
            </property>
            <property name="arrowType">
             <enum>Qt::NoArrow</enum>
-           </property>
-           <property name="Tag" stdset="0">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="EToolbarButton" name="btnReceipt">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Receipt
-voucher</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>:/images/credit-card.png</normaloff>:/images/credit-card.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
            </property>
            <property name="Tag" stdset="0">
             <string/>
@@ -918,7 +882,7 @@ voucher</string>
 voucher</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/discount.png</normaloff>:/images/discount.png</iconset>
            </property>
            <property name="iconSize">
@@ -954,7 +918,7 @@ voucher</string>
 voucher</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
            </property>
            <property name="iconSize">
@@ -990,7 +954,7 @@ voucher</string>
 Invoices</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
            </property>
            <property name="iconSize">
@@ -1026,7 +990,7 @@ Invoices</string>
 invoices</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
            </property>
            <property name="iconSize">
@@ -1062,7 +1026,7 @@ invoices</string>
 restaurant</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
            </property>
            <property name="iconSize">
@@ -1098,7 +1062,7 @@ restaurant</string>
 reservations</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
            </property>
            <property name="iconSize">
@@ -1133,7 +1097,7 @@ reservations</string>
             <string>Reminder</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/notepad.png</normaloff>:/images/notepad.png</iconset>
            </property>
            <property name="iconSize">
@@ -1151,7 +1115,7 @@ reservations</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnButtonsConfig">
+          <widget class="EToolbarButton" name="btnButtonsConfig">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -1169,7 +1133,7 @@ reservations</string>
 buttons</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
            </property>
            <property name="iconSize">
@@ -1180,6 +1144,9 @@ buttons</string>
            </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="config" stdset="0">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -1220,7 +1187,7 @@ buttons</string>
 detailed </string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/balance.png</normaloff>:/images/balance.png</iconset>
            </property>
            <property name="iconSize">
@@ -1259,7 +1226,7 @@ detailed </string>
 Movement</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/graph.png</normaloff>:/images/graph.png</iconset>
            </property>
            <property name="iconSize">
@@ -1298,7 +1265,7 @@ Movement</string>
 Movement</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/graph.png</normaloff>:/images/graph.png</iconset>
            </property>
            <property name="iconSize">
@@ -1337,7 +1304,7 @@ Movement</string>
 Summary</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/money.png</normaloff>:/images/money.png</iconset>
            </property>
            <property name="iconSize">
@@ -1376,7 +1343,7 @@ Summary</string>
 Detailed</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/money.png</normaloff>:/images/money.png</iconset>
            </property>
            <property name="iconSize">
@@ -1415,7 +1382,7 @@ Detailed</string>
 Analysis</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/partner.png</normaloff>:/images/partner.png</iconset>
            </property>
            <property name="iconSize">
@@ -1453,7 +1420,7 @@ Analysis</string>
             <string>Restaurant</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/cutlery.png</normaloff>:/images/cutlery.png</iconset>
            </property>
            <property name="iconSize">
@@ -1492,7 +1459,7 @@ Analysis</string>
 Set</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/reports.png</normaloff>:/images/reports.png</iconset>
            </property>
            <property name="iconSize">
@@ -1530,7 +1497,7 @@ Set</string>
             <string>Statistics</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/reports.png</normaloff>:/images/reports.png</iconset>
            </property>
            <property name="iconSize">
@@ -1609,7 +1576,79 @@ Set</string>
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="btnNewRoomChart">
+          <widget class="EToolbarButton" name="btnArrivalsSimple">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Arrivals
+simple</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/arrival.png</normaloff>:/images/arrival.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="EToolbarButton" name="btnDeparutersSimple">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Departures
+simple</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/departure.png</normaloff>:/images/departure.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="EToolbarButton" name="btnNewRoomChart">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -1627,7 +1666,7 @@ Set</string>
 Experemental</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/analytics.png</normaloff>:/images/analytics.png</iconset>
            </property>
            <property name="iconSize">
@@ -1666,7 +1705,7 @@ Experemental</string>
 calls</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/alarm.png</normaloff>:/images/alarm.png</iconset>
            </property>
            <property name="iconSize">
@@ -1705,7 +1744,7 @@ calls</string>
 Transactions</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/category.png</normaloff>:/images/category.png</iconset>
            </property>
            <property name="iconSize">
@@ -1726,7 +1765,7 @@ Transactions</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnRemarks">
+          <widget class="EToolbarButton" name="btnRemarks">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -1743,7 +1782,7 @@ Transactions</string>
             <string>Remarks</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/remarks.png</normaloff>:/images/remarks.png</iconset>
            </property>
            <property name="iconSize">
@@ -1761,7 +1800,7 @@ Transactions</string>
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="btnContacts">
+          <widget class="EToolbarButton" name="btnContacts">
            <property name="minimumSize">
             <size>
              <width>70</width>
@@ -1778,7 +1817,7 @@ Transactions</string>
             <string>Contacts</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/phone-book.png</normaloff>:/images/phone-book.png</iconset>
            </property>
            <property name="iconSize">
@@ -1814,8 +1853,47 @@ Transactions</string>
 hierarchy</string>
            </property>
            <property name="icon">
-            <iconset>
+            <iconset resource="res.qrc">
              <normaloff>:/images/hierarchy.png</normaloff>:/images/hierarchy.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::NoArrow</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="EToolbarButton" name="btnRoomStateTouch">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Room
+states</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/window.png</normaloff>:/images/window.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1862,6 +1940,8 @@ hierarchy</string>
    <header location="global">etoolbarbutton.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

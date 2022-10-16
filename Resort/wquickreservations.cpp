@@ -369,7 +369,6 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         static_cast<EDateEdit*>(w)->setFrame(false);
         break;
     case col_rate: {
-        qDebug() << index.data(Qt::EditRole);
         auto *l = new EDoubleEdit(parent);
         l->setFrame(false);
         w = l;

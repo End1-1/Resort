@@ -27,7 +27,14 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="WDate2" name="wd" native="true"/>
+    <widget class="WDate2" name="wd" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="horizontalSpacer">

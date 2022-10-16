@@ -11,6 +11,7 @@
 #include "paymentmode.h"
 #include "dlgtracking.h"
 #include "dlgprinttaxsm.h"
+#include "cachetaxmap.h"
 #include "pprintvaucher.h"
 #include "cacheusers.h"
 #include "paymentmode.h"
@@ -163,11 +164,23 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
         return;
     }
 
+    CacheInvoiceItem c;
+    if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
+        message_error(tr("Error in tax print. c == 0, case 1."));
+        return;
+    }
+    CacheTaxMap ci;
+    if (!ci.get(c.fCode())) {
+        message_error(tr("Tax department undefined for ") + c.fName());
+        return;
+    }
+
+
     double cash = ui->wPayment->paymentCode() == PAYMENT_CASH ? ui->wPayment->amount() : 0;
     double card = ui->wPayment->paymentCode() == PAYMENT_CASH ? 0 : ui->wPayment->amount();
     int taxCode = 0;
     QString outJson;
-    if (!DlgPrintTaxSM::printAdvance(cash, card, ui->leVoucher->text(), taxCode, outJson)) {
+    if (!DlgPrintTaxSM::printAdvance(ci.fTax(), cash, card, ui->leVoucher->text(), taxCode, outJson)) {
         return;
     }
     ui->leTax->setInt(taxCode);

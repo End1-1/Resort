@@ -26,7 +26,6 @@ private slots:
     void on_btnRoomChart_clicked();
     void on_btnAdvance_clicked();
     void on_btnPostCharge_clicked();
-    void on_btnReceipt_clicked();
     void on_btnDiscount_clicked();
     void on_btnNewReservation_clicked();
     void on_btnArrivalDeparture_clicked();
@@ -68,6 +67,9 @@ private slots:
     void on_btnNewRoomChart_clicked();
     void on_btnTransferAmount_clicked();
     void on_btnArrivalDeparture_2_clicked();
+    void on_btnRoomStateTouch_clicked();
+    void on_btnArrivalsSimple_clicked();
+    void on_btnDeparutersSimple_clicked();
 };
 
 #endif // WWELCOME_H

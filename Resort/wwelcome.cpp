@@ -76,7 +76,6 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnContacts->setVisible(r__(cr__contacts));
     ui->btnAdvance->setVisible(r__(cr__advance_vaucher));
     ui->btnPostCharge->setVisible(r__(cr__postchage_vaucher));
-    ui->btnReceipt->setVisible(r__(cr__receipt_vaucher));
     ui->btnTransferAmount->setVisible(r__(cr__transfer_vaucher));
     ui->btnDiscount->setVisible(r__(cr__discount_vaucher));
     ui->btnCityLedgerDetailedBalance->setVisible(r__(cr__cityledger_balance));
@@ -101,6 +100,9 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnWakupCalls->setVisible(r__(cr__wakeupcall));
     ui->btnDailyTransactions->setVisible(r__(cr__daily_transactions));
     ui->btnHotelHierarchy->setVisible(r__(cr__hotel_hierarcgy));
+    ui->btnRoomStateTouch->setVisible(r__(cr__state_of_room));
+    ui->btnArrivalsSimple->setVisible(r__(cr__expected_arrivals_simple));
+    ui->btnDeparutersSimple->setVisible(r__(cr__expeced_departures_simple));
     loadInfo();
 
     connect(&fTimer, SIGNAL(timeout()), SLOT(loadInfo()));
@@ -148,6 +150,9 @@ void WWelcome::showEvent(QShowEvent *event)
         EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
+            if (t->property("config").toBool()) {
+                t->setVisible(true);
+            }
         }
     }
     ui->wl1->addStretch();
@@ -166,6 +171,9 @@ void WWelcome::showEvent(QShowEvent *event)
                     ui->wl1->addWidget(t);
                 }
             }
+            if (t->property("config").toBool()) {
+                t->setVisible(true);
+            }
         }
     }
     ui->wl2->addStretch();
@@ -182,6 +190,9 @@ void WWelcome::showEvent(QShowEvent *event)
                     ui->wl1->addWidget(t);
                 }
             }
+            if (t->property("config").toBool()) {
+                t->setVisible(true);
+            }
         }
     }
     ol = ui->w4->children();
@@ -189,6 +200,9 @@ void WWelcome::showEvent(QShowEvent *event)
         EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
+            if (t->property("config").toBool()) {
+                t->setVisible(true);
+            }
         }
     }
     if (cntt > cnt) {
@@ -217,13 +231,6 @@ void WWelcome::on_btnPostCharge_clicked()
     auto *p = new DlgPostCharge(this);
     p->exec();
     delete p;
-}
-
-void WWelcome::on_btnReceipt_clicked()
-{
-    DlgReceiptVaucher *d = new DlgReceiptVaucher(this);
-    d->exec();
-    delete d;
 }
 
 void WWelcome::on_btnDiscount_clicked()
@@ -397,4 +404,19 @@ void WWelcome::on_btnTransferAmount_clicked()
 void WWelcome::on_btnArrivalDeparture_2_clicked()
 {
     fMainWindow->on_actionExpected_arrivals_departures_2_triggered();
+}
+
+void WWelcome::on_btnRoomStateTouch_clicked()
+{
+    fMainWindow->on_actionState_of_the_room_triggered();
+}
+
+void WWelcome::on_btnArrivalsSimple_clicked()
+{
+    fMainWindow->on_actionExpected_arrivals_simple_triggered();
+}
+
+void WWelcome::on_btnDeparutersSimple_clicked()
+{
+    fMainWindow->on_actionExpected_departures_simple_triggered();
 }

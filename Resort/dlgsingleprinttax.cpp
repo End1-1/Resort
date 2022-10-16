@@ -113,7 +113,19 @@ void DlgSinglePrintTax::on_btnPrint_clicked()
     double prepaid = 0.0;
     QSet<QString> errRows;
     QStringList rows;
-    DlgPrintTaxSM *d = new DlgPrintTaxSM(this);
+
+    CacheInvoiceItem c;
+    if (!c.get(ui->tbl->lineEdit(0, 1)->text())) {
+        message_error(tr("Error in tax print. c == 0, case 1.") + ui->tbl->toString(0, 1));
+        return;
+    }
+    CacheTaxMap ci;
+    if (!ci.get(c.fCode())) {
+        message_error(tr("Tax department undefined for ") + c.fName());
+        return;
+    }
+
+    DlgPrintTaxSM *d = new DlgPrintTaxSM(ci.fTax(), this);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (ui->tbl->checkBox(i, 0)->isChecked()) {
             if (ui->tbl->lineEdit(i, 1)->asInt() == 0) {

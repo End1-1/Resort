@@ -12,3 +12,7 @@ QString float_str(double value, int f)
     f = 2;
     return locale.toString(value, 'f', f).remove(reZero).remove(rDP);
 }
+
+double str_float(const QString &text) {
+    return locale.toDouble(text);
+}

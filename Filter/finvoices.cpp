@@ -33,6 +33,9 @@ void FInvoices::apply(WReportGrid *rg)
     if (ui->chContainsEmptyRooming->isChecked()) {
         where += " and f.f>0 ";
     }
+    if (ui->chNoVAT->isChecked()) {
+        where += " and r.f_vatmode=3 ";
+    }
     where +=  "order by r.f_endDate, r.f_room ";
     buildQuery(rg, where);
     QList<int> cols;
@@ -54,10 +57,7 @@ QWidget *FInvoices::lastElement()
 
 QString FInvoices::reportTitle()
 {
-    return QString("%1 From %2 To %3")
-            .arg(tr("Invoices"))
-            .arg(ui->deStart->text())
-            .arg(ui->deEnd->text());
+    return QString("%1 From %2 To %3").arg(tr("Invoices"), ui->deStart->text(), ui->deEnd->text());
 }
 
 QCheckBox *FInvoices::chFreeRooming()

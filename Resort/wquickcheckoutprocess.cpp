@@ -203,7 +203,7 @@ void WQuickCheckoutProcess::timeout()
             dd[":f_inv"] = ui->tbl->toString(i, 1);
             dd.exec("select * from m_register where f_finance=1 and f_canceled=0 and f_inv=:f_inv");
             if (dd.nextRow()) {
-                PPrintInvoice(ui->tbl->toString(i, 1), -1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), this);
+                PPrintInvoice(ui->tbl->toString(i, 1), -1, QStringList(), DlgInvoicePaymentOptions::printInvoiceImmediately(), "USD", def_usd,  true,  this);
             }
             ui->tbl->setValue(i, 5, "OK");
         }

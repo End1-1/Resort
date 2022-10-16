@@ -8,6 +8,7 @@
 #include "cacheinvoiceitem.h"
 #include "dlgpaymentmode.h"
 #include "paymentmode.h"
+#include "cachetaxmap.h"
 #include "dlgtracking.h"
 #include <QPrintDialog>
 #include <QPrinter>
@@ -185,7 +186,11 @@ void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
         message_error(tr("Setup tax printer first"));
         return;
     }
-    PrintTaxD *pt = new PrintTaxD(this);
+    CacheTaxMap cm;
+    if (!cm.get(ci.fCode())) {
+            return;
+    }
+    PrintTaxD *pt = new PrintTaxD(cm.fTax(), this);
     double total = 0;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (ui->tblData->toInt(i, 8) == 1) {

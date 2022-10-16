@@ -24,6 +24,7 @@
 #include "wreservation.h"
 #include "dlgremotinvoices.h"
 #include "dlgreserveshortinfo.h"
+#include "dlgselectfiscalmachin.h"
 #include "wvauchereditor.h"
 #include "dlgexportas.h"
 #include <QSqlRecord>
@@ -75,6 +76,7 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->leVatCode->setEnabled(r__(cr__super_correction));
     ui->btnTracking->setVisible(fPreferences.getDb(def_show_logs).toBool());
     ui->btnExportAS->setVisible(r__(cr__export_data_to_as));
+    ui->btnExportASRetail->setVisible(r__(cr__export_data_to_as));
 }
 
 WAccInvoice::~WAccInvoice()
@@ -505,21 +507,24 @@ void WAccInvoice::on_btnPrint_clicked()
     if (!r__(cr__print_partial_invoice)) {
         ids.clear();
     }
-    switch (DlgInvoicePrintOption::getOption()) {
+    QString curr;
+    double rate;
+    bool printMeal;
+    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
     case pio_none:
         break;
     case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
         break;
     case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
         break;
     case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, this);
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, this);
+        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
+        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
         break;
     case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, ids, false, this);
+        PPrintInvoice(ui->leInvoice->text(), -1, ids, false, curr, rate, printMeal, this);
         break;
     }
 }
@@ -539,10 +544,45 @@ void WAccInvoice::on_btnTaxPrint_clicked()
         break;
     }
 
-    if (fPreferences.getDb(def_tax_port).toInt() == 0) {
-        message_error(tr("Setup tax printer first"));
+    //SET TAX MACHINES
+    QSet<int> taxs;
+    for (int i = 0; i < ui->tblData->rowCount(); i++) {
+        if (!isTaxPay(ui->tblData->toString(i, 10))) {
+            continue;
+        }
+        if (ui->tblData->itemChecked(i, 8)) {
+            continue;
+        }
+        if (ui->tblData->toString(i, 9) != side) {
+            continue;
+        }
+
+        CacheInvoiceItem c;
+        if (!c.get(ui->tblData->toString(i, 3))) {
+            message_error(tr("Error in tax print. c == 0, case 1."));
+            continue;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        taxs.insert(ci.fTax());
     }
-    PrintTaxD *pt =  new PrintTaxD(this);
+
+    int taxnumber = 0;
+    if (taxs.count() == 1) {
+        taxnumber = taxs.toList().at(0);
+    } else {
+        DlgSelectFiscalMachin ds(taxs, this);
+        ds.exec();
+        taxnumber = ds.fSelectedMachine;
+    }
+    if (taxnumber == 0) {
+        return;
+    }
+
+    PrintTaxD *pt =  new PrintTaxD(taxnumber, this);
     pt->fInvoice = ui->leInvoice->text();
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (!isTaxPay(ui->tblData->toString(i, 10))) {
@@ -555,6 +595,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
         if (ui->tblData->toString(i, 9) != side) {
             continue;
         }
+
         //HOTEL SOURCE
         if (ui->tblData->toString(i, 10) != VAUCHER_POINT_SALE_N ) {
             CacheInvoiceItem c;
@@ -566,6 +607,9 @@ void WAccInvoice::on_btnTaxPrint_clicked()
             if (!ci.get(c.fCode())) {
                 message_error(tr("Tax department undefined for ") + c.fName());
                 return;
+            }
+            if (ci.fTax() != taxnumber) {
+                continue;
             }
             QString qty = "1";
             QString price = QString::number(ui->tblData->toDouble(i, 5), 'f', 2);
@@ -580,7 +624,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 qty = drb.getValue("f_pax").toString();
                 price = drb.getValue("f_price").toString();
             }
-            pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+            pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? c.fVatDept() : c.fNoVatDept());
             pt->fRecList.append(ui->tblData->toString(i, 0));
             pt->fCodeList.append(c.fCode());
             pt->fNameList.append(c.fTaxName());
@@ -601,6 +645,9 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 message_error(tr("Tax department undefined for ") + c.fName());
                 return;
             }
+            if (ci.fTax() != taxnumber) {
+                continue;
+            }
             DoubleDatabase fDD(true, doubleDatabase);
             fDD[":f_header"] = orderId;
             fDD[":f_state"] = DISH_STATE_READY;
@@ -614,7 +661,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 if (!c.fVatReception().isEmpty()) {
                     vatReception = c.fVatReception();
                 }
-                pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? ci.fName() : c.fNoVatDept());
+                pt->fDept.append(ui->leVatCode->asInt() == VAT_INCLUDED ? c.fVatDept() : c.fNoVatDept());
                 pt->fRecList.append(ui->tblData->toString(i, 0));
                 pt->fCodeList.append(fDD.getString(0));
                 pt->fNameList.append(fDD.getString(1));
@@ -932,7 +979,10 @@ void WAccInvoice::on_btnEditReserv_clicked()
 
 void WAccInvoice::on_btnExcel_clicked()
 {
-    switch (DlgInvoicePrintOption::getOption()) {
+    QString curr;
+    double rate;
+    bool printMeal;
+    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
     case pio_none:
         break;
     case pio_guest:
@@ -994,4 +1044,29 @@ void WAccInvoice::on_btnExportAS_clicked()
     DlgExportAS::getAsDataMap(partnersMap, servicesMap, goodsMap, unitsMap);
     DlgExportAS::exportInvoiceToAs(ui->leInvoice->text(), partnersMap, servicesMap, unitsMap, true);
     message_info(tr("Done."));
+}
+
+void WAccInvoice::on_btnExportASRetail_clicked()
+{
+    QString curr;
+    double rate;
+    bool printMeal;
+    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
+    case pio_none:
+        break;
+    case pio_guest:
+        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+        break;
+    case pio_comp:
+        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+        break;
+    case pio_guestcomp_ser:
+        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+        break;
+    case pio_guestcomp_tog:
+        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), -1);
+        break;
+    }
+    message_info("Finish");
 }

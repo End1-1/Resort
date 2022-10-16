@@ -224,8 +224,8 @@ void WQuickCheckout::on_tbl_doubleClicked(const QModelIndex &index)
         return;
     }
     DoubleDatabase dd(true, false);
-    auto *rv = new DlgReceiptVaucher(this);
-    auto *pt =  new PrintTaxD(this);
+    auto *rv = new DlgReceiptVaucher(0, 0, 0, this);
+    auto *pt =  new PrintTaxD(fPreferences.getDb(def_default_fiscal_machine).toInt(), this);
     rv->setRoom(ui->tbl->toInt(index.row(), 0));
     rv->setRoom(ui->tbl->toInt(index.row(), 0));
     switch (index.column()) {

@@ -51,7 +51,7 @@ void DlgTaxBack2::on_btnOK_clicked()
     DoubleDatabase fDD(true, doubleDatabase);
     foreach (int n, ch) {
         int taxCode = 0;
-        if (DlgPrintTaxSM::printTaxback(n, fInvoice, taxCode) == TAX_OK) {
+        if (DlgPrintTaxSM::printTaxback(fPreferences.getDb(def_default_fiscal_machine).toInt(), n, fInvoice, taxCode) == TAX_OK) {
             for (int i = 0; i < ui->tblData->rowCount(); i++) {
                 if (ui->tblData->toInt(i, 3) == n) {
                     fDD[":f_id"] = ui->tblData->toString(i, 0);

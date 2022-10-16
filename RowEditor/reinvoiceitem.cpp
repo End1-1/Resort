@@ -25,6 +25,13 @@ REInvoiceItem::REInvoiceItem(QList<QVariant> &values, QWidget *parent) :
     addWidget(ui->chAuto, "Manual charge");
     addWidget(ui->chRest, "Available in restaurant");
     addWidget(ui->leReceptionTax, "Tax dept, reception");
+    addWidget(ui->leASCode, "AS code");
+    addWidget(ui->leASType, "AS type");
+    addWidget(ui->leAccIncome, "AccIncome");
+    addWidget(ui->leAccIncomeNoVat, "AccIncomeNoVAT");
+    addWidget(ui->leAccVAT, "AccVAT");
+    addWidget(ui->leAccNOVAT, "AccNOVAT");
+    addWidget(ui->leByerAcc, "ByerAcc");
     fTable = "f_invoice_item";
     fCacheId = cid_invoice_item;
     ui->leGroupCode->setSelector(this, cache(cid_invoice_group), ui->leGroupName);
@@ -51,13 +58,13 @@ void REInvoiceItem::valuesToWidgets()
     }
 
     fDD[":f_item"] = ui->leCode->text();
-    fDD.exec("select f_comp, f_dept from f_invoice_item_tax where f_item=:f_item");
+    fDD.exec("select f_comp, f_tax from f_invoice_item_tax where f_item=:f_item");
     for (int i = 0; i < fDD.rowCount(); i++) {
         if (!fTaxMap.contains(fDD.getValue(i, "f_comp").toString())) {
             continue;
         }
         int row = fTaxMap[fDD.getValue(i, "f_comp").toString()];
-        ui->tblTaxPrint->setItem(row, 1, new C5TableWidgetItem(fDD.getValue(i, "f_dept").toString()));
+        ui->tblTaxPrint->setItem(row, 1, new C5TableWidgetItem(fDD.getValue(i, "f_tax").toString()));
     }
 }
 
@@ -77,7 +84,7 @@ void REInvoiceItem::on_btnOk_clicked()
             continue;
         }
         fDD[":f_comp"] = ui->tblTaxPrint->toString(i, 0);
-        fDD[":f_dept"] = ui->tblTaxPrint->toString(i, 1);
+        fDD[":f_tax"] = ui->tblTaxPrint->toInt(i, 1);
         fDD[":f_item"] = ui->leCode->text();
         fDD.insert("f_invoice_item_tax", false);
     }

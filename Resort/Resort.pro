@@ -41,10 +41,12 @@ SOURCES += main.cpp\
     ../Server2/socketconnection.cpp \
     ../Threads/broadcastthread.cpp \
     ../Threads/objectthread.cpp \
+    databaserow.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlgexportas.cpp \
     dlghdmviewer.cpp \
+    dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
     dlgofferinvoiceextra.cpp \
     dlgoptions.cpp \
@@ -53,6 +55,7 @@ SOURCES += main.cpp\
     dlgquickadvanceaction.cpp \
     dlgrecoverinvoice.cpp \
     dlgseachfromdatabase.cpp \
+    dlgselectfiscalmachin.cpp \
     dlgsingleprinttax.cpp \
     dlgtransferlog.cpp \
     mainwindow.cpp \
@@ -62,6 +65,7 @@ SOURCES += main.cpp\
     databasesconnections.cpp \
     databaseconnection.cpp \
     databasepasswordchange.cpp \
+    taxhelper.cpp \
     wactivegroup.cpp \
     wchart.cpp \
     wcheckboxgroup.cpp \
@@ -470,10 +474,12 @@ HEADERS  += mainwindow.h \
     ../Server2/socketconnection.h \
     ../Threads/broadcastthread.h \
     ../Threads/objectthread.h \
+    databaserow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlgexportas.h \
     dlghdmviewer.h \
+    dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
     dlgofferinvoiceextra.h \
     dlgoptions.h \
@@ -482,6 +488,7 @@ HEADERS  += mainwindow.h \
     dlgquickadvanceaction.h \
     dlgrecoverinvoice.h \
     dlgseachfromdatabase.h \
+    dlgselectfiscalmachin.h \
     dlgsingleprinttax.h \
     dlgtransferlog.h \
     login.h \
@@ -490,6 +497,7 @@ HEADERS  += mainwindow.h \
     databasesconnections.h \
     databaseconnection.h \
     databasepasswordchange.h \
+    taxhelper.h \
     wactivegroup.h \
     wchart.h \
     wcheckboxgroup.h \
@@ -893,6 +901,7 @@ FORMS    += mainwindow.ui \
     dlgconfigtaxserver.ui \
     dlgexportas.ui \
     dlghdmviewer.ui \
+    dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
     dlgofferinvoiceextra.ui \
     dlgoptions.ui \
@@ -901,6 +910,7 @@ FORMS    += mainwindow.ui \
     dlgquickadvanceaction.ui \
     dlgrecoverinvoice.ui \
     dlgseachfromdatabase.ui \
+    dlgselectfiscalmachin.ui \
     dlgsingleprinttax.ui \
     dlgtransferlog.ui \
     login.ui \

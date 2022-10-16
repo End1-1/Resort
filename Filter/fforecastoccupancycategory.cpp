@@ -83,7 +83,6 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
             row = rows.count() - 1;
             while (fDD.nextRow()) {
                 int catIndex = cats[fDD.getString("f_short")] + 2;
-                //qDebug() << d << fDD.getInt("rooms") << catIndex << row << fDD.getDouble("f_amount");
                 if (fDD.getInt(1) == RESERVE_OUTOFROOM || fDD.getInt(1) == RESERVE_OUTOFINVENTORY || fDD.getInt(1) == RESERVE_SERVICE) {
                     rows[row][totIndex] = rows[row][totIndex].toInt() + fDD.getInt("rooms");
                     rows[row][catIndex + vacIndex - 2] = rows[row][catIndex + vacIndex - 2].toInt() - fDD.getInt("rooms");

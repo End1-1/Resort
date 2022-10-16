@@ -1,5 +1,7 @@
 #include "dlgpretax.h"
 #include "ui_dlgpretax.h"
+#include "cacheinvoiceitem.h"
+#include "cachetaxmap.h"
 #include "dlgprinttaxsm.h"
 
 DlgPreTax::DlgPreTax(QWidget *parent) :
@@ -55,7 +57,17 @@ void DlgPreTax::on_btnOk_clicked()
         C5TableWidgetItem *item = ui->tblData->item(i, 3);
         if (item->checkState() == Qt::Checked) {
             int tc;
-            if (DlgPrintTaxSM::printAdvance(ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc, out)) {
+            CacheInvoiceItem c;
+            if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
+                message_error(tr("Error in tax print. c == 0, case 2."));
+                continue;
+            }
+            CacheTaxMap ci;
+            if (!ci.get(c.fCode())) {
+                message_error(tr("No taxmap for ") + c.fName());
+                return;
+            }
+            if (DlgPrintTaxSM::printAdvance(ci.fTax(), ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc, out)) {
                 DoubleDatabase fDD(true, doubleDatabase);
                 fDD[":f_fiscal"] = tc;
                 fDD.update("m_register", where_id(ap(ui->tblData->toInt(i, 0))));

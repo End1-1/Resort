@@ -20,7 +20,7 @@ class DlgInvoicePrintOption : public BaseExtendedDialog
 public:
     explicit DlgInvoicePrintOption(QWidget *parent = nullptr);
     ~DlgInvoicePrintOption();
-    static int getOption();
+    static int getOption(QString &currName, double &rate, bool &meal);
 
 private slots:
     void on_btnCancel_clicked();

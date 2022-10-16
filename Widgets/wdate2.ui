@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>439</width>
+    <width>473</width>
     <height>25</height>
    </rect>
   </property>
@@ -66,10 +66,26 @@
       <iconset resource="../Resort/res.qrc">
        <normaloff>:/images/left.png</normaloff>:/images/left.png</iconset>
      </property>
+     <property name="touchscreen" stdset="0">
+      <string>2</string>
+     </property>
     </widget>
    </item>
    <item>
-    <widget class="EDateEdit" name="deStart"/>
+    <widget class="EDateEdit" name="deStart">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="label_2">
@@ -79,7 +95,20 @@
     </widget>
    </item>
    <item>
-    <widget class="EDateEdit" name="deEnd"/>
+    <widget class="EDateEdit" name="deEnd">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="btnRight">
@@ -104,6 +133,9 @@
      <property name="icon">
       <iconset resource="../Resort/res.qrc">
        <normaloff>:/images/right.png</normaloff>:/images/right.png</iconset>
+     </property>
+     <property name="touchscreen" stdset="0">
+      <string>2</string>
      </property>
     </widget>
    </item>

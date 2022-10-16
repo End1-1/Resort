@@ -172,13 +172,13 @@ void WTaxAttack::on_btnPrintTax_clicked()
         totalrows ++;
         if (inv.isEmpty()) {
             inv = ui->tbl->toString(i, 0);
-            pt = new PrintTaxD(this);
+            pt = new PrintTaxD(fPreferences.getDb(def_default_fiscal_machine).toInt(), this);
         }
         if (ui->tbl->toString(i, 0) != inv) {
             pt->build();
             pt->exec2();
             delete pt;
-            pt = new PrintTaxD(this);
+            pt = new PrintTaxD(fPreferences.getDb(def_default_fiscal_machine).toInt(), this);
         }
         CacheInvoiceItem c;
         if (!c.get(ui->tbl->toString(i, col_item))) {

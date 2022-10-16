@@ -13,7 +13,7 @@ class PrintTaxD : public BaseExtendedDialog
     Q_OBJECT
 
 public:
-    explicit PrintTaxD(QWidget *parent = nullptr);
+    explicit PrintTaxD(int taxid, QWidget *parent = nullptr);
     ~PrintTaxD();
     QString fAmountPre;
     QString fAmountCash;
@@ -27,6 +27,7 @@ public:
     QStringList fPriceList;
     QStringList fAdgCode;
     QStringList fTaxNameList;
+    int fTaxID;
     void setPrepaid(const QString &amount);
     void build();
     bool print();

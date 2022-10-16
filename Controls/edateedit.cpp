@@ -9,7 +9,7 @@ EDateEdit::EDateEdit(QWidget *parent) :
     setInputMask("00/00/0000");
     setDate(EDateEditFirstDate);
     connect(this, SIGNAL(textChanged(QString)), this, SLOT(newText(QString)));
-    setMaximumWidth(100);
+    //setMaximumWidth(100);
     fRow = 0;
     fColumn = 0;
     fDoNoCheckMinDate = false;

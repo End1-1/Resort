@@ -44,6 +44,7 @@ DlgWelcomeButtonConfig::DlgWelcomeButtonConfig(QWidget *parent) :
     ui->btnReservations->setVisible(r__(cr__reservations));
     ui->btnInhouseGuest->setVisible(r__(cr__inhouse_guest));
     ui->btnArrivalDeparture->setVisible(r__(cr__expected_arrivals_deparutures));
+    ui->btnArrivalDeparture_2->setVisible(r__(cr__expected_arrivals_deparutures));
     ui->btnCallHistory->setVisible(r__(cr__calls_history));
     ui->btnNotes->setVisible(r__(cr__notes));
     ui->btnContacts->setVisible(r__(cr__contacts));
@@ -73,6 +74,9 @@ DlgWelcomeButtonConfig::DlgWelcomeButtonConfig(QWidget *parent) :
     ui->btnWakeupCalls->setVisible(r__(cr__wakeupcall));
     ui->btnDailyTransactions->setVisible(r__(cr__daily_transactions));
     ui->btnHotelHierarchy->setVisible(r__(cr__hotel_hierarcgy));
+    ui->btnRoomStateTouch->setVisible(r__(cr__state_of_room));
+    ui->btnArrivalsSimple->setVisible(r__(cr__expected_arrivals_simple));
+    ui->btnDeparutersSimple->setVisible(r__(cr__expeced_departures_simple));
 
     ui->btnExportActiveReservation->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc) && ui->btnExportActiveReservation->isVisible());
     ui->btnExportRestaurant->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc) && ui->btnExportRestaurant->isVisible());

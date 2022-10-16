@@ -6,13 +6,14 @@
 #include "paymentmode.h"
 #include "dlgprinttaxsm.h"
 
-PrintTaxD::PrintTaxD(QWidget *parent) :
+PrintTaxD::PrintTaxD(int taxid, QWidget *parent) :
     BaseExtendedDialog(parent),
     ui(new Ui::PrintTaxD)
 {
     ui->setupUi(this);
     ui->chCheckUncheckAll->setChecked(true);
     fTaxCode = 0;
+    fTaxID = taxid;
 }
 
 PrintTaxD::~PrintTaxD()
@@ -69,7 +70,7 @@ bool PrintTaxD::print()
         }
         depts << fDept.at(i);
     }
-    DlgPrintTaxSM dpt(this);
+    DlgPrintTaxSM dpt(fTaxID, this);
     for (int i = 0; i < fCodeList.count(); i++) {
         if (ui->tblData->item(i, 4)->checkState() != Qt::Checked) {
             continue;

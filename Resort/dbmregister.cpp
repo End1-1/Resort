@@ -19,7 +19,7 @@ static const QString voucher_query = "select m.f_id, m.f_source, m.f_res, m.f_in
                                      "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
                                      "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
                                      "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename, "
-                                     "m.f_session "
+                                     "m.f_session, m.f_fiscalmachine "
                                      "from m_register m "
                                      "left join users u on u.f_id=m.f_user "
                                      "left join f_invoice_item i on i.f_id=m.f_itemcode "
@@ -52,6 +52,7 @@ DBMRegister::DBMRegister()
     fCanceled = 0;
     fCancelUser = 0;
     fRb = 0;
+    fFiscalMachine = 0;
     init();
 }
 
@@ -96,7 +97,8 @@ DBMRegister::DBMRegister(const DBMRegister &r) :
     fCancelReason(r.fCancelReason),
     fCancelDate(r.fCancelDate),
     fRb(r.fRb),
-    fSession(r.fSession)
+    fSession(r.fSession),
+    fFiscalMachine(r.fFiscalMachine)
 {
     init();
     setle(r);
@@ -145,6 +147,7 @@ DBMRegister &DBMRegister::operator=(const DBMRegister &r)
     fCancelDate = r.fCancelDate;
     fRb = r.fRb;
     fSession = r.fSession;
+    fFiscalMachine = r.fFiscalMachine;
     setle(r);
     return *this;
 }
@@ -286,6 +289,7 @@ void DBMRegister::fetchData(DoubleDatabase &d)
     fCancelReason = d.getString("f_cancelreason");
     fRb = d.getInt("f_rb");
     fSession = d.getInt("f_session");
+    fFiscalMachine = d.getInt("f_fiscalmachie");
 }
 
 bool DBMRegister::openVoucher(const QString &id, QString &err)
@@ -296,7 +300,7 @@ bool DBMRegister::openVoucher(const QString &id, QString &err)
     if (dd.nextRow()) {
         QString voucherType = dd.getString(0);
         if (voucherType == VAUCHER_RECEIPT_N) {
-            DlgReceiptVaucher *d = new DlgReceiptVaucher(__mainWindow);
+            DlgReceiptVaucher *d = new DlgReceiptVaucher(0, 0, 0, __mainWindow);
             d->setVoucher(id);
             d->exec();
             delete d;
@@ -355,6 +359,7 @@ bool DBMRegister::save(DoubleDatabase &dd)
     dd[":f_side"] = fSide;
     dd[":f_rb"] = fRb;
     dd[":f_session"] = fSession;
+    dd[":f_fiscalmachine"] = fFiscalMachine;
     if (fId.isEmpty()) {
         fId = uuidx(fSource);
         if (fId.isEmpty()) {

@@ -10,6 +10,7 @@
 #include "dlgrefundvaucher.h"
 #include "pprintvaucher.h"
 #include "printtax.h"
+#include "cachetaxmap.h"
 #include "paymentmode.h"
 #include "dlginvoicepaymentoptions.h"
 #include "dlgprinttaxsm.h"
@@ -597,7 +598,18 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                 if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i, 5)->text() + " AMD") == QDialog::Accepted) {
                     int tc;
                     QString outJson;
-                    if (DlgPrintTaxSM::printAdvance(lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(), rid, tc, outJson)) {
+
+                    CacheInvoiceItem c;
+                    if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
+                        message_error(tr("Error in tax print. c == 0, case 2."));
+                        continue;
+                    }
+                    CacheTaxMap ci;
+                    if (!ci.get(c.fCode())) {
+                        message_error(tr("No taxmap for ") + c.fName());
+                        return false;
+                    }
+                    if (DlgPrintTaxSM::printAdvance(ci.fTax(), lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(), rid, tc, outJson)) {
                         fDD[":f_prepaid"] = lineEdit(t, i, 5)->text().toDouble();
                         fDD[":f_id"] = ui->leInvoice->text();
                         fDD.exec("update m_v_invoice set f_prepaid=f_prepaid+:f_prepaid where f_id=:f_id");

@@ -225,6 +225,8 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
 
 bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbrows, QMap<QString, int> &columns)
 {
+    QElapsedTimer e;
+    e.start();
     QSqlQuery *q1 = new QSqlQuery(fDb1);
     bool isSelect = true;
     bool result = true;
@@ -236,7 +238,8 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
         }
     }
     if (logEnabled) {
-        logEvent("#1 " + lastQuery(q1));
+        logEvent("#1 [" + QString::number(e.elapsed()) + "] " + fDb1.databaseName() + " "  + lastQuery(q1));
+        e.restart();
     }
 
     if (!isSelect) {
@@ -246,7 +249,7 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
             result = exec(q2, sqlQuery, isSelect);
             if (result) {
                 if (logEnabled) {
-                    logEvent("#2 " + lastQuery(q2));
+                    logEvent("#2 [" + QString::number(e.elapsed()) + "] " + lastQuery(q2));
                 }
             } else {
                 delete q2;
@@ -338,6 +341,8 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbro
 
 bool DoubleDatabase::exec(const QString &sqlQuery, QMap<QString, QList<QVariant> > &dbrows, QMap<QString, int> &columns)
 {
+    QElapsedTimer e;
+    e.start();
     QSqlQuery *q1 = new QSqlQuery(fDb1);
     bool isSelect = true;
     bool result = true;
@@ -348,9 +353,10 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QMap<QString, QList<QVariant>
             return false;
         }
     }
-#ifdef QT_DEBUG
-    logEvent("#1 " + lastQuery(q1));
-#endif
+    if (logEnabled) {
+        logEvent("#1 [" + QString::number(e.elapsed()) + "] " + lastQuery(q1));
+        e.restart();
+    }
 
     if (!isSelect) {
 
@@ -358,9 +364,9 @@ bool DoubleDatabase::exec(const QString &sqlQuery, QMap<QString, QList<QVariant>
             QSqlQuery *q2 = new QSqlQuery(fDb2);
             result = exec(q2, sqlQuery, isSelect);
             if (result) {
-#ifdef QT_DEBUG
-                logEvent("#2 " + lastQuery(q2));
-#endif
+                if (logEnabled) {
+                    logEvent("#2 [" + QString::number(e.elapsed()) + "] " + lastQuery(q2));
+                }
             } else {
                 goto FAIL;
             }
@@ -659,6 +665,8 @@ QString DoubleDatabase::lastQuery(QSqlQuery *q)
 
 bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
 {
+    QElapsedTimer e;
+    e.start();
     if (!q->prepare(sqlQuery)) {
         fLastError = q->lastError().databaseText();
         if (!fNoSqlErrorLog) {
@@ -667,7 +675,7 @@ bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
         }
         return false;
     }
-    for (QMap<QString, QVariant>::const_iterator it = fBindValues.begin(); it != fBindValues.end(); it++) {
+    for (QMap<QString, QVariant>::const_iterator it = fBindValues.constBegin(); it != fBindValues.constEnd(); it++) {
         q->bindValue(it.key(), it.value());
     }
     if (!q->exec()) {
@@ -677,6 +685,9 @@ bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
             logEvent(lastQuery(q));
         }
         return false;
+    }
+    if (logEnabled) {
+        logEvent("? [" + QString::number(e.elapsed()) + "] " + lastQuery(q));
     }
     isSelect = q->isSelect();
     if (!isSelect) {

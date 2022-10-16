@@ -222,8 +222,9 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->chAutoSession->setChecked(fPreferences.getDb(def_user_auto_session).toBool());
     ui->leRemovalVoucherId->setText(fPreferences.getDb(def_removal_vaucher_id).toString());
     ui->chPrintTaxAfterReceipt->setChecked(fPreferences.getDb(def_print_tax_after_receipt).toBool());
+    ui->chDebug->setChecked(fPreferences.getDb(def_debug_mode).toInt() > 0);
 
-    fTrackControl =  new TrackControl(TRACK_GLOBAL_CONFIG);
+    fTrackControl = new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
             .addWidget(ui->teSlogan, "Slogan")
             .addWidget(ui->leExtraBed, "Extra bed rate")
@@ -278,6 +279,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
             .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
             .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
             .addWidget(ui->chPrintTaxAfterReceipt, "Print tax after receipt")
+            .addWidget(ui->chDebug, "Debug mode")
             ;
 
     getCompSettings();
@@ -378,6 +380,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_user_auto_session, ui->chAutoSession->isChecked() ? "1" : "0");
     values.insert(def_removal_vaucher_id, ui->leRemovalVoucherId->text());
     values.insert(def_print_tax_after_receipt, ui->chPrintTaxAfterReceipt->isChecked() ? "1" : "0");
+    values.insert(def_debug_mode, ui->chDebug->isChecked() ? "1" : "0");
 
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
@@ -681,7 +684,9 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_active"] = 1;
         dd.update("r_dish_type", where_id(dr.getInt(0)));
     }
-    dr.exec("select f_id, f_part, f_name from d_dish");
+    dr.exec("select d.f_id, d.f_part, d.f_name, p.f_adgcode "
+            "from d_dish d "
+            "inner join d_part2 p on p.f_id=d.f_part ");
     while (dr.nextRow()) {
         dd[":f_id"] = dr.getInt(0);
         dd[":f_type"] = dr.getInt(1);
@@ -692,7 +697,7 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_textcolor"] = -16777216;
         dd[":f_queue"] = dr.getInt(0);
         dd[":f_unit"] = 1;
-        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd[":f_adgt"] = dr.getString("f_adgcode");
         dd.insert("r_dish", false);
 
         dd[":f_id"] = dr.getInt(0);
@@ -704,7 +709,7 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_textcolor"] = -16777216;
         dd[":f_queue"] = dr.getInt(0);
         dd[":f_unit"] = 1;
-        dd[":f_adgt"] = adg[dr.getInt(1)];
+        dd[":f_adgt"] = dr.getString("f_adgcode");
         dd.update("r_dish", where_id(dr.getInt(0)));
     }
     message_info(tr("Done"));
@@ -831,4 +836,9 @@ void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
         ui->chrpFontBold->setChecked(dd.getInt("f_fontbold"));
         ui->chrpRowHeight->setValue(dd.getInt("f_rowheight"));
     }
+}
+
+void WGlobalDbConfig::on_chDebug_clicked(bool checked)
+{
+    fPreferences.setDb(def_debug_mode, checked);
 }

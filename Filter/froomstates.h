@@ -25,6 +25,7 @@ private:
 
 private slots:
     void dbClick(const QList<QVariant> &row);
+    void clickOnRow(int row);
     void roomUpdated(int cacheid, const QString &name);
 
 };

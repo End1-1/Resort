@@ -1082,6 +1082,28 @@ void WReportGrid::endApply()
         on_btnPrint_clicked();
         fPrintOutReady = true;
     }
+    if (fReportOptions.contains(fGridClassName)) {
+        Report r = fReportOptions[fGridClassName];
+        if (r.fPrintOnly) {
+            ui->scrollArea->setVisible(true);
+            ui->wPrint->setVisible(true);
+            ui->tblMain->setVisible(false);
+            ui->tblTotals->setVisible(false);
+            fPrintOut = true;
+            ui->btnPrint->setVisible(false);
+            ui->btnPrint2->setVisible(true);
+        }
+        if (r.fRowHeight < 10) {
+            r.fRowHeight = 21;
+        }
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(r.fRowHeight);
+        QFont font(r.fFontName, r.fFontSize);
+        font.setBold(r.fFontBold);
+        ui->tblMain->setFont(font);
+        ui->tblTotals->setFont(font);
+    } else {
+        ui->tblMain->verticalHeader()->setDefaultSectionSize(21);
+    }
 }
 
 void WReportGrid::on_btnHelp_clicked()

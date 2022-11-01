@@ -310,7 +310,7 @@ bool DBMRegister::openVoucher(const QString &id, QString &err)
             d->exec();
             delete d;
         } else if (voucherType == "AV") {
-            DlgAdvanceEntry *d = new DlgAdvanceEntry("", __mainWindow);
+            DlgAdvanceEntry *d = new DlgAdvanceEntry("", 0, __mainWindow);
             d->setVoucher(id);
             d->exec();
             delete d;
@@ -526,6 +526,13 @@ void DBMRegister::setleFiscal(EQLineEdit *l)
     fTc->addWidget(l, "Tax code");
 }
 
+void DBMRegister::setleFiscalMachine(EQLineEdit *l)
+{
+    leFiscalMachine = l;
+    connect(l, SIGNAL(textChanged(QString)), this, SLOT(fiscalChanged(QString)));
+    fTc->addWidget(l, "Fiscal machine");
+}
+
 void DBMRegister::setleRemarks(QPlainTextEdit *p)
 {
     ptRemarks = p;
@@ -734,6 +741,11 @@ void DBMRegister::VATModeNameChanged(const QString &s)
 void DBMRegister::taxCodeChanged(const QString &s)
 {
     fFiscal = s.toUInt();
+}
+
+void DBMRegister::fiscalChanged(const QString &s)
+{
+    fFiscalMachine = s.toInt();
 }
 
 void DBMRegister::remarksChanged()

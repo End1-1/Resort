@@ -1298,7 +1298,81 @@ void WInvoice::on_btnTaxBack_clicked()
 
 void WInvoice::on_btnAdvance_clicked()
 {
-    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), this);
+//    EQTableWidget *t = nullptr;
+//    int result = DlgPrintTaxSideOption::printTaxSide();
+//    switch (result) {
+//    case pts_none:
+//        return;
+//    case pts_guest:
+//        t = ui->tblInvLeft;
+//        break;
+//    case pts_company:
+//        t = ui->tblInvRight;
+//        break;
+//    }
+
+//    QSet<int> taxs;
+//    for (int i = 0; i < t->rowCount(); i++) {
+//        if (!isTaxPay(t->toString(i, 12))) {
+//            continue;
+//        }
+//        if (t->itemChecked(i, 6)) {
+//            continue;
+//        }
+
+//        CacheInvoiceItem c;
+//        if (!c.get(t->toString(i, 11))) {
+//            message_error(tr("Error in tax print. c == 0, case 1."));
+//            continue;
+//        }
+//        CacheTaxMap ci;
+//        if (!ci.get(c.fCode())) {
+//            message_error(tr("Tax department undefined for ") + c.fName());
+//            return;
+//        }
+//        taxs.insert(ci.fTax());
+//    }
+
+//    int taxnumber = 0;
+//    if (taxs.count() == 1) {
+//        taxnumber = taxs.toList().at(0);
+//    } else if (taxs.count() > 1){
+//        DlgSelectFiscalMachin ds(taxs, this);
+//        ds.exec();
+//        taxnumber = ds.fSelectedMachine;
+//    }
+
+    double suggestAmount = 0;
+//    for (int i = 0; i < t->rowCount(); i++) {
+//        CacheInvoiceItem c;
+//        if (!c.get(t->toString(i, 11))) {
+//            message_error(tr("Error in payment. c == 0, case 1."));
+//            return;
+//        }
+//        CacheTaxMap ci;
+//        if (!ci.get(c.fCode())) {
+//            message_error(tr("Tax department undefined for ") + c.fName());
+//            return;
+//        }
+//        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber) {
+//            continue;
+//        }
+//        suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
+//    }
+
+    CacheInvoiceItem c;
+    if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
+        message_error(tr("Error in tax print. c == 0, case 1."));
+        return;
+    }
+    CacheTaxMap ci;
+    if (!ci.get(c.fCode())) {
+        message_error(tr("Tax department undefined for ") + c.fName());
+        return;
+    }
+
+    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), suggestAmount, this);
+    d->setFiscal(ci.fTax());
     d->setInvoice(ui->leInvoice->text());
     d->exec();
     delete d;

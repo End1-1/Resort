@@ -26,6 +26,8 @@ DlgExportAS::DlgExportAS(QWidget *parent) :
     ui->leExportPaymentAVDebet->setText(__s.value("leExportPaymentAVDebet").toString());
     ui->leExportPaymentRVCredit->setText(__s.value("leExportPaymentRVCredit").toString());
     ui->leExportPaymentRVDebet->setText(__s.value("leExportPaymentRVDebet").toString());
+    ui->_5lePartnerDebet->setText(__s.value("_5lePartnerDebet").toString());
+    ui->_5lePartnerCredit->setText(__s.value("_5lePartnerCredit").toString());
 }
 
 DlgExportAS::~DlgExportAS()
@@ -284,7 +286,7 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
     dd[":f_inv"] = invoice;
     dd.exec(QString("select m.f_source, m.f_fiscaldate, m.f_itemcode, m.f_finalname, m.f_amountamd, m.f_fiscal, "
             "i.f_ascode, i.f_astype, i.f_taxname, m.f_wdate, i.f_asaccincome, i.f_accincome_novat, i.f_accvat, "
-            "i.f_accnovat, i.f_byeracc "
+            "i.f_accnovat, i.f_byeracc, i.f_asaccexpense "
             "from m_register m "
             "left join f_invoice_item i on i.f_id=m.f_itemcode "
             "where f_inv=:f_inv and f_source in ('PS', 'CH', 'RM', 'CM') %1 ")
@@ -316,13 +318,13 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
         ed["f_accvat"] = dd.getString("f_accvat");
         ed["f_accnovat"] = dd.getString("f_accnovat");
         ed["f_byeracc"] = dd.getString("f_byeracc");
+        ed["f_accexpense"] = dd.getString("f_asaccexpense");
         exportData.append(ed);
         totals = totals + dd.getDouble("f_amountamd");
     }
     if (exportData.isEmpty()) {
         return;
     }
-
 
     dd[":f_invoice"] = invoice;
     dd.exec("select * from f_reservation where f_invoice=:f_invoice");
@@ -366,7 +368,11 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
         q.bindValue(":fCUR", "AMD");
         q.bindValue(":fSUMM", (*bi)["f_amountamd"]);
         //q.bindValue(":fCOMMENT", QString("%1 %2").arg(tr("Invoice"), invoice));
-        q.bindValue(":fCOMMENT", QString("%1,%2 / %3").arg(checkoutDate.month(), 2, 10, QChar('0')).arg(QString::number(checkoutDate.year()).right(2), QString::fromUtf8("ՀԴՄ")));
+        q.bindValue(":fCOMMENT", QString("%1,%2 / %3 %4")
+                    .arg(checkoutDate.month(), 2, 10, QChar('0'))
+                    .arg(QString::number(checkoutDate.year()).right(2),
+                         QString::fromUtf8("ՀԴՄ"),
+                         (*bi)["f_source"].toString() == "PS" ? (*bi)["f_finalname"].toString() : ""));
         q.bindValue(":fBODY", QString("\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:%3\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
                 .arg(exportData.count())
                 .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble() : 0)
@@ -416,6 +422,9 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
         QVariant itemName = astype == 1 ?
                     goodsMap[(*bi)["f_ascode"].toString()]["fcaption"] :
                     servicesMap[(*bi)["f_ascode"].toString()]["fcaption"];
+//        if ((*bi)["f_source"].toString() == "PS") {
+//            itemName = (*bi)["f_finalname"].toString();
+//        }
         q.bindValue(":fISN", docid);
         q.bindValue(":fROWNUM", rowid);
         q.bindValue(":fITEMTYPE", astype);
@@ -433,7 +442,7 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
         q.bindValue(":fENVFEESUMMA", 0);
         q.bindValue(":fVAT", 1);
         q.bindValue(":fEXPMETHOD", 1);
-        q.bindValue(":fACCEXPENSE", "");
+        q.bindValue(":fACCEXPENSE", (*bi)["f_accexpense"].toString().isEmpty() ? "" : (*bi)["f_accexpense"]);
         q.bindValue(":fACCINCOME", vat ? (*bi)["f_asaccincome"] : (*bi)["f_accincome_novat"]);
         q.bindValue(":fPARTYMETHOD", 0);
         q.bindValue(":fROWID", rowid++);
@@ -812,4 +821,129 @@ void DlgExportAS::on_btnUploadInvoicesRetail_clicked()
         ui->lbProgress2->setText(QString("%1/%2").arg(row++).arg(db.rowCount()));
     }
     message_info(tr("Done."));
+}
+
+void DlgExportAS::on__5lePartnerDebet_editingFinished()
+{
+    __s.setValue("_5lePartnerDebet", ui->_5lePartnerDebet->text());
+}
+
+void DlgExportAS::on__5lePartnerCredit_editingFinished()
+{
+    __s.setValue("_5lePartnerCredit", ui->_5lePartnerCredit->text());
+}
+
+void DlgExportAS::on__5btnStart_clicked()
+{
+    if (ui->deEnd->date() < ui->deStart->date()) {
+        message_error(tr("Invalid date range"));
+        return;
+    }
+
+    QMap<int, QMap<QString, QVariant> > partnersMap;
+    QMap<QString, QMap<QString, QVariant> > servicesMap;
+    QMap<QString, QMap<QString, QVariant> > goodsMap;
+    QMap<QString, QMap<QString, QVariant> > unitsMap;
+    getAsDataMap(partnersMap, servicesMap, goodsMap, unitsMap);
+
+    for (QDate d = ui->deStart->date(); d <= ui->deEnd->date(); d = d.addDays(1)) {
+        DoubleDatabase dd(true, false);
+        dd[":f_date"] = d;
+        dd[":f_state"] = RESERVE_CHECKOUT;
+        dd.exec("select r.f_invoice, r.f_room, m.f_id, m.f_amountamd, rm.f_aspartner "
+                "from m_register m "
+                "inner join f_reservation r on r.f_invoice=m.f_inv "
+                "inner join f_room rm on rm.f_id=r.f_room "
+                "where m.f_source='AV' and m.f_canceled=0 and r.f_enddate=:f_date and r.f_state=:f_state ");
+        QSqlDatabase dbas = QSqlDatabase::addDatabase("QODBC3", "asss");
+        dbas.setDatabaseName(__s.value("asconnectionstring").toString());
+        if (!dbas.open()) {
+            message_error(dbas.lastError().databaseText());
+            return;
+        }
+        QSqlQuery q(dbas);
+        bool headercreated = false;
+        QString docid = QUuid::createUuid().toString().replace("{", "").replace("}", "");
+        int rowid = 0;
+        double total = 0;
+        while (dd.nextRow()) {
+            if (!headercreated) {
+                headercreated = true;
+                dbas.transaction();
+                dbas.transaction();
+                if (!q.prepare("insert into DOCUMENTS ("
+                              "fISN, fDOCTYPE, fDOCSTATE, fDATE, fORDERNUM, fDOCNUM, fCUR, fSUMM, fCOMMENT, fBODY, fPARTNAME, "
+                              "fUSERID, fPARTID, fCRPARTID, fMTID, fEXPTYPE, fINVN, fENTRYSTATE, "
+                              "fEMPLIDRESPIN, fEMPLIDRESPOUT, fVATTYPE, fSPEC, fCHANGEDATE,fEXTBODY,fETLSTATE) VALUES ("
+                              ":fISN, :fDOCTYPE, :fDOCSTATE, '" + d.toString("yyyy-MM-dd") + "', "
+                              ":fORDERNUM, :fDOCNUM, :fCUR, :fSUMM, :fCOMMENT, :fBODY, :fPARTNAME, "
+                              ":fUSERID, :fPARTID, :fCRPARTID, :fMTID, '', :fINVN, :fENTRYSTATE, "
+                              ":fEMPLIDRESPIN, :fEMPLIDRESPOUT, :fVATTYPE, :fSPEC, current_timestamp,'', '')")) {
+                    message_error("Prepare insert to documents<br>" + q.lastError().databaseText() + "<br>"  + dbas.lastError().databaseText());
+                    return;
+                }
+                q.bindValue(":fISN", docid);
+                q.bindValue(":fDOCTYPE", 1);
+                q.bindValue(":fDOCSTATE", 1);
+                q.bindValue(":fORDERNUM", "");
+                q.bindValue(":fDOCNUM", "");
+                q.bindValue(":fCUR", "AMD");
+                q.bindValue(":fSUMM", 0);
+                q.bindValue(":fCOMMENT", QString("%1").arg(QString::fromUtf8("Կանխավճարների օգտագործում")));
+                q.bindValue(":fBODY", QString("\r\nPREPAYMENTACC:5231\r\nVATACC:5243\r\nBUYERACC:2211\r\n"
+                            "BUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\nRATE:1.0000\r\nRATEBASE:1.0000\r\n")
+                        .arg(dd.rowCount()));
+                q.bindValue(":fPARTNAME", ""); // set to kamar
+                q.bindValue(":fUSERID", 0);
+                q.bindValue(":fPARTID", -1);
+                q.bindValue(":fCRPARTID", -1);
+                q.bindValue(":fMTID", -1);
+                q.bindValue(":fINVN", "");
+                q.bindValue(":fENTRYSTATE", 0);
+                q.bindValue(":fEMPLIDRESPIN", -1);
+                q.bindValue(":fEMPLIDRESPOUT", -1);
+                q.bindValue(":fVATTYPE", "");
+                q.bindValue(":fSPEC", "                    00"); // <--- Tax receipt id
+
+                if (!q.exec()) {
+                    dbas.rollback();
+                    message_error("Exec insert to documents<br>" + q.lastError().databaseText());
+                    return;
+                }
+            }
+            total += dd.getDouble("f_amountamd");
+            q.prepare("insert into DRAFTENTRIES ( "
+                      "fACCDB, fACCCR, fPARTDBID, fPARTCRID, fCURRCODEDB, fCURRCODECR, fSUMM, "
+                      "fCURSUMM, fCOMMENT, fBASE, fOP, fTRANS, "
+                      "fANALYTIC1DB, fANALYTIC1CR, fANALYTIC2DB, fANALYTIC2CR) values ("
+                      ":fACCDB, :fACCCOR, :fPARTDBID, :fPARTCRID, 'AMD', 'AMD', :fSUMM, "
+                      ":fCURSUMM, :fCOMMENT, :fBASE, 'M', :fTRANS, "
+                      "'', '', '', '')");
+            q.bindValue(":fACCDB", ui->_5lePartnerDebet->text());
+            q.bindValue(":fACCCOR", ui->_5lePartnerCredit->text());
+            q.bindValue(":fPARTDBID", partnersMap[dd.getInt("f_aspartner")]["fpartid"]);
+            q.bindValue(":fPARTCRID", partnersMap[dd.getInt("f_aspartner")]["fpartid"]);
+            q.bindValue(":fSUMM", dd.getDouble("f_amountamd"));
+            q.bindValue(":fCURSUMM", dd.getDouble("f_amountamd"));
+            q.bindValue(":fBASE", docid);
+            q.bindValue(":fCOMMENT", QString("%1 %2,%3").arg(QString::fromUtf8("Կանխավճարի օգտագործում"), dd.getString("f_invoice"), dd.getString("f_id")));
+            q.bindValue(":fTRANS", rowid++);
+            if (!q.exec()) {
+                message_error(q.lastError().databaseText());
+                dbas.rollback();
+                return;
+            }
+        }
+//        q.bindValue(":fSUMM", total);
+//        q.bindValue(":fISN", docid);
+//        if (!q.exec("update DOCUMENTS set fSUMM=:fSUMM where fISN=:fISN")) {
+//            dbas.rollback();
+//            message_error("Exec insert to documents<br>" + q.lastError().databaseText());
+//            return;
+//        }
+        if (headercreated) {
+            dbas.commit();
+        }
+    }
+    message_info(tr("Done"));
 }

@@ -25,6 +25,7 @@
 #include "dlgremotinvoices.h"
 #include "dlgreserveshortinfo.h"
 #include "dlgselectfiscalmachin.h"
+#include "dlgmovetocl.h"
 #include "wvauchereditor.h"
 #include "dlgexportas.h"
 #include <QSqlRecord>
@@ -55,6 +56,7 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->btnNewVaucher->setVisible(r__(cr__super_correction));
     ui->btnEditReserv->setVisible(r__(cr__super_correction));
     ui->btnEditRowVaucher->setVisible(r__(cr__super_correction));
+    ui->btnMoveToCL->setVisible(r__(cr__super_correction));
     ui->btnExcel->setVisible(r__(cr__invoice_export_to_excel));
     fCurrentInvoicePosition = -1;
     fReport = dynamic_cast<WReportGrid*>(parent);
@@ -1069,4 +1071,28 @@ void WAccInvoice::on_btnExportASRetail_clicked()
         break;
     }
     message_info("Finish");
+}
+
+void WAccInvoice::on_btnMoveToCL_clicked()
+{
+    QModelIndexList rows = ui->tblData->selectionModel()->selectedRows();
+    if (rows.count() == 0) {
+        message_error(tr("Nothing was selected"));
+        return;
+    }
+    int row = rows.at(0).row();
+    DoubleDatabase fDD(true, doubleDatabase);
+    fDD[":f_id"] = ui->tblData->toString(row, 0);
+    fDD.exec("select f_source, f_itemCode, f_cityLedger from m_register  where f_id=:f_id");
+    if (fDD.nextRow() == false) {
+        message_error(tr("Invalid voucher code"));
+        return;
+    }
+//    if (fDD.getValue("f_source").toString() != "PS") {
+//        message_error(tr("The voucher must be the PS voucher"));
+//        return;
+//    }
+    if (DlgMoveToCL(ui->tblData->toString(row, 0), this).exec() == QDialog::Accepted){
+        load(ui->leInvoice->text());
+    }
 }

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
+    <width>536</width>
     <height>502</height>
    </rect>
   </property>
@@ -283,6 +283,13 @@
          </spacer>
         </item>
         <item>
+         <widget class="QPushButton" name="btnReadFromDevice">
+          <property name="text">
+           <string>Read from device</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="btnOk">
           <property name="text">
            <string>Save</string>
@@ -341,14 +348,14 @@
    <header location="global">edateedit.h</header>
   </customwidget>
   <customwidget>
-   <class>EQComboBox</class>
-   <extends>QComboBox</extends>
-   <header location="global">eqcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQTextEdit</class>
    <extends>QTextEdit</extends>
    <header location="global">eqtextedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EQComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">eqcombobox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

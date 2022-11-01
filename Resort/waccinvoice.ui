@@ -69,7 +69,7 @@
 Charges</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/charge.png</normaloff>:/images/charge.png</iconset>
         </property>
         <property name="iconSize">
@@ -111,7 +111,7 @@ Charges</string>
 voucher</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
         </property>
         <property name="iconSize">
@@ -153,7 +153,7 @@ voucher</string>
 voucher</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
         </property>
         <property name="iconSize">
@@ -195,7 +195,7 @@ voucher</string>
 Reserve</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/bed.png</normaloff>:/images/bed.png</iconset>
         </property>
         <property name="iconSize">
@@ -237,7 +237,7 @@ Reserve</string>
 Reserve</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
         </property>
         <property name="iconSize">
@@ -269,7 +269,7 @@ Reserve</string>
          <string>Print invoice</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/printer.png</normaloff>:/images/printer.png</iconset>
         </property>
        </widget>
@@ -292,7 +292,7 @@ Reserve</string>
          <string>Print tax</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
         </property>
        </widget>
@@ -315,7 +315,7 @@ Reserve</string>
          <string>Excel</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/excel.png</normaloff>:/images/excel.png</iconset>
         </property>
        </widget>
@@ -338,7 +338,7 @@ Reserve</string>
          <string>Tax back</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/tax.png</normaloff>:/images/tax.png</iconset>
         </property>
        </widget>
@@ -358,7 +358,7 @@ Reserve</string>
          <string>Corrections</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
         </property>
        </widget>
@@ -378,7 +378,7 @@ Reserve</string>
          <string>Move entry</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
         </property>
        </widget>
@@ -398,7 +398,7 @@ Reserve</string>
          <string>Eliminate Entry</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/biohazard.png</normaloff>:/images/biohazard.png</iconset>
         </property>
        </widget>
@@ -418,7 +418,27 @@ Reserve</string>
          <string>Change CL</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
+          <normaloff>:/images/biohazard.png</normaloff>:/images/biohazard.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnMoveToCL">
+        <property name="maximumSize">
+         <size>
+          <width>21545</width>
+          <height>21212</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>MOVE TO CL</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
           <normaloff>:/images/biohazard.png</normaloff>:/images/biohazard.png</iconset>
         </property>
        </widget>
@@ -438,7 +458,7 @@ Reserve</string>
          <string>To AS invoice</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
         </property>
        </widget>
@@ -458,7 +478,7 @@ Reserve</string>
          <string>To AS retail</string>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
         </property>
        </widget>
@@ -491,7 +511,7 @@ Reserve</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
         </property>
        </widget>
@@ -551,7 +571,7 @@ Reserve</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/left.png</normaloff>:/images/left.png</iconset>
         </property>
        </widget>
@@ -599,7 +619,7 @@ Reserve</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/right.png</normaloff>:/images/right.png</iconset>
         </property>
        </widget>
@@ -777,7 +797,7 @@ Reserve</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset>
+         <iconset resource="res.qrc">
           <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
         </property>
        </widget>
@@ -1587,6 +1607,8 @@ time</string>
    <header location="global">eqtimeedit.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

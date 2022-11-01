@@ -21,6 +21,7 @@
 #include "cachedocpayment.h"
 #include "cachegroupreservations.h"
 #include "cacheguest.h"
+#include "cachefiscalmachine.h"
 #include "cacheguesttitle.h"
 #include "cacheinvoiceitem.h"
 #include "cacheinvoiceitemgroup.h"
@@ -300,6 +301,9 @@ CacheInstance *CacheOne::getCache(int id)
         break;
     case cid_serv_year:
         cbs = new CacheYear();
+        break;
+    case cid_fiscalmachine:
+        cbs = new CacheFiscalMachine();
         break;
     default:
         TrackControl tc(0);

@@ -20,6 +20,7 @@ public:
     virtual void setup();
 
 private slots:
+    virtual void callback(int sel, const QString &code);
     void reservationCacheUpdated(int cacheId, const QString &id);
     void singleGuestFocusOut();
     void singleGuestLineEdit(bool);

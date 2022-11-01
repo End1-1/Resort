@@ -308,7 +308,7 @@ void EQLineEdit::doubleClickEvent()
         QStringList codes, names;
         fCacheInstance->fStruct->fSelector->fCodeFilter = fCodeFilter;
         fCacheInstance->fStruct->fSelector->fExcludeCodeFilter = fCodeExcludeFilter;
-        for (QMap<QString, QStringList>::const_iterator it = fFieldFilter.begin(); it != fFieldFilter.end(); it++) {
+        for (QMap<QString, QStringList>::const_iterator it = fFieldFilter.constBegin(); it != fFieldFilter.constEnd(); it++) {
             fCacheInstance->fStruct->fSelector->fFieldFilter[fCacheInstance->fColumnNameMap[it.key().toLower()]] = it.value();
         }
         if (!fCacheInstance->selector(codes, names, fSelectorMultiCheck)) {

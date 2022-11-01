@@ -89,6 +89,7 @@ public:
     void setleAmountUSD(EQLineEdit *l);
     void setleAmountVAT(EQLineEdit *l);
     void setleFiscal(EQLineEdit *l);
+    void setleFiscalMachine(EQLineEdit *l);
     void setleRemarks(QPlainTextEdit *p);
 
 private:
@@ -114,6 +115,7 @@ private:
     EQLineEdit *leVatMode;
     EQLineEdit *leVatModeName;
     EQLineEdit *leTaxCode;
+    EQLineEdit *leFiscalMachine;
     EDateEdit *deWDate;
     QPlainTextEdit *ptRemarks;
 
@@ -143,6 +145,7 @@ private slots:
     void VATModeChanged(const QString &s);
     void VATModeNameChanged(const QString &s);
     void taxCodeChanged(const QString &s);
+    void fiscalChanged(const QString &s);
     void remarksChanged();
 };
 

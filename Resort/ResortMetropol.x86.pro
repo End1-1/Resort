@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
+    ../Cache/cachefiscalmachine.cpp \
     ../Cache/cacheyear.cpp \
     ../Controls/edoubleedit.cpp \
     ../Controls/eyearcombo.cpp \
@@ -40,12 +41,14 @@ SOURCES += main.cpp\
     ../Server2/socketconnection.cpp \
     ../Threads/broadcastthread.cpp \
     ../Threads/objectthread.cpp \
+    databaserow.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlgexportas.cpp \
     dlghdmviewer.cpp \
     dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
+    dlgmovetocl.cpp \
     dlgoptions.cpp \
     dlgprintvoucherasinvoice.cpp \
     dlgquickadvanceaction.cpp \
@@ -454,6 +457,7 @@ HEADERS  += mainwindow.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
+    ../Cache/cachefiscalmachine.h \
     ../Cache/cacheyear.h \
     ../Controls/edoubleedit.h \
     ../Controls/eyearcombo.h \
@@ -470,12 +474,14 @@ HEADERS  += mainwindow.h \
     ../Server2/socketconnection.h \
     ../Threads/broadcastthread.h \
     ../Threads/objectthread.h \
+    databaserow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlgexportas.h \
     dlghdmviewer.h \
     dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
+    dlgmovetocl.h \
     dlgoptions.h \
     dlgprintvoucherasinvoice.h \
     dlgquickadvanceaction.h \
@@ -897,6 +903,7 @@ FORMS    += mainwindow.ui \
     dlghdmviewer.ui \
     dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
+    dlgmovetocl.ui \
     dlgoptions.ui \
     dlgprintvoucherasinvoice.ui \
     dlgquickadvanceaction.ui \

@@ -202,6 +202,9 @@
       </item>
       <item row="3" column="2" colspan="2">
        <widget class="EQLineEdit" name="leCardName">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -346,6 +349,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
        </widget>
       </item>
       <item row="5" column="1" colspan="3">
@@ -482,9 +488,24 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>leVaucher</tabstop>
+  <tabstop>leOpcode</tabstop>
+  <tabstop>leOpName</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>leFiscalMachine</tabstop>
+  <tabstop>lePaymentCode</tabstop>
+  <tabstop>leCL</tabstop>
+  <tabstop>leCardCode</tabstop>
+  <tabstop>btnSuggestAmount</tabstop>
+  <tabstop>leAmountAMD</tabstop>
+  <tabstop>teRemarks</tabstop>
+  <tabstop>btnLog</tabstop>
+  <tabstop>btnNew</tabstop>
   <tabstop>btnSave</tabstop>
   <tabstop>btnPrint</tabstop>
   <tabstop>btnCancel</tabstop>
+  <tabstop>leCLName</tabstop>
+  <tabstop>leCardName</tabstop>
  </tabstops>
  <resources>
   <include location="res.qrc"/>

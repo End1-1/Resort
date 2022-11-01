@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>460</width>
-    <height>496</height>
+    <height>433</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -473,6 +473,27 @@ or contact to administrator</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cbDatabase</tabstop>
+  <tabstop>lePin</tabstop>
+  <tabstop>btnClearPin</tabstop>
+  <tabstop>btn1</tabstop>
+  <tabstop>btn2</tabstop>
+  <tabstop>btn3</tabstop>
+  <tabstop>btn4</tabstop>
+  <tabstop>btn5</tabstop>
+  <tabstop>btn6</tabstop>
+  <tabstop>btn7</tabstop>
+  <tabstop>btn8</tabstop>
+  <tabstop>btnLoginPin</tabstop>
+  <tabstop>btn9</tabstop>
+  <tabstop>btn0</tabstop>
+  <tabstop>btnCancel2</tabstop>
+  <tabstop>leUsername</tabstop>
+  <tabstop>lePassword</tabstop>
+  <tabstop>btnLogin</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
  <resources>
   <include location="res.qrc"/>
  </resources>

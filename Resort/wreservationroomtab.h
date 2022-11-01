@@ -119,6 +119,8 @@ private slots:
     void on_btnAllNation_clicked();
     void on_btnWakeup_clicked();
 
+    void on_btnReadFromDevice_clicked();
+
 private:
     Ui::WReservationRoomTab *ui;
     QString fInitCardex;

@@ -13,8 +13,9 @@ class DlgAdvanceEntry : public BaseDialog
     Q_OBJECT
 
 public:
-    explicit DlgAdvanceEntry(const QString &reserveId, QWidget *parent = nullptr);
+    explicit DlgAdvanceEntry(const QString &reserveId, double suggestAmount, QWidget *parent = nullptr);
     ~DlgAdvanceEntry();
+    void setFiscal(int id);
     void setVoucher(const QString &id);
     void setRoom(int room);
     void setInvoice(const QString &invoice);

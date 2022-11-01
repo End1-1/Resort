@@ -26,6 +26,12 @@ private slots:
     void on_btnUploadPayments_clicked();
     void on_btnUploadInvoicesRetail_clicked();
 
+    void on__5lePartnerDebet_editingFinished();
+
+    void on__5lePartnerCredit_editingFinished();
+
+    void on__5btnStart_clicked();
+
 private:
     Ui::DlgExportAS *ui;
     static void recordToMap(QMap<QString, QVariant> &m, QSqlQuery &q, QStringList &fields);

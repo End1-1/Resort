@@ -10,6 +10,9 @@ DatabasesConnections::DatabasesConnections(QWidget *parent) :
     ui->setupUi(this);
     loadDatabases();
     ui->chDirectConnection->setChecked(__s.value("db_direct_connection").toBool());
+    ui->wBroadcast->setVisible(__s.value("db_direct_connection").toBool());
+    ui->leBroadcast->setText(__s.value("db_broadcast_server").toString());
+    ui->tableDb->setColumnHidden(4, true);
 }
 
 DatabasesConnections::~DatabasesConnections()
@@ -74,4 +77,10 @@ void DatabasesConnections::on_btnChangePassword_clicked()
 void DatabasesConnections::on_chDirectConnection_clicked(bool checked)
 {
     __s.setValue("db_direct_connection", checked);
+    ui->wBroadcast->setVisible(checked);
+}
+
+void DatabasesConnections::on_leBroadcast_textChanged(const QString &arg1)
+{
+    __s.setValue("db_broadcast_server", arg1);
 }

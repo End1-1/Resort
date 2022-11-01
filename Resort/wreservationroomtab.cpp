@@ -2273,7 +2273,7 @@ void WReservationRoomTab::on_btnAppendAdvance_clicked()
         message_error(tr("Save reservation first"));
         return;
     }
-    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReservId->text(), this);
+    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReservId->text(), 0, this);
     d->exec();
     delete d;
     getAdvance();
@@ -2353,4 +2353,21 @@ void WReservationRoomTab::on_btnWakeup_clicked()
         return;
     }
     DlgWakepCalls::openWakeupCallsByInvoice(ui->leInvoice->text());
+}
+
+void WReservationRoomTab::on_btnReadFromDevice_clicked()
+{
+    QList<QVariant> values;
+    WGuest *g = WGuest::guest(values, true, true);
+    if (g->exec() == QDialog::Accepted) {
+        cache(cid_guest)->update(values.at(0).toString());
+        CacheGuest guest;
+        guest.get(values.at(0).toString());
+        if (!guest.fValid) {
+            message_error(tr("Cannot register new guest, contact to application developer"));
+            return;
+        }
+        addGuest(guest, true);
+    }
+    delete g;
 }

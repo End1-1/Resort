@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="ArmSoft">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -334,42 +334,42 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_18">
          <property name="text">
           <string>Acc VAT type</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <widget class="EQLineEdit" name="leAccVAT">
          <property name="Field" stdset="0">
           <string>f_accvat</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="label_19">
          <property name="text">
           <string>Acc no VAT type</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="EQLineEdit" name="leAccNOVAT">
          <property name="Field" stdset="0">
           <string>f_accnovat</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="EQLineEdit" name="leByerAcc">
          <property name="Field" stdset="0">
           <string>f_byeracc</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="6" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -382,10 +382,24 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="label_20">
          <property name="text">
-          <string>Acc no VAT type</string>
+          <string>Bayer acc</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_21">
+         <property name="text">
+          <string>Acc expense</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="EQLineEdit" name="leAccExpense">
+         <property name="Field" stdset="0">
+          <string>f_asaccexpense</string>
          </property>
         </widget>
        </item>
@@ -443,17 +457,17 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>EQTableWidget</class>
-   <extends>QTableWidget</extends>
-   <header location="global">eqtablewidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
    <slots>
     <signal>customButtonClicked(bool)</signal>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>EQTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">eqtablewidget.h</header>
   </customwidget>
   <customwidget>
    <class>EQCheckBox</class>

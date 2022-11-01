@@ -186,7 +186,7 @@ void Login::getDatabases()
                     db.dc_main_pass,
                     "", "", "", "");
             ui->cbDatabase->addItem(db.dc_name);
-            AppConfig::fServerAddress = db.dc_main_host;
+            AppConfig::fServerAddress = __s.value("db_broadcast_server").toString();
             AppConfig::fServerPort = SERVER_DEFAULT_PORT;
             DoubleDatabase::logEvent("O, shit!");
         }

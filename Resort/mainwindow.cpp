@@ -1241,7 +1241,7 @@ void MainWindow::on_actionChange_password_triggered()
 
 void MainWindow::on_actionNew_advance_entry_triggered()
 {
-    DlgAdvanceEntry *d = new DlgAdvanceEntry("", this);
+    DlgAdvanceEntry *d = new DlgAdvanceEntry("", 0, this);
     d->exec();
     delete d;
 }
@@ -1362,6 +1362,7 @@ void MainWindow::on_actionReservatios_triggered()
     widths << 80 //f_id 1
            << 0 //f_author 2
            << 80 //username 3
+           << 120 // fullname
            << 0 //state_id 4
            << 100 //state name 5
            << 80 // room 6
@@ -1382,6 +1383,7 @@ void MainWindow::on_actionReservatios_triggered()
     fields << "r.f_id"
            << "r.f_author"
            << "u.f_username"
+           << "concat(u.f_lastname, ' ', u.f_firstname) as f_fullname"
            << "r.f_state"
            << "rs.f_" + def_lang
            << "r.f_room"
@@ -1401,6 +1403,7 @@ void MainWindow::on_actionReservatios_triggered()
     titles << tr("Code")
            << tr("Author code")
            << tr("Author")
+           << tr("Author name")
            << tr("State code")
            << tr("State")
            << tr("Room")
@@ -1420,6 +1423,7 @@ void MainWindow::on_actionReservatios_triggered()
     includes["r.f_id"] = true;
     includes["r.f_author"] = true;
     includes["u.f_username"] = true;
+    includes["concat(u.f_lastname, ' ', u.f_firstname) as f_fullname"] = true;
     includes["r.f_state"] = true;
     includes["rs.f_" + def_lang] = true;
     includes["r.f_room"] = true;
@@ -1577,6 +1581,7 @@ void MainWindow::on_actionInvoice_items_triggered()
            << 80
            << 80
            << 80
+           << 80
               ;
     QStringList fields;
     fields << "i.f_id"
@@ -1597,6 +1602,7 @@ void MainWindow::on_actionInvoice_items_triggered()
             << "i.f_ascode"
             << "i.f_astype"
 << "i.f_asaccincome"
+<< "i.f_asaccexpense"
 << "i.f_accincome_novat"
 << "i.f_accvat"
 << "i.f_accnovat"
@@ -1622,6 +1628,7 @@ void MainWindow::on_actionInvoice_items_triggered()
            << tr("AS type")
            << tr("Acc income")
            << tr("Acc income no VAT")
+           << tr("Acc expense")
            << tr("Acc VAT type")
            << tr("Acc no VAT type")
            << tr("Byer acc")
@@ -1630,7 +1637,7 @@ void MainWindow::on_actionInvoice_items_triggered()
     QString icon = ":/images/list.png";
     QString query = "select i.f_id, i.f_vaucher, i.f_group, g.f_" +def_lang + ", i.f_am, i.f_en, i.f_ru, i.f_price, "
             "i.f_taxName, i.f_adgt, i.f_vatDept, i.f_noVatDept, i.f_auto, i.f_rest, i.f_vatReception, i.f_ascode, i.f_astype,  "
-            "i.f_asaccincome, i.f_accincome_novat, i.f_accvat, i.f_accnovat, i.f_byeracc "
+            "i.f_asaccincome, i.f_accincome_novat, i.f_asaccexpense, i.f_accvat, i.f_accnovat, i.f_byeracc "
             "from f_invoice_item i "
             "inner join f_invoice_item_group g on g.f_id=i.f_group ";
     WReportGrid *r = addTab<WReportGrid>();

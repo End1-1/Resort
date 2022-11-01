@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
+    ../Cache/cachefiscalmachine.cpp \
     ../Cache/cacheroomextra.cpp \
     ../Cache/cacheyear.cpp \
     ../Controls/edoubleedit.cpp \
@@ -48,6 +49,7 @@ SOURCES += main.cpp\
     dlghdmviewer.cpp \
     dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
+    dlgmovetocl.cpp \
     dlgofferinvoiceextra.cpp \
     dlgoptions.cpp \
     dlgpostcharge.cpp \
@@ -457,6 +459,7 @@ HEADERS  += mainwindow.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
+    ../Cache/cachefiscalmachine.h \
     ../Cache/cacheroomextra.h \
     ../Cache/cacheyear.h \
     ../Controls/edoubleedit.h \
@@ -481,6 +484,7 @@ HEADERS  += mainwindow.h \
     dlghdmviewer.h \
     dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
+    dlgmovetocl.h \
     dlgofferinvoiceextra.h \
     dlgoptions.h \
     dlgpostcharge.h \
@@ -903,6 +907,7 @@ FORMS    += mainwindow.ui \
     dlghdmviewer.ui \
     dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
+    dlgmovetocl.ui \
     dlgofferinvoiceextra.ui \
     dlgoptions.ui \
     dlgpostcharge.ui \

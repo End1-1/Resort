@@ -32,6 +32,7 @@ REInvoiceItem::REInvoiceItem(QList<QVariant> &values, QWidget *parent) :
     addWidget(ui->leAccVAT, "AccVAT");
     addWidget(ui->leAccNOVAT, "AccNOVAT");
     addWidget(ui->leByerAcc, "ByerAcc");
+    addWidget(ui->leAccExpense, "AccExpense");
     fTable = "f_invoice_item";
     fCacheId = cid_invoice_item;
     ui->leGroupCode->setSelector(this, cache(cid_invoice_group), ui->leGroupName);

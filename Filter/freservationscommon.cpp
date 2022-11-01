@@ -36,6 +36,8 @@ void FReservationsCommon::apply(WReportGrid *rg)
     QString where = "where ";
     if (ui->rbArrival->isChecked()) {
         where += "r.f_startdate between " + ui->deStart->dateMySql() + " and " + ui->deEnd->dateMySql() + " ";
+    } else if (ui->rbCreated->isChecked()) {
+        where += "r.f_created between " + ui->deStart->dateMySql() + " and " + ui->deEnd->dateMySql() + " ";
     } else {
         where += "r.f_endDate between " + ui->deStart->dateMySql() + " and " + ui->deEnd->dateMySql() + " ";
     }

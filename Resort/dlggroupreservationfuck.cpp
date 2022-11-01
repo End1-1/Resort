@@ -77,7 +77,7 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
         }
         it++;
     }
-    ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexName);
+    ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexName, cid_cardex);
     ui->leCardexCode->setInitialValue(fPreferences.getDb(def_default_cardex).toString());
 
     fCurrRow = -1;
@@ -260,6 +260,25 @@ void DlgGroupReservationFuck::loadGroup(int id)
 void DlgGroupReservationFuck::setup()
 {
     setupTabTextAndIcon(tr("Group reservation"), ":/images/groupreservation.png");
+}
+
+void DlgGroupReservationFuck::callback(int sel, const QString &code)
+{
+    switch (sel) {
+    case cid_cardex: {
+        CacheCardex cc;
+        if (!cc.get(code)) {
+            return;
+        }
+        DoubleDatabase dd(true, doubleDatabase);
+        for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+            dd[":f_id"] = ui->tblRoom->toString(i, 0);
+            dd[":f_vatmode"] = cc.fVatMode();
+            dd.exec("update f_reservation set f_vatmode=:f_vatmode where f_id=:f_id");
+        }
+        break;
+    }
+    }
 }
 
 void DlgGroupReservationFuck::reservationCacheUpdated(int cacheId, const QString &id)

@@ -20,7 +20,7 @@
 #define HINT_RED_RESERVATION 2
 #define HINT_CITY_LEDGER 3
 
-DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
+DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, double suggestAmount, QWidget *parent) :
     BaseDialog(parent),
     ui(new Ui::DlgAdvanceEntry)
 {
@@ -45,12 +45,14 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, QWidget *parent) :
     fDoc.fSource = VAUCHER_ADVANCE_N;
     fDoc.fItemCode = fPreferences.getDb(def_advance_voucher_id).toUInt();
     fDoc.setleFinalName(ui->leFinalName);
-    fDoc.setleFiscal(ui->leTax);
+    fDoc.setleFiscal(ui->wPayment->leTaxReceipt());
+    fDoc.setleFiscalMachine(ui->wPayment->leFiscal());
     fDoc.fDC = "DEBET";
     fDoc.fSign = -1;
     fDoc.fFinance = 1;
     fDoc.setleRemarks(ui->teRemarks);
     ui->btnLog->setVisible(fPreferences.getDb(def_show_logs).toBool());
+    ui->wPayment->setSuggestAmount(suggestAmount);
     adjustSize();
 }
 
@@ -64,6 +66,11 @@ void DlgAdvanceEntry::clearSelector()
 DlgAdvanceEntry::~DlgAdvanceEntry()
 {
     delete ui;
+}
+
+void DlgAdvanceEntry::setFiscal(int id)
+{
+    ui->wPayment->setFiscal(id);
 }
 
 void DlgAdvanceEntry::setVoucher(const QString &id)
@@ -144,14 +151,14 @@ void DlgAdvanceEntry::on_btnPrint_clicked()
 void DlgAdvanceEntry::on_btnNew_clicked()
 {
     accept();
-    DlgAdvanceEntry *d = new DlgAdvanceEntry("", fPreferences.getDefaultParentForMessage());
+    DlgAdvanceEntry *d = new DlgAdvanceEntry("", 0, fPreferences.getDefaultParentForMessage());
     d->exec();
     delete d;
 }
 
 void DlgAdvanceEntry::on_btnPrintTax_clicked()
 {
-    if (ui->leTax->asInt() > 0) {
+    if (ui->wPayment->getTaxReceipt() > 0) {
         message_error(tr("Already printed"));
         return;
     }
@@ -159,10 +166,10 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
         message_error(tr("Save first"));
         return;
     }
-    if (ui->leTax->asInt() > 0) {
-        message_error(tr("Already printed"));
-        return;
-    }
+//    if (ui->wPayment->getFiscal() == 0) {
+//        message_error(tr("Fiscal machine is not defined"));
+//        return;
+//    }
 
     CacheInvoiceItem c;
     if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
@@ -183,7 +190,7 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     if (!DlgPrintTaxSM::printAdvance(ci.fTax(), cash, card, ui->leVoucher->text(), taxCode, outJson)) {
         return;
     }
-    ui->leTax->setInt(taxCode);
+    ui->wPayment->setTaxReceipt(taxCode);
     DoubleDatabase dd(true, doubleDatabase);
     if (!fDoc.save(dd)) {
         message_error(fDoc.fError);

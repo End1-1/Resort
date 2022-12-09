@@ -83,14 +83,14 @@ void PPrintInvoice::previewInvoice()
                "r.f_vatMode, vm.f_" + def_lang + " as f_vatModeName, r.f_upgradeFrom, g.f_address, r.f_checkinUser,"
                "nights.ntotal, r.f_checkOutUser "
                "from f_reservation r "
-               "inner join f_guests g on g.f_id=r.f_guest "
-               "inner join f_room rm on rm.f_id=r.f_room "
-               "inner join f_room_classes cat on cat.f_id=rm.f_class "
+               "left join f_guests g on g.f_id=r.f_guest "
+               "left join f_room rm on rm.f_id=r.f_room "
+               "left join f_room_classes cat on cat.f_id=rm.f_class "
                "left join f_cardex ca on ca.f_cardex=r.f_cardex "
                "left join f_room_arrangement ar on ar.f_id=r.f_arrangement "
                "left join f_nationality nat on nat.f_short=g.f_nation "
-               "inner join f_vat_mode vm on vm.f_id=r.f_vatMode "
-               "left join (select f_inv, count(f_id) as ntotal from m_register where f_canceled=0 and f_source='RM' and f_inv=:f_invoice) nights on nights.f_inv=r.f_invoice "
+               "left join f_vat_mode vm on vm.f_id=r.f_vatMode "
+               "left join (select :f_invoice as f_inv, count(f_id) as ntotal from m_register where f_canceled=0 and f_source='RM' and f_inv=:f_invoice) nights on nights.f_inv=r.f_invoice "
                "where r.f_invoice=:f_invoice ");
     if (!dh.nextRow()) {
         message_error(tr("Cannot print empty invoice. Contact with program developer."));

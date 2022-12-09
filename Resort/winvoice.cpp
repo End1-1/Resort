@@ -54,7 +54,7 @@ WInvoice::WInvoice(QWidget *parent) :
     }
     ui->teRemark->setReadOnly(true);
     QList<int> tblInvWidths;
-    tblInvWidths << 0 << 0 << 100 << 200 << 80 << 80 << 30 << 200 << 0 << 0 << 27 << 0 << 0 << 0;
+    tblInvWidths << 0 << 0 << 100 << 200 << 80 << 80 << 70 << 200 << 0 << 0 << 27 << 0 << 0 << 0;
     for (int i = 0; i < tblInvWidths.count(); i++) {
         ui->tblInvLeft->setColumnWidth(i, tblInvWidths.at(i));
         ui->tblInvRight->setColumnWidth(i, tblInvWidths.at(i));
@@ -1298,67 +1298,69 @@ void WInvoice::on_btnTaxBack_clicked()
 
 void WInvoice::on_btnAdvance_clicked()
 {
-//    EQTableWidget *t = nullptr;
-//    int result = DlgPrintTaxSideOption::printTaxSide();
-//    switch (result) {
-//    case pts_none:
-//        return;
-//    case pts_guest:
-//        t = ui->tblInvLeft;
-//        break;
-//    case pts_company:
-//        t = ui->tblInvRight;
-//        break;
-//    }
+    /*
+    EQTableWidget *t = nullptr;
+    int result = DlgPrintTaxSideOption::printTaxSide();
+    switch (result) {
+    case pts_none:
+        return;
+    case pts_guest:
+        t = ui->tblInvLeft;
+        break;
+    case pts_company:
+        t = ui->tblInvRight;
+        break;
+    }
 
-//    QSet<int> taxs;
-//    for (int i = 0; i < t->rowCount(); i++) {
-//        if (!isTaxPay(t->toString(i, 12))) {
-//            continue;
-//        }
-//        if (t->itemChecked(i, 6)) {
-//            continue;
-//        }
+    QSet<int> taxs;
+    for (int i = 0; i < t->rowCount(); i++) {
+        if (!isTaxPay(t->toString(i, 12))) {
+            continue;
+        }
+        if (t->itemChecked(i, 6)) {
+            continue;
+        }
 
-//        CacheInvoiceItem c;
-//        if (!c.get(t->toString(i, 11))) {
-//            message_error(tr("Error in tax print. c == 0, case 1."));
-//            continue;
-//        }
-//        CacheTaxMap ci;
-//        if (!ci.get(c.fCode())) {
-//            message_error(tr("Tax department undefined for ") + c.fName());
-//            return;
-//        }
-//        taxs.insert(ci.fTax());
-//    }
+        CacheInvoiceItem c;
+        if (!c.get(t->toString(i, 11))) {
+            message_error(tr("Error in tax print. c == 0, case 1."));
+            continue;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        taxs.insert(ci.fTax());
+    }
 
-//    int taxnumber = 0;
-//    if (taxs.count() == 1) {
-//        taxnumber = taxs.toList().at(0);
-//    } else if (taxs.count() > 1){
-//        DlgSelectFiscalMachin ds(taxs, this);
-//        ds.exec();
-//        taxnumber = ds.fSelectedMachine;
-//    }
+    int taxnumber = 0;
+    if (taxs.count() == 1) {
+        taxnumber = taxs.toList().at(0);
+    } else if (taxs.count() > 1){
+        DlgSelectFiscalMachin ds(taxs, this);
+        ds.exec();
+        taxnumber = ds.fSelectedMachine;
+    }
 
     double suggestAmount = 0;
-//    for (int i = 0; i < t->rowCount(); i++) {
-//        CacheInvoiceItem c;
-//        if (!c.get(t->toString(i, 11))) {
-//            message_error(tr("Error in payment. c == 0, case 1."));
-//            return;
-//        }
-//        CacheTaxMap ci;
-//        if (!ci.get(c.fCode())) {
-//            message_error(tr("Tax department undefined for ") + c.fName());
-//            return;
-//        }
-//        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber) {
-//            continue;
-//        }
-//        suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
-//    }
+    for (int i = 0; i < t->rowCount(); i++) {
+        CacheInvoiceItem c;
+        if (!c.get(t->toString(i, 11))) {
+            message_error(tr("Error in payment. c == 0, case 1."));
+            return;
+        }
+        CacheTaxMap ci;
+        if (!ci.get(c.fCode())) {
+            message_error(tr("Tax department undefined for ") + c.fName());
+            return;
+        }
+        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber) {
+            continue;
+        }
+        suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
+    }
+    */
 
     CacheInvoiceItem c;
     if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
@@ -1371,7 +1373,9 @@ void WInvoice::on_btnAdvance_clicked()
         return;
     }
 
-    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), suggestAmount, this);
+    //DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), suggestAmount, this);
+    //d->setFiscal(taxnumber);
+    DlgAdvanceEntry *d = new DlgAdvanceEntry(ui->leReserveID->text(), 0, this);
     d->setFiscal(ci.fTax());
     d->setInvoice(ui->leInvoice->text());
     d->exec();
@@ -1604,9 +1608,8 @@ void WInvoice::on_btnPayment_clicked()
         DlgSelectFiscalMachin ds(taxs, this);
         ds.exec();
         taxnumber = ds.fSelectedMachine;
-    }
-    if (taxnumber == 0) {
-        return;
+    } else {
+        taxnumber = 1;
     }
 
     double suggestAmount = 0;
@@ -1621,7 +1624,7 @@ void WInvoice::on_btnPayment_clicked()
             message_error(tr("Tax department undefined for ") + c.fName());
             return;
         }
-        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber) {
+        if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber && taxnumber != 0) {
             continue;
         }
         suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));

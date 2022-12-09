@@ -70,6 +70,7 @@ private slots:
     void on_btnRoomStateTouch_clicked();
     void on_btnArrivalsSimple_clicked();
     void on_btnDeparutersSimple_clicked();
+    void on_btnAdvance_2_clicked();
 };
 
 #endif // WWELCOME_H

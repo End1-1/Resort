@@ -4,6 +4,7 @@
 #include "vauchers.h"
 #include "ptextrect.h"
 #include "cachecityledger.h"
+#include "cachecardex.h"
 #include "dlgchangeclofvaucher.h"
 #include "pimage.h"
 
@@ -13,6 +14,7 @@ FCityLedgerDetailedBalance::FCityLedgerDetailedBalance(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCL);
+    ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardexName);
     QString query = "call cl_detailed_balance(:d1, :d2, :cl);select * from rep;";
 
     fReportGrid->fStaticQuery = query;
@@ -400,14 +402,21 @@ void FCityLedgerDetailedBalance::applyNorm(WReportGrid *rg)
             "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
             "and f_wdate < :d1 "
             "union "
-            "select f_id, f_wdate, concat(f_finalname, ' ', coalesce(f_remarks, '')), f_amountamd*f_sign*-1, '0' as dd, '0' as cc, f_room, f_id, f_inv, f_time "
-            "from m_register "
-            "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
-            "and f_wdate between :d1 and :d2 "
+            "select m.f_id, m.f_wdate, concat(f_finalname, ' ', coalesce(rr.f_remarks, '')), f_amountamd*f_sign*-1,"
+            " '0' as dd, '0' as cc, m.f_room, m.f_id, f_inv, f_time "
+            "from m_register m "
+            "left join f_reservation rr on rr.f_invoice=m.f_inv "
+            "where f_finance=1 and m.f_cityledger=:cl and f_canceled=0 "
+            "and f_wdate between :d1 and :d2 :group "
             "order by 2, 10 ";
     query.replace(":d1", ui->deFrom->dateMySql())
             .replace(":d2", ui->deTo->dateMySql())
             .replace(":cl", QString::number(ui->leCLCode->text().toInt()));
+    if (ui->leCardex->isEmpty()) {
+        query.replace(":group", "");
+    } else {
+        query.replace(":group", QString(" and rr.f_cardex='%1'").arg(ui->leCardex->text()));
+    }
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
 }

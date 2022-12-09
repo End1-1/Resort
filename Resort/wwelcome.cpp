@@ -420,3 +420,8 @@ void WWelcome::on_btnDeparutersSimple_clicked()
 {
     fMainWindow->on_actionExpected_departures_simple_triggered();
 }
+
+void WWelcome::on_btnAdvance_2_clicked()
+{
+    fMainWindow->on_actionReceipt_voucher_triggered();
+}

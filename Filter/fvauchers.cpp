@@ -70,7 +70,7 @@ FVauchers::FVauchers(QWidget *parent) :
         left join users u on u.f_id=r.f_user \
         left join f_payment_type i on i.f_id=r.f_paymentMode \
         left join users uc on uc.f_id=r.f_cancelUser \
-        where f_wdate between :f_date1 and :f_date2 ";
+        where f_wdate between :f_date1 and :f_date2 :novat ";
 
         ui->leVaucherCode->setSelector(this, cache(cid_vaucher), ui->leVacherName);
         //connect(fReportGrid, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(doubleClickOnRow(QList<QVariant>)));
@@ -105,9 +105,15 @@ void FVauchers::openWithFilter(const QDate &d1, const QDate &d2, const QString &
 
 void FVauchers::apply(WReportGrid *rg)
 {
+    QString query = fQuery;
     int canceled = 0;
     if (ui->chCanceled->isChecked()) {
         canceled = 120; //this is a column width
+    }
+    if (ui->chNoVAT->isChecked()) {
+        query.replace(":novat", " and r.f_vatmode=3 ");
+    } else {
+        query.replace(":novat", "");
     }
     fReportGrid->fModel->clearColumns();
     fReportGrid->fModel->setColumn(80, "", tr("Code"))
@@ -141,7 +147,6 @@ void FVauchers::apply(WReportGrid *rg)
             .setColumn(canceled * 2, "", tr("Cancel User"))
             .setColumn(0, "", tr("Invoice"))
             ;
-    QString query = fQuery;
     query = query.replace(":f_date1", ui->deFrom->dateMySql()).replace(":f_date2", ui->deTo->dateMySql());
     if (ui->leVaucherCode->text().length() > 0) {
         query += " and r.f_source='" + ui->leVaucherCode->text() + "'";
@@ -176,11 +181,7 @@ QWidget *FVauchers::lastElement()
 
 QString FVauchers::reportTitle()
 {
-    return QString("%1 %2-%2 %3")
-            .arg(tr("Vouchers"))
-            .arg(ui->deFrom->text())
-            .arg(ui->deTo->text())
-            .arg(ui->leVaucherCode->text());
+    return QString("%1 %2-%2 %3").arg(tr("Vouchers"), ui->deFrom->text(), ui->deTo->text(), ui->leVaucherCode->text());
 }
 
 void FVauchers::clickOnRow(int row)

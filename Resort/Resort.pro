@@ -35,6 +35,7 @@ SOURCES += main.cpp\
     ../Filter/fexpectedsimple.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
+    ../Filter/froomcatsale.cpp \
     ../Filter/froomstates.cpp \
     ../Filter/ftaxreport.cpp \
     ../Server2/datahandler.cpp \
@@ -470,6 +471,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fexpectedsimple.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
+    ../Filter/froomcatsale.h \
     ../Filter/froomstates.h \
     ../Filter/ftaxreport.h \
     ../Server2/datahandler.h \
@@ -900,6 +902,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fexpectedsimple.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
+    ../Filter/froomcatsale.ui \
     ../Filter/froomstates.ui \
     ../Filter/ftaxreport.ui \
     dlgconfigtaxserver.ui \

@@ -19,6 +19,7 @@ public:
     void setVoucher(const QString &id);
     void setRoom(int room);
     void setInvoice(const QString &invoice);
+    virtual int exec() override;
 
 private slots:
     void on_btnCancel_clicked();

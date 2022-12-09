@@ -825,6 +825,42 @@ voucher</string>
           </widget>
          </item>
          <item>
+          <widget class="EToolbarButton" name="btnAdvance_2">
+           <property name="minimumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>70</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Receipt
+voucher</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/images/credit-card.png</normaloff>:/images/credit-card.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>32</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+           <property name="Tag" stdset="0">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="EToolbarButton" name="btnPostCharge">
            <property name="minimumSize">
             <size>

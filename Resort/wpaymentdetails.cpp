@@ -25,9 +25,9 @@ WPaymentDetails::WPaymentDetails(QWidget *parent) :
     ui->leCL->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->leFiscal->setSelector(this, cache(cid_fiscalmachine), ui->leFiscalName);
 
-    ui->leFiscal->setVisible(false);
-    ui->leFiscalName->setVisible(false);
-    ui->lbFiscalMachine->setVisible(false);
+//    ui->leFiscal->setVisible(false);
+//    ui->leFiscalName->setVisible(false);
+//    ui->lbFiscalMachine->setVisible(false);
 }
 
 WPaymentDetails::~WPaymentDetails()

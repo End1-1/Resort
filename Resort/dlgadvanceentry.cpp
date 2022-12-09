@@ -91,6 +91,12 @@ void DlgAdvanceEntry::setInvoice(const QString &invoice)
     ui->wInvoice->setInvoice(invoice);
 }
 
+int DlgAdvanceEntry::exec()
+{
+    adjustSize();
+    return BaseDialog::exec();
+}
+
 void DlgAdvanceEntry::on_btnCancel_clicked()
 {
     reject();

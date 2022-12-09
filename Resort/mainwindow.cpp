@@ -19,6 +19,7 @@
 #include "freportbypayment.h"
 #include "fexpectedarrivals2.h"
 #include "wquickroomassignment.h"
+#include "froomcatsale.h"
 #include "fhotelhierarchy.h"
 #include "guestcheckin.h"
 #include "fexpecteddeparturesimple.h"
@@ -666,6 +667,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionMonthly_occupancy_percentages->setVisible(r__(cr__analytics_monthly_occupancy_perc));
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
     ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
+    ui->actionCategory_statistics->setVisible(r__(cr__cardex_analysis));
 
 
     ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
@@ -2314,4 +2316,9 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
 void MainWindow::on_actionReceipt_voucher_triggered()
 {
     DlgReceiptVaucher(0, 0, 0, this).exec();
+}
+
+void MainWindow::on_actionCategory_statistics_triggered()
+{
+    FRoomCatSale::openFilterReport<FRoomCatSale, WReportGrid>();
 }

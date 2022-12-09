@@ -47,7 +47,7 @@ void DlgRecoverInvoice::on_btnRecover_clicked()
         }
     }
     ddr[":f_invoice"] = ui->leInvoice->text();
-    if (!ddr.exec("select * from f_reservation where f_invoice=:f_invoce")) {
+    if (!ddr.exec("select * from f_reservation where f_invoice=:f_invoice")) {
         ui->teLog->appendPlainText(ddl.fLastError);
     }
     while (ddr.nextRow()) {

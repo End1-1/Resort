@@ -74,13 +74,13 @@ void FReservationsCommon::apply(WReportGrid *rg)
     where += " order by r.f_startDate ";
     buildQuery(rg, where);
     QList<int> cols;
-    cols << 11 << 12 << 13 << 17;
+    cols << 12 << 13 << 18;
     QList<double> vals;
     fReportGrid->fModel->sumOfColumns(cols, vals);
     fReportGrid->setTblTotalData(cols, vals);
-    if (fReportGrid->fTableTotal->toInt(0, 12) > 0) {
-        fReportGrid->fTableTotal->setItemWithValue(0, 13,
-            fReportGrid->fTableTotal->toDouble(0, 17) / fReportGrid->fTableTotal->toInt(0, 12));
+    if (fReportGrid->fTableTotal->toInt(0, 13) > 0) {
+        fReportGrid->fTableTotal->setItemWithValue(0, 14,
+            fReportGrid->fTableTotal->toDouble(0, 18) / fReportGrid->fTableTotal->toInt(0, 13));
     }
 }
 

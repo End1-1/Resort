@@ -268,6 +268,7 @@
     <addaction name="actionNaitonality_report_by_period"/>
     <addaction name="actionGuest_by_nationality"/>
     <addaction name="actionRoom_arrangement"/>
+    <addaction name="actionCategory_statistics"/>
    </widget>
    <widget class="QMenu" name="menuOther_Reports">
     <property name="title">
@@ -1596,6 +1597,15 @@
   <action name="actionReceipt_voucher">
    <property name="text">
     <string>Receipt voucher</string>
+   </property>
+  </action>
+  <action name="actionCategory_statistics">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/reports.png</normaloff>:/images/reports.png</iconset>
+   </property>
+   <property name="text">
+    <string>Category statistics</string>
    </property>
   </action>
  </widget>

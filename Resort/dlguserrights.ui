@@ -29,7 +29,7 @@
       <enum>QTabWidget::West</enum>
      </property>
      <property name="currentIndex">
-      <number>8</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -276,7 +276,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-178</y>
             <width>853</width>
             <height>610</height>
            </rect>
@@ -565,7 +565,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-201</y>
             <width>853</width>
             <height>633</height>
            </rect>
@@ -827,7 +827,7 @@
               <string>Fiscal report</string>
              </property>
              <property name="Tag" stdset="0">
-              <number>150</number>
+              <number>149</number>
              </property>
             </widget>
            </item>

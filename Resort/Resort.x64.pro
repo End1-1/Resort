@@ -15,6 +15,7 @@ RC_FILE = res.rc
 
 DEFINES += _RESORT_
 DEFINES += _HOTEL_
+DEFINES += _METROPOL_
 
 SOURCES += main.cpp\
     ../../XLSX/src/xlsxborder.cpp \
@@ -24,6 +25,7 @@ SOURCES += main.cpp\
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
+    ../Cache/cachefiscalmachine.cpp \
     ../Cache/cacheroomextra.cpp \
     ../Cache/cacheyear.cpp \
     ../Controls/edoubleedit.cpp \
@@ -34,6 +36,7 @@ SOURCES += main.cpp\
     ../Filter/fexpectedsimple.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/finhouseguestfuture.cpp \
+    ../Filter/froomcatsale.cpp \
     ../Filter/froomstates.cpp \
     ../Filter/ftaxreport.cpp \
     ../Server2/datahandler.cpp \
@@ -41,12 +44,14 @@ SOURCES += main.cpp\
     ../Server2/socketconnection.cpp \
     ../Threads/broadcastthread.cpp \
     ../Threads/objectthread.cpp \
+    databaserow.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
     dlgexportas.cpp \
     dlghdmviewer.cpp \
     dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
+    dlgmovetocl.cpp \
     dlgofferinvoiceextra.cpp \
     dlgoptions.cpp \
     dlgpostcharge.cpp \
@@ -456,6 +461,7 @@ HEADERS  += mainwindow.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
+    ../Cache/cachefiscalmachine.h \
     ../Cache/cacheroomextra.h \
     ../Cache/cacheyear.h \
     ../Controls/edoubleedit.h \
@@ -466,6 +472,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fexpectedsimple.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/finhouseguestfuture.h \
+    ../Filter/froomcatsale.h \
     ../Filter/froomstates.h \
     ../Filter/ftaxreport.h \
     ../Server2/datahandler.h \
@@ -473,12 +480,14 @@ HEADERS  += mainwindow.h \
     ../Server2/socketconnection.h \
     ../Threads/broadcastthread.h \
     ../Threads/objectthread.h \
+    databaserow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
     dlgexportas.h \
     dlghdmviewer.h \
     dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
+    dlgmovetocl.h \
     dlgofferinvoiceextra.h \
     dlgoptions.h \
     dlgpostcharge.h \
@@ -894,6 +903,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fexpectedsimple.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/finhouseguestfuture.ui \
+    ../Filter/froomcatsale.ui \
     ../Filter/froomstates.ui \
     ../Filter/ftaxreport.ui \
     dlgconfigtaxserver.ui \
@@ -901,6 +911,7 @@ FORMS    += mainwindow.ui \
     dlghdmviewer.ui \
     dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
+    dlgmovetocl.ui \
     dlgofferinvoiceextra.ui \
     dlgoptions.ui \
     dlgpostcharge.ui \

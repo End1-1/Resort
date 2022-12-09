@@ -714,7 +714,7 @@ void DBMRegister::amountAMDChagned(const QString &s)
 {
     fAmountAMD = QLocale().toDouble(s);
     if (leAmountUSD) {
-        leAmountUSD->setDouble(s.toDouble() / fAmountUSD);
+        leAmountUSD->setDouble(str_float(s) / fAmountUSD);
     }
 }
 

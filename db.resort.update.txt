@@ -65,15 +65,3 @@ alter table f_invoice_Item_tax drop column f_vat, drop column f_novat, add colum
 alter table s_tax_map drop column f_dept;
 alter table s_tax_map add column f_name tinytext;
 alter table serv_tax add column f_default smallint ;
-
-
-/* db 13 26.09.2022 */
-update s_app set f_version='13' where f_app='DB';
-alter table f_invoice_item add column f_accincome_novat tinytext, add column  f_accvat varchar(2);
-alter table f_invoice_item add column f_accnovat varchar(2);
-alter table f_invoice_item add column f_byeracc tinytext;
-
-
-/* db 14 26.09.2022 */
-update s_app set f_version='14' where f_app='DB';
-alter table m_register add column f_fiscalmachine tinyint;

@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="ArmSoft">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -457,6 +457,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>EQCheckBox</class>
+   <extends>QCheckBox</extends>
+   <header location="global">eqcheckbox.h</header>
+  </customwidget>
+  <customwidget>
    <class>EQLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">eqlineedit.h</header>
@@ -468,11 +473,6 @@
    <class>EQTableWidget</class>
    <extends>QTableWidget</extends>
    <header location="global">eqtablewidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>EQCheckBox</class>
-   <extends>QCheckBox</extends>
-   <header location="global">eqcheckbox.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

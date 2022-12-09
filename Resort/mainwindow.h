@@ -144,6 +144,7 @@ public slots:
     void on_actionExpected_arrivals_departures_2_triggered();
     void on_actionState_of_the_room_triggered();
     void on_actionExpected_departures_simple_triggered();
+    void on_actionReceipt_voucher_triggered();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -194,7 +195,7 @@ private slots:
     void on_actionArmSoft_triggered();
     void on_actionFiscal_report_triggered();
     void on_actionUpload_menu_from_FrontDesk_triggered();
-    void on_actionReceipt_voucher_triggered();
+    void on_actionCategory_statistics_triggered();
 
 private:
     Listener fServer2Listener;

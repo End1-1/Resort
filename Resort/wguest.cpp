@@ -131,8 +131,8 @@ void WGuest::on_btnReadFromDevice_clicked()
     QString rawName = src.mid(5, 39);
     QString rawDocNum = src.mid(44, 9);
     QString nat = src.mid(54, 3);
-    if (nat == "D<<") {
-        nat = "DNK";
+    if (country == "D<<") {
+        country = "DNK";
     }
     QString dobRaw = src.mid(57, 6);
     QStringList names = rawName.split("<<", Qt::SkipEmptyParts);
@@ -148,31 +148,32 @@ void WGuest::on_btnReadFromDevice_clicked()
     }
     ui->deBirth->setDate(QDate::fromString(QString("%1/%2/%3").arg(day, month, year), "dd/MM/yyyy"));
     DoubleDatabase dd(true, false);
-    dd[":f_alpha3"] = nat;
+    dd[":f_alpha3"] = country;
     dd.exec("select f_short from f_nationality where f_alpha3=:f_alpha3");
     if (dd.nextRow() == false) {
-        message_error(tr("Invalid nationality code"));
+        message_error(tr("Invalid nationality code") + "<br>" + country);
         return;
     }
     ui->leNationalityCode->setInitialValue(dd.getString("f_short"));
     ui->lePassport->setText(rawDocNum);
     if (names.count() > 0) {
         if (names.at(0).contains("<")) {
-
+            QStringList fnames = names.at(0).split("<", Qt::SkipEmptyParts);
+            ui->leLastname->setText(fnames.join(" "));
         } else {
             ui->leLastname->setText(names.at(0));
-            if (names.count() > 1) {
-                if (names.at(1).contains("<")) {
-                    names = names.at(1).split("<", Qt::SkipEmptyParts);
-                    ui->leFirstname->setText(names.join(" "));
-                } else {
-                    ui->leFirstname->setText(names.at(1));
-                    if (names.count() > 2) {
-                        if (names.at(2).contains("<")) {
+        }
+        if (names.count() > 1) {
+            if (names.at(1).contains("<")) {
+                names = names.at(1).split("<", Qt::SkipEmptyParts);
+                ui->leFirstname->setText(names.join(" "));
+            } else {
+                ui->leFirstname->setText(names.at(1));
+                if (names.count() > 2) {
+                    if (names.at(2).contains("<")) {
 
-                        } else {
-                            ui->leFirstname->setText(ui->leFirstname->text() + " " + names.at(2));
-                        }
+                    } else {
+                        ui->leFirstname->setText(ui->leFirstname->text() + " " + names.at(2));
                     }
                 }
             }

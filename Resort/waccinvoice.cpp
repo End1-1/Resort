@@ -18,6 +18,7 @@
 #include "pexportinvoicetoexcel.h"
 #include "frestauranttotal.h"
 #include "dlgchartdaterange.h"
+#include "dlghdmviewer.h"
 #include "dlgreservationguests.h"
 #include "dlgpostcharge.h"
 #include "dlgcl.h"
@@ -64,9 +65,9 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
         connect(fReport, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(handleValues(QList<QVariant>)));
     }
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
-                                0, 30, 90, 0, 250, 80, 80, 80, 30, 30, 0, 0);
+                                0, 30, 90, 0, 250, 80, 80, 80, 80, 30, 0, 0);
     Utils::tableSetColumnWidths(ui->tblTotal, ui->tblTotal->columnCount(),
-                                0, 30, 90, 0, 250, 80, 80, 80, 30, 30, 0, 0);
+                                0, 30, 90, 0, 250, 80, 80, 80, 80, 30, 0, 0);
     ui->leInvoice->setSelector(this, cache(cid_checkout_invoice), ui->leInvoice, sel_invoice);
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->addWidget(ui->deCheckIn, "Check in date");
@@ -358,7 +359,7 @@ void WAccInvoice::viewEntries()
         //vat - 7
         ui->tblData->setItem(row, 7, Utils::tableItem(rowData.at(6)));
         //tax - 8
-        C5TableWidgetItem *itemTax = new C5TableWidgetItem();
+        C5TableWidgetItem *itemTax = new C5TableWidgetItem(rowData.at(7).toString());
         itemTax->setFlags(itemTax->flags() ^ Qt::ItemIsUserCheckable);
         itemTax->setCheckState(rowData.at(7).toInt() == 0  ? Qt::Unchecked : Qt::Checked);
         ui->tblData->setItem(row, 8, itemTax);
@@ -795,14 +796,14 @@ void WAccInvoice::on_btnEliminate_clicked()
 
 void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
 {
-    if (!r__(cr__super_correction)) {
-        return;
-    }
     if (!index.isValid()) {
         return;
     }
     DoubleDatabase fDD(true, doubleDatabase);
     if (index.column() == 2) {
+        if (!r__(cr__super_correction)) {
+            return;
+        }
         QString oldDate = ui->tblData->item(index.row(), 2)->data(Qt::EditRole).toDate().toString(def_date_format);
         QDate date = WORKING_DATE;
         if (DlgChartDateRange::getDate(date)) {
@@ -823,6 +824,9 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
     } else if (index.column() == 4) {
         openVaucher(ui->tblData->toString(index.row(), 10), ui->tblData->toString(index.row(), 0));
     } else if (index.column() == 5 || index.column() == 6) {
+        if (!r__(cr__super_correction)) {
+            return;
+        }
         double oldAmount = ui->tblData->toDouble(index.row(), index.column());
         bool ok = false;
         double newAmount = QInputDialog::getDouble(this, tr("New amount"), tr("New amount"), oldAmount, 0, 999999999, 2, &ok);
@@ -837,6 +841,16 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
         correctCOCL();
         fTrackControl->saveChanges();
         load(ui->leInvoice->text());
+    } else if (index.column() == 8) {
+        DoubleDatabase dd(true, false);
+        dd[":f_replyTaxCode"] = ui->tblData->toInt(index.row(), 8);
+        dd.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");
+        if (dd.nextRow()) {
+            DlgHDMViewer(ui->tblData->toString(index.row(), 8), dd.getString("f_queryjson"), this).exec();
+        } else {
+            message_error(tr("Invalid fiscal code"));
+            return;
+        }
     }
 }
 

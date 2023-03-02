@@ -684,6 +684,10 @@ name</source>
         <source>Confirm to delete selected database</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Broadcast server</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dialog</name>
@@ -798,10 +802,6 @@ name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>TAX</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save first</source>
         <translation type="unfinished"></translation>
     </message>
@@ -827,6 +827,14 @@ name</source>
     </message>
     <message>
         <source>Card is not selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in tax print. c == 0, case 1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax department undefined for </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2247,6 +2255,42 @@ rooms</source>
         <source>Partner code undefined</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Export invoices as Retail sale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Document start number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export advances </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export advamces of checkout invoices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partner debet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partner credit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid date range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgExportOther</name>
@@ -2964,6 +3008,25 @@ rooms</source>
         <source>Change the room state?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DlgHouseItemOnOffWidget</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">Այո</translation>
+    </message>
+    <message>
+        <source>Not ready</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgInvoiceCancelation</name>
@@ -3063,6 +3126,93 @@ rooms</source>
     </message>
     <message>
         <source>Invoice print option was not selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print meal plan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Այո</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">Ոչ</translation>
+    </message>
+</context>
+<context>
+    <name>DlgMoveToCL</name>
+    <message>
+        <source>Change CL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination CL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voucher</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Used payments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount</source>
+        <translation type="unfinished">Գումար</translation>
+    </message>
+    <message>
+        <source>Item name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Final name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current payment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change</source>
+        <translation type="unfinished">Փոխել</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Current CL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid voucher id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No destination CL selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm operation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3670,6 +3820,14 @@ rooms</source>
         <source>Terminal</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Error in tax print. c == 0, case 2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No taxmap for </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgPostBreakfast</name>
@@ -4017,6 +4175,14 @@ rooms</source>
     <message>
         <source>Cancel</source>
         <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+    <message>
+        <source>Error in tax print. c == 0, case 2.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No taxmap for </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4383,10 +4549,6 @@ rooms</source>
 <context>
     <name>DlgPrintTaxSideOption</name>
     <message>
-        <source>Tax part</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Guest part</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4700,6 +4862,22 @@ rooms</source>
         <source>Check the parametrs</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Error in tax print. c == 0, case 1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax department undefined for </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No fiscal machines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot mix fiscal machines here</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgQuickAdvanceApply</name>
@@ -5011,6 +5189,18 @@ for this operation</source>
     </message>
     <message>
         <source>PAYMENT TERMINAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suggest amount</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5634,6 +5824,17 @@ for this operation</source>
     </message>
 </context>
 <context>
+    <name>DlgSelectFiscalMachin</name>
+    <message>
+        <source>Fiscal machine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Հրաժարվել</translation>
+    </message>
+</context>
+<context>
     <name>DlgSelector</name>
     <message>
         <source>Dialog</source>
@@ -5783,6 +5984,14 @@ for this operation</source>
     </message>
     <message>
         <source>Next row contains mistake</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in tax print. c == 0, case 1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax department undefined for </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7287,6 +7496,21 @@ hierarchy</source>
 departures 2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Arrivals
+simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departures
+simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room
+states</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>EFilterLineEdit</name>
@@ -8512,6 +8736,10 @@ ee</source>
         <source>INVOICE</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cardex</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FCityTrayLedger</name>
@@ -8946,15 +9174,19 @@ ee</source>
         <translation type="unfinished">Անվանում</translation>
     </message>
     <message>
-        <source>Amount, AMD</source>
+        <source>Amount 1, AMD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amount, USD</source>
+        <source>Amount 1, USD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Fiscal</source>
+        <source>Amount 2, AMD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amount 2, USD</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9355,6 +9587,18 @@ ee</source>
     </message>
     <message>
         <source>Expected arrivals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departure</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remarks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -10268,6 +10512,10 @@ ee</source>
         <source>Booking</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FLengthOfStay</name>
@@ -11067,6 +11315,10 @@ ee</source>
         <source>Extra bed</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Created</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FReserveByCreate</name>
@@ -11746,6 +11998,45 @@ ledger</source>
     </message>
 </context>
 <context>
+    <name>FRoomCatSale</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Category statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Voucher</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date</source>
+        <translation type="unfinished">Ամսաթիվ</translation>
+    </message>
+    <message>
+        <source>Invoice</source>
+        <translation type="unfinished">ՀԱ</translation>
+    </message>
+    <message>
+        <source>Guest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Price</source>
+        <translation type="unfinished">Գին</translation>
+    </message>
+</context>
+<context>
     <name>FRoomState</name>
     <message>
         <source>Form</source>
@@ -11836,11 +12127,11 @@ ledger</source>
     </message>
     <message>
         <source>State code</source>
-        <translation type="unfinished">Վիճակի կոդ</translation>
+        <translation type="obsolete">Վիճակի կոդ</translation>
     </message>
     <message>
         <source>Code</source>
-        <translation type="unfinished">Կոդ</translation>
+        <translation type="obsolete">Կոդ</translation>
     </message>
     <message>
         <source>Name</source>
@@ -11888,6 +12179,10 @@ ledger</source>
     </message>
     <message>
         <source>Dont disturbe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12477,6 +12772,10 @@ ledger</source>
         <source>Invalid fiscal code</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>No VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FWakeupCall</name>
@@ -12747,6 +13046,50 @@ or contact to administrator</source>
     </message>
     <message>
         <source>started at right now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13904,6 +14247,46 @@ or contact to administrator</source>
         <source>Done.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Category statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Author name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AS type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc income</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc income no VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc expense</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc VAT type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc no VAT type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Byer acc</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PExportInvoiceToExcel</name>
@@ -14300,10 +14683,6 @@ or contact to administrator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Being the equivalent of USD</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>VAT 20%</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14325,6 +14704,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Room </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Being the equivalent of </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -14591,10 +14974,6 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Data read timeout</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You should to setup cashier and pin before to use fiscal printer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -15083,6 +15462,22 @@ or contact to administrator</source>
     <message>
         <source>Queue</source>
         <translation type="unfinished">Հերթ</translation>
+    </message>
+    <message>
+        <source>Fiscal machine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IP address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Password</source>
+        <translation type="unfinished">Գախտնաբառ</translation>
     </message>
 </context>
 <context>
@@ -15840,10 +16235,6 @@ or contact to administrator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Tax name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>f_auto</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15881,6 +16272,78 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Voucher type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_ascode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AS code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AS type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax an AS name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_astype</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ArmSoft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc income</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_asaccincome</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc income no VAT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_accincome_novat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc VAT type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_accvat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc no VAT type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_accnovat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_byeracc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bayer acc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Acc expense</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>f_asaccexpense</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17748,10 +18211,6 @@ Reserve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Setup tax printer first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Error in tax print. c == 0, case 1.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17796,11 +18255,27 @@ Reserve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>AS</source>
+        <source>Done.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Done.</source>
+        <source>MOVE TO CL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To AS invoice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To AS retail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Currency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid voucher code</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18153,6 +18628,10 @@ Reserve</source>
     <message>
         <source>Date end</source>
         <translation type="unfinished">Վերջ</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -18648,6 +19127,10 @@ Reserve</source>
         <source>Prnit tax after receipt</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Debug mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WGroupReserveRect</name>
@@ -18813,6 +19296,14 @@ CS CV L</source>
     </message>
     <message>
         <source>Guest was removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Read from device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid nationality code</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19368,6 +19859,19 @@ amount</source>
         <source>Reset available amount of advance?</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Payment
+details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FiscalMachine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error in payment. c == 0, case 1.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>WMainDesk</name>
@@ -19452,10 +19956,6 @@ reservation</source>
     <message>
         <source>End
 Of Day</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Receipt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -19694,6 +20194,22 @@ reservation</source>
     </message>
     <message>
         <source>Cityledger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fiscal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tax receipt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suggest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Suggested amount</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -22637,6 +23153,21 @@ Experemental</source>
     </message>
     <message>
         <source>The global configuration of program was modified, you need to close program, then login again to load new configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Arrivals
+simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Departures
+simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room
+states</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

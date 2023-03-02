@@ -125,7 +125,40 @@ void FForecastOccupancyCategoryReal::apply(WReportGrid *rg)
                     }
                 }
             }
+        } else {
+            nr = er;
+            nr[0] = d.toString(def_date_format);
+            nr[1] = totRooms;
+            rows.append(nr);
+            row = rows.count() - 1;
+
+//                int catIndex = cats[fDD.getString("f_short")] + 2;
+//                int state = fDD.getInt("f_state");
+//                QString cs = fDD.getString("f_short");
+//                QDate d1 = fDD.getDate("f_startdate");
+//                QDate d2 = fDD.getDate("f_enddate");
+//                if (state == RESERVE_OUTOFROOM || state == RESERVE_OUTOFINVENTORY || state == RESERVE_SERVICE) {
+//                    rows[row][totIndex] = rows[row][totIndex].toInt() + 1;
+//                    map[cs][fDD.getString("f_room")].v1 = true;
+//                    map[cs][fDD.getString("f_room")].v2 = true;
+//                } else {
+//                    rows[row][catIndex] = rows[row][catIndex].toInt() + 1;
+//                    rows[row][totIndex + 1] = rows[row][totIndex + 1].toDouble() + fDD.getDouble("f_amount");
+//                    if (d1 < d && d2 > d) {
+//                        map[cs][fDD.getString("f_room")].v1 = true;
+//                        map[cs][fDD.getString("f_room")].v2 = true;
+//                    } else if (d1 == d) {
+//                        map[cs][fDD.getString("f_room")].v2 = true;
+//                        if (d == WORKING_DATE) {
+//                            map[cs][fDD.getString("f_room")].v1 = true;
+//                        }
+//                    } else if (d2 == d) {
+//                        map[cs][fDD.getString("f_room")].v1 = true;
+//                    }
+//                }
+
         }
+
         QMap<QString, int> mapQty;
         for (QMap<QString, QMap<QString, ROOM> >::const_iterator it = map.begin(); it != map.end(); it++) {
             for (QMap<QString, ROOM>::const_iterator ir = it.value().begin(); ir != it.value().end(); ir++) {

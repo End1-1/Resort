@@ -358,7 +358,7 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
             return;
         }
         QString docid = QUuid::createUuid().toString().replace("{", "").replace("}", "");
-        QString docnumstr = docnum == 0 ? "" : QString::number(docnum);
+        QString docnumstr = docnum == 0 ? "" : QString("%1").arg(docnum, 4, 10, QChar('0'));
         docnum++;
         q.bindValue(":fISN", docid);
         q.bindValue(":fDOCTYPE", 20);
@@ -372,7 +372,7 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
                     .arg(checkoutDate.month(), 2, 10, QChar('0'))
                     .arg(QString::number(checkoutDate.year()).right(2),
                          QString::fromUtf8("ՀԴՄ"),
-                         (*bi)["f_source"].toString() == "PS" ? (*bi)["f_finalname"].toString() : ""));
+                         (*bi)["f_finalname"].toString()));
         q.bindValue(":fBODY", QString("\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:%3\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
                 .arg(exportData.count())
                 .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble() : 0)

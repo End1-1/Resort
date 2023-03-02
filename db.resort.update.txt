@@ -65,3 +65,7 @@ alter table f_invoice_Item_tax drop column f_vat, drop column f_novat, add colum
 alter table s_tax_map drop column f_dept;
 alter table s_tax_map add column f_name tinytext;
 alter table serv_tax add column f_default smallint ;
+
+
+/*db 13 27.12.2022 */
+ALTER TABLE `f_users_settings` CHANGE COLUMN `f_key` `f_key` TINYTEXT NULL COLLATE 'utf8mb3_general_ci' AFTER `f_user`, CHANGE COLUMN `f_value` `f_value` TINYTEXT NULL COLLATE 'utf8mb3_general_ci' AFTER `f_key`;

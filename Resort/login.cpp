@@ -216,7 +216,11 @@ void Login::on_btnLogin_clicked()
 
     fDD[":username"] = ui->leUsername->text();
     fDD[":password"] = ui->lePassword->text();
-    fDD.exec("select f_id, f_firstName, f_lastName, f_group, concat(f_firstName, ' ', f_lastName) as f_fullName from users where length(f_username)>0 and f_username=:username and f_password=md5(:password)");
+    fDD.exec("select f_id, f_firstName, f_lastName, f_group, "
+             "concat(f_firstName, ' ', f_lastName) as f_fullName "
+            "from users "
+            "where length(f_username)>0 and f_username=:username and f_password=md5(:password) "
+            "and f_state=1 ");
     if (!fDD.nextRow()) {
         message_error(tr("Access denied"));
         return;

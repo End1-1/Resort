@@ -270,6 +270,7 @@ void DlgGroupReservationFuck::callback(int sel, const QString &code)
         if (!cc.get(code)) {
             return;
         }
+        ui->leCardCode->setProperty("vatmode", cc.fVatMode());
         DoubleDatabase dd(true, doubleDatabase);
         for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
             dd[":f_id"] = ui->tblRoom->toString(i, 0);
@@ -792,7 +793,7 @@ void DlgGroupReservationFuck::save()
         fDD[":f_pricePerNight"] = ui->tblRoom->lineEdit(i, 6)->asDouble();
         fDD[":f_vat"] = def_vat;
         fDD[":f_vatAmount"] = Utils::countVATAmount(ui->tblRoom->lineEdit(i, 6)->asDouble(), VAT_INCLUDED);
-        fDD[":f_vatMode"] = VAT_INCLUDED;
+        fDD[":f_vatMode"] = ui->leCardCode->property("vatmode");
         fDD[":f_total"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
         fDD[":f_grandTotal"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
         fDD[":f_totalUSD"] = def_usd;

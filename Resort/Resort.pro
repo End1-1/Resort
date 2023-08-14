@@ -23,6 +23,7 @@ SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/monthnames.cpp \
     ../Base/stringutils.cpp \
+    ../Base/travellineconfig.cpp \
     ../Cache/cacheactivegroup.cpp \
     ../Cache/cachefiscalmachine.cpp \
     ../Cache/cacheroomextra.cpp \
@@ -69,6 +70,7 @@ SOURCES += main.cpp\
     databaseconnection.cpp \
     databasepasswordchange.cpp \
     taxhelper.cpp \
+    travelline.cpp \
     wactivegroup.cpp \
     wchart.cpp \
     wcheckboxgroup.cpp \
@@ -459,9 +461,11 @@ HEADERS  += mainwindow.h \
     ../Base/doubleutils.h \
     ../Base/monthnames.h \
     ../Base/stringutils.h \
+    ../Base/travellineconfig.h \
     ../Cache/cacheactivegroup.h \
     ../Cache/cachefiscalmachine.h \
     ../Cache/cacheroomextra.h \
+    ../Cache/cachetraveline.h \
     ../Cache/cacheyear.h \
     ../Controls/edoubleedit.h \
     ../Controls/eyearcombo.h \
@@ -504,6 +508,7 @@ HEADERS  += mainwindow.h \
     databaseconnection.h \
     databasepasswordchange.h \
     taxhelper.h \
+    travelline.h \
     wactivegroup.h \
     wchart.h \
     wcheckboxgroup.h \
@@ -927,6 +932,7 @@ FORMS    += mainwindow.ui \
     databasesconnections.ui \
     databaseconnection.ui \
     databasepasswordchange.ui \
+    travelline.ui \
     wactivegroup.ui \
     wcardex.ui \
     wchart.ui \

@@ -16,6 +16,7 @@ class MainWindow;
 }
 
 class BaseWidget;
+class QListWidgetItem;
 
 class MainWindow : public QMainWindow, public Base
 {
@@ -196,6 +197,11 @@ private slots:
     void on_actionFiscal_report_triggered();
     void on_actionUpload_menu_from_FrontDesk_triggered();
     void on_actionCategory_statistics_triggered();
+
+    void on_actionTravelline_triggered();
+
+
+    void on_lstTravelLine_itemClicked(QListWidgetItem *item);
 
 private:
     Listener fServer2Listener;

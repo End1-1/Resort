@@ -303,6 +303,19 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btnCPay">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>CPay</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btnBankPayX_2">
         <property name="minimumSize">
          <size>

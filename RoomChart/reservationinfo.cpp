@@ -10,6 +10,11 @@
 
 Preferences ReservationInfo::fPref;
 
+static QColor chmStatus[][2] = {
+    {QColor(255, 100,255), QColor::fromRgb(255,50,255)},
+    {QColor(255, 100,255), QColor(255, 50,255)}
+};
+
 static QColor rc[][2] = {
     {Qt::white, Qt::white},
     {QColor::fromRgb(__ss.value("checkincolor", -16733441).toInt()), QColor::fromRgb(70, 170, 255)},
@@ -102,6 +107,9 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         setVisible(false);
         delete this;
         return;
+    }
+    if (fReservation.fChmStatus() > 0) {
+        mainColor = chmStatus[fReservation.fChmStatus() - 1][1];
     }
 
     QRect rect = option->rect;

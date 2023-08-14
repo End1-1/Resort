@@ -18,6 +18,7 @@ public:
     static void getAsDataMap(QMap<int, QMap<QString, QVariant> > &partnersMap, QMap<QString, QMap<QString, QVariant> > &servicesMap, QMap<QString, QMap<QString, QVariant> > &goodsMap, QMap<QString, QMap<QString, QVariant> > &unitsMap);
     static void exportInvoiceToAs(const QString &invoice, const QMap<int, QMap<QString, QVariant> > &partnersMap, const QMap<QString, QMap<QString, QVariant> > &servicesMap, const QMap<QString, QMap<QString, QVariant> > &unitsMap, bool forceMove);
     static void exportInvoiceToAsAsRetailSale(const QString &invoice, int side);
+    static void exportInvoiceToAsAsRetailSaleOnlyTax(const QString &invoice);
 
 private slots:
     void on_btnUploadPostCharges_clicked();
@@ -31,6 +32,8 @@ private slots:
     void on__5lePartnerCredit_editingFinished();
 
     void on__5btnStart_clicked();
+
+    void on_btnUploadInvoicesRetail_2_clicked();
 
 private:
     Ui::DlgExportAS *ui;

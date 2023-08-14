@@ -214,7 +214,13 @@ void DoubleDatabase::close(bool commit)
 
 bool DoubleDatabase::exec(const QString &sqlQuery)
 {
-    return exec(sqlQuery, fDbRows, fNameColumnMap);
+    bool a = exec(sqlQuery, fDbRows, fNameColumnMap);
+    if (a) {
+        for (QMap<QString, int>::const_iterator it = fNameColumnMap.constBegin(); it != fNameColumnMap.constEnd(); it++) {
+            fColumnNameMap[it.value()]  = it.key();
+        }
+    }
+    return a;
 }
 
 bool DoubleDatabase::exec(const QString &sqlQuery, QList<QList<QVariant> > &dbrows)

@@ -1064,26 +1064,27 @@ void WAccInvoice::on_btnExportAS_clicked()
 
 void WAccInvoice::on_btnExportASRetail_clicked()
 {
-    QString curr;
-    double rate;
-    bool printMeal;
-    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
-    case pio_none:
-        break;
-    case pio_guest:
-        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
-        break;
-    case pio_comp:
-        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
-        break;
-    case pio_guestcomp_ser:
-        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
-        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
-        break;
-    case pio_guestcomp_tog:
-        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), -1);
-        break;
-    }
+    DlgExportAS::exportInvoiceToAsAsRetailSaleOnlyTax(ui->leInvoice->text());
+//    QString curr;
+//    double rate;
+//    bool printMeal;
+//    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
+//    case pio_none:
+//        break;
+//    case pio_guest:
+//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+//        break;
+//    case pio_comp:
+//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+//        break;
+//    case pio_guestcomp_ser:
+//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+//        break;
+//    case pio_guestcomp_tog:
+//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), -1);
+//        break;
+//    }
     message_info("Finish");
 }
 

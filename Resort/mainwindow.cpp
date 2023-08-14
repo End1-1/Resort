@@ -17,6 +17,7 @@
 #include "fcanceledreservations.h"
 #include "dlgconfigtaxserver.h"
 #include "freportbypayment.h"
+#include "cachetraveline.h"
 #include "fexpectedarrivals2.h"
 #include "wquickroomassignment.h"
 #include "froomcatsale.h"
@@ -25,6 +26,7 @@
 #include "fexpecteddeparturesimple.h"
 #include "dlgquickroomassignment.h"
 #include "dlgexportas.h"
+#include "travelline.h"
 #include "froomstates.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
@@ -177,6 +179,7 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     fCommand(nullptr)
 {
     ui->setupUi(this);
+    ui->grTravelLine->hide();
 
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
@@ -354,6 +357,16 @@ void MainWindow::login()
         fPreferences.setDb(def_default_fiscal_machine, dd.getInt("f_default"));
     }
     fPreferences.setDb(def_touchscreen, fTouchscreen);
+
+    if (r__(cr__travelline)) {
+        dd.exec("select f_id from f_reservation where f_chmstatus=1 and f_state=2");
+        while (dd.nextRow()) {
+            QListWidgetItem *item = new QListWidgetItem(ui->lstTravelLine);
+            item->setText(dd.getString("f_id"));
+            ui->lstTravelLine->addItem(item);
+        }
+    }
+    ui->grTravelLine->setVisible(ui->lstTravelLine->count() > 0);
 }
 
 void MainWindow::addTabWidget(BaseWidget *widget)
@@ -487,6 +500,14 @@ void MainWindow::parseSocketCommand(const QString &command)
     } else if (cmd == "update_cache") {
         int cacheId = jObj.value("cache").toInt();
         QString item = jObj.value("item").toString();
+        if (cacheId == cache_travelline) {
+            if (r__(cr__travelline)) {
+                QListWidgetItem *item = new QListWidgetItem(ui->lstTravelLine);
+                ui->lstTravelLine->addItem(item);
+                ui->grTravelLine->show();
+                return;
+            }
+        }
         emit updateCache(cacheId, item);
     } else if (cmd == "session") {
         AppConfig::fAppSession = jObj["session"].toString();
@@ -588,6 +609,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
+    ui->actionTravelline->setVisible(r__(cr__travelline));
 
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
@@ -2321,4 +2343,25 @@ void MainWindow::on_actionReceipt_voucher_triggered()
 void MainWindow::on_actionCategory_statistics_triggered()
 {
     FRoomCatSale::openFilterReport<FRoomCatSale, WReportGrid>();
+}
+
+void MainWindow::on_actionTravelline_triggered()
+{
+    addTab<TravelLine>();
+}
+
+void MainWindow::on_lstTravelLine_itemClicked(QListWidgetItem *item)
+{
+    if (!item) {
+        return;
+    }
+    if (message_confirm(tr("Open reservation?")) != QDialog::Accepted) {
+        return;
+    }
+    WReservation::openReserveWindows(item->text());
+    delete item;
+    //ui->lstTravelLine->removeItemWidget(item);
+    if (ui->lstTravelLine->count() == 0) {
+        ui->grTravelLine->hide();
+    }
 }

@@ -33,7 +33,8 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, double suggestAmount,
                   << PAYMENT_CARD
                   << PAYMENT_BANK
                   << PAYMENT_PAYX
-                  << PAYMENT_TERMINAL;
+                  << PAYMENT_TERMINAL
+                  << PAYMENT_CPAY;
     ui->wPayment->setPaymentFilter(paymentFilter);
     ui->wPayment->hideVAT(true);
     ui->wInvoice->setDBMRegister(&fDoc);
@@ -129,6 +130,9 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     case PAYMENT_TERMINAL:
         finalName = "TERMINAL";
         break;
+    case PAYMENT_CPAY:
+        finalName = "CPAY";
+        break;
     default:
         message_error(tr("Selected mode of payment is not allowed here"));
         return;
@@ -172,6 +176,16 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
         message_error(tr("Save first"));
         return;
     }
+
+//    if (ui->wPayment->paymentCode() == PAYMENT_CASH
+//            || ui->wPayment->paymentCode() == PAYMENT_ADVANCE
+//            || ui->wPayment->paymentCode() == PAYMENT_TERMINAL) {
+//        if (ui->wPayment->amount() > 299000) {
+//            message_error(tr("Stop! Think twice!"));
+//            return;
+//        }
+//    }
+
 //    if (ui->wPayment->getFiscal() == 0) {
 //        message_error(tr("Fiscal machine is not defined"));
 //        return;

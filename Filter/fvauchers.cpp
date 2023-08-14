@@ -65,11 +65,12 @@ FVauchers::FVauchers(QWidget *parent) :
             r.f_cancelReason, \
             r.f_cancelDate, \
             uc.f_username, \
-            r.f_inv \
+            r.f_inv, left(fr.f_cardex, 2) \
         FROM m_register r \
         left join users u on u.f_id=r.f_user \
         left join f_payment_type i on i.f_id=r.f_paymentMode \
         left join users uc on uc.f_id=r.f_cancelUser \
+        left join f_reservation fr on fr.f_invoice=r.f_inv \
         where f_wdate between :f_date1 and :f_date2 :novat ";
 
         ui->leVaucherCode->setSelector(this, cache(cid_vaucher), ui->leVacherName);
@@ -146,6 +147,7 @@ void FVauchers::apply(WReportGrid *rg)
             .setColumn(canceled, "", tr("Cancel date"))
             .setColumn(canceled * 2, "", tr("Cancel User"))
             .setColumn(0, "", tr("Invoice"))
+            .setColumn(60, "", tr("Cardex group"))
             ;
     query = query.replace(":f_date1", ui->deFrom->dateMySql()).replace(":f_date2", ui->deTo->dateMySql());
     if (ui->leVaucherCode->text().length() > 0) {

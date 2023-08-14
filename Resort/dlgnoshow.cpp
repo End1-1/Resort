@@ -35,7 +35,8 @@ DlgNoShow::DlgNoShow(QWidget *parent) :
             << QString::number(PAYMENT_CARD)
             << QString::number(PAYMENT_ADVANCE)
             << QString::number(PAYMENT_ROOM)
-            << QString::number(PAYMENT_CL);
+            << QString::number(PAYMENT_CL)
+            << QString::number(PAYMENT_PAYX);
     ui->deDate->setDate(WORKING_DATE);
     ui->wGuest->setVisible(false);
 }
@@ -257,7 +258,7 @@ void DlgNoShow::on_btnPrintTax_clicked()
         return;
     }
     int pm = ui->lePaymentMode->asInt();
-    double card = pm == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
+    double card = pm != PAYMENT_CASH ? ui->leAmount->asDouble() : 0;
     double prepaid = pm == PAYMENT_ADVANCE ? ui->leAmount->asDouble() : 0;
     DlgPrintTaxSM dpt(tm.fTax(), this);
     QString dep = ii.fVatDept();
@@ -313,7 +314,8 @@ void DlgNoShow::getBalance()
     fp << QString::number(PAYMENT_BANK)
        << QString::number(PAYMENT_CARD)
        << QString::number(PAYMENT_CASH)
-       << QString::number(PAYMENT_CL);
+       << QString::number(PAYMENT_CL)
+       << QString::number(PAYMENT_PAYX);
 }
 
 void DlgNoShow::on_btnLog_clicked()

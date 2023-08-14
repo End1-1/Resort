@@ -34,6 +34,8 @@ private slots:
 
     void on_btnBankPayX_2_clicked();
 
+    void on_btnCPay_clicked();
+
 private:
     int fCheckoutFlag;
     Ui::DlgPaymentsDetails *ui;

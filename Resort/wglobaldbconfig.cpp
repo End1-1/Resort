@@ -5,6 +5,9 @@
 #include "cacheresthall.h"
 #include "dlgeditservtax.h"
 #include "cacheusersgroups.h"
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 void WGlobalDbConfig::getCompSettings()
 {
@@ -20,6 +23,7 @@ void WGlobalDbConfig::getCompSettings()
     ui->leHost->clear();
     ui->leHallCode->clear();
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
+
 }
 
 void WGlobalDbConfig::getAccess()
@@ -841,4 +845,24 @@ void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
 void WGlobalDbConfig::on_chDebug_clicked(bool checked)
 {
     fPreferences.setDb(def_debug_mode, checked);
+}
+
+void WGlobalDbConfig::on_btnAddRoomType_clicked()
+{
+
+}
+
+void WGlobalDbConfig::on_btnRemoveRoomType_clicked()
+{
+
+}
+
+void WGlobalDbConfig::on_btnAddRatePlan_clicked()
+{
+
+}
+
+void WGlobalDbConfig::on_btnRemoveRatePlan_clicked()
+{
+
 }

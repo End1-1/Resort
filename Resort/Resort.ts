@@ -2291,6 +2291,10 @@ rooms</source>
         <source>Done</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Upload items</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgExportOther</name>
@@ -3828,6 +3832,10 @@ rooms</source>
         <source>No taxmap for </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>CPay</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DlgPostBreakfast</name>
@@ -5201,6 +5209,10 @@ for this operation</source>
     </message>
     <message>
         <source>Suggest amount</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAYMENT CPAY</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7220,6 +7232,10 @@ for this operation</source>
     </message>
     <message>
         <source>Init restaurant dishes from external db</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TravelLine</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -12776,6 +12792,10 @@ ledger</source>
         <source>No VAT</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cardex group</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FWakeupCall</name>
@@ -14285,6 +14305,10 @@ or contact to administrator</source>
     </message>
     <message>
         <source>Byer acc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Travelline</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -17945,6 +17969,41 @@ deviation</source>
     </message>
 </context>
 <context>
+    <name>TravelLine</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GroupBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date end</source>
+        <translation type="unfinished">Վերջ</translation>
+    </message>
+    <message>
+        <source>Rate plan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Booking limit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Date start</source>
+        <translation type="unfinished">Սկիզբ</translation>
+    </message>
+</context>
+<context>
     <name>WAccInvoice</name>
     <message>
         <source>Invoice</source>
@@ -18276,6 +18335,10 @@ Reserve</source>
     </message>
     <message>
         <source>Invalid voucher code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid fiscal code</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19129,6 +19192,34 @@ Reserve</source>
     </message>
     <message>
         <source>Debug mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Travelline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Room type name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>API code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hotel ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate plan name</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

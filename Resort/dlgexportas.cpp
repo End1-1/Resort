@@ -457,6 +457,200 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
     DoubleDatabase::logEvent(DoubleDatabase::lastQuery(&q));
 }
 
+void DlgExportAS::exportInvoiceToAsAsRetailSaleOnlyTax(const QString &invoice)
+{
+    DoubleDatabase::logEvent("starting export to as");
+    QSqlDatabase dbas = QSqlDatabase::addDatabase("QODBC3", "as");
+    dbas.setDatabaseName(__s.value("asconnectionstring").toString());
+    if (!dbas.open()) {
+        message_error("Could not open database<br>" + dbas.lastError().databaseText());
+        return;
+    }
+    QSqlQuery q(dbas);
+
+    QMap<int, QMap<QString, QVariant> > partnersMap;
+    QMap<QString, QMap<QString, QVariant> > servicesMap;
+    QMap<QString, QMap<QString, QVariant> > goodsMap;
+    QMap<QString, QMap<QString, QVariant> > unitsMap;
+    getAsDataMap(partnersMap, servicesMap, goodsMap, unitsMap);
+
+    DoubleDatabase::logEvent("export to as: get list of saled items");
+    QList<QMap<QString, QVariant> > exportData;
+    double totals = 0;
+    DoubleDatabase dd(true, false);
+    dd[":f_inv"] = invoice;
+    dd.exec(QString("select m.f_source, m.f_fiscaldate, m.f_itemcode, m.f_finalname, m.f_amountamd, m.f_fiscal, "
+            "i.f_ascode, i.f_astype, i.f_taxname, m.f_wdate, i.f_asaccincome, i.f_accincome_novat, i.f_accvat, "
+            "i.f_accnovat, i.f_byeracc, i.f_asaccexpense "
+            "from m_register m "
+            "left join f_invoice_item i on i.f_id=m.f_itemcode "
+            "where f_inv=:f_inv and f_source in ('PS', 'CH', 'RM', 'CM') and m.f_fiscal>0 "));
+    while (dd.nextRow()) {
+        if (dd.getString("f_ascode").isEmpty()) {
+            dbas.rollback();
+            message_error(dd.getString("f_finalname") + "\r\n" + "has not have AS code");
+            return;
+        }
+        if (dd.getInt("f_astype") == 0) {
+            dbas.rollback();
+            message_error(dd.getString("f_finalname") + "\r\n" + "has not have as item type");
+            return;
+        }
+        QMap<QString, QVariant> ed;
+        ed["f_asaccincome"] = dd.getString("f_asaccincome");
+        ed["f_source"] = dd.getString("f_source");
+        ed["f_itemcode"] = dd.getString("f_itemcode");
+        ed["f_finalname"] = dd.getString("f_finalname");
+        ed["f_amountamd"] = dd.getString("f_amountamd");
+        ed["f_fiscal"] = dd.getString("f_fiscal");
+        ed["f_inv"] = dd.getString("f_inv");
+        ed["f_ascode"] = dd.getString("f_ascode");
+        ed["f_astype"] = dd.getInt("f_astype");
+        ed["f_taxname"] = dd.getString("f_taxname");
+        ed["f_wdate"] = dd.getString("f_wdate");
+        ed["f_accincome_novat"] = dd.getString("f_accincome_novat");
+        ed["f_accvat"] = dd.getString("f_accvat");
+        ed["f_accnovat"] = dd.getString("f_accnovat");
+        ed["f_byeracc"] = dd.getString("f_byeracc");
+        ed["f_accexpense"] = dd.getString("f_asaccexpense");
+        exportData.append(ed);
+        totals = totals + dd.getDouble("f_amountamd");
+    }
+    if (exportData.isEmpty()) {
+        return;
+    }
+
+    dd[":f_invoice"] = invoice;
+    dd.exec("select * from f_reservation where f_invoice=:f_invoice");
+    if (dd.nextRow() == false) {
+        message_error("Invoice not exists");
+        return;
+    }
+    int room = dd.getInt("f_room");
+    bool vat = dd.getInt("f_vatmode") == 1;
+    QDate checkoutDate = dd.getDate("f_enddate");
+    dd[":f_id"] = room;
+    dd.exec("select f_aspartner from f_room where f_id=:f_id");
+    dd.nextRow();
+    QString partner = dd.getString("f_aspartner");
+
+
+    dbas.transaction();
+    DoubleDatabase::logEvent("export to as: create header");
+    int docnum = __s.value("leRetailDocStartNumber").toInt();
+
+    for (QList<QMap<QString, QVariant> >::const_iterator bi = exportData.constBegin(); bi != exportData.constEnd(); bi++) {
+        if (!q.prepare("insert into DOCUMENTS ("
+                      "fISN, fDOCTYPE, fDOCSTATE, fDATE, fORDERNUM, fDOCNUM, fCUR, fSUMM, fCOMMENT, fBODY, fPARTNAME, "
+                      "fUSERID, fPARTID, fCRPARTID, fMTID, fEXPTYPE, fINVN, fENTRYSTATE, "
+                      "fEMPLIDRESPIN, fEMPLIDRESPOUT, fVATTYPE, fSPEC, fCHANGEDATE,fEXTBODY,fETLSTATE) VALUES ("
+                      ":fISN, :fDOCTYPE, :fDOCSTATE, '" + (*bi)["f_wdate"].toDate().toString("yyyy-MM-dd") + "', "
+                      ":fORDERNUM, :fDOCNUM, :fCUR, :fSUMM, :fCOMMENT, :fBODY, :fPARTNAME, "
+                      ":fUSERID, :fPARTID, :fCRPARTID, :fMTID, '', :fINVN, :fENTRYSTATE, "
+                      ":fEMPLIDRESPIN, :fEMPLIDRESPOUT, :fVATTYPE, :fSPEC, current_timestamp,'', '')")) {
+            message_error("Prepare insert to documents<br>" + q.lastError().databaseText() + "<br>"  + dbas.lastError().databaseText());
+            return;
+        }
+        QString docid = QUuid::createUuid().toString().replace("{", "").replace("}", "");
+        QString docnumstr = docnum == 0 ? "" : QString("%1").arg(docnum, 4, 10, QChar('0'));
+        docnum++;
+        q.bindValue(":fISN", docid);
+        q.bindValue(":fDOCTYPE", 20);
+        q.bindValue(":fDOCSTATE", 1);
+        q.bindValue(":fORDERNUM", "");
+        q.bindValue(":fDOCNUM", docnumstr);
+        q.bindValue(":fCUR", "AMD");
+        q.bindValue(":fSUMM", (*bi)["f_amountamd"]);
+        //q.bindValue(":fCOMMENT", QString("%1 %2").arg(tr("Invoice"), invoice));
+        q.bindValue(":fCOMMENT", QString("%1,%2 / %3 %4")
+                    .arg(checkoutDate.month(), 2, 10, QChar('0'))
+                    .arg(QString::number(checkoutDate.year()).right(2),
+                         QString::fromUtf8("ՀԴՄ"),
+                         (*bi)["f_finalname"].toString()));
+        q.bindValue(":fBODY", QString("\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:%3\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
+                .arg(exportData.count())
+                .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble() : 0)
+                    .arg((*bi)["f_byeracc"].toString()));
+        q.bindValue(":fPARTNAME", partnersMap[partner.toInt()]["fcaption"]); // set to kamar
+        q.bindValue(":fUSERID", 0);
+        q.bindValue(":fPARTID", partnersMap[partner.toInt()]["fpartid"]);
+        q.bindValue(":fCRPARTID", -1);
+        q.bindValue(":fMTID", -1);
+        q.bindValue(":fINVN", "");
+        q.bindValue(":fENTRYSTATE", 0);
+        q.bindValue(":fEMPLIDRESPIN", -1);
+        q.bindValue(":fEMPLIDRESPOUT", -1);
+        q.bindValue(":fVATTYPE", vat ? (*bi)["f_accvat"] : (*bi)["f_accnovat"]);
+        q.bindValue(":fSPEC", "                    00"); // <--- Tax receipt id
+    //        if (card > 0.001) {
+    //            dbas[":fBODY"] = dbas[":fBODY"].toString() +
+    //                    QString("BANKACQUIRINGACCOUNT:%1\r\nSUMMPLCARD:%2\r\n")
+    //                    .arg(bankacc)
+    //                    .arg(float_str(card, 2).replace(",", "").replace(" ", ""));
+    //        }
+        if (!q.exec()) {
+            dbas.rollback();
+            message_error("Exec insert to documents<br>" + q.lastError().databaseText());
+            return;
+        }
+
+        int rowid = 0;
+        if (!q.prepare("insert into MTINVOICELIST (fISN, fROWNUM, fITEMTYPE, fITEMID, fITEMNAME, "
+                    "fUNITBRIEF, fSTORAGE, fQUANTITY, fINITPRICE, fDISCOUNT, fPRICE, fSUMMA, fSUMMA1, "
+                    "fENVFEEPERCENT, fENVFEESUMMA, fVAT, fEXPMETHOD, fACCEXPENSE, fACCINCOME, fPARTYMETHOD, fROWID) "
+                    "VALUES (:fISN, :fROWNUM, :fITEMTYPE, :fITEMID, :fITEMNAME, "
+                    ":fUNITBRIEF, :fSTORAGE, :fQUANTITY, :fINITPRICE, :fDISCOUNT, :fPRICE, :fSUMMA, :fSUMMA1, "
+                    ":fENVFEEPERCENT, :fENVFEESUMMA, :fVAT, :fEXPMETHOD, :fACCEXPENSE, :fACCINCOME, :fPARTYMETHOD, :fROWID)")) {
+            dbas.rollback();
+            message_error("Prepare insert to invoice list<br>" + q.lastError().databaseText());
+            return;
+        }
+
+        int astype = (*bi)["f_astype"].toInt();
+        QVariant unit = astype == 1 ?
+                    unitsMap[goodsMap[(*bi)["f_ascode"].toString()]["funit"].toString()] :
+                    unitsMap[servicesMap[(*bi)["f_ascode"].toString()]["funit"].toString()];
+        QVariant itemId = astype == 1 ?
+                    goodsMap[(*bi)["f_ascode"].toString()]["fmtid"] :
+                    servicesMap[(*bi)["f_ascode"].toString()]["fservid"];
+        QVariant itemName = astype == 1 ?
+                    goodsMap[(*bi)["f_ascode"].toString()]["fcaption"] :
+                    servicesMap[(*bi)["f_ascode"].toString()]["fcaption"];
+//        if ((*bi)["f_source"].toString() == "PS") {
+//            itemName = (*bi)["f_finalname"].toString();
+//        }
+        q.bindValue(":fISN", docid);
+        q.bindValue(":fROWNUM", rowid);
+        q.bindValue(":fITEMTYPE", astype);
+        q.bindValue(":fITEMID", itemId);
+        q.bindValue(":fITEMNAME", itemName);
+        q.bindValue(":fUNITBRIEF", unit);
+        q.bindValue(":fSTORAGE", __s.value("asstorecode"));
+        q.bindValue(":fQUANTITY", 1);
+        q.bindValue(":fINITPRICE", (*bi)["f_amountamd"]);
+        q.bindValue(":fDISCOUNT", 0);
+        q.bindValue(":fPRICE", (*bi)["f_amountamd"]);
+        q.bindValue(":fSUMMA", (*bi)["f_amountamd"]);
+        q.bindValue(":fSUMMA1", 0);
+        q.bindValue(":fENVFEEPERCENT", 0);
+        q.bindValue(":fENVFEESUMMA", 0);
+        q.bindValue(":fVAT", 1);
+        q.bindValue(":fEXPMETHOD", 1);
+        q.bindValue(":fACCEXPENSE", (*bi)["f_accexpense"].toString().isEmpty() ? "" : (*bi)["f_accexpense"]);
+        q.bindValue(":fACCINCOME", vat ? (*bi)["f_asaccincome"] : (*bi)["f_accincome_novat"]);
+        q.bindValue(":fPARTYMETHOD", 0);
+        q.bindValue(":fROWID", rowid++);
+        if (q.exec() == false) {
+            dbas.rollback();
+            message_error("Exec insert to invoice list<br>" + q.lastError().databaseText() + "<br>" + DoubleDatabase::lastQuery(&q));
+            return;
+        }
+    }
+    __s.setValue("leRetailDocStartNumber", docnum);
+    dbas.commit();
+    DoubleDatabase::logEvent(DoubleDatabase::lastQuery(&q));
+}
+
 void DlgExportAS::on_btnUploadPostCharges_clicked()
 {
     __s.setValue("partnercode", ui->lePartnerCode->text());
@@ -946,4 +1140,21 @@ void DlgExportAS::on__5btnStart_clicked()
         }
     }
     message_info(tr("Done"));
+}
+
+void DlgExportAS::on_btnUploadInvoicesRetail_2_clicked()
+{
+    DoubleDatabase dd(true, false);
+    dd[":f_date1"] = ui->deStart->date();
+    dd[":f_date2"] = ui->deEnd->date();
+    dd.exec("select f_invoice from f_reservation where f_state=3 and f_enddate between :f_date1 and :f_date2");
+    QStringList invoices;
+    while (dd.nextRow()) {
+        invoices.append(dd.getString("f_invoice"));
+    }
+    for (int i = 0; i < invoices.count(); i++) {
+        exportInvoiceToAsAsRetailSaleOnlyTax(invoices[i]);
+        ui->lbProgress2->setText(QString("%1 / %2").arg(i).arg(invoices.count()));
+    }
+    message_info("Done.");
 }

@@ -39,7 +39,8 @@ DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, in
                                      << QString::number(PAYMENT_BARTER)
                                      << QString::number(PAYMENT_CL)
                                      << QString::number(PAYMENT_PAYX)
-                                     << QString::number(PAYMENT_TERMINAL);
+                                     << QString::number(PAYMENT_TERMINAL)
+                                     << QString::number(PAYMENT_CPAY);
     } else {
         ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CL);
     }
@@ -153,6 +154,11 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
                 cardVisible(false);
                 clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT TERMINAL"));
+                break;
+            case PAYMENT_CPAY:
+                cardVisible(false);
+                clVisible(false);
+                ui->leFinalName->setText(tr("PAYMENT CPAY"));
                 break;
             case PAYMENT_CL:
                 clVisible(true);
@@ -298,6 +304,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             break;
         case PAYMENT_TERMINAL:
             finalName += "TERMINAL";
+            break;
+        case PAYMENT_CPAY:
+            finalName += "CPAY";
             break;
         default:
             errors += tr("Selected payment mode is not allowed here") + "<br>";

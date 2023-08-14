@@ -66,7 +66,22 @@ void logging::writeLog(const QString &text, QElapsedTimer &t)
         QString fullText = QString("%1 %2: %3\r\n").arg(e).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss")).arg(text);
         f.write(fullText.toUtf8());
         f.close();
-    } {
+    } else {
         QMessageBox::critical(0, "Error", "Cannot write log");
+    }
+}
+
+void logging::writeTravelLineLog(const QString &text, const QString &title)
+{
+#ifdef QT_DEBUG
+    qDebug() << title << text;
+#endif
+    QDir d;
+    QString logFile = d.homePath() + "/" + _APPLICATION_ + QString("/travelline_%1.txt").arg(QDate::currentDate().toString("ddMMyyyy"));
+    QFile f(logFile);
+    if (f.open(QIODevice::Append)) {
+        QString fullText = QString("%1 %2\r\n%3\r\n").arg(QDateTime::currentDateTime().toString("dd.MM.yyyy HH:mm:ss"), title, text);
+        f.write(fullText.toUtf8());
+        f.close();
     }
 }

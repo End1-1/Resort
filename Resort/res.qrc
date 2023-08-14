@@ -152,5 +152,6 @@
         <file>images/do-not-disturbe.png</file>
         <file>images/AS.png</file>
         <file>images/card-reader.png</file>
+        <file>images/TravelLine.png</file>
     </qresource>
 </RCC>

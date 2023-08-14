@@ -38,7 +38,9 @@ private:
     QMap<QTcpSocket*, Command*> fTcpSockets;
     QMap<QTcpSocket*, Command*> fTcpSocketsDraft;
     void logActivity(const QString &action);
+    void processTravelLine();
 private slots:
+    void timeout();
     void appTerminate();
     void iconClicked(QSystemTrayIcon::ActivationReason reason);
     void newConnection();
@@ -50,6 +52,9 @@ private slots:
     void on_btnClear_clicked();
     void on_btnClearDisconnected_clicked();
     void on_tabWidget_currentChanged(int index);
+    void travellineFinished(QString ar);
+    void travellineConfirm();
+    void on_leTravelineDB_textChanged(const QString &arg1);
 };
 
 #endif // DLGMAIN_H

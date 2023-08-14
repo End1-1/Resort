@@ -68,7 +68,7 @@ void FCashReport::apply(WReportGrid *rg)
             query.replace(":operator", QString(" and m.f_user=%1 ").arg(ui->leOperator->text()));
         }
         if (ui->lePayments->isEmpty()) {
-            query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15, 16)");
+            query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17)");
         } else {
             query.replace(":payment", "and m.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }
@@ -81,7 +81,7 @@ void FCashReport::apply(WReportGrid *rg)
         query += fRestaurantQuery;
         query = query.replace(":orbreak", QString(" or mr.f_itemCode=%1 ").arg(fPreferences.getDb(def_auto_breakfast_id).toInt()));
         if (ui->lePayments->isEmpty()) {
-            query.replace(":payment", " and mr.f_paymentMode in (1, 2, 3, 4, 15)");
+            query.replace(":payment", " and mr.f_paymentMode in (1, 2, 3, 4, 15, 16, 17)");
         } else {
             query.replace(":payment", "and mr.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }

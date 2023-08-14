@@ -42,6 +42,14 @@ private slots:
     void on_lwrpReports_currentRowChanged(int currentRow);
     void on_chDebug_clicked(bool checked);
 
+    void on_btnAddRoomType_clicked();
+
+    void on_btnRemoveRoomType_clicked();
+
+    void on_btnAddRatePlan_clicked();
+
+    void on_btnRemoveRatePlan_clicked();
+
 private:
     Ui::WGlobalDbConfig *ui;
     void getCompSettings();

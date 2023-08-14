@@ -96,6 +96,7 @@ public:
     void setNoSqlErrorLogMode(bool v = true);
     static QString lastQuery(QSqlQuery *q);
     static void logEvent(const QString &event);
+    QMap<int, QString> fColumnNameMap;
 private:
     bool fIsReady;
     bool fNoSqlErrorLog;

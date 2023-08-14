@@ -14,6 +14,7 @@ public:
     static void justLog(const QString &text);
     static void writeLog(const QString &text);
     static void writeLog(const QString &text, QElapsedTimer &t);
+    static void writeTravelLineLog(const QString &text, const QString &title);
 };
 
 extern bool logEnabled;

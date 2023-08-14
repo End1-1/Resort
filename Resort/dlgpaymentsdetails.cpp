@@ -764,3 +764,8 @@ void DlgPaymentsDetails::on_btnBankPayX_2_clicked()
 {
     newPaidRow(PAYMENT_TERMINAL);
 }
+
+void DlgPaymentsDetails::on_btnCPay_clicked()
+{
+    newPaidRow(PAYMENT_CPAY);
+}

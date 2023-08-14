@@ -430,6 +430,17 @@ bool WReservationRoomTab::save()
         result = result && fDD.exec("update m_register set f_room=:f_room where f_inv=" + ap(ui->leInvoice->text()));
     }
 
+    if (result) {
+        fDD[":f_id"] = ui->leReservId->text();
+        fDD.exec("select f_chmstatus from f_reservation where f_id=:f_id");
+        fDD.nextRow();
+        if (fDD.getInt("f_chmstatus") == 1) {
+            fDD[":f_id"] = ui->leReservId->text();
+            fDD[":f_chmstatus"] = 2;
+            fDD.exec("update f_reservation set f_chmstatus=:f_chmstatus where f_id=:f_id");
+        }
+    }
+
 
     if (result) {
         ui->btnAppendAdvance->setEnabled(true);

@@ -147,6 +147,10 @@ void PrintTaxD::filter()
 
 void PrintTaxD::on_btnPrint_clicked()
 {
+//    if (ui->leCash->asDouble() > 299000) {
+//        message_error(tr("Stop! Think twice!"));
+//        return;
+//    }
     if (!print()) {
         return;
     }

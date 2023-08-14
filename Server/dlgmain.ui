@@ -178,7 +178,11 @@
           <item>
            <layout class="QGridLayout" name="gridLayout">
             <item row="12" column="1">
-             <widget class="QLineEdit" name="leLogPassword"/>
+             <widget class="QLineEdit" name="leLogPassword">
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
+              </property>
+             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_6">
@@ -265,7 +269,11 @@
              <widget class="QLineEdit" name="leDatabase"/>
             </item>
             <item row="6" column="1">
-             <widget class="QLineEdit" name="lePassword"/>
+             <widget class="QLineEdit" name="lePassword">
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
+              </property>
+             </widget>
             </item>
             <item row="8" column="0">
              <widget class="QLabel" name="label_7">
@@ -407,6 +415,34 @@
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Traveline</string>
+      </attribute>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>121</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Airwick database id</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="leTravelineDB">
+       <property name="geometry">
+        <rect>
+         <x>170</x>
+         <y>30</y>
+         <width>113</width>
+         <height>20</height>
+        </rect>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>

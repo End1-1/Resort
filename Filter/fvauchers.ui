@@ -112,6 +112,16 @@
     </spacer>
    </item>
    <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Cardex group</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="leCardexGroup"/>
+   </item>
+   <item>
     <widget class="QCheckBox" name="chNoVAT">
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>

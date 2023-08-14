@@ -2,8 +2,14 @@
 #include "ui_dlgmain.h"
 #include "defines.h"
 #include "qtcppushbutton.h"
+#include "traveline.h"
 #include "logging.h"
+#include "travellineconfig.h"
 #include "doubledatabase.h"
+#include "broadcastthread.h"
+#include "appconfig.h"
+#include "baseuid.h"
+#include "cachereservation.h"
 #include <QCloseEvent>
 #include <QHostAddress>
 #include <QTcpSocket>
@@ -11,11 +17,15 @@
 #include <QInputDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include <QJsonValue>
 #include <QMessageBox>
 #include <QSettings>
 #include <QUuid>
 #include <QNetworkProxy>
+#include <QTimer>
 #include <QMutex>
 
 static QMutex mutex;
@@ -32,6 +42,13 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->leDatabase->setText(s.value("database").toString());
     ui->leUsername->setText(s.value("username").toString());
     ui->lePassword->setText(s.value("password").toString());
+
+    BaseUIDX::fAirHost = s.value("host").toString();
+    BaseUIDX::fAirDbName = s.value("database").toString();
+    BaseUIDX::fAirUser = s.value("username").toString();
+    BaseUIDX::fAirPass = s.value("password").toString();
+
+    AppConfig::fServerAddress = s.value("host").toString();
 
     ui->leLogHost->setText(s.value("loghost").toString());
     ui->leLogDb->setText(s.value("logdb").toString());
@@ -64,7 +81,17 @@ DlgMain::DlgMain(QWidget *parent) :
     ui->tblConn->setColumnWidth(7, 40);
     ui->tblConn->setColumnWidth(10, 0);
 
+    auto *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &DlgMain::timeout);
+
+#ifdef QT_DEBUG
+    timer->start(30000);
+#else
+    timer->start(5 * 60000);
+#endif
+
     ui->wSettings->setVisible(false);
+    ui->leTravelineDB->setText(s.value("travellinedb").toString());
 }
 
 DlgMain::~DlgMain()
@@ -103,6 +130,42 @@ void DlgMain::logActivity(const QString &action)
             delete ui->lwActivity->item(i);
         }
     }
+}
+
+void DlgMain::processTravelLine()
+{
+    if (ui->leTravelineDB->text().isEmpty()) {
+        return;
+    }
+    DoubleDatabase dd(ui->leHost->text(), ui->leDatabase->text(), ui->leUsername->text(), ui->lePassword->text());
+    dd.open(true, false);
+    dd.exec(QString("select * from airwick.f_db where f_id in (%1) order by field(f_id, %1) limit 1").arg(ui->leTravelineDB->text()));
+    int r = dd.rowCount();
+    if (r == 0) {
+        return;
+    }
+        __dd1Host = dd.getString(0, "f_host");
+        __dd1Database = dd.getString(0, "f_database");
+        __dd1Username = dd.getString(0, "f_username");
+        __dd1Password = dd.getString(0, "f_password");
+
+    DoubleDatabase dr(true, false);
+    dr.exec("select * from travelline where f_id=1");
+    if (dr.nextRow() == false) {
+        return;
+    }
+    QJsonObject jo = QJsonDocument::fromJson(dr.getString("f_connection").toUtf8()).object();
+    Traveline *t = new Traveline(jo["username"].toString(), jo["password"].toString(), jo["hotelid"].toString(), this);
+    connect(t, &Traveline::end, this, &DlgMain::travellineFinished);
+    for (int i = 0; i < dr.columnCount(); i++) {
+        jo[dr.fColumnNameMap[i]] = dr.getString(i);
+    }
+    t->queryReservations(jo);
+}
+
+void DlgMain::timeout()
+{
+    processTravelLine();
 }
 
 void DlgMain::appTerminate()
@@ -333,7 +396,7 @@ void DlgMain::parseCommand(const QString &command)
     QByteArray dataToSend;
     dataToSend.append(reinterpret_cast<const char*>(&size), sizeof(size));
     dataToSend.append(newCmd.toUtf8());
-    for (QMap<QTcpSocket*, Command*>::const_iterator it = fTcpSockets.begin(); it != fTcpSockets.end(); it++) {
+    for (QMap<QTcpSocket*, Command*>::const_iterator it = fTcpSockets.constBegin(); it != fTcpSockets.constEnd(); it++) {
         if (it.value()->fDatabase != cmd->fDatabase) {
             continue;
         }
@@ -341,7 +404,6 @@ void DlgMain::parseCommand(const QString &command)
             continue;
         }
         it.key()->write(dataToSend, dataToSend.length());
- //       it.key()->flush();
         if (!ui->chDoNotLog->isChecked()) {
             for (int i = 0; i < ui->tblConn->rowCount(); i++) {
                 if (ui->tblConn->item(i, 0)->data(Qt::UserRole + 1).toInt() == 1) {
@@ -411,4 +473,257 @@ void DlgMain::on_tabWidget_currentChanged(int index)
     } else {
         ui->wSettings->setVisible(false);
     }
+}
+
+void DlgMain::travellineFinished(QString ar)
+{
+    QJsonArray ja = QJsonDocument::fromJson(ar.toUtf8()).array();
+    sender()->deleteLater();
+    DoubleDatabase dd(ui->leHost->text(), ui->leDatabase->text(),
+                      ui->leUsername->text(), ui->lePassword->text());
+    dd.open(true, false);
+    dd.exec(QString("select * from airwick.f_db where f_id in (%1) order by field(f_id, %1)").arg(ui->leTravelineDB->text()));
+    int r = dd.rowCount();
+    if (r == 0) {
+        return;
+    }
+    if (r ==  1) {
+        __dd1Host = dd.getString(0, "f_host");
+        __dd1Database = dd.getString(0, "f_database");
+        __dd1Username = dd.getString(0, "f_username");
+        __dd1Password = dd.getString(0, "f_password");
+    } else {
+        __dd2Host = dd.getString(1, "f_host");
+        __dd2Database = dd.getString(1, "f_database");
+        __dd2Username = dd.getString(1, "f_username");
+        __dd2Password = dd.getString(1, "f_password");
+    }
+
+    DoubleDatabase dr(true, r > 1);
+    dr.exec("select f_rate from f_acc_currencies where f_id=2");
+    dr.nextRow();
+    double dollarRate = dr.getDouble("f_rate");
+
+    dr.exec("select * from travelline where f_id=1");
+    if (dr.nextRow() == false) {
+        return;
+    }
+
+    QString responseStr = dr.getString("f_confirmrs");
+    QString responseStrBody = dr.getString("f_confirmrsbody");
+    QString travellineConfig = dr.getString("f_connection");
+    QJsonArray jRoomTypes = QJsonDocument::fromJson(dr.getString("f_room_types").toUtf8()).array();
+    QMap<QString, QString> roomClass;
+    QMap<QString, int> roomQty;
+    for (int i = 0; i < jRoomTypes.size(); i++) {
+        const QJsonObject &jo = jRoomTypes.at(i).toObject();
+        roomClass[jo["api"].toString()] = jo["category"].toString();
+        roomQty[jo["api"].toString()] = jo["qty"].toString().toInt();
+    }
+    QJsonDocument jdoc = QJsonDocument::fromJson(dr.getString("f_rate_plans").toUtf8());
+    QJsonArray jRatePlans = jdoc.array();
+    QMap<QString, double> ratePlan;
+    for (int i = 0; i < jRatePlans.size(); i++) {
+        const QJsonObject &jo = jRatePlans.at(i).toObject();
+        ratePlan[jo["api"].toString()] = jo["price"].toString().toDouble();
+    }
+
+    QMap<QString, QString> newTravelResID;
+    QStringList newResID;
+
+    for (int i = 0; i < ja.count(); i++) {
+        const QJsonObject &jr = ja.at(i).toObject();
+        const QJsonArray &jrooms = ja.at(i)["rooms"].toArray();
+        dr[":f_name"] = jr["cardex"].toString();
+        dr.exec("select f_cardex, f_cityledger from f_cardex where f_name=:f_name");
+        QString cardex;
+        int cityLedger = 0;
+        if (dr.nextRow()) {
+            cardex = dr.getString("f_cardex");
+            cityLedger = dr.getInt("f_cityledger");
+        }
+        QString comment = jr["comment"].toString();
+        int commentStart = comment.indexOf("Guest's comment:");
+        if (commentStart > -1) {
+            int commentEnd = comment.indexOf("\r\n", commentStart + 1);
+            comment = comment.mid(commentStart + 17, commentEnd - commentStart - 17);
+        } else {
+            comment = "";
+        }
+
+        QJsonObject mainGuest = jr["main_guest"].toObject();
+        dr[":f_email"] = mainGuest["email"].toString();
+        dr.exec("select * from f_guests where f_email=:f_email");
+        int mainGuestId = 0;
+        if (dr.nextRow()) {
+            mainGuestId = dr.getInt("f_id");
+            dr[":f_firstname"] = mainGuest["first_name"].toString();
+            dr[":f_lastname"] = mainGuest["last_name"].toString();
+            dr[":f_tel1"] = mainGuest["phone"].toString();
+            dr.update("f_guests", QString("where f_id=%1").arg(mainGuestId));
+        }
+        if (mainGuestId == 0) {
+            dr[":f_title"] = "MR.";
+            dr[":f_firstname"] = mainGuest["first_name"].toString();
+            dr[":f_lastname"] = mainGuest["last_name"].toString();
+            dr[":f_sex"] = 1;
+            //dr[":f_datebirth"] =
+            dr[":f_nation"] = "";
+            dr[":f_passport"] ="";
+            dr[":f_email"] = mainGuest["email"].toString();
+            dr[":f_tel1"] = mainGuest["phone"].toString();
+            mainGuestId = dr.insert("f_guests");
+        }
+
+        int paymenttype = 1;
+        QString paymentName = jr["paymenttype"].toString();
+        if (paymentName == "PaymentMethodName") {
+            paymentName = "CASH";
+        } else if (paymentName == "BankCard") {
+            paymentName = jr["paymentname"].toString();
+            paymenttype = 2;
+        }
+
+        for (int r = 0; r < jrooms.size(); r++) {
+            QJsonObject jroom = jrooms.at(r).toObject();
+
+            dr[":f_short"] = roomClass[jroom["room_type"].toString()];
+            dr.exec("select f_id from f_room where f_class in (select f_id from f_room_classes where f_short=:f_short)");
+            QList<int> checkRooms;
+            while (dr.nextRow()) {
+                checkRooms.append(dr.getInt("f_id"));
+            }
+
+            double pricePerNight = ratePlan[jroom["rateplan"].toString()];
+            double totalAmount = pricePerNight * jroom["days"].toString().toInt();
+            QDateTime startDate = QDateTime::fromString(jroom["arrival"].toString(), "yyyy-MM-ddTHH:mm:ss");
+            QDateTime endDate = QDateTime::fromString(jroom["departure"].toString(), "yyyy-MM-ddTHH:mm:ss");
+
+            int room = 0;
+            QMap<QString, CacheReservation> reserveOut;
+            for (const int &tempRoom: checkRooms) {
+                bool fStartDateOk = true;
+                bool fEndDateOk = true;
+                CacheReservation cr;
+                cr.fInstance = cache(cid_reservation);
+                cr.fInstance->load();
+                cr.check(startDate.date(), endDate.date(), tempRoom, reserveOut, fStartDateOk, fEndDateOk, "");
+                if (fStartDateOk && fEndDateOk) {
+                    room = tempRoom;
+                    break;
+                }
+            }
+
+            QString rsId = uuidx("RS");
+            QString inId = uuidx("IN");
+            newTravelResID[jr["res_id"].toString()] = rsId;
+            newResID.append(rsId);
+            dr[":f_id"] = rsId;
+            dr[":f_invoice"] = inId;
+            dr[":f_created"] = QDate::currentDate();
+            dr[":f_author"] = 1;
+            dr[":f_state"] = 2;
+            dr[":f_reservestate"] = 4;
+            dr[":f_arrangement"] = 1;
+            dr[":f_mealincluded"] = 0;
+            dr[":f_chm"] = jr["res_id"].toString();
+            dr[":f_chmstatus"] = 1;
+            dr[":f_room"] = room;
+            dr[":f_group"] = 0;
+            dr[":f_guest"] = mainGuestId;
+            dr[":f_man"] = 1;
+            dr[":f_woman"] = 0;
+            dr[":f_child"] = 0;
+            dr[":f_baby"] = 0;
+            dr[":f_cardex"] = cardex;
+            dr[":f_cityledger"] = cityLedger;
+            dr[":f_booking"] = jr["res_id"].toString();
+            dr[":f_startdate"] = startDate;
+            dr[":f_enddate"] = endDate;
+            dr[":f_roomfee"] = pricePerNight;
+            dr[":f_paymenttype"] = paymenttype;
+            dr[":f_mealqty"] = 1;
+            dr[":f_mealprice"] = 0;
+            dr[":f_extrabed"] = 0;
+            dr[":f_extrabedfee"] = 0;
+            dr[":f_pricepernight"] = pricePerNight;
+            dr[":f_vat"] = 20;
+            dr[":f_vatamount"] = totalAmount - (totalAmount / ((20 / 100) + 1));
+            dr[":f_vatmode"]  = 1;
+            dr[":f_total"] = totalAmount;
+            dr[":f_grandTotal"] = totalAmount;
+            dr[":f_totalusd"] = (pricePerNight * jroom["days"].toInt()) / dollarRate;
+            dr[":f_remarks"] = comment;
+            dr[":f_createtime"] = QTime::currentTime();
+            dr.insert("f_reservation", false);
+
+            dr[":f_reservation"] = rsId;
+            dr[":f_guest"] = mainGuestId;
+            dr[":f_first"] = 1;
+            dr.insert("f_reservation_guests", false);
+
+            dr[":f_id"] = rsId;
+            dr[":f_source"] = "RS";
+            dr[":f_res"] = rsId;
+            dr[":f_wdate"] = QDate::currentDate();
+            dr[":f_rdate"] = QDate::currentDate();
+            dr[":f_time"] = QTime::currentTime();
+            dr[":f_user"] = 1;
+            dr[":f_room"] = 0;
+            dr[":f_guest"] = mainGuest["first_name"].toString() + " " + mainGuest["last_name"].toString();
+            dr[":f_itemcode"] = 32; // NEED TO UPDATE, FETCH FROM CONFIG
+            dr[":f_amountamd"] = totalAmount;
+            dr[":f_amountvat"] = totalAmount - (totalAmount / ((20 / 100) + 1));
+            dr[":f_amountusd"] = dollarRate;
+            dr[":f_paymentmode"] = 1;
+            dr[":f_paymentcomment"] = "CASH";
+            dr[":f_cityledger"] = cityLedger;
+            dr[":f_sign"] = 1;
+            dr[":f_inv"] = inId;
+            dr[":f_finance"] = 0;
+            dr[":f_remarks"] = comment;
+            dr[":f_canceled"] = 0;
+            dr[":f_side"] = 0;
+            dr[":f_p"] = 0;
+            dr[":f_rb"] = 0;
+            dr[":f_cash"] = 0;
+            dr.insert("m_register", false);
+
+            qDebug() << "Reservation" << jr;
+        }
+    }
+
+    for (QMap<QString, QString>::const_iterator it = newTravelResID.constBegin(); it != newTravelResID.constEnd(); it++) {
+        QJsonObject jo = QJsonDocument::fromJson(travellineConfig.toUtf8()).object();
+        Traveline *t = new Traveline(jo["username"].toString(), jo["password"].toString(), jo["hotelid"].toString(), this);
+        connect(t, &Traveline::end, this, &DlgMain::travellineConfirm);
+        QString body;
+            body += responseStrBody.replace("%1", QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss"))
+                    .replace("%2", it.key())
+                    .replace("%3", it.value());
+
+        body = responseStr.replace("%1", jo["hotelid"].toString()).replace("%2", body);
+        qDebug() << body;
+        jo["f_query"] = body;
+        t->reservationCreated(jo);
+    }
+
+    for (const QString &s: newResID) {
+        BroadcastThread::cmdRefreshCache(34, s);
+        BroadcastThread::cmdRefreshCache(33, 0);
+        BroadcastThread::cmdRefreshCache(45, s);
+        BroadcastThread::cmdRefreshCache(118, s);
+        BroadcastThread::cmdRefreshCache(210, s);
+    }
+}
+
+void DlgMain::travellineConfirm()
+{
+    sender()->deleteLater();
+}
+
+void DlgMain::on_leTravelineDB_textChanged(const QString &arg1)
+{
+    QSettings s("SmartHotel", "SmartHotel");
+    s.setValue("travellinedb", arg1);
 }

@@ -544,6 +544,13 @@
               </widget>
              </item>
              <item>
+              <widget class="ERadioButton" name="rbrArrangementAge">
+               <property name="text">
+                <string>Arrangement by age*</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="ERadioButton" name="rbrPax">
                <property name="text">
                 <string>Pax</string>

@@ -33,7 +33,7 @@ DlgPrintTaxSM::~DlgPrintTaxSM()
 
 void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty)
 {
-    fPrintTax.addGoods(dep, adgt, code, name, price, qty, 0.00);
+    fPrintTax.addGoods(dep.toInt(), adgt, code, name, price, qty, 0.00);
 }
 
 int DlgPrintTaxSM::exec()

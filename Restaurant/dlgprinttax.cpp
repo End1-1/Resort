@@ -71,7 +71,7 @@ void DlgPrintTax::load(const QString &dep, const QString &order)
     air[":f_time"] = QTime::currentTime();
     air[":f_db"] = 1;
     air[":f_order"] = fOrder;
-    air[":f_queryCode"] = opcode_PrintTaxN;
+    //air[":f_queryCode"] = opcode_PrintTaxN;
     air[":f_queryJson"] = inJson;
     air[":f_replyJson"] = outJson;
     air[":f_replyResult"] = result;

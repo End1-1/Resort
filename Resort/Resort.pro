@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql network xml printsupport charts
+QT       += core gui sql network xml printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -72,7 +72,6 @@ SOURCES += main.cpp\
     taxhelper.cpp \
     travelline.cpp \
     wactivegroup.cpp \
-    wchart.cpp \
     wcheckboxgroup.cpp \
     wcityledger.cpp \
     wguestinvoice.cpp \
@@ -510,7 +509,6 @@ HEADERS  += mainwindow.h \
     taxhelper.h \
     travelline.h \
     wactivegroup.h \
-    wchart.h \
     wcheckboxgroup.h \
     wcityledger.h \
     wguestinvoice.h \
@@ -935,7 +933,6 @@ FORMS    += mainwindow.ui \
     travelline.ui \
     wactivegroup.ui \
     wcardex.ui \
-    wchart.ui \
     wcityledger.ui \
     wguestinvoice.ui \
     whomepage.ui \

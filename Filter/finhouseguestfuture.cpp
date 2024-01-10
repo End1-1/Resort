@@ -1,7 +1,6 @@
 #include "finhouseguestfuture.h"
 #include "ui_finhouseguestfuture.h"
 #include "wreportgrid.h"
-#include "wchart.h"
 
 FInhouseGuestFuture::FInhouseGuestFuture(QWidget *parent) :
     WFilterBase(parent),
@@ -106,18 +105,4 @@ QString FInhouseGuestFuture::reportTitle()
 void FInhouseGuestFuture::refresh()
 {
     apply(fReportGrid);
-}
-
-void FInhouseGuestFuture::chart()
-{
-    int max = 0;
-    auto *wc = addTab<WChart>();
-    wc->setTitle(reportTitle(), ":/images/bed.png");
-    QList<QPair<QDateTime, int> > vals;
-    for (int i = 0; i < fReportGrid->fModel->rowCount(); i++) {
-        int v = fReportGrid->fModel->data(i, 5).toInt();
-        max = max < v ? v : max;
-        vals.append(QPair<QDateTime, int>(QDateTime(fReportGrid->fModel->data(i, 0, Qt::EditRole).toDate()), v));
-    }
-    wc->lineChart(max, ui->wDate->d1(), ui->wDate->d2(), vals);
 }

@@ -190,7 +190,7 @@ bool RFace::setup()
     } else {
         message_error(tr("Cannot connect to broadcast server, force logout"));
         message_error(__dd1Host);
-        return false;
+        //return false;
     }
     Splash s(this);
     s.show();

@@ -34,6 +34,7 @@ SOURCES += main.cpp\
     ../Base/doubleutils.cpp \
     ../Base/stringutils.cpp \
     ../Cache/cacheactivegroup.cpp \
+    ../Cache/cachefiscalmachine.cpp \
     ../Cache/cachetransferfromcl.cpp \
     ../Cache/cacheyear.cpp \
     ../Threads/broadcastthread.cpp \
@@ -177,6 +178,7 @@ HEADERS  += rface.h \
     ../Base/doubleutils.h \
     ../Base/stringutils.h \
     ../Cache/cacheactivegroup.h \
+    ../Cache/cachefiscalmachine.h \
     ../Cache/cachetransferfromcl.h \
     ../Cache/cacheyear.h \
     ../Threads/broadcastthread.h \

@@ -38,6 +38,7 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     fBtnGroup.addButton(ui->rbrSalesMan);
     fBtnGroup.addButton(ui->rbrSalesManYearly);
     fBtnGroup.addButton(ui->rbrArrangement);
+    fBtnGroup.addButton(ui->rbrArrangementAge);
     fBtnGroup.addButton(ui->rbrPax);
     fBtnGroup.addButton(ui->rbrMarketSigmentYearly);
     fBtnGroup.addButton(ui->rbrMarketSigment);
@@ -55,6 +56,7 @@ WReportsSetOld::WReportsSetOld(QWidget *parent) :
     ui->rbrSalesManYearly->fData["rep"] = 13;
 
     ui->rbrArrangement->fData["rep"] = 14;
+    ui->rbrArrangementAge->fData["rep"] = 17;
 
     ui->rbrMarketSigmentYearly->fData["rep"] = 15;
     ui->rbrMarketSigment->fData["rep"] = 16;
@@ -211,6 +213,7 @@ void WReportsSetOld::on_btnGo_clicked()
             || eb->fData["rep"].toInt() == 14
             || eb->fData["rep"].toInt() == 9
             || eb->fData["rep"].toInt() == 16
+            || eb->fData["rep"].toInt() == 17
             || eb->fData["rep"].toInt() == 20) {
         QList<QList<QVariant> > rows;
         QList<int> widths;
@@ -287,6 +290,31 @@ void WReportsSetOld::on_btnGo_clicked()
             titles << "Sigment" << "GUESTS" << "NIGHTS" << "FREE PAX" << "FREE NIGHTS" << "ROOMING" << "PENALTY" << "LENGTH OF STAY" << "AVG.ROOM";
             sumCols << 1 << 2 << 3 << 4 << 5 << 6;
             marketsigment(rows, months);
+            break;
+        case 17:
+            reportTitle = "Room arrangement by age" + reportTitle;
+            widths << 130
+                   << 100 << 100
+                   << 100 << 100
+                    << 100 << 100
+                    << 100 << 100
+                    << 100 << 100
+                    << 100 << 100
+                    << 100 << 100
+                    << 100 << 100
+                   << 100 << 100;
+            titles << "CATEGORY"
+                   << "NIGHTS B/O" << "NIGHTS B/B"
+                   << "NIGHTS B/0 0-6" << "NIGHTS B/B 0-6"
+                   << "NIGHTS B/0 7-11" << "NIGHTS B/B < 12"
+                   << "PAX B/O" << "PAX B/B"
+                   << "PAX B/O 0-6" << "PAX B/B 0-6"
+                   << "PAX B/O 7-11" << "PAX B/B 7-11"
+                   << "ROOMING B/O" << "ROOMIN B/B"
+                   << "ROOMING B/O 0-6" << "ROOMIN B/B 0-6"
+                   << "ROOMING B/O 7-11" << "ROOMIN B/B 7-11"  ;
+            sumCols << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13 << 14 << 15 << 16 << 17 << 18;
+            roomArrangementByAge(rows, months, titles);
             break;
         case 20:
             reportTitle = tr("Cardex group / Category") + " " + ui->deDate1->text() + " - " + ui->deDate2->text();
@@ -685,7 +713,8 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
     }
     QString query;
     if (ui->chUseDateRange->isChecked()) {
-        query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
+        query = "select rc.f_description, r.f_arrangement, "
+            "count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
             "from m_register m "
             "inner join f_reservation r on r.f_invoice=m.f_inv "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -697,7 +726,8 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
         query.replace(":date1", ui->deDate1->dateMySql());
         query.replace(":date2", ui->deDate2->dateMySql());
     } else {
-        query = "select rc.f_description, r.f_arrangement, count(m.f_id), sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
+        query = "select rc.f_description, r.f_arrangement, count(m.f_id), "
+            "sum(r.f_man+r.f_woman+r.f_child), sum(m.f_amountamd) "
             "from m_register m "
             "inner join f_reservation r on r.f_invoice=m.f_inv "
             "left join f_room rm on rm.f_id=r.f_room "
@@ -724,6 +754,54 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
         rows[row][col] = dd.getInt(2);
         rows[row][col + 2] = dd.getInt(3);
         rows[row][col + 4] = dd.getDouble(4);
+    }
+}
+
+void WReportsSetOld::roomArrangementByAge(QList<QList<QVariant> > &rows, const QString &month, QStringList &titles)
+{
+    // category << B/O << B/B << Pax B/O << Pax B/B << Rooming B/O << Romming B/B
+    QList<QVariant> er;
+    er <<QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant()
+          << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant()
+       << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant();
+    DoubleDatabase dd(true, false);
+    if (ui->chUseDateRange->isChecked()) {
+        dd.exec("select f_sql from serv_sql where f_name='roomArrangementByAge11'");
+    } else {
+        dd.exec("select f_sql from serv_sql where f_name='roomArrangementByAge1'");
+    }
+
+    if (dd.nextRow() == false) {
+        message_error(tr("Report body missing"));
+        return;
+    }
+    QString query = dd.getString("f_sql");
+    QString rooming = fPreferences.getDb(def_rooming_list).toString();
+    if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
+        rooming += "," + fPreferences.getDb(def_penalty_list).toString();
+    }
+    if (ui->chUseDateRange->isChecked()) {
+        query.replace(":rooming", rooming);
+        query.replace(":date1", ui->deDate1->dateMySql());
+        query.replace(":date2", ui->deDate2->dateMySql());
+    } else {
+        query.replace(":rooming", rooming);
+        query.replace(":year", ui->cbYear->currentText());
+        query.replace(":month", month);
+    }
+    dd.exec(query);
+    while (dd.nextRow()) {
+        int row = rows.count();
+        if (row == 0) {
+            for (int i = 0; i < dd.columnCount(); i++) {
+               titles[i] = dd.fColumnNameMap[i];
+            }
+        }
+        rows.append(er);
+        for (int i = 0; i < dd.columnCount(); i++) {
+            rows[row][i] = dd.getValue(i);
+        }
     }
 }
 

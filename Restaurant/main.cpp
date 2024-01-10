@@ -4,6 +4,7 @@
 #include "cacheone.h"
 #include "trackcontrol.h"
 #include "dlgconnecttoserver.h"
+#include "rmessage.h"
 #include <QApplication>
 #include <QLockFile>
 #include <QMessageBox>
@@ -49,35 +50,57 @@ int main(int argc, char *argv[])
 
     Preferences p;
     p.initFromConfig();
-    DlgConnectToServer *d = new DlgConnectToServer();
-    if (d->exec() != QDialog::Accepted) {
-        return -1;
-    }
-    delete d;
+//    DlgConnectToServer *d = new DlgConnectToServer();
+//    if (d->exec() != QDialog::Accepted) {
+//        return -1;
+//    }
+//    delete d;
 
     QFile file(p.getString(def_home_path) + "/lock.pid");
     file.remove();
     QLockFile lockFile(p.getString(def_home_path) + "/lock.pid");
-    if (!lockFile.tryLock())
+    if (!lockFile.tryLock()) {
+        RMessage::showError("Another copies already running", 0);
         return -1;
+    }
 
+    __dd1Host = "10.1.0.2";
+    __dd1Database = "hnaw";
+    __dd1Username = "root";
+    __dd1Password = "root2018jan";
+
+    __dd2Host = "10.1.0.33";
+    __dd2Database = "testb";
+    __dd2Username = "root";
+    __dd2Password = "root2018jan";
+    doubleDatabase = true;
+
+    BaseUIDX::fAirHost = "10.1.0.2";
+    BaseUIDX::fAirDbName = "airwick";
+    BaseUIDX::fAirUser = "root";
+    BaseUIDX::fAirPass = "root2018jan";
+    _IDGENMODE_ = 1;
+
+    p.appendDatabase("Main", "10.1.0.2", "hnaw", "root", "root2018jan", "10.1.0.2", "airlog", "root", "root2018jan");
     Base::fDbName = "Main";
     p.initFromDb(Base::fDbName, HOSTNAME, 0);
-    Db db = p.getDatabase(Base::fDbName);
+    //Db db = p.getDatabase(Base::fDbName);
 
-    __dd1Host = db.dc_main_host;
-    __dd1Database = db.dc_main_path;
-    __dd1Username = db.dc_main_user;
-    __dd1Password = db.dc_main_pass;
+//    __dd1Host = db.dc_main_host;
+//    __dd1Database = db.dc_main_path;
+//    __dd1Username = db.dc_main_user;
+//    __dd1Password = db.dc_main_pass;
 
-    QStringList dbParams = p.getDb("dd").toString().split(";", QString::SkipEmptyParts);
-    if (dbParams.count() == 4) {
-        __dd2Host = dbParams[0];
-        __dd2Database = dbParams[1];
-        __dd2Username = dbParams[2];
-        __dd2Password = dbParams[3];
-        doubleDatabase = true;
-    }
+
+
+//    QStringList dbParams = p.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+//    if (dbParams.count() == 4) {
+//        __dd2Host = dbParams[0];
+//        __dd2Database = dbParams[1];
+//        __dd2Username = dbParams[2];
+//        __dd2Password = dbParams[3];
+//        doubleDatabase = true;
+//    }
 
     QStringList log = p.getDb(def_log_main_db).toString().split(";", QString::SkipEmptyParts);
     if (log.count() == 4) {
@@ -97,6 +120,7 @@ int main(int argc, char *argv[])
 
     RFace w;
     if (!w.fIsConfigured) {
+        RMessage::showError("Not configured", 0);
         return -1;
     }
     w.showFullScreen();

@@ -375,7 +375,9 @@ void DlgExportAS::exportInvoiceToAsAsRetailSale(const QString &invoice, int side
                          (*bi)["f_finalname"].toString()));
         q.bindValue(":fBODY", QString("\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:%3\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
                 .arg(exportData.count())
-                .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble() : 0)
+                .arg(__s.value("asvatinv").toString().toDouble() > 0.001
+                     ? QString::number((__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble(),'f',2)
+                     : 0)
                     .arg((*bi)["f_byeracc"].toString()));
         q.bindValue(":fPARTNAME", partnersMap[partner.toInt()]["fcaption"]); // set to kamar
         q.bindValue(":fUSERID", 0);
@@ -569,7 +571,9 @@ void DlgExportAS::exportInvoiceToAsAsRetailSaleOnlyTax(const QString &invoice)
                          (*bi)["f_finalname"].toString()));
         q.bindValue(":fBODY", QString("\r\nVATACC:5243\r\nSUMMVAT:%2\r\nBUYERACC:%3\r\nBUYCHACCPOST:Գլխավոր հաշվապահ \r\nMAXROWID:%1\r\n")
                 .arg(exportData.count())
-                .arg(__s.value("asvatinv").toString().toDouble() > 0.001 ? (__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble() : 0)
+                .arg(__s.value("asvatinv").toString().toDouble() > 0.001
+                     ? QString::number((__s.value("asvatinv").toString().toDouble() / 100) * (*bi)["f_amountamd"].toDouble(), 'f', 2)
+                     : 0)
                     .arg((*bi)["f_byeracc"].toString()));
         q.bindValue(":fPARTNAME", partnersMap[partner.toInt()]["fcaption"]); // set to kamar
         q.bindValue(":fUSERID", 0);

@@ -367,7 +367,7 @@ void DlgBanket::printTax()
         air[":f_time"] = QTime::currentTime();
         air[":f_db"] = 1;
         air[":f_order"] = fDoc;
-        air[":f_queryCode"] = opcode_PrintTaxN;
+        //air[":f_queryCode"] = opcode_PrintTaxN;
         air[":f_queryJson"] = in;
         air[":f_replyJson"] = out;
         air[":f_replyResult"] = result;
@@ -383,7 +383,7 @@ void DlgBanket::printTax()
     air[":f_time"] = QTime::currentTime();
     air[":f_db"] = 1;
     air[":f_order"] = fDoc;
-    air[":f_queryCode"] = opcode_PrintTaxN;
+    //air[":f_queryCode"] = opcode_PrintTaxN;
     air[":f_queryJson"] = in;
     air[":f_replyJson"] = out;
     air[":f_replyResult"] = result;
@@ -993,7 +993,7 @@ void DlgBanket::on_btnDuplicateFiscal_clicked()
         air[":f_time"] = QTime::currentTime();
         air[":f_db"] = 1;
         air[":f_order"] = fDoc;
-        air[":f_queryCode"] = opcode_PrintTaxN;
+        //air[":f_queryCode"] = opcode_print_receipt;
         air[":f_queryJson"] = in;
         air[":f_replyJson"] = out;
         air[":f_replyResult"] = result;
@@ -1009,7 +1009,7 @@ void DlgBanket::on_btnDuplicateFiscal_clicked()
     air[":f_time"] = QTime::currentTime();
     air[":f_db"] = 1;
     air[":f_order"] = fDoc;
-    air[":f_queryCode"] = opcode_PrintTaxN;
+    //air[":f_queryCode"] = opcode_PrintTaxN;
     air[":f_queryJson"] = in;
     air[":f_replyJson"] = out;
     air[":f_replyResult"] = result;

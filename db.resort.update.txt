@@ -69,3 +69,16 @@ alter table serv_tax add column f_default smallint ;
 
 /*db 13 27.12.2022 */
 ALTER TABLE `f_users_settings` CHANGE COLUMN `f_key` `f_key` TINYTEXT NULL COLLATE 'utf8mb3_general_ci' AFTER `f_user`, CHANGE COLUMN `f_value` `f_value` TINYTEXT NULL COLLATE 'utf8mb3_general_ci' AFTER `f_key`;
+
+/*db 14 04.09.2022 */
+update s_app set f_version='14' where f_app='DB';
+create table airwicktravelline (f_id integer primary key auto_increment, f_connection text);
+insert into airwick.travelline (f_id, f_connection) values (1, '');
+
+alter table airwicktravelline add column f_availability text;
+ALTER TABLE airwicktravelline ADD COLUMN f_room_types TEXT;
+alter table airwicktravelline add column f_rate_plans text;
+alter table airwick.travelline add column f_reservations text;
+
+alter table f_reservation add column f_chm varchar(32);
+alter table f_reservation add column f_chmstatus integer;

@@ -24,7 +24,6 @@ private:
 
 private slots:
     void refresh();
-    void chart();
 };
 
 #endif // FINHOUSEGUESTFUTURE_H

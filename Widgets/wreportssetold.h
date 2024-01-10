@@ -37,6 +37,7 @@ private:
     void category(QList<QList<QVariant> > &rows, const QString &month);
     void occupancy(QList<QList<QVariant> > &rows, const QString &month);
     void roomArrangement(QList<QList<QVariant> > &rows, const QString &month);
+    void roomArrangementByAge(QList<QList<QVariant> > &rows, const QString &month, QStringList &titles);
     void nationality(QList<QList<QVariant> > &rows, const QString &month);
     void nationalityYearly(QList<QList<QVariant> > &rows, const QString &month);
     void cardex(QList<QList<QVariant> > &rows, const QString &month);

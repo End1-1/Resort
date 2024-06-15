@@ -108,7 +108,7 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
         delete this;
         return;
     }
-    if (fReservation.fChmStatus() > 0) {
+    if (fReservation.fChmStatus() > 0 && fReservation.fState() != RESERVE_CHECKIN) {
         mainColor = chmStatus[fReservation.fChmStatus() - 1][1];
     }
 

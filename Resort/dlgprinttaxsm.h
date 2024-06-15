@@ -36,7 +36,7 @@ public:
     int fTaxCode;
     QString fTaxback;
     int fTaxID;
-    static bool printAdvance(int taxid, double amountCash, double amountCard, const QString &vaucher, int &taxCode, QString &json);
+    static bool printAdvance(int taxid, double amountCash, double amountCard, const QString &invoice, const QString &vaucher, int &taxCode, QString &json);
     static int printTaxback(int taxid, int number, const QString &vaucher, int &taxCode);
 
 private slots:

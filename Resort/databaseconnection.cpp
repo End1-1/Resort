@@ -18,6 +18,7 @@ void DatabaseConnection::setConnection(const QString &name)
     ui->leMainDb->setText(db.dc_main_path);
     ui->leMainUser->setText(db.dc_main_user);
     ui->leMainPassword->setText(db.dc_main_pass);
+    ui->leBroadcastServer->setText(db.dc_broadcast);
     fAppendMode = false;
 }
 
@@ -38,7 +39,7 @@ void DatabaseConnection::on_btnOk_clicked()
     }
 
     fPreferences.appendDatabase(ui->leName->text(), ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(), ui->leMainPassword->text(),
-                                    "", "", "", "");
+                                "", "", "", "", ui->leBroadcastServer->text());
     fPreferences.saveConfig();
     accept();
 }

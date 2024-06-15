@@ -39,12 +39,15 @@ QString BaseUIDX::ID(const QString &vaucher)
     d.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass, 1);
     d.setNoSqlErrorLogMode(true);
 
-    int idlen = 5;
+    int idlen = 8;
     if (vaucher == "DR") {
         idlen = 10;
     }
     if (vaucher == "PS") {
         idlen = 8;
+    }
+    if (vaucher == "RV") {
+        idlen = 9;
     }
 
     QString errstr;

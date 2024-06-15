@@ -1,0 +1,14 @@
+#include "fincompleteguestsnames.h"
+#include "ui_fincompleteguestsnames.h"
+
+FIncompleteGuestsNames::FIncompleteGuestsNames(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::FIncompleteGuestsNames)
+{
+    ui->setupUi(this);
+}
+
+FIncompleteGuestsNames::~FIncompleteGuestsNames()
+{
+    delete ui;
+}

@@ -6,7 +6,7 @@
 #include "cachepaymentmode.h"
 #include "vauchers.h"
 #include "pimage.h"
-#include "printtax.h"
+#include "printtaxn.h"
 #include "dlgtracking.h"
 #include "cacheactiveroom.h"
 #include "cacheroom.h"

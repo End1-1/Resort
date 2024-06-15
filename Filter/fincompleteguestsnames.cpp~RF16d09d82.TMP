@@ -1,0 +1,30 @@
+#include "fincompleteguestsnames.h"
+#include "ui_fincompleteguestsnames.h"
+#include "wdate2.h"
+
+FIncompleteGuestsNames::FIncompleteGuestsNames(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::FIncompleteGuestsNames)
+{
+    ui->setupUi(this);
+}
+
+FIncompleteGuestsNames::~FIncompleteGuestsNames()
+{
+    delete ui;
+}
+
+QWidget *FIncompleteGuestsNames::firstElement()
+{
+    return ui->wd->fw();
+}
+
+QWidget *FIncompleteGuestsNames::lastElement()
+{
+    return ui->wd->lw();
+}
+
+QString FIncompleteGuestsNames::reportTitle()
+{
+
+}

@@ -231,7 +231,7 @@ void DlgQuickAdvanceAction::on_btnPrint_clicked()
             message_error(tr("Tax department undefined for ") + ci.fName());
             return;
         }
-        if (!DlgPrintTaxSM::printAdvance(cm.fTax(), ui->leaCash->getDouble(), ui->leaCard->getDouble(), "TEMP", taxCode, fJson)) {
+        if (!DlgPrintTaxSM::printAdvance(cm.fTax(), ui->leaCash->getDouble(), ui->leaCard->getDouble(), "TEMP", "TEMP", taxCode, fJson)) {
             return;
         }
         ui->tabWidget->removeTab(0);

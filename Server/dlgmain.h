@@ -55,6 +55,7 @@ private slots:
     void travellineFinished(QString ar);
     void travellineConfirm();
     void on_leTravelineDB_textChanged(const QString &arg1);
+    void on_pushButton_clicked();
 };
 
 #endif // DLGMAIN_H

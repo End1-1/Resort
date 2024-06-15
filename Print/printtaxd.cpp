@@ -87,6 +87,7 @@ bool PrintTaxD::print()
     dpt.fPrepaid = fAmountPre.toDouble();
 
     int result = dpt.exec();
+    TrackControl::insert(2, "Print fiscal", dpt.fTaxCode, QString::number(result), "", fInvoice);
     if (result == TAX_OK) {
         fTaxCode = dpt.fTaxCode;
         return true;

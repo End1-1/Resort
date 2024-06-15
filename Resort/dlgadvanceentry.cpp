@@ -207,7 +207,9 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
     double card = ui->wPayment->paymentCode() == PAYMENT_CASH ? 0 : ui->wPayment->amount();
     int taxCode = 0;
     QString outJson;
-    if (!DlgPrintTaxSM::printAdvance(ci.fTax(), cash, card, ui->leVoucher->text(), taxCode, outJson)) {
+    if (!DlgPrintTaxSM::printAdvance(ci.fTax(), cash, card,
+                                     ui->wInvoice->invoice(),
+                                     ui->leVoucher->text(), taxCode, outJson)) {
         return;
     }
     ui->wPayment->setTaxReceipt(taxCode);

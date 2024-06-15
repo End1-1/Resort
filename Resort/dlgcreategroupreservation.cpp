@@ -87,7 +87,7 @@ void DlgCreateGroupReservation::loadRooms()
         connect(w, SIGNAL(checkClicked(bool)), this, SLOT(singleHandle(bool)));
         QString k = fDD.getString(2);
         QString s = k.remove(0, 4);
-        w->setRoomName(fDD.getString(0), fDD.getString(0) + "\n" + s);
+        w->setRoomName(fDD.getString(0), fDD.getString(2) + "\n" + s);
         ui->tblData->setCellWidget(row, col, w);
         col++;
         if (col > ui->tblData->columnCount() - 1) {

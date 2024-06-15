@@ -385,6 +385,7 @@ void DlgPostCharge::on_btnPrintTax_clicked()
     DlgSinglePrintTax *d = new DlgSinglePrintTax(ui->wRoom->invoice(), this);
     d->addItem(ui->leItem->text(), ui->leAmount->asDouble(), mp, ui->leVoucher->text());
     if (d->exec() == QDialog::Accepted) {
+        TrackControl::insert(2, "Print fiscal", QString::number(d->fTaxCode), "", "", ui->wRoom->invoice());
         ui->btnPrintTax->setEnabled(false);
         ui->leFiscal->setInt(d->fTaxCode);
         DoubleDatabase dd(true, doubleDatabase);

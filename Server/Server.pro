@@ -16,6 +16,7 @@ RC_FILE = res.rc
 SOURCES += main.cpp\
     ../Base/appconfig.cpp \
     ../Base/base.cpp \
+    ../Base/broadcast1.cpp \
     ../Base/dlgselector.cpp \
     ../Base/stringutils.cpp \
     ../Base/travellineconfig.cpp \
@@ -128,6 +129,7 @@ SOURCES += main.cpp\
 HEADERS  += dlgmain.h \
     ../Base/appconfig.h \
     ../Base/base.h \
+    ../Base/broadcast1.h \
     ../Base/defines.h \
     ../Base/command.h \
     ../Base/dlgselector.h \
@@ -251,5 +253,6 @@ INCLUDEPATH += $$PWD/../Cache
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"Server\\\"
 DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
+DEFINES += RESORT_SERVER
 
 LIBS += -lVersion

@@ -23,6 +23,7 @@ typedef struct {
     char dc_log_path[255];
     char dc_log_user[32];
     char dc_log_pass[32];
+    char dc_broadcast[255];
 } Db;
 
 class Preferences : public QObject {
@@ -45,7 +46,7 @@ public:
     QWidget *getDefaultParentForMessage();
     void setDefaultParentForMessage(QWidget *parent);
     void clearDatabase();
-    void appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb, const QString &mainUser, const QString &mainPassword, const QString &logHost, const QString &logDb, const QString &logUser, const QString &logPassword);
+    void appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb, const QString &mainUser, const QString &mainPassword, const QString &logHost, const QString &logDb, const QString &logUser, const QString &logPassword, const QString &broadcast);
     void setDatabasesNames(QStringList &names);
     Db getDatabase(const QString &name);
     Db getFirstDatabase();

@@ -97,7 +97,7 @@ void FForecastOccupancyCategory::apply(WReportGrid *rg)
     for (int i = 0; i < rows.count(); i++) {
         int totalOcc = 0;
         int totalVac = 0;
-        for (QMap<QString, int>::const_iterator it = cats.begin(); it != cats.end(); it++) {
+        for (QMap<QString, int>::const_iterator it = cats.constBegin(); it != cats.constEnd(); it++) {
             int catIndex = it.value() + 2;
             if (rows[i][catIndex].toInt() == 0) {
                 rows[i][catIndex] = 0;

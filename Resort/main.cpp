@@ -10,6 +10,7 @@
 #include <QTranslator>
 #include <QMessageBox>
 #include <QDir>
+#include <QTextCodec>
 
 #define DEMO_
 
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     def_station = "SmartHotel: ";
     Utils::initNumbersWords();
     QApplication a(argc, argv);
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8") );
     Preferences p;
     p.initFromConfig();
 

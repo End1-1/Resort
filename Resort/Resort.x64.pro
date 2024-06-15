@@ -35,6 +35,7 @@ SOURCES += main.cpp\
     ../Filter/fexpecteddeparturesimple.cpp \
     ../Filter/fexpectedsimple.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
+    ../Filter/fincompleteguestsnames.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Filter/froomcatsale.cpp \
     ../Filter/froomstates.cpp \
@@ -70,8 +71,8 @@ SOURCES += main.cpp\
     databaseconnection.cpp \
     databasepasswordchange.cpp \
     taxhelper.cpp \
+    travelline.cpp \
     wactivegroup.cpp \
-    wchart.cpp \
     wcheckboxgroup.cpp \
     wcityledger.cpp \
     wguestinvoice.cpp \
@@ -471,6 +472,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fexpecteddeparturesimple.h \
     ../Filter/fexpectedsimple.h \
     ../Filter/fforecastoccupancycategoryreal.h \
+    ../Filter/fincompleteguestsnames.h \
     ../Filter/finhouseguestfuture.h \
     ../Filter/froomcatsale.h \
     ../Filter/froomstates.h \
@@ -505,8 +507,8 @@ HEADERS  += mainwindow.h \
     databaseconnection.h \
     databasepasswordchange.h \
     taxhelper.h \
+    travelline.h \
     wactivegroup.h \
-    wchart.h \
     wcheckboxgroup.h \
     wcityledger.h \
     wguestinvoice.h \
@@ -902,6 +904,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fexpecteddeparturesimple.ui \
     ../Filter/fexpectedsimple.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
+    ../Filter/fincompleteguestsnames.ui \
     ../Filter/finhouseguestfuture.ui \
     ../Filter/froomcatsale.ui \
     ../Filter/froomstates.ui \
@@ -928,9 +931,9 @@ FORMS    += mainwindow.ui \
     databasesconnections.ui \
     databaseconnection.ui \
     databasepasswordchange.ui \
+    travelline.ui \
     wactivegroup.ui \
     wcardex.ui \
-    wchart.ui \
     wcityledger.ui \
     wguestinvoice.ui \
     whomepage.ui \

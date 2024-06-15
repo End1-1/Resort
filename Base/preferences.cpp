@@ -129,7 +129,10 @@ void Preferences::clearDatabase()
     fDatabases.clear();
 }
 
-void Preferences::appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb, const QString &mainUser, const QString &mainPassword, const QString &logHost, const QString &logDb, const QString &logUser, const QString &logPassword)
+void Preferences::appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb,
+                                 const QString &mainUser, const QString &mainPassword,
+                                 const QString &logHost, const QString &logDb, const QString &logUser, const QString &logPassword,
+                                 const QString &broadcast)
 {
     Db db;
     memset(&db, 0, sizeof(db));
@@ -142,6 +145,7 @@ void Preferences::appendDatabase(const QString &name, const QString &mainHost, c
     qstringToChar(&db.dc_log_path[0], logDb);
     qstringToChar(&db.dc_log_user[0], logUser);
     qstringToChar(&db.dc_log_pass[0], logPassword);
+    qstringToChar(&db.dc_broadcast[0], broadcast);
     fDatabases[name] = db;
 }
 

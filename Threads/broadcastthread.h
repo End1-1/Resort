@@ -9,6 +9,7 @@
 #define cmd_update_program 4
 
 class QTcpSocket;
+class MainWindow;
 
 class BroadcastThread : public ObjectThread
 {
@@ -17,6 +18,7 @@ public:
     static void cmdRefreshCache(int cache, const QString &item);
     static void cmdCommand(int command, const QMap<QString, QString> &params);
     static void sendData(const QString &data);
+    static MainWindow *mMainWindow;
 
 public slots:
     virtual void process() override;

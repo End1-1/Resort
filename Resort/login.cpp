@@ -171,7 +171,7 @@ void Login::getDatabases()
                     fDatabaseList[s]["f_database"],
                     fDatabaseList[s]["f_username"],
                     fDatabaseList[s]["f_password"],
-                    "", "", "", "");
+                    "", "", "", "", fDatabaseList[s]["f_broadcast"]);
             }
             ui->cbDatabase->addItems(dbNames);
     } else {
@@ -184,7 +184,7 @@ void Login::getDatabases()
                     db.dc_main_path,
                     db.dc_main_user,
                     db.dc_main_pass,
-                    "", "", "", "");
+                    "", "", "", "", db.dc_broadcast);
             ui->cbDatabase->addItem(db.dc_name);
             AppConfig::fServerAddress = __s.value("db_broadcast_server").toString();
             AppConfig::fServerPort = SERVER_DEFAULT_PORT;

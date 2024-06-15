@@ -18,6 +18,7 @@ DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
     ../../XLSX/src/xlsxborder.cpp \
+    ../Base/broadcast1.cpp \
     ../Base/dlgexitbyversion.cpp \
     ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
@@ -35,6 +36,7 @@ SOURCES += main.cpp\
     ../Filter/fexpecteddeparturesimple.cpp \
     ../Filter/fexpectedsimple.cpp \
     ../Filter/fforecastoccupancycategoryreal.cpp \
+    ../Filter/fincompleteguestsnames.cpp \
     ../Filter/finhouseguestfuture.cpp \
     ../Filter/froomcatsale.cpp \
     ../Filter/froomstates.cpp \
@@ -455,6 +457,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     ../../XLSX/src/xlsxborder.h \
+    ../Base/broadcast1.h \
     ../Base/dlgexitbyversion.h \
     ../Base/dlgselector.h \
     ../Base/doubleutils.h \
@@ -473,6 +476,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fexpecteddeparturesimple.h \
     ../Filter/fexpectedsimple.h \
     ../Filter/fforecastoccupancycategoryreal.h \
+    ../Filter/fincompleteguestsnames.h \
     ../Filter/finhouseguestfuture.h \
     ../Filter/froomcatsale.h \
     ../Filter/froomstates.h \
@@ -904,6 +908,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fexpecteddeparturesimple.ui \
     ../Filter/fexpectedsimple.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
+    ../Filter/fincompleteguestsnames.ui \
     ../Filter/finhouseguestfuture.ui \
     ../Filter/froomcatsale.ui \
     ../Filter/froomstates.ui \
@@ -1162,7 +1167,7 @@ RESOURCES += \
     res.qrc
 
 LIBS += -lVersion
-LIBS += -LC:/Soft/OpenSSL-Win32/lib
+LIBS += -LC:/soft/OpenSSLWin64/lib/VC/x64/MD
 LIBS += -lopenssl
 LIBS += -llibcrypto
 LIBS +=  -lwsock32
@@ -1185,8 +1190,8 @@ INCLUDEPATH += $$PWD/../RGDoubleClick
 INCLUDEPATH += $$PWD/../GridOptionWidgets
 INCLUDEPATH += $$PWD/../Vouchers
 INCLUDEPATH += $$PWD/../Server2
-INCLUDEPATH += C:/Soft/OpenSSL-Win32/include
-INCLUDEPATH += C:/Soft/OpenSSL-Win32/include/openssl
+INCLUDEPATH += C:/Soft/OpenSSLWin64/include
+INCLUDEPATH += C:/Soft/OpenSSLWin64/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src
 INCLUDEPATH += c:/projects/XLSX/src
 

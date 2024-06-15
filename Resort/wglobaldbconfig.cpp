@@ -399,9 +399,10 @@ void WGlobalDbConfig::on_btnSave_clicked()
         query += QString("(1, '%1', '%2')")
                 .arg(it.key(),it.value());
     }
+    QMap<QString, int> fNameColumnMap;
     DoubleDatabase fDD(true, doubleDatabase);
     fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC', 'dd')");
-    fDD.exec(query);
+    fDD.exec(query, fDD.fDbRows, fNameColumnMap);
 
     //Reports
     for (int i = 0; i < ui->tblMonthly->rowCount(); i++) {

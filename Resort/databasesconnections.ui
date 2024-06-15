@@ -105,48 +105,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="wBroadcast" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Broadcast server</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="leBroadcast">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>353</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
     <widget class="QTableWidget" name="tableDb">
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
@@ -180,6 +138,11 @@
      <column>
       <property name="text">
        <string>Password</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Broadcast</string>
       </property>
      </column>
     </widget>

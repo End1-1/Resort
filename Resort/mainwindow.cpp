@@ -27,10 +27,12 @@
 #include "dlgquickroomassignment.h"
 #include "dlgexportas.h"
 #include "travelline.h"
+#include "fincompleteguestsnames.h"
 #include "froomstates.h"
 #include "wreportroom.h"
 #include "fexportreservation.h"
 #include "wcardexlist.h"
+#include "broadcast1.h"
 #include "dlgtransferlog.h"
 #include "fexpectedsimple.h"
 #include "ftaxreport.h"
@@ -180,6 +182,7 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->grTravelLine->hide();
+    BroadcastThread::mMainWindow = this;
 
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
@@ -300,11 +303,12 @@ void MainWindow::login()
         fSocket.write(dataToSend, dataToSend.length());
         fSocket.flush();
     } else {
-        message_error(QString("Cannot connect to broadcast server, force logout")
-                      + QString("<br>") + fSocket.errorString() +
-                      "<br>Host: " + AppConfig::fServerAddress);
-        logout();
-        return;
+        //TODO LINUX BROADCAST
+//        message_error(QString("Cannot connect to broadcast server, force logout")
+//                      + QString("<br>") + fSocket.errorString() +
+//                      "<br>Host: " + AppConfig::fServerAddress);
+//        logout();
+//        return;
     }
     fSocketDraft.disconnectFromHost();
     fSocketDraft.setProxy(QNetworkProxy::NoProxy);
@@ -321,11 +325,13 @@ void MainWindow::login()
         fSocketDraft.write(dataToSend, dataToSend.length());
         fSocketDraft.flush();
     } else {
-        message_error(QString("Cannot connect to broadcast server, force logout")
-                      + QString("<br>") + fSocket.errorString()
-                      + "<br>Host: " + AppConfig::fServerAddress);
-        logout();
-        return;
+        Broadcast1::SOCKET_CONNECTED = 0;
+        //TODO: LINUX BROADCAST
+//        message_error(QString("Cannot connect to broadcast server, force logout")
+//                      + QString("<br>") + fSocket.errorString()
+//                      + "<br>Host: " + AppConfig::fServerAddress);
+//        logout();
+//        return;
     }
 
     enableMainMenu(true);
@@ -358,6 +364,7 @@ void MainWindow::login()
     }
     fPreferences.setDb(def_touchscreen, fTouchscreen);
 
+    ui->lstTravelLine->clear();
     if (r__(cr__travelline)) {
         dd.exec("select f_id from f_reservation where f_chmstatus=1 and f_state=2");
         while (dd.nextRow()) {
@@ -502,8 +509,9 @@ void MainWindow::parseSocketCommand(const QString &command)
         QString item = jObj.value("item").toString();
         if (cacheId == cache_travelline) {
             if (r__(cr__travelline)) {
-                QListWidgetItem *item = new QListWidgetItem(ui->lstTravelLine);
-                ui->lstTravelLine->addItem(item);
+                QListWidgetItem *litem = new QListWidgetItem(ui->lstTravelLine);
+                litem->setText(item);
+                ui->lstTravelLine->addItem(litem);
                 ui->grTravelLine->show();
                 return;
             }
@@ -526,19 +534,23 @@ void MainWindow::parseSocketCommand(const QString &command)
 
 void MainWindow::socketError(QAbstractSocket::SocketError f_cityLedger)
 {
-    Q_UNUSED(f_cityLedger)
-    if (fTimer.isActive()) {
-        DlgExitByVersion::exit(tr("Lost connection to broadcast server, force logout") + "<br>" + fSocket.errorString());
-        logout();
-    }
+    Broadcast1::SOCKET_CONNECTED = 0;
+    //TODO: LINUX BROADCAST
+//    Q_UNUSED(f_cityLedger)
+//    if (fTimer.isActive()) {
+//        DlgExitByVersion::exit(tr("Lost connection to broadcast server, force logout") + "<br>" + fSocket.errorString());
+//        logout();
+//    }
 }
 
 void MainWindow::socketDisconnected()
 {
-    if (fTimer.isActive()) {
-        message_error(tr("Lost connection to broadcast server, force logout"));
-        logout();
-    }
+    Broadcast1::SOCKET_CONNECTED = 0;
+    //TODO: LINUX BROADCAST
+//    if (fTimer.isActive()) {
+//        message_error(tr("Lost connection to broadcast server, force logout"));
+//        logout();
+//    }
 }
 
 void MainWindow::logout()
@@ -2365,3 +2377,9 @@ void MainWindow::on_lstTravelLine_itemClicked(QListWidgetItem *item)
         ui->grTravelLine->hide();
     }
 }
+
+void MainWindow::on_actionIncomplete_guests_names_triggered()
+{
+    FIncompleteGuestsNames::openFilterReport<FIncompleteGuestsNames, WReportGrid>();
+}
+

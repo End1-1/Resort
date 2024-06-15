@@ -35,6 +35,7 @@ public:
     void secondDbError();
 
 public slots:
+    void parseSocketCommand(const QString &command);
     void on_actionExpected_arrivals_triggered();
     void on_actionReservatios_triggered();
     void on_actionIn_house_guest_triggered();
@@ -159,7 +160,6 @@ private slots:
     void timeout();
     void timeout2();
     void socketReadyRead();
-    void parseSocketCommand(const QString &command);
     void socketError(QAbstractSocket::SocketError f_cityLedger);
     void socketDisconnected();
     void on_actionBreakfast_report_triggered();
@@ -202,6 +202,8 @@ private slots:
 
 
     void on_lstTravelLine_itemClicked(QListWidgetItem *item);
+
+    void on_actionIncomplete_guests_names_triggered();
 
 private:
     Listener fServer2Listener;

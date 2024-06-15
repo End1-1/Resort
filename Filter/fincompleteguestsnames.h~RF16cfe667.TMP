@@ -1,0 +1,22 @@
+#ifndef FINCOMPLETEGUESTSNAMES_H
+#define FINCOMPLETEGUESTSNAMES_H
+
+#include <QWidget>
+
+namespace Ui {
+class FIncompleteGuestsNames;
+}
+
+class FIncompleteGuestsNames : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit FIncompleteGuestsNames(QWidget *parent = nullptr);
+    ~FIncompleteGuestsNames();
+
+private:
+    Ui::FIncompleteGuestsNames *ui;
+};
+
+#endif // FINCOMPLETEGUESTSNAMES_H

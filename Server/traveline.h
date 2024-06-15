@@ -11,13 +11,16 @@ class Traveline : public QObject
 {
     Q_OBJECT
 public:
-    explicit Traveline(const QString &username, const QString &password, const QString &hotel, QObject *parent = nullptr);
+    explicit Traveline();
+    explicit Traveline(const QString &username, const QString &password, const QString &hotel, const QString &url, QObject *parent = nullptr);
 
     void queryReservations(QJsonObject jo);
     void reservationCreated(QJsonObject jo);
     ~Traveline();
 
+    void processResponse(const QByteArray &d);
 private:
+    QString fUrl;
     QString fUsername;
     QString fPassword;
     QString fHotel;

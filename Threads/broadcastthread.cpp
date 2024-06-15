@@ -1,8 +1,15 @@
 #include "broadcastthread.h"
 #include "doubledatabase.h"
+#include "broadcast1.h"
 #include "appconfig.h"
 #include <QTcpSocket>
 #include <QNetworkProxy>
+
+#ifndef RESORT_SERVER
+#include "mainwindow.h"
+#endif
+
+MainWindow *BroadcastThread::mMainWindow = 0;
 
 BroadcastThread::BroadcastThread(const QString &data) :
     ObjectThread()
@@ -15,11 +22,21 @@ BroadcastThread::BroadcastThread(const QString &data) :
 void BroadcastThread::cmdRefreshCache(int cache, const QString &item) {
     QString data = QString("{\"db\": {\"database\" : \"%1\", \"user\" : \"%2\", \"password\" : \"%3\"}, "
                            "\"command\" : {\"command\": \"update_cache\", \"cache\":%4, \"item\":\"%5\"}}")
-            .arg(__dd1Database)
-            .arg("userjan")
-            .arg("passwordjan")
-            .arg(cache)
-            .arg(item);
+                       .arg(__dd1Database)
+                       .arg("userjan")
+                       .arg("passwordjan")
+                       .arg(cache)
+                       .arg(item);
+#ifndef RESORT_SERVER
+    if (Broadcast1::SOCKET_CONNECTED == 0) {
+        QString data = QString("{\"command\": \"update_cache\", \"cache\":%4, \"item\":\"%5\"}")
+                           .arg(cache)
+                           .arg(item);
+        mMainWindow->parseSocketCommand(data);
+        return;
+    }
+#endif
+
     sendData(data);
 }
 

@@ -67,7 +67,7 @@ void DlgPreTax::on_btnOk_clicked()
                 message_error(tr("No taxmap for ") + c.fName());
                 return;
             }
-            if (DlgPrintTaxSM::printAdvance(ci.fTax(), ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), tc, out)) {
+            if (DlgPrintTaxSM::printAdvance(ci.fTax(), ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), ui->tblData->toString(i, 0), tc, out)) {
                 DoubleDatabase fDD(true, doubleDatabase);
                 fDD[":f_fiscal"] = tc;
                 fDD.update("m_register", where_id(ap(ui->tblData->toInt(i, 0))));

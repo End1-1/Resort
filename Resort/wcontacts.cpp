@@ -31,7 +31,7 @@ void WContacts::setupTab()
 
 void WContacts::removeContact()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QList<QVariant> out;
     int row;
     if ((row = fillRowValuesOut(out)) < 0) {

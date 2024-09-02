@@ -12,7 +12,7 @@
 void WGlobalDbConfig::getCompSettings()
 {
     ui->lwHost->clear();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_comp, f_hall from s_tax_print");
     while (fDD.nextRow()) {
         QListWidgetItem *item = new QListWidgetItem(ui->lwHost);
@@ -23,14 +23,13 @@ void WGlobalDbConfig::getCompSettings()
     ui->leHost->clear();
     ui->leHallCode->clear();
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
-
 }
 
 void WGlobalDbConfig::getAccess()
 {
     DoubleDatabase db;
-    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password, 1);
-    if (!db.open(true, false)) {
+    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password);
+    if (!db.open()) {
         return;
     }
     db.exec("select * from f_db");
@@ -58,7 +57,6 @@ void WGlobalDbConfig::getAccess()
             ui->tblAccess->setItemWithValue(i, j, "", dbColAddr[j]);
         }
     }
-
     db.exec("select * from f_access");
     for (int i = 0; i < db.rowCount(); i++) {
         int row = userAddr[db.getValue(i, "f_user").toString()];
@@ -71,11 +69,10 @@ void WGlobalDbConfig::getAccess()
 void WGlobalDbConfig::getDatabases()
 {
     DoubleDatabase db;
-    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password, 1);
-    if (!db.open(true, false)) {
+    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password);
+    if (!db.open()) {
         return;
     }
-    
     db.exec("select * from f_db");
     Utils::tableSetColumnWidths(ui->tblDatabases, ui->tblDatabases->columnCount(),
                                 0, 120, 120, 200, 120, 120);
@@ -92,10 +89,9 @@ void WGlobalDbConfig::getDatabases()
 
 void WGlobalDbConfig::getMonthly()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     Utils::tableSetColumnWidths(ui->tblMonthly, ui->tblMonthly->columnCount(),
                                 50, 120, 100, 300);
-    
     fDD.exec("select * from serv_monthly order by f_id");
     ui->tblMonthly->setRowCount(fDD.rowCount());
     for (int i = 0; i < fDD.rowCount(); i++) {
@@ -104,7 +100,6 @@ void WGlobalDbConfig::getMonthly()
         ui->tblMonthly->addLineEdit(i, 2, false)->setText(fDD.getValue(i, "f_width").toString());
         ui->tblMonthly->addLineEdit(i, 3, false)->setText(fDD.getValue(i, "f_items").toString());
     }
-
     Utils::tableSetColumnWidths(ui->tblCardexAnalysis, ui->tblCardexAnalysis->columnCount(),
                                 50, 120, 100, 300);
     fDD.exec("select * from serv_cardex_analysis order by f_id");
@@ -122,11 +117,10 @@ void WGlobalDbConfig::getMonthly()
 
 void WGlobalDbConfig::getTax()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     Utils::tableSetColumnWidths(ui->tblTax, ui->tblTax->columnCount(),
-                                     0, 150, 40, 150, 150, 150);
+                                0, 150, 40, 150, 150, 150);
     ui->tblTax->clearContents();
-    
     fDD.exec("select f_id, f_comp, f_active, f_host, f_port, f_password from serv_tax order by f_comp");
     ui->tblTax->setRowCount(fDD.rowCount());
     for (int i = 0; i < fDD.rowCount(); i++) {
@@ -141,7 +135,7 @@ void WGlobalDbConfig::getTax()
 
 void WGlobalDbConfig::getApp()
 {
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fDD[":f_key"] = def_external_rest_db;
     fDD.exec("select f_value from f_global_settings where f_settings=1 and f_key=:f_key");
     if (fDD.nextRow()) {
@@ -151,7 +145,7 @@ void WGlobalDbConfig::getApp()
 
 void WGlobalDbConfig::getReportOptions()
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select distinct(rp.f_group), g.f_en from rp_main rp "
             "left join users_groups g on g.f_id=rp.f_group");
     while (dd.nextRow()) {
@@ -160,7 +154,6 @@ void WGlobalDbConfig::getReportOptions()
         item->setData(Qt::UserRole, dd.getInt(0));
         ui->lwrpGroups->addItem(item);
     }
-
 }
 
 WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
@@ -227,65 +220,63 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     ui->leRemovalVoucherId->setText(fPreferences.getDb(def_removal_vaucher_id).toString());
     ui->chPrintTaxAfterReceipt->setChecked(fPreferences.getDb(def_print_tax_after_receipt).toBool());
     ui->chDebug->setChecked(fPreferences.getDb(def_debug_mode).toInt() > 0);
-
     fTrackControl = new TrackControl(TRACK_GLOBAL_CONFIG);
     fTrackControl->addWidget(ui->deWorkingDate, "Working date")
-            .addWidget(ui->teSlogan, "Slogan")
-            .addWidget(ui->leExtraBed, "Extra bed rate")
-            .addWidget(ui->leDefaultCardex, "Default cardex code")
-            .addWidget(ui->leRoomChargeId, "Room charge id")
-            .addWidget(ui->leEarlyCheckinID, "Early checkin id")
-            .addWidget(ui->leLateCheckoutID, "Late checkout id")
-            .addWidget(ui->teEarlyCheckin, "Early checkin time")
-            .addWidget(ui->teLateCheckout, "Late checkout time")
-            .addWidget(ui->leAirportPickupId, "Airport pickup id")
-            .addWidget(ui->leDayUse, "Day use id")
-            .addWidget(ui->leVaucherDigits, "Voucher number format, digits count")
-            .addWidget(ui->leBrekfastChargeId, "Breakfast charge id")
-            .addWidget(ui->leDiscountId, "Default discount id")
-            .addWidget(ui->lePosTransferId, "Positive balance default id")
-            .addWidget(ui->leNegTransferId, "Negative balance default id")
-            .addWidget(ui->chNoTrackControl, "No tracking changes")
-            .addWidget(ui->leRefundId, "Refund default id")
-            .addWidget(ui->leManualTax, "Manual tax filter")
-            .addWidget(ui->leCancelCode, "Cancelation fee code")
-            .addWidget(ui->leNoshowCode, "No show fee code")
-            .addWidget(ui->leRestHallForReception, "Restaurant hall for reception")
-            .addWidget(ui->leRoomArrangement, "Default room arrangement")
-            .addWidget(ui->leReceiptVaucherId, "Receipt vaucher id")
-            .addWidget(ui->leReservationVoucherId, "Reservation voucher id")
-            .addWidget(ui->leCheckinVoucherId, "Checkin voucher id")
-            .addWidget(ui->leAdvanceVoucherId, "Advance voucher id")
-            .addWidget(ui->leRoomRateChangeId, "Room rate change voucher id")
-            .addWidget(ui->leBreakfastHallId, "Breakfast hall id")
-            .addWidget(ui->leBreakfastTableId, "Breakfast table id")
-            .addWidget(ui->leBreakfastDishId, "Breakfast dish id")
-            .addWidget(ui->leMinibarHallId, "Minibar hall id")
-            .addWidget(ui->leMinibarTableId, "MInibar table id")
-            .addWidget(ui->leMinibarDishId, "Minibar dish id")
-            .addWidget(ui->chPasswordRequired, "Passport required")
-            .addWidget(ui->chShowLogs, "Show logs")
-            .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
-            .addWidget(ui->leExternalRestaurantDb, "External restaurant db")
-            .addWidget(ui->leTransferAmountVoucherId, "Transfer amount voucher id")
-            .addWidget(ui->leRoomingEODSide, "Rooming EOD default side")
-            .addWidget(ui->leExtraRooming, "Extran rooming id")
-            .addWidget(ui->chOfferDayUse, "Offer day use")
-            .addWidget(ui->chOfferExtraRooming, "Offer extra rooming")
-            .addWidget(ui->chDailyPrintCanceled, "Daily: always print canceled")
-            .addWidget(ui->leLog1, "Log 1")
-            .addWidget(ui->leLog2, "Log 2")
-            .addWidget(ui->chPrintVoucherAfterSave, "Print voucher after save")
-            .addWidget(ui->lePenaltyList, "Penalty list")
-            .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
-            .addWidget(ui->leCheckoutVoucherId, "Checkout voucher id")
-            .addWidget(ui->chothTaxGuestDetailed, ui->chothTaxGuestDetailed->text())
-            .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
-            .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
-            .addWidget(ui->chPrintTaxAfterReceipt, "Print tax after receipt")
-            .addWidget(ui->chDebug, "Debug mode")
-            ;
-
+    .addWidget(ui->teSlogan, "Slogan")
+    .addWidget(ui->leExtraBed, "Extra bed rate")
+    .addWidget(ui->leDefaultCardex, "Default cardex code")
+    .addWidget(ui->leRoomChargeId, "Room charge id")
+    .addWidget(ui->leEarlyCheckinID, "Early checkin id")
+    .addWidget(ui->leLateCheckoutID, "Late checkout id")
+    .addWidget(ui->teEarlyCheckin, "Early checkin time")
+    .addWidget(ui->teLateCheckout, "Late checkout time")
+    .addWidget(ui->leAirportPickupId, "Airport pickup id")
+    .addWidget(ui->leDayUse, "Day use id")
+    .addWidget(ui->leVaucherDigits, "Voucher number format, digits count")
+    .addWidget(ui->leBrekfastChargeId, "Breakfast charge id")
+    .addWidget(ui->leDiscountId, "Default discount id")
+    .addWidget(ui->lePosTransferId, "Positive balance default id")
+    .addWidget(ui->leNegTransferId, "Negative balance default id")
+    .addWidget(ui->chNoTrackControl, "No tracking changes")
+    .addWidget(ui->leRefundId, "Refund default id")
+    .addWidget(ui->leManualTax, "Manual tax filter")
+    .addWidget(ui->leCancelCode, "Cancelation fee code")
+    .addWidget(ui->leNoshowCode, "No show fee code")
+    .addWidget(ui->leRestHallForReception, "Restaurant hall for reception")
+    .addWidget(ui->leRoomArrangement, "Default room arrangement")
+    .addWidget(ui->leReceiptVaucherId, "Receipt vaucher id")
+    .addWidget(ui->leReservationVoucherId, "Reservation voucher id")
+    .addWidget(ui->leCheckinVoucherId, "Checkin voucher id")
+    .addWidget(ui->leAdvanceVoucherId, "Advance voucher id")
+    .addWidget(ui->leRoomRateChangeId, "Room rate change voucher id")
+    .addWidget(ui->leBreakfastHallId, "Breakfast hall id")
+    .addWidget(ui->leBreakfastTableId, "Breakfast table id")
+    .addWidget(ui->leBreakfastDishId, "Breakfast dish id")
+    .addWidget(ui->leMinibarHallId, "Minibar hall id")
+    .addWidget(ui->leMinibarTableId, "MInibar table id")
+    .addWidget(ui->leMinibarDishId, "Minibar dish id")
+    .addWidget(ui->chPasswordRequired, "Passport required")
+    .addWidget(ui->chShowLogs, "Show logs")
+    .addWidget(ui->cbInvoiceHeader, "Invoice header mode")
+    .addWidget(ui->leExternalRestaurantDb, "External restaurant db")
+    .addWidget(ui->leTransferAmountVoucherId, "Transfer amount voucher id")
+    .addWidget(ui->leRoomingEODSide, "Rooming EOD default side")
+    .addWidget(ui->leExtraRooming, "Extran rooming id")
+    .addWidget(ui->chOfferDayUse, "Offer day use")
+    .addWidget(ui->chOfferExtraRooming, "Offer extra rooming")
+    .addWidget(ui->chDailyPrintCanceled, "Daily: always print canceled")
+    .addWidget(ui->leLog1, "Log 1")
+    .addWidget(ui->leLog2, "Log 2")
+    .addWidget(ui->chPrintVoucherAfterSave, "Print voucher after save")
+    .addWidget(ui->lePenaltyList, "Penalty list")
+    .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
+    .addWidget(ui->leCheckoutVoucherId, "Checkout voucher id")
+    .addWidget(ui->chothTaxGuestDetailed, ui->chothTaxGuestDetailed->text())
+    .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
+    .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
+    .addWidget(ui->chPrintTaxAfterReceipt, "Print tax after receipt")
+    .addWidget(ui->chDebug, "Debug mode")
+    ;
     getCompSettings();
     getAccess();
     getDatabases();
@@ -294,9 +285,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     getApp();
     getReportOptions();
     fTrackControl->resetChanges();
-
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
-
     ui->lerpGroup->setSelector(this, cache(cid_users_group), ui->lerpGroupName);
 }
 
@@ -368,7 +357,7 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_external_rest_db, ui->leExternalRestaurantDb->text());
     values.insert(def_daily_movement_items, ui->teDailyMovement->toPlainText());
     values.insert(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? "0" : "1");
-    values.insert(def_transfer_amount_id , ui->leTransferAmountVoucherId->text());
+    values.insert(def_transfer_amount_id, ui->leTransferAmountVoucherId->text());
     values.insert(def_rooming_eod_default_side, QString::number(ui->leRoomingEODSide->text().toInt()));
     values.insert(def_extrarooming_id, ui->leExtraRooming->text());
     values.insert(def_offer_dayuse, ui->chOfferDayUse->isChecked() ? "1" : "0");
@@ -385,7 +374,6 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_removal_vaucher_id, ui->leRemovalVoucherId->text());
     values.insert(def_print_tax_after_receipt, ui->chPrintTaxAfterReceipt->isChecked() ? "1" : "0");
     values.insert(def_debug_mode, ui->chDebug->isChecked() ? "1" : "0");
-
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
     QMapIterator<QString, QString> it(values);
@@ -397,13 +385,12 @@ void WGlobalDbConfig::on_btnSave_clicked()
             query += ",";
         }
         query += QString("(1, '%1', '%2')")
-                .arg(it.key(),it.value());
+                 .arg(it.key(), it.value());
     }
     QMap<QString, int> fNameColumnMap;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("delete from f_global_settings where f_settings=1 and f_key not in ('HC', 'AHC', 'dd')");
     fDD.exec(query, fDD.fDbRows, fNameColumnMap);
-
     //Reports
     for (int i = 0; i < ui->tblMonthly->rowCount(); i++) {
         fDD[":f_title"] = ui->tblMonthly->lineEdit(i, 1)->text();
@@ -417,10 +404,8 @@ void WGlobalDbConfig::on_btnSave_clicked()
         fDD[":f_items"] = ui->tblCardexAnalysis->lineEdit(i, 3)->text();
         fDD.update("serv_cardex_analysis", where_id(ui->tblCardexAnalysis->toString(i, 0)));
     }
-
     fPreferences.setDb(def_daily_movement_items, ui->teDailyMovement->toPlainText());
     fPreferences.setDb(def_daily_movement_total_side, ui->rbDailySubtotalDown->isChecked() ? 0 : 1);
-
     QListWidgetItem *item = ui->lwrpGroups->currentItem();
     if (item) {
         int rpgroup = item->data(Qt::UserRole).toInt();
@@ -437,7 +422,6 @@ void WGlobalDbConfig::on_btnSave_clicked()
                      "f_printonly=:f_printonly, f_rowheight=:f_rowheight where f_group=:f_group and f_report=:f_report");
         }
     }
-
     fTrackControl->saveChanges();
     message_info(tr("Saved"));
 }
@@ -449,7 +433,7 @@ void WGlobalDbConfig::on_lwHost_clicked(const QModelIndex &index)
     }
     ui->leHost->setText(index.data(Qt::DisplayRole).toString());
     ui->leHallCode->setInitialValue(index.data(Qt::UserRole).toString());
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_comp"] = index.data(Qt::DisplayRole).toString();
     fDD.exec("select f_key, f_value from r_config where upper(f_comp)=upper(:f_comp)");
     QMap<QString, QString> v;
@@ -471,7 +455,7 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
         message_error(tr("Host not selected"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_hall"] = ui->leHallCode->text();
     fDD.update("s_tax_print", where_field("f_comp", "'" + ui->leHost->text() + "'"));
     fDD[":f_comp"] = ui->leHost->text();
@@ -495,7 +479,7 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_discount_50;
     fDD[":f_value"] = ui->leDisc50->text();
-    fDD.insert("r_config");    
+    fDD.insert("r_config");
     fDD[":f_comp"] = ui->leHost->text();
     fDD[":f_key"] = dr_long_order_time;
     fDD[":f_value"] = ui->leLongOrderTime->text();
@@ -504,7 +488,6 @@ void WGlobalDbConfig::on_btnSaveRestaurant_clicked()
     fDD[":f_key"] = dr_new_dish_state_after_close;
     fDD[":f_value"] = ui->cbNewDishState->currentIndex();
     fDD.insert("r_config");
-
     getCompSettings();
     message_info(tr("Saved"));
 }
@@ -517,10 +500,9 @@ void WGlobalDbConfig::on_btnRefresh_clicked()
 void WGlobalDbConfig::on_btnSaveAccess_clicked()
 {
     DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
-    if (!db.open(true, false)) {
+    if (!db.open()) {
         return;
     }
-
     db.exec("delete from f_access");
     for (int i = 0; i < ui->tblAccess->rowCount(); i++) {
         for (int j = 1; j < ui->tblAccess->columnCount(); j++) {
@@ -530,18 +512,17 @@ void WGlobalDbConfig::on_btnSaveAccess_clicked()
             db.insert("f_access", false);
         }
     }
-   // BroadcastThread::cmdCommand(cmd_global_settings, QMap<QString, QString>());
+    // BroadcastThread::cmdCommand(cmd_global_settings, QMap<QString, QString>());
     message_info(tr("Saved"));
 }
 
 void WGlobalDbConfig::on_btnSaveDatabases_clicked()
 {
     DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
-    if (!db.open(true, false)) {
+    if (!db.open()) {
         return;
     }
-
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblDatabases->rowCount(); i++) {
         fDD[":f_name"] = ui->tblDatabases->lineEdit(i, 1)->text();
         fDD[":f_host"] = ui->tblDatabases->lineEdit(i, 2)->text();
@@ -568,13 +549,12 @@ void WGlobalDbConfig::on_btnRemoveStation_clicked()
     if (message_confirm(tr("Confirm to remove station")) != QDialog::Accepted) {
         return;
     }
-
     DoubleDatabase db;
-    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password, 1);
-    if (!db.open(true, false)) {
+    db.setDatabase(__dd1Host, "airwick", __dd1Username, __dd1Password);
+    if (!db.open()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_name"] = ui->tblAccess->toString(sel.at(0).row(), 0);
     db.exec("delete from f_users where lower(f_name)=lower(:f_name)");
     fDD[":f_user"] = ui->tblAccess->toString(sel.at(0).row(), 0);
@@ -597,7 +577,7 @@ void WGlobalDbConfig::on_btnRemoveRest_clicked()
     if (message_confirm(tr("Confirm to delete")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_comp"] = index.data(Qt::DisplayRole).toString();
     fDD.exec("delete from s_tax_print where f_comp=:f_comp");
     getCompSettings();
@@ -641,7 +621,7 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
         return;
     }
     DoubleDatabase db(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
-    db.open(true, false);
+    db.open();
     db[":f_id"] = ui->tblDatabases->lineEdit(rows.at(0).row(), 0)->asInt();
     db.exec("delete from airwick.f_db where f_id=:f_id");
     db[":f_id"] = ui->tblDatabases->lineEdit(rows.at(0).row(), 0)->asInt();
@@ -652,12 +632,11 @@ void WGlobalDbConfig::on_btnRemoveDatabase_clicked()
 
 void WGlobalDbConfig::on_btnInitExtRestData_clicked()
 {
-    DoubleDatabase dd(true, doubleDatabase);
-//    dd.exec("delete from r_dish");
-//    dd.exec("delete from r_dish_type");
-
+    DoubleDatabase dd;
+    //    dd.exec("delete from r_dish");
+    //    dd.exec("delete from r_dish_type");
     DoubleDatabase dr(__dd1Host, ui->leExternalRestaurantDb->text(), __dd1Username, __dd1Password);
-    if (!dr.open(true, false)) {
+    if (!dr.open()) {
         message_error(dr.fLastError);
         return;
     }
@@ -676,7 +655,6 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_queue"] = dr.getInt(0);
         dd[":f_active"] = 1;
         dd.insert("r_dish_type", false);
-
         dd[":f_id"] = dr.getInt(0);
         dd[":f_part"] = 1;
         dd[":f_en"] = dr.getString(1);
@@ -704,7 +682,6 @@ void WGlobalDbConfig::on_btnInitExtRestData_clicked()
         dd[":f_unit"] = 1;
         dd[":f_adgt"] = dr.getString("f_adgcode");
         dd.insert("r_dish", false);
-
         dd[":f_id"] = dr.getInt(0);
         dd[":f_type"] = dr.getInt(1);
         dd[":f_en"] = dr.getString(2);
@@ -727,25 +704,25 @@ void WGlobalDbConfig::on_leExternalRestaurantDb_textChanged(const QString &arg1)
 
 void WGlobalDbConfig::on_btnCorrectRoomChart_clicked()
 {
-    DoubleDatabase dd1(true, doubleDatabase);
+    DoubleDatabase dd1;
     dd1.exec("delete from f_reservation_chart");
     dd1.exec("delete from f_reservation_map");
     dd1.exec("select r.f_id, r.f_invoice, r.f_state, r.f_reservestate, r.f_room, r.f_startdate, r.f_enddate, "
-            "g.guest as f_guest, r.f_cardex, c.f_name as f_cardexname, rm.f_short as f_roomshort, rm.f_state as f_roomstate, sn.f_en as f_statename, rsn.f_en as f_reservestatename,  "
-            "r.f_invoice, r.f_group, rg.f_name as f_groupname, rm.f_building, rm.f_floor, group_concat(g1.gname separator ', ') as f_allguest, rm.f_class "
-            "from f_reservation r "
-            "left join guests g on g.f_id=r.f_guest "
-            "left join f_cardex c on c.f_cardex=r.f_cardex "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_reservation_state sn on sn.f_id=r.f_state "
-            "left join f_reservation_status rsn on rsn.f_id=r.f_reservestate "
-            "left join f_reservation_group rg on rg.f_id=r.f_group "
-            "left join (select f_reservation, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName) as gname "
-                "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
-            "where r.f_state in (1,2,4,7,9) and r.f_room>0 and r.f_startdate is not null "
-            "group by 1 ");
+             "g.guest as f_guest, r.f_cardex, c.f_name as f_cardexname, rm.f_short as f_roomshort, rm.f_state as f_roomstate, sn.f_en as f_statename, rsn.f_en as f_reservestatename,  "
+             "r.f_invoice, r.f_group, rg.f_name as f_groupname, rm.f_building, rm.f_floor, group_concat(g1.gname separator ', ') as f_allguest, rm.f_class "
+             "from f_reservation r "
+             "left join guests g on g.f_id=r.f_guest "
+             "left join f_cardex c on c.f_cardex=r.f_cardex "
+             "left join f_room rm on rm.f_id=r.f_room "
+             "left join f_reservation_state sn on sn.f_id=r.f_state "
+             "left join f_reservation_status rsn on rsn.f_id=r.f_reservestate "
+             "left join f_reservation_group rg on rg.f_id=r.f_group "
+             "left join (select f_reservation, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName) as gname "
+             "from f_reservation_guests gr left join f_guests g on g.f_id=gr.f_guest) g1 on g1.f_reservation=r.f_id "
+             "where r.f_state in (1,2,4,7,9) and r.f_room>0 and r.f_startdate is not null "
+             "group by 1 ");
     while (dd1.nextRow()) {
-        DoubleDatabase dd2(true, true);
+        DoubleDatabase dd2;
         dd2[":f_id"] = dd1.getString("f_id");
         dd2[":f_invoice"] = dd1.getString("f_invoice");
         dd2[":f_state"] = dd1.getInt("f_state");
@@ -813,7 +790,7 @@ void WGlobalDbConfig::on_lwrpGroups_currentRowChanged(int currentRow)
     QListWidgetItem *item = ui->lwrpGroups->item(currentRow);
     int group = item->data(Qt::UserRole).toInt();
     ui->lwrpReports->clear();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_group"] = item->data(Qt::UserRole).toInt();
     dd.exec("select f_report from rp_main where f_group=:f_group");
     while (dd.nextRow()) {
@@ -830,7 +807,7 @@ void WGlobalDbConfig::on_lwrpReports_currentRowChanged(int currentRow)
         return;
     }
     QListWidgetItem *item = ui->lwrpReports->item(currentRow);
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_group"] = item->data(Qt::UserRole);
     dd[":f_report"] = item->text();
     dd.exec("select * from rp_main where f_group=:f_group and f_report=:f_report");
@@ -850,20 +827,16 @@ void WGlobalDbConfig::on_chDebug_clicked(bool checked)
 
 void WGlobalDbConfig::on_btnAddRoomType_clicked()
 {
-
 }
 
 void WGlobalDbConfig::on_btnRemoveRoomType_clicked()
 {
-
 }
 
 void WGlobalDbConfig::on_btnAddRatePlan_clicked()
 {
-
 }
 
 void WGlobalDbConfig::on_btnRemoveRatePlan_clicked()
 {
-
 }

@@ -34,7 +34,7 @@ void FForecastOccupancyCategoryReal::apply(WReportGrid *rg)
     rg->fModel->clearColumns();
     QMap<QString, int> cats;
     QMap<QString, int> catsQty;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select rc.f_short, count(rm.f_id) from f_room_classes rc "
                "left join f_room rm on rm.f_class=rc.f_id group by 1");
     int ind = 0;

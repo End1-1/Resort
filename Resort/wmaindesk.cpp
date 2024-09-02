@@ -35,7 +35,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     BaseWidget(parent),
     ui(new Ui::WMainDesk)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     ui->setupUi(this);
     ui->wRoom->setMaximumWidth(__s.value("showroomdescription").toBool() ? 250 : 100);
     ui->wRoom->setMinimumWidth(__s.value("showroomdescription").toBool() ? 250 : 100);
@@ -78,7 +78,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
     fDD.exec("select min(f_startdate) from f_reservation where f_state in (1,2,4,7,9)");
-    if (fDD.nextRow()){
+    if (fDD.nextRow()) {
         fDateStart = fDD.getDate(0);
         fDateStart.setDate(fDateStart.year(), fDateStart.month(), 1);
     } else {
@@ -89,7 +89,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
     int dayCount = fDateStart.daysTo(fDateEnd) + 1;
     ui->tblDay->setColumnCount(dayCount);
     ui->tblDay->horizontalHeader()->setDefaultSectionSize(COLUMN_WIDTH);
-    ui->tblDay->setMinimumWidth(dayCount * COLUMN_WIDTH + 2);
+    ui->tblDay->setMinimumWidth(dayCount *COLUMN_WIDTH + 2);
     ui->g->setMinimumWidth(ui->tblDay->minimumWidth());
     ui->tblDay->setRowCount(1);
     ui->tblDay->setItemDelegate(new DayItemDelegate());
@@ -119,12 +119,13 @@ WMainDesk::WMainDesk(QWidget *parent) :
     connect(ui->saMain->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scMainVScroll(int)));
     connect(ui->g->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scMainVScroll(int)));
     connect(ui->saRoom->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scRoomVScroll(int)));
-    connect(ui->tblRoom->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(roomSelectionChanged(QModelIndex,QModelIndex)));
-    connect(ui->tblDay->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(daySelectionChanged(QModelIndex,QModelIndex)));
-    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
-    connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomCacheUpdated(int, QString)));
-
-    connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(ui->tblRoom->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this,
+            SLOT(roomSelectionChanged(QModelIndex, QModelIndex)));
+    connect(ui->tblDay->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this,
+            SLOT(daySelectionChanged(QModelIndex, QModelIndex)));
+    connect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
+    connect(cache(cid_room), SIGNAL(updated(int, QString)), this, SLOT(roomCacheUpdated(int, QString)));
+    connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     timeout();
     fTimer.start(30000);
     ui->btnEndOfDay->setVisible(r__(cr__eod));
@@ -157,22 +158,22 @@ void WMainDesk::handleBroadcast(const QMap<QString, QVariant> &data)
 {
     int cmd = data["command"].toInt();
     switch (cmd) {
-    case cmd_end_of_day:
-        int x = xFromDate(WORKING_DATE);
-        ui->saMain->horizontalScrollBar()->setValue(x);
+        case cmd_end_of_day:
+            int x = xFromDate(WORKING_DATE);
+            ui->saMain->horizontalScrollBar()->setValue(x);
     }
 }
 
 bool WMainDesk::event(QEvent *e)
 {
     switch (e->type()) {
-    case QEvent::WindowActivate:
-        break;
-    case QEvent::WindowDeactivate:
-        //fDockHint->hide();
-        break;
-    default:
-        break;
+        case QEvent::WindowActivate:
+            break;
+        case QEvent::WindowDeactivate:
+            //fDockHint->hide();
+            break;
+        default:
+            break;
     }
     return BaseWidget::event(e);
 }
@@ -206,7 +207,7 @@ void WMainDesk::scMainVScroll(int value)
 
 void WMainDesk::catButtonClick()
 {
-    auto *btn = static_cast<QPushButton*>(sender());
+    auto *btn = static_cast<QPushButton *>(sender());
     uncheckCatButtons();
     btn->setChecked(true);
     fCatFilter = btn->text();
@@ -238,25 +239,23 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
         return;
     }
     fDockHint->reset();
-
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":state1"] = RESERVE_CHECKIN;
     fDD[":state2"] = RESERVE_RESERVE;
     fDD[":state3"] = RESERVE_SERVICE;
     fDD[":state4"] = RESERVE_OUTOFINVENTORY;
     fDD[":state5"] = RESERVE_OUTOFROOM;
     fDD.exec("select r.f_state, r.f_id, r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-               "r.f_startDate, r.f_endDate, r.f_cardex, n.f_name, '', "
-               "r.f_invoice, concat(u.f_firstName, ' ', u.f_lastName), r.f_booking "
-               "from f_reservation r  "
-               "left join f_guests g on g.f_id=r.f_guest "
-               "left join f_nationality n on n.f_short=g.f_nation "
-               "left join users u on u.f_id=r.f_author "
-               "where (r.f_state=:state1 or r.f_state=:state2 or r.f_state=:state3 or r.f_state=:state4 or r.f_state=:state5) "
-               "and r.f_id=" + ap(id) + " "
-               "order by 1, 2 ");
+             "r.f_startDate, r.f_endDate, r.f_cardex, n.f_name, '', "
+             "r.f_invoice, concat(u.f_firstName, ' ', u.f_lastName), r.f_booking "
+             "from f_reservation r  "
+             "left join f_guests g on g.f_id=r.f_guest "
+             "left join f_nationality n on n.f_short=g.f_nation "
+             "left join users u on u.f_id=r.f_author "
+             "where (r.f_state=:state1 or r.f_state=:state2 or r.f_state=:state3 or r.f_state=:state4 or r.f_state=:state5) "
+             "and r.f_id=" + ap(id) + " "
+             "order by 1, 2 ");
     QList<QVariant> v;
-
     fScene->removeInvalidReserveWidget(id);
     CacheReservation r;
     if (!r.get(id))  {
@@ -270,19 +269,18 @@ void WMainDesk::reservationCacheUpdated(int cacheId, const QString &id)
     if (!fRoomList.contains(r.fRoom())) {
         return;
     }
-
     switch (r.fState()) {
-    case RESERVE_CHECKIN:
-    case RESERVE_RESERVE: {
-        fScene->addReserveInfo(id);
-        break;
-    }
-    case RESERVE_SERVICE:
-    case RESERVE_OUTOFINVENTORY:
-    case RESERVE_OUTOFROOM: {
-        fScene->addReserveWidget(id);
-        break;
-    }
+        case RESERVE_CHECKIN:
+        case RESERVE_RESERVE: {
+            fScene->addReserveInfo(id);
+            break;
+        }
+        case RESERVE_SERVICE:
+        case RESERVE_OUTOFINVENTORY:
+        case RESERVE_OUTOFROOM: {
+            fScene->addReserveWidget(id);
+            break;
+        }
     }
 }
 
@@ -334,10 +332,8 @@ void WMainDesk::filterRoom()
     CacheRoom room;
     room.fInstance = c;
     QMap<QString, QList<QVariant> >::iterator it = roomRows.begin();
-
     qDebug() << et.elapsed() << "Cache loaded. Start filter";
     et.restart();
-
     while (it != roomRows.end()) {
         room.fData = it.value();
         if (!ui->leJumpToRoom->text().isEmpty()) {
@@ -391,11 +387,9 @@ void WMainDesk::filterRoom()
         fRoomList.append(room.fCode());
         it++;
     }
-
     qDebug() << et.elapsed() << "End filter. Init background";
     et.restart();
-
-    DoubleDatabase ddr(true, false);
+    DoubleDatabase ddr;
     ddr.exec("select f_id from f_room order by f_building, f_id");
     QStringList tmpRoom = fRoomList;
     fRoomList.clear();
@@ -404,13 +398,10 @@ void WMainDesk::filterRoom()
             fRoomList << ddr.getString(0);
         }
     }
-
     ui->lbRoomsCount->setText(QString("Rooms: %1").arg(fRoomList.count()));
-
     fScene->initBackgroung(fDateStart.daysTo(fDateEnd) + 1, fRoomList);
     qDebug() << et.elapsed() << "End init background. Init rooms";
     et.restart();
-
     ui->tblRoom->clear();
     ui->tblRoom->setRowCount(fRoomList.count());
     ui->tblRoom->setColumnCount(1);
@@ -419,7 +410,6 @@ void WMainDesk::filterRoom()
         item->setData(Qt::UserRole, fRoomList.at(i));
         ui->tblRoom->setItem(i, 0, item);
     }
-
     int minimumHeight = ui->saRoom->height();
     int height = fRoomList.count() * ROW_HEIGHT;
     minimumHeight = minimumHeight < height ? height : minimumHeight;
@@ -428,8 +418,6 @@ void WMainDesk::filterRoom()
     //ui->saMain->verticalScrollBar()->setValue(0);
     ui->g->setMinimumHeight(minimumHeight);
     ui->g->setMaximumHeight(minimumHeight);
-
-
     qDebug() << et.elapsed() << "End init rooms. Add reservations to chart";
     et.restart();
     int totalr = 0;
@@ -451,20 +439,19 @@ void WMainDesk::filterRoom()
             it++;
             continue;
         }
-
         totalr ++;
         switch (it->at(pos_state).toInt()) {
-        case RESERVE_CHECKIN:
-        case RESERVE_RESERVE:{
-            fScene->addReserveInfo(it->at(pos_id).toString());
-            break;
-        }
-        case RESERVE_SERVICE:
-        case RESERVE_OUTOFINVENTORY:
-        case RESERVE_OUTOFROOM: {
-            fScene->addReserveWidget(it->at(pos_id).toString());
-            break;
-        }
+            case RESERVE_CHECKIN:
+            case RESERVE_RESERVE: {
+                fScene->addReserveInfo(it->at(pos_id).toString());
+                break;
+            }
+            case RESERVE_SERVICE:
+            case RESERVE_OUTOFINVENTORY:
+            case RESERVE_OUTOFROOM: {
+                fScene->addReserveWidget(it->at(pos_id).toString());
+                break;
+            }
         }
         it++;
     }
@@ -483,7 +470,7 @@ void WMainDesk::dockHint(const QString &filter)
 int WMainDesk::xFromDate(const QDate &date)
 {
     int dayCount = fDateStart.daysTo(date);
-    return dayCount * COLUMN_WIDTH;
+    return dayCount *COLUMN_WIDTH;
 }
 
 void WMainDesk::roomsRowSelectionChanged()
@@ -539,7 +526,7 @@ void WMainDesk::on_btnScrollLeft_clicked()
 
 void WMainDesk::on_btnCheckIn_clicked()
 {
-    QList<CacheRoom*> rooms;
+    QList<CacheRoom *> rooms;
     rooms.append(nullptr);
     addTab<WReservation>()->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
 }
@@ -550,7 +537,6 @@ void WMainDesk::on_btnClearSelection_clicked()
         fScene->clearReserveWidgets();
     }
 }
-
 
 void WMainDesk::on_btnGroupReservation_clicked()
 {
@@ -571,7 +557,6 @@ void WMainDesk::on_btnEndOfDay_clicked()
 {
     DlgEndOfDay *d = new DlgEndOfDay(this);
     if (d->exec() == QDialog::Accepted)  {
-
     }
     delete d;
 }
@@ -691,26 +676,25 @@ void WMainDesk::on_btnStatus_clicked()
     if (result > 0) {
         fReserveStatus = result;
         switch (fReserveStatus) {
-        case CONFIRM_BLOCK:
-            ui->btnStatus->setText(tr("Block"));
-            break;
-        case CONFIRM_CONFIRM:
-            ui->btnStatus->setText(tr("Confirm"));
-            break;
-        case CONFIRM_GUARANTEED:
-            ui->btnStatus->setText(tr("Guaranted"));
-            break;
-        case CONFIRM_TENTATIVE:
-            ui->btnStatus->setText(tr("Tentative"));
-            break;
-        case CONFIRM_WAITING:
-            ui->btnStatus->setText(tr("Waiting"));
-            break;
-        default:
-            ui->btnStatus->setText(tr("Status"));
-            break;
+            case CONFIRM_BLOCK:
+                ui->btnStatus->setText(tr("Block"));
+                break;
+            case CONFIRM_CONFIRM:
+                ui->btnStatus->setText(tr("Confirm"));
+                break;
+            case CONFIRM_GUARANTEED:
+                ui->btnStatus->setText(tr("Guaranted"));
+                break;
+            case CONFIRM_TENTATIVE:
+                ui->btnStatus->setText(tr("Tentative"));
+                break;
+            case CONFIRM_WAITING:
+                ui->btnStatus->setText(tr("Waiting"));
+                break;
+            default:
+                ui->btnStatus->setText(tr("Status"));
+                break;
         }
-
         filterRoom();
     }
 }
@@ -731,8 +715,8 @@ void WMainDesk::on_btnColors_clicked()
 void WMainDesk::on_btnRefreshChart_clicked()
 {
     CacheOne::clearAll();
-    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
-    connect(cache(cid_room), SIGNAL(updated(int,QString)), this, SLOT(roomCacheUpdated(int, QString)));
+    connect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
+    connect(cache(cid_room), SIGNAL(updated(int, QString)), this, SLOT(roomCacheUpdated(int, QString)));
     on_btnClearFilter_clicked();
 }
 
@@ -755,7 +739,8 @@ void WMainDesk::on_btnBedFilter_clicked()
 void WMainDesk::on_btnSmokeFilter_clicked()
 {
     if  (WMainDeskFilterList::filter(fSmokeList, fSmokeListNames, tr("Smoke"), fSmokeFilter)) {
-        ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(fSmokeFilter.isEmpty() ? tr("All") : fSmokeFilter));
+        ui->btnSmokeFilter->setText(QString("%1: %2").arg(tr("Smoke filter")).arg(fSmokeFilter.isEmpty() ? tr("All") :
+                                    fSmokeFilter));
         qApp->processEvents();
         filterRoom();
     }
@@ -764,7 +749,8 @@ void WMainDesk::on_btnSmokeFilter_clicked()
 void WMainDesk::on_btnRoomStateFilter_clicked()
 {
     if  (WMainDeskFilterList::filter(fStateList, fStateListNames, tr("Room state"), fStateFilter)) {
-        ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(fStateFilter.isEmpty() ? tr("All") : fStateFilter));
+        ui->btnRoomStateFilter->setText(QString("%1: %2").arg(tr("Room state filter")).arg(fStateFilter.isEmpty() ? tr("All") :
+                                        fStateFilter));
         qApp->processEvents();
         filterRoom();
     }
@@ -773,8 +759,8 @@ void WMainDesk::on_btnRoomStateFilter_clicked()
 void WMainDesk::uncheckCatButtons()
 {
     QObjectList ol = ui->wCatButtons->children();
-    for (QObject *o: ol) {
-        QPushButton *b = dynamic_cast<QPushButton*>(o);
+    for (QObject *o : ol) {
+        QPushButton *b = dynamic_cast<QPushButton *>(o);
         if (b) {
             b->setChecked(false);
         }
@@ -784,7 +770,8 @@ void WMainDesk::uncheckCatButtons()
 void WMainDesk::on_btnBuilding_clicked()
 {
     if  (WMainDeskFilterList::filter(fBuildingList, fBuildingListNames, tr("Building"), fBuildingFilter)) {
-        ui->btnBuilding->setText(QString("%1: %2").arg(tr("Building filter")).arg(fBuildingFilter.isEmpty() ? tr("All") : fBuildingFilter));
+        ui->btnBuilding->setText(QString("%1: %2").arg(tr("Building filter")).arg(fBuildingFilter.isEmpty() ? tr("All") :
+                                 fBuildingFilter));
         qApp->processEvents();
         filterRoom();
     }

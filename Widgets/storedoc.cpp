@@ -23,15 +23,12 @@ StoreDoc::StoreDoc(QWidget *parent) :
     fFirstTab = ui->tabWidget->widget(0);
     fGoodsTab = ui->tabWidget->widget(1);
     fAccTab = ui->tabWidget->widget(2);
-
     ui->leStore->setSelector(this, cache(cid_rest_store), ui->leStore);
     ui->leStoreout->setSelector(this, cache(cid_rest_store), ui->leStoreout);
     ui->leAction->setSelector(this, cache(cid_store_doc_type), ui->leAction, HINT_DOC_TYPE);
     ui->lePartnerCode->setSelector(this, cache(cid_store_partners), ui->lePartnerName, HINT_PARTNER);
-
     Utils::tableSetColumnWidths(ui->tblGoods, ui->tblGoods->columnCount(),
-                                     0, 100, 300, 80, 80, 80);
-
+                                0, 100, 300, 80, 80, 80);
     ui->wAcc->docType(CASHDOC_STORE);
     ui->wAcc->setSaveVisible(false);
     ui->wAcc->cashOp(CASHOP_OUT);
@@ -45,19 +42,19 @@ StoreDoc::~StoreDoc()
 void StoreDoc::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_PARTNER: {
-        CacheStorePartners c;
-        if (c.get(code)) {
-            ui->wAcc->partner(c.fCode().toInt());
-        } else {
-            ui->wAcc->partner(0);
+        case HINT_PARTNER: {
+            CacheStorePartners c;
+            if (c.get(code)) {
+                ui->wAcc->partner(c.fCode().toInt());
+            } else {
+                ui->wAcc->partner(0);
+            }
+            break;
         }
-        break;
-    }
-    case HINT_DOC_TYPE: {
-        prepareDoc();
-        break;
-    }
+        case HINT_DOC_TYPE: {
+            prepareDoc();
+            break;
+        }
     }
 }
 
@@ -76,7 +73,7 @@ void StoreDoc::openStoreDocument(const QString &id)
 
 void StoreDoc::loadDoc(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     ui->leDocNumber->setText(id);
     fDD[":f_id"] = id;
     fDD.exec("select * from r_docs where f_id=:f_id");
@@ -87,13 +84,11 @@ void StoreDoc::loadDoc(const QString &id)
     int state = fDD.getValue("f_state").toInt();
     ui->leAction->setInitialValue(fDD.getValue("f_type").toString());
     ui->lePartnerCode->setInitialValue(fDD.getValue("f_partner").toString());
-
     prepareDoc();
     ui->deDate->setDate(fDD.getValue("f_date").toDate());
     ui->leInvoiceNo->setText(fDD.getValue("f_inv").toString());
     ui->deInvoiceDate->setDate(fDD.getValue("f_invDate").toDate());
     ui->leComments->setText(fDD.getValue("f_remarks").toString());
-
     fDD[":f_doc"] = ui->leDocNumber->text();
     fDD.exec("select distinct(f_store) as f_store, f_sign from r_body where f_doc=:f_doc");
     if (fDD.nextRow()) {
@@ -121,9 +116,9 @@ void StoreDoc::loadDoc(const QString &id)
         add = "and b.f_sign=1";
     }
     fDD.exec("select b.f_id, b.f_material, m.f_en, b.f_qty, b.f_price, b.f_total "
-              "from r_body b "
-              "left join r_dish m on m.f_id=b.f_material "
-              "where b.f_doc=:f_doc " + add);
+             "from r_body b "
+             "left join r_dish m on m.f_id=b.f_material "
+             "where b.f_doc=:f_doc " + add);
     for (int i = 0; i < fDD.rowCount(); i++) {
         CacheDish d;
         if (!d.get(fDD.getValue(i, "f_material").toString())) {
@@ -145,7 +140,6 @@ void StoreDoc::loadDoc(const QString &id)
         ui->tblGoods->lineEdit(j, 5)->setReadOnly(!v);
     }
     ui->wGoodsOps->setEnabled(v);
-
 }
 
 void StoreDoc::copyDoc(const QString &id)
@@ -164,36 +158,36 @@ void StoreDoc::copyDoc(const QString &id)
 void StoreDoc::prepareDoc()
 {
     switch (ui->leAction->fHiddenText.toInt()) {
-    case STORE_DOC_IN:
-        if (ui->tabWidget->count() == 1) {
-            ui->tabWidget->insertTab(0, fFirstTab, QIcon(), tr("Common"));
-            ui->tabWidget->insertTab(2, fAccTab, QIcon(), tr("Accounts"));
-        }
-        ui->leStoreout->setVisible(false);
-        ui->lbStoreout->setVisible(false);
-        break;
-    case STORE_DOC_MOVE:
-        if (ui->tabWidget->count() > 1) {
-            ui->tabWidget->removeTab(0);
-            ui->tabWidget->removeTab(1);
-        }
-        ui->tabCommon->setVisible(false);
-        ui->leStoreout->setVisible(true);
-        ui->lbStoreout->setVisible(true);
-        ui->wAcc->disable();
-        break;
-    case STORE_DOC_OUT:
-        if (ui->tabWidget->count() > 1) {
-            ui->tabWidget->removeTab(0);
-            ui->tabWidget->removeTab(1);
-        }
-        ui->tabCommon->setVisible(false);
-        ui->leStoreout->setVisible(false);
-        ui->lbStoreout->setVisible(false);
-        ui->wAcc->disable();
-        break;
-    default:
-        break;
+        case STORE_DOC_IN:
+            if (ui->tabWidget->count() == 1) {
+                ui->tabWidget->insertTab(0, fFirstTab, QIcon(), tr("Common"));
+                ui->tabWidget->insertTab(2, fAccTab, QIcon(), tr("Accounts"));
+            }
+            ui->leStoreout->setVisible(false);
+            ui->lbStoreout->setVisible(false);
+            break;
+        case STORE_DOC_MOVE:
+            if (ui->tabWidget->count() > 1) {
+                ui->tabWidget->removeTab(0);
+                ui->tabWidget->removeTab(1);
+            }
+            ui->tabCommon->setVisible(false);
+            ui->leStoreout->setVisible(true);
+            ui->lbStoreout->setVisible(true);
+            ui->wAcc->disable();
+            break;
+        case STORE_DOC_OUT:
+            if (ui->tabWidget->count() > 1) {
+                ui->tabWidget->removeTab(0);
+                ui->tabWidget->removeTab(1);
+            }
+            ui->tabCommon->setVisible(false);
+            ui->leStoreout->setVisible(false);
+            ui->lbStoreout->setVisible(false);
+            ui->wAcc->disable();
+            break;
+        default:
+            break;
     }
 }
 
@@ -219,29 +213,29 @@ void StoreDoc::saveDoc(int docState)
         errors += tr("Action must be selected.") + "<br>";
     }
     switch (ui->leAction->fHiddenText.toInt()) {
-    case STORE_DOC_IN:
-        if (ui->leStore->fHiddenText.toInt() == 0) {
-            errors += tr("Input store must be selected.") + "<br>";
-        }
-        break;
-    case STORE_DOC_OUT:
-        if (ui->leStore->fHiddenText.toInt() == 0) {
-            errors += tr("Output store must be selected.") + "<br>";
-        }
-        break;
-    case STORE_DOC_MOVE:
-        if (ui->leStore->fHiddenText.toInt() == 0) {
-            errors += tr("Input store must be selected.") + "<br>";
-        }
-        if (ui->leStoreout->fHiddenText.toInt() == 0) {
-            errors += tr("Output store must be selected.") + "<br>";
-        }
-        if (ui->leStore->fHiddenText.toInt() > 0) {
-            if (ui->leStore->fHiddenText.toInt() == ui->leStoreout->fHiddenText.toInt()) {
-                errors += tr("Input and output storages cannot be same.");
+        case STORE_DOC_IN:
+            if (ui->leStore->fHiddenText.toInt() == 0) {
+                errors += tr("Input store must be selected.") + "<br>";
             }
-        }
-        break;
+            break;
+        case STORE_DOC_OUT:
+            if (ui->leStore->fHiddenText.toInt() == 0) {
+                errors += tr("Output store must be selected.") + "<br>";
+            }
+            break;
+        case STORE_DOC_MOVE:
+            if (ui->leStore->fHiddenText.toInt() == 0) {
+                errors += tr("Input store must be selected.") + "<br>";
+            }
+            if (ui->leStoreout->fHiddenText.toInt() == 0) {
+                errors += tr("Output store must be selected.") + "<br>";
+            }
+            if (ui->leStore->fHiddenText.toInt() > 0) {
+                if (ui->leStore->fHiddenText.toInt() == ui->leStoreout->fHiddenText.toInt()) {
+                    errors += tr("Input and output storages cannot be same.");
+                }
+            }
+            break;
     }
     if (docState == 1) {
         for (int i = 0; i < ui->tblGoods->rowCount(); i++) {
@@ -263,7 +257,7 @@ void StoreDoc::saveDoc(int docState)
         ui->leDocNumber->setText(uuidx("ST"));
         isNew = true;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     if (isNew) {
         fDD[":f_id"] = ui->leDocNumber->text();
@@ -289,8 +283,8 @@ void StoreDoc::saveDoc(int docState)
         message_error(fDD.fLastError);
         return;
     }
-    DoubleDatabase d2(fDD);
-    d2.open(true, doubleDatabase);
+    DoubleDatabase d2;
+    d2.open();
     for (int i = 0; i < ui->tblGoods->rowCount(); i++) {
         if (ui->tblGoods->toInt(i, 0) == 0) {
             fDD[":f_id"] = 0;
@@ -362,31 +356,31 @@ void StoreDoc::saveDoc(int docState)
 void StoreDoc::qtyChange(const QString &arg1)
 {
     Q_UNUSED(arg1)
-    EQLineEdit *l = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *l = static_cast<EQLineEdit *>(sender());
     int row, col;
     if (!ui->tblGoods->findWidgetCell(l, row, col)) {
         return;
     }
-    ui->tblGoods->lineEdit(row, 5)->setDouble(l->asDouble() * ui->tblGoods->lineEdit(row, 4)->asDouble());
+    ui->tblGoods->lineEdit(row, 5)->setDouble(l->asDouble() *ui->tblGoods->lineEdit(row, 4)->asDouble());
     countTotal();
 }
 
 void StoreDoc::priceChange(const QString &arg1)
 {
     Q_UNUSED(arg1)
-    EQLineEdit *l = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *l = static_cast<EQLineEdit *>(sender());
     int row, col;
     if (!ui->tblGoods->findWidgetCell(l, row, col)) {
         return;
     }
-    ui->tblGoods->lineEdit(row, 5)->setDouble(l->asDouble() * ui->tblGoods->lineEdit(row, 3)->asDouble());
+    ui->tblGoods->lineEdit(row, 5)->setDouble(l->asDouble() *ui->tblGoods->lineEdit(row, 3)->asDouble());
     countTotal();
 }
 
 void StoreDoc::totalChange(const QString &arg1)
 {
     Q_UNUSED(arg1)
-    EQLineEdit *l = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *l = static_cast<EQLineEdit *>(sender());
     int row, col;
     if (!ui->tblGoods->findWidgetCell(l, row, col)) {
         return;
@@ -452,7 +446,7 @@ void StoreDoc::on_btnRemoveDoc_clicked()
     if (message_confirm(tr("Confirm to delete document")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_doc"] = ui->leDocNumber->text();
     fDD.exec("delete from r_body where f_doc=:f_doc");
     fDD[":f_id"] = ui->leDocNumber->text();
@@ -472,8 +466,8 @@ void StoreDoc::on_btnRemoveMaterial_clicked()
         rows << m.row();
     }
     QList<int> r = rows.toList();
-    DoubleDatabase fDD(true, doubleDatabase);
-    for (int i = r.count() - 1; i > -1; i--) {        
+    DoubleDatabase fDD;
+    for (int i = r.count() - 1; i > -1; i--) {
         fDD[":f_id"] = ui->tblGoods->toInt(r.at(i), 0);
         fDD.exec("delete from r_body where f_id=:f_id");
         ui->tblGoods->removeRow(r.at(i));

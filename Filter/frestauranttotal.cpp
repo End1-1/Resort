@@ -408,7 +408,7 @@ void FRestaurantTotal::open()
 void FRestaurantTotal::removeVoucher(const QString &id)
 {
     QStringList dishes;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fDD.exec("select f_id from o_dish where f_header=:f_header");
     while (fDD.nextRow()) {
@@ -699,7 +699,7 @@ void FRestaurantTotal::removeOrder()
     if (state == QDialog::Rejected) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_state"] = ORDER_STATE_REMOVED;
     fDD[":f_comment"] = "Canceled by " + WORKING_USERNAME;

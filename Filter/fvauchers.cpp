@@ -220,8 +220,8 @@ void FVauchers::eliminateVoucher()
         return;
     }
     DoubleDatabase l(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
-    l.open(true, false);
-    DoubleDatabase fDD(true, doubleDatabase);
+    l.open();
+    DoubleDatabase fDD;
     fDD[":f_id"] = out.at(0);
     fDD.exec("select * from m_register where f_id=:f_id");
     QString id, invoice, reserve, name;
@@ -300,7 +300,7 @@ void FVauchers::reviveVaucher()
     if (message_confirm(tr("Confirm to revive the selected voucher")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_canceled"] = 0;
     fDD.update("m_register", where_id(ap(out.at(0).toString())));
     fTrackControl->insert("Revive voucher", out.at(0).toString(), "");
@@ -378,7 +378,7 @@ void FVauchers::printVoucherAsInvoice()
         ch = out.at(0).toString();
     }
     if (!out.at(29).toString().isEmpty()) {
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_invoice"] = out.at(29);
         dd.exec("select f_id from f_reservation where f_invoice=:f_invoice");
         if (dd.nextRow()) {
@@ -427,7 +427,7 @@ void FVauchers::tblMainDblClick(const QModelIndex &index)
         return;
     }
     if (index.column() == 14) {
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_replyTaxCode"] = fReportGrid->fModel->data(index.row(), 14, Qt::EditRole).toInt();
         dd.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");
         if (dd.nextRow()) {

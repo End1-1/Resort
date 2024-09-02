@@ -294,7 +294,7 @@ void DBMRegister::fetchData(DoubleDatabase &d)
 
 bool DBMRegister::openVoucher(const QString &id, QString &err)
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_id"] = id;
     dd.exec("select f_source from m_register where f_id=:f_id");
     if (dd.nextRow()) {

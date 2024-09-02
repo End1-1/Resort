@@ -34,19 +34,19 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     ui->tblCat->setMinimumWidth(350);
     QStringList ht;
     ht << QString("RS") << QString("Room") << QString("Cat") << QString("Bed") <<
-            QString("Arrival") << QString("Departure") << QString("Price") <<
-            QString("Nights") << QString("Total") <<
-            QString("Arr.") << QString("Guest") << QString("Remarks") <<
-            QString("Male") << QString("Female") << QString("Child") << QString("GuestCode") <<
-            QString("X") << QString("O") << QString("R") << QString("I") << QString("State") << QString("State id");
+       QString("Arrival") << QString("Departure") << QString("Price") <<
+       QString("Nights") << QString("Total") <<
+       QString("Arr.") << QString("Guest") << QString("Remarks") <<
+       QString("Male") << QString("Female") << QString("Child") << QString("GuestCode") <<
+       QString("X") << QString("O") << QString("R") << QString("I") << QString("State") << QString("State id");
     ui->tblRoom->setHorizontalHeaderLabels(ht);
     Utils::tableSetColumnWidths(ui->tblRoom, ui->tblRoom->columnCount(),
                                 100, 40, 40, 40, 100, 100, 50, 80, 80, 55, 200, 0, 50, 50, 50, 0, 30, 30, 30, 30, 80, 0);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select rc.f_short, rm.f_bed, rm.f_rate, count(rm.f_id) as f_room "
-              "from f_room rm "
-              "inner join f_room_classes rc on rc.f_id=rm.f_class "
-              "group by 1, 2");
+             "from f_room rm "
+             "inner join f_room_classes rc on rc.f_id=rm.f_class "
+             "group by 1, 2");
     ui->tblCat->setRowCount(fDD.rowCount());
     for (int i = 0; i < fDD.rowCount(); i++) {
         ui->tblCat->setItemWithValue(i, 0, fDD.getValue(i, "f_short"));
@@ -61,8 +61,8 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
         connect(l, SIGNAL(textChanged(QString)), this, SLOT(preCount(QString)));
         ui->tblCat->addButton(i, 6, SLOT(createMultiRoom(int)), this, QIcon(":/images/goto.png"));
     }
-    ui->tblCat->setMaximumHeight(((ui->tblCat->rowCount() + 1) * ui->tblCat->verticalHeader()->defaultSectionSize()) + 15);
-    ui->tblCat->setMinimumHeight(((ui->tblCat->rowCount() + 1) * ui->tblCat->verticalHeader()->defaultSectionSize()) + 15);
+    ui->tblCat->setMaximumHeight(((ui->tblCat->rowCount() + 1) *ui->tblCat->verticalHeader()->defaultSectionSize()) + 15);
+    ui->tblCat->setMinimumHeight(((ui->tblCat->rowCount() + 1) *ui->tblCat->verticalHeader()->defaultSectionSize()) + 15);
     CacheInstance *ci = cache(cid_room);
     CacheRoom itroom;
     itroom.fInstance = ci;
@@ -79,42 +79,35 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     }
     ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexName, cid_cardex);
     ui->leCardexCode->setInitialValue(fPreferences.getDb(def_default_cardex).toString());
-
     fCurrRow = -1;
     ui->leGuest->setSelector(this, cache(cid_guest), ui->leGuest);
-
-    connect(ui->teCommonRemark, &EQTextEdit::doubleClicked, [this](){
+    connect(ui->teCommonRemark, &EQTextEdit::doubleClicked, [this]() {
         QString remark = ui->teCommonRemark->toPlainText();
         if (DlgReservationRemarks::Remarks(remark)) {
             ui->teCommonRemark->setPlainText(remark);
         }
     });
-
-    connect(ui->teIndRemarks, &EQTextEdit::doubleClicked, [this](){
+    connect(ui->teIndRemarks, &EQTextEdit::doubleClicked, [this]() {
         QString remark = ui->teIndRemarks->toPlainText();
         if (DlgReservationRemarks::Remarks(remark)) {
             ui->teIndRemarks->setPlainText(remark);
         }
     });
-
     fDockRoom = new DlgSimpleSelectRoom(this);
     fDockRoom->show();
     fDockRoom->hide();
-
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName);
     countReserve();
     on_cbModeOfPayment_currentIndexChanged(0);
-
     ui->cbArr->setIndexForData(fPreferences.getDb(def_room_arrangement));
-    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
-
+    connect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fGroupTrackControl = new TrackControl(TRACK_RESERVATION_GROUP);
     fGroupTrackControl->addWidget(ui->leGroupName, "Group name")
-            .addWidget(ui->leCardexName, "Cardex")
-            .addWidget(ui->leCLName, "City ledger")
-            .addWidget(ui->teCommonRemark, "All remarks");
+    .addWidget(ui->leCardexName, "Cardex")
+    .addWidget(ui->leCLName, "City ledger")
+    .addWidget(ui->teCommonRemark, "All remarks");
 }
 
 DlgGroupReservationFuck::~DlgGroupReservationFuck()
@@ -134,7 +127,7 @@ void DlgGroupReservationFuck::loadGroup(int id)
 {
     ui->tblRoom->clearContents();
     ui->tblRoom->setRowCount(0);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select * from f_reservation_group where f_id=:f_id");
     fDD.nextRow();
@@ -143,7 +136,6 @@ void DlgGroupReservationFuck::loadGroup(int id)
     ui->deArrival->setDate(fDD.getValue("f_entry").toDate());
     ui->deDeparture->setDate(fDD.getValue("f_departure").toDate());
     ui->leCardexCode->setInitialValue(fDD.getValue("f_cardex").toString());
-
     ui->cbArr->setIndexForData(fDD.getValue("f_arrangement").toInt());
     ui->lePrice->setDouble(fDD.getValue("f_price").toDouble());
     ui->cbModeOfPayment->setIndexForData(fDD.getValue("f_paymentMode").toInt());
@@ -155,21 +147,19 @@ void DlgGroupReservationFuck::loadGroup(int id)
         ui->leGuest->fHiddenText = g.fId();
     }
     ui->leCLCode->setInitialValue(fDD.getValue("f_cityLedger").toString());
-
     ui->leCardCode->setInitialValue(fDD.getValue("f_card").toString());
-
     ui->teCommonRemark->setPlainText(fDD.getValue("f_remarks").toString());
     on_cbModeOfPayment_currentIndexChanged(0);
     fDD[":f_group"] = id;
     fDD.exec("select r.f_id, r.f_room, rc.f_short, rm.f_bed, r.f_startDate, r.f_endDate, "
-              "r.f_pricePerNight, r.f_arrangement, g.guest, r.f_remarks, r.f_guest, r.f_paymentType, "
-              "r.f_cardex, r.f_man, r.f_woman, r.f_child, r.f_state, rs.f_en as state_name "
-              "from f_reservation r "
-              "left join guests g on g.f_id=r.f_guest "
-              "left join f_room rm on rm.f_id=r.f_room "
-              "left join f_reservation_state rs on rs.f_id=r.f_state "
-              "left join f_room_classes rc on rc.f_id=rm.f_class "
-              "where r.f_group=:f_group and r.f_state in (1,2,3,6) ");
+             "r.f_pricePerNight, r.f_arrangement, g.guest, r.f_remarks, r.f_guest, r.f_paymentType, "
+             "r.f_cardex, r.f_man, r.f_woman, r.f_child, r.f_state, rs.f_en as state_name "
+             "from f_reservation r "
+             "left join guests g on g.f_id=r.f_guest "
+             "left join f_room rm on rm.f_id=r.f_room "
+             "left join f_reservation_state rs on rs.f_id=r.f_state "
+             "left join f_room_classes rc on rc.f_id=rm.f_class "
+             "where r.f_group=:f_group and r.f_state in (1,2,3,6) ");
     bool editable = false;
     for (int i = 0; i < fDD.rowCount(); i++) {
         int row = ui->tblRoom->rowCount();
@@ -199,7 +189,7 @@ void DlgGroupReservationFuck::loadGroup(int id)
         lg->fHiddenText = fDD.getValue(i, "f_guest").toString();
         connect(lg, SIGNAL(customButtonClicked(bool)), this, SLOT(singleGuestLineEdit(bool)));
         connect(lg, SIGNAL(focusIn()), this, SLOT(singleGuestFocusOut()));
-        ui->tblRoom->setItemWithValue(row, 11, fDD.getValue(i, "f_remarks"));        
+        ui->tblRoom->setItemWithValue(row, 11, fDD.getValue(i, "f_remarks"));
         lg = ui->tblRoom->addLineEdit(row, 12, false);
         lg->setInt(fDD.getValue(i, "f_man").toInt());
         lg = ui->tblRoom->addLineEdit(row, 13, false);
@@ -207,10 +197,8 @@ void DlgGroupReservationFuck::loadGroup(int id)
         lg = ui->tblRoom->addLineEdit(row, 14, false);
         lg->setInt(fDD.getValue(i, "f_child").toInt());
         ui->tblRoom->setItemWithValue(row, 15, fDD.getValue(i, "f_guest"));
-
         ui->tblRoom->addButton(row, 16, SLOT(removeRow()), this, QIcon(":/images/garbage.png"));
         ui->tblRoom->setItemWithValue(row, 17, "O");
-
         if (fDD.getValue(i, "f_state").toInt() == 2) {
             editable = true;
         }
@@ -241,7 +229,6 @@ void DlgGroupReservationFuck::loadGroup(int id)
         if (fDD.getValue(i, "f_state").toInt() == RESERVE_REMOVED) {
             ui->tblRoom->button(row, 16)->setEnabled(false);
         }
-
         ui->tblRoom->setItemWithValue(row, 20, fDD.getValue(i, "state_name").toString());
         ui->tblRoom->setItemWithValue(row, 21, fDD.getValue(i, "f_state").toInt());
         makeTrackControl(row);
@@ -265,20 +252,20 @@ void DlgGroupReservationFuck::setup()
 void DlgGroupReservationFuck::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case cid_cardex: {
-        CacheCardex cc;
-        if (!cc.get(code)) {
-            return;
+        case cid_cardex: {
+            CacheCardex cc;
+            if (!cc.get(code)) {
+                return;
+            }
+            ui->leCardCode->setProperty("vatmode", cc.fVatMode());
+            DoubleDatabase dd;
+            for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
+                dd[":f_id"] = ui->tblRoom->toString(i, 0);
+                dd[":f_vatmode"] = cc.fVatMode();
+                dd.exec("update f_reservation set f_vatmode=:f_vatmode where f_id=:f_id");
+            }
+            break;
         }
-        ui->leCardCode->setProperty("vatmode", cc.fVatMode());
-        DoubleDatabase dd(true, doubleDatabase);
-        for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-            dd[":f_id"] = ui->tblRoom->toString(i, 0);
-            dd[":f_vatmode"] = cc.fVatMode();
-            dd.exec("update f_reservation set f_vatmode=:f_vatmode where f_id=:f_id");
-        }
-        break;
-    }
     }
 }
 
@@ -296,12 +283,10 @@ void DlgGroupReservationFuck::reservationCacheUpdated(int cacheId, const QString
 
 void DlgGroupReservationFuck::singleGuestFocusOut()
 {
-
 }
 
 void DlgGroupReservationFuck::singleGuestLineEdit(bool)
 {
-
 }
 
 void DlgGroupReservationFuck::preCount(const QString &str)
@@ -325,10 +310,10 @@ void DlgGroupReservationFuck::preCount(const QString &str)
 
 void DlgGroupReservationFuck::removeRow()
 {
-    EPushButton *btn = static_cast<EPushButton*>(sender());
+    EPushButton *btn = static_cast<EPushButton *>(sender());
     int row = -1;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-        EPushButton *btnWidget = static_cast<EPushButton*>(ui->tblRoom->cellWidget(i, 16));
+        EPushButton *btnWidget = static_cast<EPushButton *>(ui->tblRoom->cellWidget(i, 16));
         if (btnWidget == btn) {
             row = i;
             break;
@@ -345,11 +330,12 @@ void DlgGroupReservationFuck::removeRow()
         countTotalReservation();
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(row, 0))));
     BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(row, 0));
-    fGroupTrackControl->insertMessage("Reservation removed", QString("%1, %2").arg(ui->tblRoom->toString(row, 0)).arg(ui->tblRoom->lineEdit(row, 1)->text()), "");
+    fGroupTrackControl->insertMessage("Reservation removed", QString("%1, %2").arg(ui->tblRoom->toString(row,
+                                      0)).arg(ui->tblRoom->lineEdit(row, 1)->text()), "");
     ui->tblRoom->removeRow(row);
     message_info(tr("Reservation was canceled."));
     countTotalReservation();
@@ -357,10 +343,10 @@ void DlgGroupReservationFuck::removeRow()
 
 void DlgGroupReservationFuck::editReserve()
 {
-    EPushButton *btn = static_cast<EPushButton*>(sender());
+    EPushButton *btn = static_cast<EPushButton *>(sender());
     int row = -1;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-        EPushButton *btnWidget = static_cast<EPushButton*>(ui->tblRoom->cellWidget(i, 18));
+        EPushButton *btnWidget = static_cast<EPushButton *>(ui->tblRoom->cellWidget(i, 18));
         if (btnWidget == btn) {
             row = i;
             break;
@@ -374,10 +360,10 @@ void DlgGroupReservationFuck::editReserve()
 
 void DlgGroupReservationFuck::editInvoice()
 {
-    EPushButton *btn = static_cast<EPushButton*>(sender());
+    EPushButton *btn = static_cast<EPushButton *>(sender());
     int row = -1;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-        EPushButton *btnWidget = static_cast<EPushButton*>(ui->tblRoom->cellWidget(i, 19));
+        EPushButton *btnWidget = static_cast<EPushButton *>(ui->tblRoom->cellWidget(i, 19));
         if (btnWidget == btn) {
             row = i;
             break;
@@ -394,10 +380,10 @@ void DlgGroupReservationFuck::editInvoice()
 
 void DlgGroupReservationFuck::editAInvoice()
 {
-    EPushButton *btn = static_cast<EPushButton*>(sender());
+    EPushButton *btn = static_cast<EPushButton *>(sender());
     int row = -1;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-        EPushButton *btnWidget = static_cast<EPushButton*>(ui->tblRoom->cellWidget(i, 19));
+        EPushButton *btnWidget = static_cast<EPushButton *>(ui->tblRoom->cellWidget(i, 19));
         if (btnWidget == btn) {
             row = i;
             break;
@@ -406,8 +392,8 @@ void DlgGroupReservationFuck::editAInvoice()
     if (row < 0) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
-    fDD[":f_id"] = ui->tblRoom->toString(row, 0);    
+    DoubleDatabase fDD;
+    fDD[":f_id"] = ui->tblRoom->toString(row, 0);
     fDD.exec("select f_invoice from f_reservation where f_id=:f_id");
     if (fDD.rowCount() > 0) {
         WAccInvoice *wa = addTab<WAccInvoice>();
@@ -432,7 +418,7 @@ void DlgGroupReservationFuck::countReserve()
         total[r.fCategoryShort()][r.fBed()] = total[r.fCategoryShort()][r.fBed()] - 1;
     }
     for (QMap<QString, QMap<QString, int> >::const_iterator l1 = total.begin(); l1 != total.end(); l1++) {
-        for (QMap<QString, int>::const_iterator lb = (*l1).begin(); lb != (*l1).end(); lb++) {
+        for (QMap<QString, int>::const_iterator lb = ( *l1).begin(); lb != ( *l1).end(); lb++) {
             for (int i = 0; i < ui->tblCat->rowCount(); i++) {
                 if (ui->tblCat->toString(i, 0) == l1.key() && ui->tblCat->toString(i, 1) == lb.key()) {
                     ui->tblCat->setItemWithValue(i, 3, lb.value());
@@ -450,20 +436,22 @@ void DlgGroupReservationFuck::countTotalReservation()
     }
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         for (int j = 0; j < ui->tblCat->rowCount(); j++) {
-            if (ui->tblCat->toString(j, 0) == ui->tblRoom->toString(i, 2) && ui->tblCat->toString(j, 1) == ui->tblRoom->toString(i, 3)) {
+            if (ui->tblCat->toString(j, 0) == ui->tblRoom->toString(i, 2)
+                    && ui->tblCat->toString(j, 1) == ui->tblRoom->toString(i, 3)) {
                 if (ui->tblRoom->toInt(i, 21) != 2) {
                     continue;
                 }
                 ui->tblCat->lineEdit(j, 4)->setInt(ui->tblCat->lineEdit(j, 4)->asInt() + 1);
                 ui->tblCat->lineEdit(j, 5)->setDouble(ui->tblCat->lineEdit(j, 5)->asDouble() +
-                                                      (ui->tblRoom->lineEdit(i, 6)->asDouble() * (ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()))));
+                                                      (ui->tblRoom->lineEdit(i, 6)->asDouble() * (ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i,
+                                                              5)->date()))));
                 break;
             }
         }
         ui->tblRoom->setItemWithValue(i, 7,
-            ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()));
+                                      ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()));
         ui->tblRoom->setItemWithValue(i, 8,
-            ui->tblRoom->toInt(i, 7) * ui->tblRoom->lineEdit(i, 6)->asDouble());
+                                      ui->tblRoom->toInt(i, 7) *ui->tblRoom->lineEdit(i, 6)->asDouble());
     }
 }
 
@@ -539,7 +527,9 @@ void DlgGroupReservationFuck::createRooms(const QString &cat, const QString &bed
             ui->tblRoom->addButton(row, 18, SLOT(editReserve()), this, QIcon(":/images/bed.png"));
             ui->tblRoom->setItemWithValue(row, 20, tr("Reserved"));
             ui->tblRoom->setItemWithValue(row, 21, RESERVE_RESERVE);
-            fGroupTrackControl->insertMessage("New room", QString("%1-%2, %3 - %4").arg(r.fCode()).arg(r.fRoomDescription()).arg(ui->deArrival->text()).arg(ui->deDeparture->text()), "");
+            fGroupTrackControl->insertMessage("New room",
+                                              QString("%1-%2, %3 - %4").arg(r.fCode()).arg(r.fRoomDescription()).arg(ui->deArrival->text()).arg(
+                                                  ui->deDeparture->text()), "");
         }
         it++;
     }
@@ -607,14 +597,15 @@ void DlgGroupReservationFuck::on_leGuest_returnPressed()
     if (ui->leGuest->text().trimmed().isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QStringList fn = ui->leGuest->text().split(" ");
     if (fn.count() > 0) {
         QString searchName = fn.at(0).toLower();
         if (fn.count() > 1) {
             searchName += " " + fn.at(1).toLower();
         }
-        fDD.exec("select f_id from f_guests where concat(lower(f_firstName), ' ', lower(f_lastName)) like '" + searchName + "%'");
+        fDD.exec("select f_id from f_guests where concat(lower(f_firstName), ' ', lower(f_lastName)) like '" + searchName +
+                 "%'");
         if (fDD.nextRow()) {
             CacheInstance *ci = cache(cid_guest);
             ci->fFieldFilter.clear();
@@ -622,7 +613,6 @@ void DlgGroupReservationFuck::on_leGuest_returnPressed()
             QString guestCode = ci->get(ui->leGuest->text());
             CacheGuest gg;
             if (gg.get(guestCode)) {
-
             }
         } else {
             fDD[":f_title"] = "";
@@ -684,7 +674,7 @@ void DlgGroupReservationFuck::save()
         message_error(tr("The group name cannot be empty"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leGroupCode->asInt() == 0) {
         fDD[":f_name"] = ui->leGroupName->text();
         ui->leGroupCode->setInt(fDD.insert("f_reservation_group"));
@@ -696,7 +686,6 @@ void DlgGroupReservationFuck::save()
         ui->leGuest->setText(ui->leGroupName->text());
         BroadcastThread::cmdRefreshCache(cid_guest, ui->leGuest->fHiddenText);
     }
-
     fDD[":f_name"] = ui->leGroupName->text();
     fDD[":f_entry"] = ui->deArrival->date();
     fDD[":f_departure"] = ui->deDeparture->date();
@@ -710,7 +699,6 @@ void DlgGroupReservationFuck::save()
     fDD[":f_card"] = ui->leCardCode->asInt();
     fDD[":f_extra1"] = ui->leExtraname->text();
     fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
-
     bool err = false;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->item(i, 0)->backgroundColor() == Qt::magenta) {
@@ -731,7 +719,7 @@ void DlgGroupReservationFuck::save()
         }
         QString errorStr;
         if (!WReservationRoomTab::check(ui->tblRoom->lineEdit(i, 1)->asInt(),
-            ui->tblRoom->dateEdit(i, 4)->date(), ui->tblRoom->dateEdit(i, 5)->date(), ui->tblRoom->toString(i, 0), errorStr)) {
+                                        ui->tblRoom->dateEdit(i, 4)->date(), ui->tblRoom->dateEdit(i, 5)->date(), ui->tblRoom->toString(i, 0), errorStr)) {
             err = true;
             ui->tblRoom->setItemWithValue(i, 17, "X");
             continue;
@@ -762,7 +750,8 @@ void DlgGroupReservationFuck::save()
             lgg->setText(ui->leGroupName->text());
             lgg->fHiddenText = ui->leGuest->fHiddenText;
         }
-        int totalGuest = ui->tblRoom->lineEdit(i, 12)->asInt() + ui->tblRoom->lineEdit(i, 13)->asInt() + ui->tblRoom->lineEdit(i, 14)->asInt();
+        int totalGuest = ui->tblRoom->lineEdit(i, 12)->asInt() + ui->tblRoom->lineEdit(i,
+                         13)->asInt() + ui->tblRoom->lineEdit(i, 14)->asInt();
         if (totalGuest == 0) {
             flagGuestQtyWarning = true;
         }
@@ -794,8 +783,10 @@ void DlgGroupReservationFuck::save()
         fDD[":f_vat"] = def_vat;
         fDD[":f_vatAmount"] = Utils::countVATAmount(ui->tblRoom->lineEdit(i, 6)->asDouble(), VAT_INCLUDED);
         fDD[":f_vatMode"] = ui->leCardCode->property("vatmode");
-        fDD[":f_total"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
-        fDD[":f_grandTotal"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
+        fDD[":f_total"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i,
+                          5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
+        fDD[":f_grandTotal"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i,
+                               5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
         fDD[":f_totalUSD"] = def_usd;
         fDD[":f_novatReason"] = "";
         fDD[":f_remarks"] = ui->tblRoom->toString(i, 11);
@@ -806,7 +797,7 @@ void DlgGroupReservationFuck::save()
         fDD[":f_lastEdit"] = WORKING_USERID;
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             DoubleDatabase did;
-            did.open(true, doubleDatabase);
+            did.open();
             QString rsId = uuidx(VAUCHER_RESERVATION_N);
             did.insertId("f_reservation", rsId);
             ui->tblRoom->setItemWithValue(i, 0, rsId);
@@ -819,7 +810,6 @@ void DlgGroupReservationFuck::save()
                                   .arg(ui->tblRoom->toString(i, 2))
                                   .arg(ui->tblRoom->lineEdit(i, 1)->text()),  "");
             makeTrackControl(i);
-
         }
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
         fDD[":f_id"] = ui->tblRoom->toString(i, 0);
@@ -828,14 +818,12 @@ void DlgGroupReservationFuck::save()
         fDD.exec("update f_reservation set f_total=f_pricepernight*datediff(f_enddate, f_startdate) where f_id=:f_id");
         fDD[":f_id"] = ui->tblRoom->toString(i, 0);
         fDD.exec("update f_reservation set f_grandtotal=f_pricepernight*datediff(f_enddate, f_startdate) where f_id=:f_id");
-
         fDD[":f_reservation"] = ui->tblRoom->toString(i, 0);
         fDD.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_first=1");
         fDD[":f_reservation"] = ui->tblRoom->toString(i, 0);
         fDD[":f_guest"] = ui->tblRoom->toString(i, 15);
         fDD[":f_first"] = 1;
         fDD.insert("f_reservation_guests");
-
         QString rid = ui->tblRoom->toString(i, 0);
         if (isNew) {
             fDD[":f_id"] = rid;
@@ -850,7 +838,8 @@ void DlgGroupReservationFuck::save()
             fDD[":f_guest"] = ui->tblRoom->lineEdit(i, 10)->text();
             fDD[":f_itemCode"] = fPreferences.getDb(def_reservation_voucher_id);
             fDD[":f_finalName"] = tr("RESERVATION ") + ui->tblRoom->toString(i, 0);
-            fDD[":f_amountAmd"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
+            fDD[":f_amountAmd"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i,
+                                  5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
             fDD[":f_amountVat"] = Utils::countVATAmount(ui->tblRoom->lineEdit(i, 6)->asDouble(), VAT_INCLUDED);;
             fDD[":f_amountUsd"] = def_usd;
             fDD[":f_fiscal"] = 0;
@@ -869,12 +858,12 @@ void DlgGroupReservationFuck::save()
             fDD[":f_side"] = 0;
             fDD.update("m_register", where_id(ap(rid)));
         }
-
         fDD[":f_wdate"] = ui->tblRoom->dateEdit(i, 4)->date();
         fDD[":f_room"] = ui->tblRoom->lineEdit(i, 1)->asInt();
         fDD[":f_guest"] = ui->tblRoom->toString(i, 10);
         fDD[":f_finalName"] = tr("RESERVATION ") + ui->tblRoom->toString(i, 0);
-        fDD[":f_amountAmd"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i, 5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
+        fDD[":f_amountAmd"] = ui->tblRoom->dateEdit(i, 4)->date().daysTo(ui->tblRoom->dateEdit(i,
+                              5)->date()) * ui->tblRoom->lineEdit(i, 6)->asDouble();
         fDD[":f_amountVat"] = Utils::countVATAmount(ui->tblRoom->lineEdit(i, 6)->asDouble(), VAT_INCLUDED);;
         fDD[":f_amountUsd"] = def_usd;
         fDD[":f_fiscal"] = 0;
@@ -892,23 +881,19 @@ void DlgGroupReservationFuck::save()
         fDD[":f_cancelReason"] = "";
         fDD[":f_side"] = 0;
         fDD.update("m_register", where_id(ap(rid)));
-
         fDD[":f_room"] = ui->tblRoom->lineEdit(i, 1)->asInt();
         fDD[":f_inv"] = invId;
         fDD.exec("update m_register set f_room=:f_room where f_inv=:f_inv");
-
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(i, 0));
         BroadcastThread::cmdRefreshCache(cid_group_reservation, ui->leGroupCode->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tblRoom->toString(i, 0));
-
-        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl*>();
+        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl *>();
         if (t) {
             if (t->hasChanges()) {
                 t->saveChanges();
             }
         }
     }
-
     if (err) {
         message_error(tr("Some reservation was not saved. Check for 'X' in the table"));
     } else {
@@ -919,21 +904,22 @@ void DlgGroupReservationFuck::save()
         message_info(tr("The count of the guest automatically was set to 1 where count of the guests equal to zero"));
     }
     if (flagAnotherSaved) {
-        message_info(tr("The reservations that's colored magenta could not be saved, because there are saved in another document."));
+        message_info(
+            tr("The reservations that's colored magenta could not be saved, because there are saved in another document."));
     }
     countReserve();
     fDD.commit();
     fDD.close();
-    fDD.open(true, doubleDatabase);
+    fDD.open();
 }
 
 void DlgGroupReservationFuck::on_btnSave_clicked()
 {
-    disconnect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
+    disconnect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
     save();
     fGroupTrackControl->fRecord = ui->leGroupCode->text();
     fGroupTrackControl->saveChanges();
-    connect(cache(cid_reservation), SIGNAL(updated(int,QString)), this, SLOT(reservationCacheUpdated(int, QString)));
+    connect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
 }
 
 void DlgGroupReservationFuck::on_btnRemarksToAll_clicked()
@@ -963,7 +949,7 @@ void DlgGroupReservationFuck::roomTextChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
     int col, row;
-    if (!ui->tblRoom->findWidgetCell(static_cast<QWidget*>(sender()), row, col)) {
+    if (!ui->tblRoom->findWidgetCell(static_cast<QWidget * >(sender()), row, col)) {
         return;
     }
     CacheRoom r;
@@ -978,8 +964,8 @@ void DlgGroupReservationFuck::roomTextChanged(const QString &arg1)
     bool endOk = true;
     CacheReservation cr;
     cr.check(ui->tblRoom->dateEdit(row, 4)->date(),
-                            ui->tblRoom->dateEdit(row, 5)->date(),
-                            ui->tblRoom->lineEdit(row, 1)->asInt(), out, startOk, endOk, ui->tblRoom->toString(row, 0));
+             ui->tblRoom->dateEdit(row, 5)->date(),
+             ui->tblRoom->lineEdit(row, 1)->asInt(), out, startOk, endOk, ui->tblRoom->toString(row, 0));
     if (!startOk || !endOk) {
         ui->tblRoom->setItemWithValue(row, 17, "X");
     } else {
@@ -999,9 +985,8 @@ void DlgGroupReservationFuck::openRoomSelectDialog(bool v)
             exclude.append(ui->tblRoom->lineEdit(i, 1)->text());
         }
     }
-
     int row, col;
-    if (!ui->tblRoom->findWidgetCell(static_cast<QWidget*>(sender()), row, col)) {
+    if (!ui->tblRoom->findWidgetCell(static_cast<QWidget * >(sender()), row, col)) {
         return;
     }
     CacheRoom r;
@@ -1010,13 +995,11 @@ void DlgGroupReservationFuck::openRoomSelectDialog(bool v)
                            ui->tblRoom->dateEdit(row, 5)->date(), exclude, ui->tblCat->toString(row, 1), v) != QDialog::Accepted) {
         return;
     }
-
     if (!r.get(fDockRoom->fRoomCode)) {
         return;
     }
     ui->tblRoom->lineEdit(row, 1)->setText(r.fCode());
     countTotalReservation();
-
 }
 
 void DlgGroupReservationFuck::createMultiRoom(int tag)
@@ -1031,14 +1014,11 @@ void DlgGroupReservationFuck::createMultiRoom(int tag)
         }
     }
     int currRow = ui->tblRoom->rowCount();
-
     ui->tblCat->lineEdit(tag, 4)->clear();
-
     if (fDockRoom->getRoom(ui->tblCat->toString(tag, 0), ui->deArrival->date(),
                            ui->deDeparture->date(), exclude, ui->tblCat->toString(tag, 1), true) != QDialog::Accepted) {
         return;
     }
-
     QStringList rooms;
     fDockRoom->getRoomsList(rooms);
     createRooms(ui->tblCat->toString(tag, 0), ui->tblCat->toString(tag, 1),
@@ -1075,10 +1055,12 @@ void DlgGroupReservationFuck::on_btnPriceToAll_clicked()
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
         }
-        if (ui->tblRoom->toString(i, 2) == ui->cbCat->currentText() && ui->tblRoom->toString(i, 3) == ui->cbBed->currentData().toString()) {
+        if (ui->tblRoom->toString(i, 2) == ui->cbCat->currentText()
+                && ui->tblRoom->toString(i, 3) == ui->cbBed->currentData().toString()) {
             ui->tblRoom->lineEdit(i, 6)->setText(ui->lePrice->text());
         }
-        fGroupTrackControl->insert("Price for reservations", QString("%1,%2").arg(ui->cbCat->currentText()).arg(ui->cbBed->currentText()), "");
+        fGroupTrackControl->insert("Price for reservations",
+                                   QString("%1,%2").arg(ui->cbCat->currentText()).arg(ui->cbBed->currentText()), "");
     }
     countTotalReservation();
 }
@@ -1095,7 +1077,7 @@ void DlgGroupReservationFuck::on_btnClear_clicked()
 
 void DlgGroupReservationFuck::on_btnDateAll_clicked()
 {
-    for (int i = 0; i <ui->tblRoom->rowCount(); i++) {
+    for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
         }
@@ -1110,7 +1092,7 @@ void DlgGroupReservationFuck::on_btnArrangeToAll_2_clicked()
     if (ui->leCardexCode->isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
@@ -1120,12 +1102,10 @@ void DlgGroupReservationFuck::on_btnArrangeToAll_2_clicked()
         }
         fDD[":f_cardex"] = ui->leCardexCode->text();
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
-
         fDD[":f_cardex"] = ui->leCardexCode->text();
         fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
-
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->lineEdit(i, 1)->text());
-        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl*>();
+        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl *>();
         if (t) {
             t->insert("Cardex changed", ui->leCardCode->text(), "");
         }
@@ -1135,7 +1115,7 @@ void DlgGroupReservationFuck::on_btnArrangeToAll_2_clicked()
 
 void DlgGroupReservationFuck::on_btnAllPayments_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
@@ -1145,7 +1125,7 @@ void DlgGroupReservationFuck::on_btnAllPayments_clicked()
         }
         fDD[":f_paymentType"] = ui->cbModeOfPayment->currentData();
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
-        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl*>();
+        TrackControl *t = ui->tblRoom->item(i, 0)->data(Qt::UserRole).value<TrackControl *>();
         if (t) {
             t->insert("Cardex changed", ui->leCardCode->text(), "");
         }
@@ -1168,7 +1148,7 @@ void DlgGroupReservationFuck::on_cbModeOfPayment_currentIndexChanged(int index)
 
 void DlgGroupReservationFuck::on_btnAllCL_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             continue;
@@ -1179,14 +1159,13 @@ void DlgGroupReservationFuck::on_btnAllCL_clicked()
         fDD[":f_cityLedger"] = ui->leCLCode->asInt();
         fDD.update("f_reservation", where_id(ap(ui->tblRoom->toString(i, 0))));
     }
-
     fDD[":f_cityLedger"] = ui->leCardexCode->text();
     fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
 }
 
 void DlgGroupReservationFuck::on_btnAllCard_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
             continue;
@@ -1204,7 +1183,8 @@ void DlgGroupReservationFuck::on_tblCat_cellDoubleClicked(int row, int column)
     Q_UNUSED(column)
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         ui->tblRoom->setRowHidden(i, true);
-        if (ui->tblCat->toString(row, 0) == ui->tblRoom->toString(i, 2) && ui->tblCat->toString(row, 1) == ui->tblRoom->toString(i, 3)) {
+        if (ui->tblCat->toString(row, 0) == ui->tblRoom->toString(i, 2)
+                && ui->tblCat->toString(row, 1) == ui->tblRoom->toString(i, 3)) {
             ui->tblRoom->setRowHidden(i, false);
         }
     }
@@ -1221,7 +1201,6 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
 {
     PPrintPreview *pv = new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage());
     PPrintScene *ps = pv->addScene(0, Landscape);
-
     int top = 10;
     //PTextRect *trInfo = new PTextRect(1500, 20, 500, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
     //                                  0, QFont("Arial", 25));
@@ -1236,21 +1215,19 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
     th.setBorders(false, false, false, false);
     th.setFont(f);
     th.setTextAlignment(Qt::AlignLeft);
-
     ps->addTextRect(20, top, 500, 80, QObject::tr("GROUP RESERVATION") + ": ", &th);
     top += ps->addTextRect(510, top, 2700, 80, ui->leGroupName->text(), &th)->textHeight();
     ps->addTextRect(20, top, 500, 80, QObject::tr("Cardex") + ": ", &th);
-    top += ps->addTextRect(510, top, 2700, 80, ui->leCardexCode->text() + "/" + ui->leCardexName->text(), &th)->textHeight();
+    top += ps->addTextRect(510, top, 2700, 80, ui->leCardexCode->text() + "/" + ui->leCardexName->text(),
+                           &th)->textHeight();
     ps->addTextRect(20, top, 500, 80, QObject::tr("Arrival") + ": ", &th);
     top += ps->addTextRect(510, top, 2700, 80, ui->deArrival->text(), &th)->textHeight();
     ps->addTextRect(20, top, 500, 80, QObject::tr("Departure") + ": ", &th);
     top += ps->addTextRect(510, top, 2700, 80, ui->deDeparture->text(), &th)->textHeight();
     ps->addTextRect(20, top, 500, 80, QObject::tr("Arrangement") + ": " + ui->deArrival->text(), &th);
     top += ps->addTextRect(510, top, 2700, 80, ui->cbArr->currentText(), &th)->textHeight();
-
-  //  top += trInfo->textHeight();
+    //  top += trInfo->textHeight();
     top += 10;
-
     f.setPointSize(30);
     f.setItalic(false);
     f.setBold(false);
@@ -1259,7 +1236,6 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
     th.setTextAlignment(Qt::AlignHCenter);
     QList<int> cols;
     QStringList vals;
-
     cols << 60
          << 230
          << 130
@@ -1276,8 +1252,7 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
          << 100
          << 100
          << 250
-            ;
-
+         ;
     vals << tr("Code")
          << tr("Room")
          << tr("Cat.")
@@ -1293,13 +1268,12 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
          << tr("F")
          << tr("Ch")
          << tr("State")
-            ;
+         ;
     ps->addTableRow(top, rowHeight, cols, vals, &th);
-
     int totMan = 0,
-            totNight = 0,
-            totFemal = 0,
-            totChild = 0;
+        totNight = 0,
+        totFemal = 0,
+        totChild = 0;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         vals << ui->tblRoom->toString(i, 0)
              << ui->tblRoom->lineEdit(i, 1)->text()
@@ -1316,7 +1290,7 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
              << ui->tblRoom->lineEdit(i, 13)->text()
              << ui->tblRoom->lineEdit(i, 14)->text()
              << ui->tblRoom->toString(i, 20)
-                ;
+             ;
         ps->addTableRow(top, rowHeight, cols, vals, &th);
         if (top > sizeLandscape.height() - 200) {
             top = 10;
@@ -1327,7 +1301,6 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
         totChild += ui->tblRoom->lineEdit(i, 14)->text().toInt();
         totNight += ui->tblRoom->toInt(i, 7);
     }
-
     vals << tr("Total")
          << QString::number(ui->tblRoom->rowCount())
          << ""
@@ -1343,28 +1316,25 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
          << QString::number(totFemal)
          << QString::number(totChild)
          << ""
-            ;
+         ;
     ps->addTableRow(top, rowHeight, cols, vals, &th);
     if (top > sizeLandscape.height() - 200) {
         top = 10;
         ps = pv->addScene(0, Landscape);
     }
-
     top += rowHeight;
-
     top += rowHeight;
     QString footer = QString("%1: %2, %3: %4")
-            .arg(QObject::tr("Printed"))
-            .arg(QDateTime::currentDateTime().toString(def_date_time_format))
-            .arg(QObject::tr("Operator"))
-            .arg(WORKING_USERNAME);
+                     .arg(QObject::tr("Printed"))
+                     .arg(QDateTime::currentDateTime().toString(def_date_time_format))
+                     .arg(QObject::tr("Operator"))
+                     .arg(WORKING_USERNAME);
     f.setBold(true);
     f.setPointSize(18);
     th.setBorders(false, false, false, false);
     th.setFont(f);
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(20, top, 2100, rowHeight, footer, &th);
-
     pv->exec();
     delete pv;
 }
@@ -1372,7 +1342,8 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
 void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
 {
     bool ok = false;
-    QString reason = QInputDialog::getText(this, tr("Cancelation reason"), tr("Reason"), QLineEdit::Normal, "", &ok).trimmed();
+    QString reason = QInputDialog::getText(this, tr("Cancelation reason"), tr("Reason"), QLineEdit::Normal, "",
+                                           &ok).trimmed();
     if (!ok) {
         return;
     }
@@ -1383,17 +1354,16 @@ void DlgGroupReservationFuck::on_btnCancelGroup_clicked()
     if (message_confirm(tr("Confirm to removing whole group")) != RESULT_YES) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QString cannotCancel;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toInt(i, 21) != RESERVE_RESERVE) {
             continue;
         }
         fDD[":f_id"] = ui->tblRoom->toString(i, 0);
-        
         fDD.exec("select r.f_invoice, r.f_room, g.guest from f_reservation r "
-                  "left join guests g on g.f_id=r.f_guest "
-                  "where r.f_id=:f_id");
+                 "left join guests g on g.f_id=r.f_guest "
+                 "where r.f_id=:f_id");
         if (!fDD.nextRow()) {
             continue;
         }
@@ -1455,7 +1425,7 @@ void DlgGroupReservationFuck::on_btnCopyLast_clicked()
     if (message_confirm(tr("Copy from last?")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select max(f_id) from f_reservation_group");
     if (dd.nextRow()) {
         dd[":f_id"] = dd.getInt(0);

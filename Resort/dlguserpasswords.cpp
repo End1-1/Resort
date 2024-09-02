@@ -41,7 +41,7 @@ void DlgUserPasswords::on_btnCancel_clicked()
 
 void DlgUserPasswords::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->chManager->isChecked()) {
         if (ui->leNewPass->text().isEmpty()) {
             if (message_confirm(tr("Are you sure to clear password?")) != QDialog::Accepted) {

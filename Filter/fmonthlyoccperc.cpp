@@ -65,7 +65,7 @@ void FMonthlyOccPerc::apply(WReportGrid *rg)
     rows.clear();
     QList<QVariant> er;
     er << QVariant() << QVariant() << QVariant() << QVariant() << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select count(f_id) from f_room");
     dd.nextRow();
     int rooms = dd.getInt(0);

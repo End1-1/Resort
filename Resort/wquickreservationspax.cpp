@@ -16,7 +16,7 @@ WQuickReservationsPax::WQuickReservationsPax(QWidget *parent) :
 WQuickReservationsPax::~WQuickReservationsPax()
 {
     if (!fCode.isEmpty()) {
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         dd[":f_man"] = ui->sbMan->value();
         dd[":f_woman"] = ui->sbWoman->value();
         dd[":f_child"] = ui->sbChild->value();
@@ -34,7 +34,7 @@ void WQuickReservationsPax::setReservationCode(const QString &code)
         return;
     }
     fCode = code;
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_id"] = code;
     dd.exec("select f_room, f_invoice, f_man, f_woman, f_child, f_baby from f_reservation where f_id=:f_id");
     if (dd.nextRow()) {

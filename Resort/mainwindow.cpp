@@ -33,10 +33,8 @@
 #include "fexportreservation.h"
 #include "wcardexlist.h"
 #include "broadcast1.h"
-#include "dlgtransferlog.h"
 #include "fexpectedsimple.h"
 #include "ftaxreport.h"
-#include "dlgrecoverinvoice.h"
 #include "dlgpostcharge.h"
 #include "fcashreportbyitem.h"
 #include "taxhelper.h"
@@ -104,7 +102,6 @@
 #include "storedoc.h"
 #include "wroomview.h"
 #include "wremarks.h"
-#include "dlgexportother.h"
 #include "wreservation.h"
 #include "flistsourcereserve.h"
 #include "vauchers.h"
@@ -183,7 +180,6 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     ui->setupUi(this);
     ui->grTravelLine->hide();
     BroadcastThread::mMainWindow = this;
-
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
     hl->setSizeConstraint(QLayout::SetMinimumSize);
@@ -207,15 +203,14 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
     fMainWindow = this;
     fTab = ui->tabWidget;
-    connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     logout();
     fSocket.setProxy(QNetworkProxy::NoProxy);
-    fCommand.setSocket(&fSocket);
-    connect(&fSocket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
-    connect(&fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
-    connect(&fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    connect(&fCommand, SIGNAL(parseCommand(QString)), this, SLOT(parseSocketCommand(QString)));
-
+    fCommand.setSocket( &fSocket);
+    connect( &fSocket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
+    connect( &fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
+    connect( &fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
+    connect( &fCommand, SIGNAL(parseCommand(QString)), this, SLOT(parseSocketCommand(QString)));
     QShortcut *shortcut = new QShortcut(QKeySequence("F2"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(shortcutSlot()));
     QShortcut *shortcut12 = new QShortcut(QKeySequence("F12"), this);
@@ -226,14 +221,12 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     connect(shortCat4, SIGNAL(activated()), this, SLOT(on_actionRoomChart_triggered()));
     QShortcut *shortSecondDb = new QShortcut(QKeySequence("F10"), this);
     connect(shortSecondDb, SIGNAL(activated()), this, SLOT(on_actionDisable_second_database_triggered()));
-
     ui->menuStorehouse->setVisible(false);
     ui->menuDiscount_system->setVisible(false);
-
     fTimeErrLableValue = false;
-    connect(&fTimeErrLabel, SIGNAL(timeout()), this, SLOT(timeout2()));
+    connect( &fTimeErrLabel, SIGNAL(timeout()), this, SLOT(timeout2()));
     fTimeErrLabel.start(1000);
-    connect(this, SIGNAL(updateCache(int,QString)), &fCacheOne, SLOT(updateCache(int,QString)));
+    connect(this, SIGNAL(updateCache(int, QString)), &fCacheOne, SLOT(updateCache(int, QString)));
     __mainWindow = this;
     if (fPreferences.getDb(def_debug_mode).toInt() > 0) {
         logEnabled = true;
@@ -244,8 +237,9 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    disconnect(&fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    disconnect(&fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
+    disconnect( &fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
+    disconnect( &fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+                SLOT(socketError(QAbstractSocket::SocketError)));
     delete ui;
 }
 
@@ -294,21 +288,21 @@ void MainWindow::login()
     if (fSocket.waitForConnected()) {
         QString data = QString("{\"db\" : {\"database\" : \"%1\", \"user\" : \"%2\", \"password\" : \"password\"}, "
                                "\"command\" : {\"command\": \"identify\"}}")
-                .arg(db.dc_main_path)
-                .arg(WORKING_USERNAME);
+                       .arg(db.dc_main_path)
+                       .arg(WORKING_USERNAME);
         int size = data.toUtf8().length();
         QByteArray dataToSend;
-        dataToSend.append(reinterpret_cast<const char*>(&size), sizeof(size));
+        dataToSend.append(reinterpret_cast<const char *>( &size), sizeof(size));
         dataToSend.append(data.toUtf8(), data.toUtf8().length());
         fSocket.write(dataToSend, dataToSend.length());
         fSocket.flush();
     } else {
         //TODO LINUX BROADCAST
-//        message_error(QString("Cannot connect to broadcast server, force logout")
-//                      + QString("<br>") + fSocket.errorString() +
-//                      "<br>Host: " + AppConfig::fServerAddress);
-//        logout();
-//        return;
+        //        message_error(QString("Cannot connect to broadcast server, force logout")
+        //                      + QString("<br>") + fSocket.errorString() +
+        //                      "<br>Host: " + AppConfig::fServerAddress);
+        //        logout();
+        //        return;
     }
     fSocketDraft.disconnectFromHost();
     fSocketDraft.setProxy(QNetworkProxy::NoProxy);
@@ -316,24 +310,23 @@ void MainWindow::login()
     if (fSocketDraft.waitForConnected()) {
         QString data = QString("{\"db\" : {\"database\" : \"%1\", \"user\" : \"%2\", \"password\" : \"password\"}, "
                                "\"command\" : {\"command\": \"draft\"}}")
-                .arg(db.dc_main_path)
-                .arg(WORKING_USERNAME);
+                       .arg(db.dc_main_path)
+                       .arg(WORKING_USERNAME);
         int size = data.toUtf8().length();
         QByteArray dataToSend;
-        dataToSend.append(reinterpret_cast<const char*>(&size), sizeof(size));
+        dataToSend.append(reinterpret_cast<const char *>( &size), sizeof(size));
         dataToSend.append(data.toUtf8(), data.toUtf8().length());
         fSocketDraft.write(dataToSend, dataToSend.length());
         fSocketDraft.flush();
     } else {
         Broadcast1::SOCKET_CONNECTED = 0;
         //TODO: LINUX BROADCAST
-//        message_error(QString("Cannot connect to broadcast server, force logout")
-//                      + QString("<br>") + fSocket.errorString()
-//                      + "<br>Host: " + AppConfig::fServerAddress);
-//        logout();
-//        return;
+        //        message_error(QString("Cannot connect to broadcast server, force logout")
+        //                      + QString("<br>") + fSocket.errorString()
+        //                      + "<br>Host: " + AppConfig::fServerAddress);
+        //        logout();
+        //        return;
     }
-
     enableMainMenu(true);
     WWelcome *ww = addTab<WWelcome>();
     ww->setSlogan(fPreferences.getLocalString("Slogan"));
@@ -345,7 +338,6 @@ void MainWindow::login()
         message_error(tr("Receipt voucher id not defined"));
         return;
     }
-
     QPushButton *btnMenu = new QPushButton(ui->tabWidget);
     btnMenu->setText(tr("Menu"));
     btnMenu->setIcon(QIcon(":/images/bed.png"));
@@ -356,14 +348,13 @@ void MainWindow::login()
     logEnabled = fPreferences.getDb(def_debug_mode).toInt() > 0;
 #endif
     TaxHelper::init();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_comp"] = "SmartHotel: " + HOSTNAME;
     dd.exec("select f_default from serv_tax where f_comp=:f_comp");
     if (dd.nextRow()) {
         fPreferences.setDb(def_default_fiscal_machine, dd.getInt("f_default"));
     }
     fPreferences.setDb(def_touchscreen, fTouchscreen);
-
     ui->lstTravelLine->clear();
     if (r__(cr__travelline)) {
         dd.exec("select f_id from f_reservation where f_chmstatus=1 and f_state=2");
@@ -395,19 +386,19 @@ void MainWindow::configureLabels()
     str = "DEBUG";
 #endif
     QString text = QString("[%1] %2, %3 %4")
-            .arg(fDbName)
-            .arg(tr("Welcome"))
-            .arg(WORKING_USERNAME)
-            .arg(str);
+                   .arg(fDbName)
+                   .arg(tr("Welcome"))
+                   .arg(WORKING_USERNAME)
+                   .arg(str);
     QString textRight = QString("%1: %2; %3: %4; %5: %6; %7 %8")
-            .arg(tr("Current date"))
-            .arg(QDate::currentDate().toString(def_date_format))
-            .arg(tr("Working date"))
-            .arg(fPreferences.getLocalString(def_working_day))
-            .arg(tr("Last charge date"))
-            .arg(WORKING_DATE.addDays(-1).toString(def_date_format))
-            .arg(tr("Last run night"))
-            .arg(fPreferences.getDb("eod").toString());
+                        .arg(tr("Current date"))
+                        .arg(QDate::currentDate().toString(def_date_format))
+                        .arg(tr("Working date"))
+                        .arg(fPreferences.getLocalString(def_working_day))
+                        .arg(tr("Last charge date"))
+                        .arg(WORKING_DATE.addDays(-1).toString(def_date_format))
+                        .arg(tr("Last run night"))
+                        .arg(fPreferences.getDb("eod").toString());
     fStatusLabelLeft->setText(text);
     fStatusLabelRight->setText(textRight);
 }
@@ -419,7 +410,7 @@ void MainWindow::hideMenu()
 
 void MainWindow::tabCloseRequested(int index)
 {
-    BaseWidget *w = static_cast<BaseWidget*>(ui->tabWidget->widget(index));
+    BaseWidget *w = static_cast<BaseWidget *>(ui->tabWidget->widget(index));
     if (!w->canClose()) {
         return;
     }
@@ -431,41 +422,39 @@ void MainWindow::timeout()
 {
     fTimer.stop();
     DoubleDatabase db;
-    if (!db.open(true, false))
+    if (!db.open())
         return;
     QString query = "select r.f_id, r.f_state, s.f_" + def_lang + ", r.f_room, rm.f_short as f_room_short, "
-            "r.f_group, ug.f_" + def_lang + ", r.f_dateStart, "
-            "r.f_interval, r.f_text, r.f_guest, concat(g.f_firstName, ' ', g.f_lastName) as f_guestName, "
-            "n.f_name as f_nationality, r.f_dateLastComplete, concat(u.f_firstName, ' ', u.f_lastName) "
-            "from f_reminder r "
-            "left join f_room rm on r.f_room=rm.f_id "
-            "left join f_guests g on r.f_guest=g.f_id "
-            "left join f_nationality n on g.f_nation=n.f_short "
-            "left join f_reminder_state s on r.f_state=s.f_id "
-            "left join users_groups ug on ug.f_id=r.f_group "
-            "left join users u on u.f_id=r.f_author "
-            "where r.f_state=1 and (r.f_group = 0 or r.f_group=:f_group) "
-            "and (r.f_dateLastComplete is null or current_timestamp() > addtime(r.f_dateLastComplete, r.f_interval)) ";
+                    "r.f_group, ug.f_" + def_lang + ", r.f_dateStart, "
+                    "r.f_interval, r.f_text, r.f_guest, concat(g.f_firstName, ' ', g.f_lastName) as f_guestName, "
+                    "n.f_name as f_nationality, r.f_dateLastComplete, concat(u.f_firstName, ' ', u.f_lastName) "
+                    "from f_reminder r "
+                    "left join f_room rm on r.f_room=rm.f_id "
+                    "left join f_guests g on r.f_guest=g.f_id "
+                    "left join f_nationality n on g.f_nation=n.f_short "
+                    "left join f_reminder_state s on r.f_state=s.f_id "
+                    "left join users_groups ug on ug.f_id=r.f_group "
+                    "left join users u on u.f_id=r.f_author "
+                    "where r.f_state=1 and (r.f_group = 0 or r.f_group=:f_group) "
+                    "and (r.f_dateLastComplete is null or current_timestamp() > addtime(r.f_dateLastComplete, r.f_interval)) ";
     db[":f_group"] = WORKING_USERGROUP;
     db.exec(query);
-
     for (QList<QList<QVariant> >::iterator it = db.fDbRows.begin(); it != db.fDbRows.end(); it++) {
-        QDateTime l = (*it)[13].toDateTime();
+        QDateTime l = ( *it)[13].toDateTime();
         bool go = false;
         if (l.isValid()) {
             go = true;
         } else {
-            if (QDateTime::currentDateTime() > (*it)[7].toDateTime()) {
+            if (QDateTime::currentDateTime() > ( *it)[7].toDateTime()) {
                 go = true;
             }
         }
         if (go) {
-            (*it).removeAt(13);
-            DlgNotes *d = new DlgNotes(*it, this);
+            ( *it).removeAt(13);
+            DlgNotes *d = new DlgNotes( *it, this);
             d->setValues();
             d->setScheduleVisible();
             if (d->exec() == QDialog::Accepted) {
-
             }
             delete d;
         }
@@ -491,7 +480,7 @@ void MainWindow::timeout2()
 
 void MainWindow::socketReadyRead()
 {
-    QTcpSocket *s = static_cast<QTcpSocket*>(sender());
+    QTcpSocket *s = static_cast<QTcpSocket *>(sender());
     fCommand.readBytes(s->readAll());
 }
 
@@ -502,8 +491,8 @@ void MainWindow::parseSocketCommand(const QString &command)
     QJsonObject jObj = jDoc.object();
     QString cmd = jObj.value("command").toString();
     if (cmd == "refresh_reservations") {
-//  Remove after some time
-//        refreshReservationList(); Bye, tormoz
+        //  Remove after some time
+        //        refreshReservationList(); Bye, tormoz
     } else if (cmd == "update_cache") {
         int cacheId = jObj.value("cache").toInt();
         QString item = jObj.value("item").toString();
@@ -522,7 +511,7 @@ void MainWindow::parseSocketCommand(const QString &command)
     } else {
         QVariantMap m = jObj.toVariantMap();
         for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
-            BaseWidget *b = static_cast<BaseWidget*>(ui->tabWidget->widget(i));
+            BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
             if (!b) {
                 return;
             }
@@ -536,21 +525,21 @@ void MainWindow::socketError(QAbstractSocket::SocketError f_cityLedger)
 {
     Broadcast1::SOCKET_CONNECTED = 0;
     //TODO: LINUX BROADCAST
-//    Q_UNUSED(f_cityLedger)
-//    if (fTimer.isActive()) {
-//        DlgExitByVersion::exit(tr("Lost connection to broadcast server, force logout") + "<br>" + fSocket.errorString());
-//        logout();
-//    }
+    //    Q_UNUSED(f_cityLedger)
+    //    if (fTimer.isActive()) {
+    //        DlgExitByVersion::exit(tr("Lost connection to broadcast server, force logout") + "<br>" + fSocket.errorString());
+    //        logout();
+    //    }
 }
 
 void MainWindow::socketDisconnected()
 {
     Broadcast1::SOCKET_CONNECTED = 0;
     //TODO: LINUX BROADCAST
-//    if (fTimer.isActive()) {
-//        message_error(tr("Lost connection to broadcast server, force logout"));
-//        logout();
-//    }
+    //    if (fTimer.isActive()) {
+    //        message_error(tr("Lost connection to broadcast server, force logout"));
+    //        logout();
+    //    }
 }
 
 void MainWindow::logout()
@@ -564,7 +553,7 @@ void MainWindow::logout()
     QString session = QString("{\"command\":{\"command\":\"logout\",\"session\":\"%1\"}}").arg(AppConfig::fAppSession);
     int s = session.length();
     QByteArray bs;
-    bs.append(reinterpret_cast<const char*>(&s), sizeof(s));
+    bs.append(reinterpret_cast<const char *>( &s), sizeof(s));
     bs.append(session);
     fSocket.write(bs.data(), bs.length());
     fSocket.flush();
@@ -594,14 +583,11 @@ void MainWindow::enableMainMenu(bool value)
     if (!value) {
         return;
     }
-
     for (int i = 1; i < ui->menuBar->actions().count() - 1; i++) {
         ui->menuBar->actions()[i]->setEnabled(true);
     }
-
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
     ui->actionDisable_second_database->setVisible(r__(cr__do_no_write_second_db) && dbParams.count() == 4);
-
     ui->menuBar->actions().at(1)->setVisible(r__(cr__menu_reservation)); //Resevation
     ui->actionRoomChart->setVisible(r__(cr__room_chart));
     ui->actionNew_reservation->setVisible(r__(cr__edit_reservation));
@@ -622,7 +608,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
     ui->actionTravelline->setVisible(r__(cr__travelline));
-
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
     ui->actionQuick_checkout->setVisible(r__(cr__quick_checkout));
@@ -635,7 +620,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionExpected_arrivals_simple->setVisible(r__(cr__expected_arrivals_pax));
     ui->actionRoom_assignment->setVisible(r__(cr__room_assignment));
     ui->actionRe_checkin->setVisible(r__(cr__re_checkin));
-    ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin) || r__(cr__call_tout));
+    ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin)
+                                       || r__(cr__call_tout));
     ui->actionNotes->setVisible(r__(cr__notes));
     ui->actionContacts->setVisible(r__(cr__contacts));
     ui->actionRemarks->setVisible(r__(cr__remarks));
@@ -646,7 +632,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionHotel_hierarchy->setVisible(r__(cr__hotel_hierarcgy));
     ui->actionDaily_transactions->setVisible(r__(cr__daily_transactions));
     ui->actionState_of_the_room->setVisible(r__(cr__state_of_room));
-
     ui->menuBar->actions().at(3)->setVisible(r__(cr__menu_cashier)); // Cashier
     ui->actionCurrencies->setVisible(r__(cr__currencies));
     ui->actionNew_advance_entry->setVisible(r__(cr__advance_vaucher));
@@ -664,14 +649,11 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionRefund_voucher->setVisible(r__(cr__cashier_refund));
     ui->actionTemporary_receipts->setVisible(r__(cr__temporary_receipts));
     ui->actionPrint_tax_of_checkout_invoices->setVisible(r__(cr__tax_attack));
-
     ui->menuBar->actions().at(4)->setVisible(r__(cr__menu_cityledger)); //Cityledger
     ui->actionCity_Ledger_detailed_balance->setVisible(r__(cr__cityledger_balance));
     ui->actionCity_ledger_balance_2->setVisible(r__(cr__cityledger_balance));
     ui->actionCity_Ledger_balance->setVisible(r__(cr__cityledger_balance));
     ui->actionAvailable_amounts->setVisible(r__(cr__cityledger_avaiable_amounts));
-
-
     ui->menuBar->actions().at(5)->setVisible(r__(cr__menu_bookkeeping)); //Bookkeeping
     ui->actionVauchers->setVisible(r__(cr__report_vauchers));
     ui->actionDaily_movement->setVisible(r__(cr__report_daily_movement));
@@ -685,28 +667,23 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionYearly_financial_report->setVisible(r__(cr__bookeeping_yearly_financial_report));
     ui->actionCheckout_invoices_free_rooming->setVisible(r__(cr__report_checkout_invoices));
     ui->actionArmSoft->setVisible(r__(cr__export_data_to_as));
-
     ui->menuBar->actions().at(6)->setVisible(r__(cr__menu_restaurant_reports)); //Restaurant
     ui->actionOpen_breakfast->setVisible(r__(cr__menu_restaurant_reports));
     ui->actionSales_by_storages->setVisible(r__(cr__menu_restaurant_reports));
     ui->actionBreakfast_report->setVisible(r__(cr__menu_restaurant_reports));
-
     ui->menuBar->actions().at(7)->setVisible(r__(cr__analytics_menu)); // Analytics
     ui->actionCardex_analysis->setVisible(r__(cr__cardex_analysis));
     ui->actionReports_set->setVisible(r__(cr__reports_set));
     ui->actionStatistics->setVisible(r__(cr__reports_set));
     ui->actionMonthly_occupancy_percentages->setVisible(r__(cr__analytics_menu));
     ui->actionNaitonality_report_by_period->setVisible(r__(cr__reports_set));
-    ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_int) || r__(cr__call_out) || r__(cr__call_tin) || r__(cr__call_tout));
+    ui->actionCall_history->setVisible(r__(cr__call_in) || r__(cr__call_int) || r__(cr__call_out) || r__(cr__call_tin)
+                                       || r__(cr__call_tout));
     ui->actionMonthly_occupancy_percentages->setVisible(r__(cr__analytics_monthly_occupancy_perc));
     ui->actionGuest_by_nationality->setVisible(r__(cr__analytics_guest_by_nationality));
     ui->actionRoom_arrangement->setVisible(r__(cr__room_arrangement));
     ui->actionCategory_statistics->setVisible(r__(cr__cardex_analysis));
-
-
     ui->menuBar->actions().at(9)->setVisible(r__(cr__menu_restaurant)); //directory restaurant
-
-
     ui->menuBar->actions().at(10)->setVisible(r__(cr__menu_direcotory)); //Directory hotel
     ui->actionContacts->setVisible(r__(cr__contacts));
     ui->actionPartners->setVisible(r__(cr__cardex_list));
@@ -731,7 +708,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionModels_of_cars->setVisible(false);
     ui->actionAccounts_2->setVisible(false);
 #endif
-
     ui->menuBar->actions().at(11)->setVisible(r__(cr__menu_application)); //Application
     ui->actionUsers_groups->setVisible(r__(cr__users_groups));
     ui->actionUsers->setVisible(r__(cr__users));
@@ -743,8 +719,8 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionExport_invoices->setVisible(r__(cr__bookkeeper_sync) && fPreferences.getDb("HC").toInt() > 0);
     ui->actionSynchronization->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc));
     ui->actionExport_back->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
-    ui->actionExport_active_reservations->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
-    ui->actionExport_data->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__bookkeeper_sync));
+    ui->actionExport_active_reservations->setVisible(fPreferences.getDb("HC").toBool()
+            && r__(cr__export_active_reservations));
     ui->actionExport_reservations->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
     ui->actionUtils->setVisible(WORKING_USERGROUP == 1);
     ui->actionWeb->setVisible(false);
@@ -753,16 +729,13 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionTransfer_log->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
     ui->actionUpload_menu_from_FrontDesk->setVisible(r__(cr__update_menu_from_frontdesk));
     ui->menuBar->actions().at(12)->setVisible(r__(cr__storehouse_all_items)); // Storehouse
-
     ui->menuBar->actions().at(13)->setVisible(false); // Discount system
-
     ui->actionOptions->setEnabled(true);
 #ifdef _HOTEL_
     ui->actionDebts->setVisible(false);
     ui->actionSales_report_by_cars->setVisible(false);
 #endif
-
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_name, f_groupAccess, f_menu from serv_reports where f_menu>0");
     while (fDD.nextRow()) {
         if (fDD.getString(2) != "*") {
@@ -772,11 +745,10 @@ void MainWindow::enableMainMenu(bool value)
             }
         }
         QAction *a = ui->menuBar->actions().at(fDD.getInt(3))->menu()->
-                addAction(QIcon(":/images/report.png"), fDD.getString(1), this, SLOT(customReport()));
+                     addAction(QIcon(":/images/report.png"), fDD.getString(1), this, SLOT(customReport()));
         fCustomReports[a] = fDD.getInt(0);
     }
     ui->menuBar->actions().at(8)->setVisible(ui->menuOther_Reports->actions().count() > 0);
-
 #ifdef _RESORT_BUILD_
     ui->menuDiscount_system->setVisible(false);
     ui->menuStorehouse->setVisible(false);
@@ -861,7 +833,7 @@ void MainWindow::on_actionHakk_triggered()
            << 30
            << 30
            << 30
-              ;
+           ;
     QStringList fields;
     fields << "f_id"
            << "f_name"
@@ -876,29 +848,29 @@ void MainWindow::on_actionHakk_triggered()
            << "f_showHall"
            << "f_serviceItem"
            << "f_prefix"
-              ;
+           ;
     QStringList titles;
     titles << tr("Code")
-             << tr("Name")
-             << tr("Menu code")
-             << tr("Menu")
-             << tr("Service")
-             << tr("Invoice id")
-             << tr("Printer")
-             << tr("VAT dept")
-             << tr("No VAT dept")
-             << tr("Banket")
-             << tr("Hall")
-             << tr("Service item")
-             << tr("Order Prefix")
-                ;
+           << tr("Name")
+           << tr("Menu code")
+           << tr("Menu")
+           << tr("Service")
+           << tr("Invoice id")
+           << tr("Printer")
+           << tr("VAT dept")
+           << tr("No VAT dept")
+           << tr("Banket")
+           << tr("Hall")
+           << tr("Service item")
+           << tr("Order Prefix")
+           ;
     QString title = tr("Hall");
     QString icon = ":/images/hall.png";
     QString query = "select h.f_id, h.f_name, h.f_defaultMenu, m.f_" + def_lang + ", h.f_defaultSvc, "
-            "h.f_itemForInvoice, h.f_receiptPrinter, f_vatDept, f_noVatDept, f_showBanket, f_showHall, "
-            "h.f_serviceItem, h.f_prefix "
-            "from r_hall h "
-            "inner join r_menu_names m on m.f_id=h.f_defaultMenu ";
+                    "h.f_itemForInvoice, h.f_receiptPrinter, f_vatDept, f_noVatDept, f_showBanket, f_showHall, "
+                    "h.f_serviceItem, h.f_prefix "
+                    "from r_hall h "
+                    "inner join r_menu_names m on m.f_id=h.f_defaultMenu ";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RERestHall>(widths, fields, titles, title, icon, query);
 }
@@ -926,9 +898,9 @@ void MainWindow::on_actionTables_triggered()
     QString title = tr("Tables");
     QString icon = ":/images/table.png";
     QString query = "select t.f_id, t.f_name, t.f_hall, h.f_name, t.f_queue "
-            "from r_table t "
-            "inner join r_hall h on h.f_id = t.f_hall "
-            "order by f_hall, f_queue ";
+                    "from r_table t "
+                    "inner join r_hall h on h.f_id = t.f_hall "
+                    "order by f_hall, f_queue ";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RERestTable>(widths, fields, titles, title, icon, query);
 }
@@ -1019,10 +991,10 @@ void MainWindow::on_actionType_of_dishes_triggered()
     QString title = tr("Type of dish");
     QString icon = ":/images/cutlery.png";
     QString query = "select t.f_id, t.f_part, p.f_" + def_lang + ", t.f_am, t.f_en, t.f_ru, "
-            "f_bgColor, f_textColor, t.f_queue, f_active "
-            "from r_dish_type t "
-            "inner join r_dish_part p on p.f_id=t.f_part "
-            "order by p.f_" + def_lang + ", t.f_" + def_lang;
+                    "f_bgColor, f_textColor, t.f_queue, f_active "
+                    "from r_dish_type t "
+                    "inner join r_dish_part p on p.f_id=t.f_part "
+                    "order by p.f_" + def_lang + ", t.f_" + def_lang;
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RERestDishType>(widths, fields, titles, title, icon, query);
 }
@@ -1091,7 +1063,7 @@ void MainWindow::on_actionMenu_review_triggered()
            << 100
            << 100
            << 80
-              ;
+           ;
     QStringList fields;
     fields << "f_id"
            << "f_menu_id"
@@ -1107,7 +1079,7 @@ void MainWindow::on_actionMenu_review_triggered()
            << "f_print1"
            << "f_print2"
            << "f_as"
-              ;
+           ;
     QStringList titles;
     titles << tr("Code")
            << tr("Menu code")
@@ -1123,18 +1095,18 @@ void MainWindow::on_actionMenu_review_triggered()
            << tr("Printer 1")
            << tr("Printer 2")
            << tr("ArmSoft")
-              ;
+           ;
     QString query = "select  d.f_id, m.f_id, mn.f_" + def_lang + ", t.f_part, p.f_" + def_lang + ", "
-            "d.f_type, t.f_" + def_lang + ", d.f_" + def_lang + ", m.f_price, "
-            "m.f_store, s.f_name, m.f_print1, m.f_print2, d.f_as "
-            "from r_menu m "
-            "inner join r_menu_names mn on mn.f_id=m.f_menu "
-            "inner join r_store s on s.f_id=m.f_store "
-            "inner join r_dish d on d.f_id=m.f_dish "
-            "inner join r_dish_type t on t.f_id=d.f_type "
-            "inner join r_dish_part p on p.f_id=t.f_part "
-            "where m.f_state=1 "
-            "order by 2, 4, 6, 7";
+                    "d.f_type, t.f_" + def_lang + ", d.f_" + def_lang + ", m.f_price, "
+                    "m.f_store, s.f_name, m.f_print1, m.f_print2, d.f_as "
+                    "from r_menu m "
+                    "inner join r_menu_names mn on mn.f_id=m.f_menu "
+                    "inner join r_store s on s.f_id=m.f_store "
+                    "inner join r_dish d on d.f_id=m.f_dish "
+                    "inner join r_dish_type t on t.f_id=d.f_type "
+                    "inner join r_dish_part p on p.f_id=t.f_part "
+                    "where m.f_state=1 "
+                    "order by 2, 4, 6, 7";
     QString title = tr("Review of menu");
     QString icon = ":/images/cutlery.png";
     WReportGrid *r = addTab<WReportGrid>();
@@ -1238,7 +1210,7 @@ void MainWindow::on_actionRoomChart_triggered()
 
 void MainWindow::on_actionNew_reservation_triggered()
 {
-    QList<CacheRoom*> rooms;
+    QList<CacheRoom *> rooms;
     rooms.append(nullptr);
     WReservation *w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
@@ -1300,7 +1272,7 @@ void MainWindow::on_actionComplex_dish_triggered()
            << 80
            << 80
            << 30
-              ;
+           ;
     QStringList fields;
     fields << "f_id"
            << "f_am"
@@ -1312,7 +1284,7 @@ void MainWindow::on_actionComplex_dish_triggered()
            << "f_priceDeviation"
            << "f_adgt"
            << "f_enabled"
-              ;
+           ;
     QStringList titles;
     titles << tr("Code")
            << tr("Name, am")
@@ -1324,11 +1296,11 @@ void MainWindow::on_actionComplex_dish_triggered()
            << tr("Price deviation")
            << tr("ADGT")
            << tr("Active")
-              ;
+           ;
     QString title = tr("Complex dish");
     QString icon = ":/images/dinner.png";
     QString query = "select f_id, f_am, f_en, f_ru, f_startTime, f_endTime, f_price, "
-            "f_priceDeviation, f_adgt, f_enabled from r_dish_complex";
+                    "f_priceDeviation, f_adgt, f_enabled from r_dish_complex";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RERestDishComplex>(widths, fields, titles, title, icon, query);
 }
@@ -1344,7 +1316,7 @@ void MainWindow::on_actionCategories_triggered()
     fields << "f_id"
            << "f_short"
            << "f_description"
-            << "f_queue";
+           << "f_queue";
     QStringList titles;
     titles << tr("Code")
            << tr("Short")
@@ -1379,12 +1351,11 @@ void MainWindow::on_actionType_of_bed_triggered()
 
 QString MainWindow::actionTitle(QObject *a)
 {
-    return static_cast<QAction*>(a)->text();
+    return static_cast<QAction *>(a)->text();
 }
 
 void MainWindow::on_actionSynchronization_triggered()
 {
-
 }
 
 void MainWindow::on_actionRestaurant_triggered()
@@ -1414,7 +1385,7 @@ void MainWindow::on_actionReservatios_triggered()
            << 200 // cardex name 16
            << 200 // booking
            << 80 // grand total 17
-              ;
+           ;
     QStringList fields;
     fields << "r.f_id"
            << "r.f_author"
@@ -1478,10 +1449,10 @@ void MainWindow::on_actionReservatios_triggered()
     QStringList tables;
     tables << "f_reservation r"
            << "users u"
-          << "f_reservation_state rs"
-          << "f_room_arrangement ra"
-          << "f_guests g"
-          << "f_cardex cx";
+           << "f_reservation_state rs"
+           << "f_room_arrangement ra"
+           << "f_guests g"
+           << "f_cardex cx";
     QStringList joins;
     joins << ""
           << "inner"
@@ -1521,7 +1492,7 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << 100
            << 100
            << 80
-              ;
+           ;
     QStringList fields;
     fields << "f_id"
            << "f_name"
@@ -1531,7 +1502,7 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << "f_extra1"
            << "f_extra2"
            << "f_alwaysinvoice"
-              ;
+           ;
     QStringList titles;
     titles << tr("Code")
            << tr("Name")
@@ -1541,10 +1512,11 @@ void MainWindow::on_actionCity_Ledger_triggered()
            << tr("Extra1")
            << tr("Extra2")
            << tr("Always invoice")
-              ;
+           ;
     QString title = actionTitle(sender());
     QString icon = ":/images/currency.png";
-    QString query = "select f_id, f_name, f_address, f_phone, f_email, f_extra1, f_extra2, f_alwaysinvoice from f_city_ledger";
+    QString query =
+        "select f_id, f_name, f_address, f_phone, f_email, f_extra1, f_extra2, f_alwaysinvoice from f_city_ledger";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<RECityLedger>(widths, fields, titles, title, icon, query);
 }
@@ -1618,7 +1590,7 @@ void MainWindow::on_actionInvoice_items_triggered()
            << 80
            << 80
            << 80
-              ;
+           ;
     QStringList fields;
     fields << "i.f_id"
            << "i.f_vaucher"
@@ -1635,15 +1607,15 @@ void MainWindow::on_actionInvoice_items_triggered()
            << "i.f_auto"
            << "i.f_rest"
            << "i.f_vatReception"
-            << "i.f_ascode"
-            << "i.f_astype"
-<< "i.f_asaccincome"
-<< "i.f_asaccexpense"
-<< "i.f_accincome_novat"
-<< "i.f_accvat"
-<< "i.f_accnovat"
-<< "i.f_byeracc"
-              ;
+           << "i.f_ascode"
+           << "i.f_astype"
+           << "i.f_asaccincome"
+           << "i.f_asaccexpense"
+           << "i.f_accincome_novat"
+           << "i.f_accvat"
+           << "i.f_accnovat"
+           << "i.f_byeracc"
+           ;
     QStringList titles;
     titles << tr("Code")
            << tr("Voucher")
@@ -1668,14 +1640,14 @@ void MainWindow::on_actionInvoice_items_triggered()
            << tr("Acc VAT type")
            << tr("Acc no VAT type")
            << tr("Byer acc")
-              ;
+           ;
     QString title = tr("Invoice items");
     QString icon = ":/images/list.png";
-    QString query = "select i.f_id, i.f_vaucher, i.f_group, g.f_" +def_lang + ", i.f_am, i.f_en, i.f_ru, i.f_price, "
-            "i.f_taxName, i.f_adgt, i.f_vatDept, i.f_noVatDept, i.f_auto, i.f_rest, i.f_vatReception, i.f_ascode, i.f_astype,  "
-            "i.f_asaccincome, i.f_accincome_novat, i.f_asaccexpense, i.f_accvat, i.f_accnovat, i.f_byeracc "
-            "from f_invoice_item i "
-            "inner join f_invoice_item_group g on g.f_id=i.f_group ";
+    QString query = "select i.f_id, i.f_vaucher, i.f_group, g.f_" + def_lang + ", i.f_am, i.f_en, i.f_ru, i.f_price, "
+                    "i.f_taxName, i.f_adgt, i.f_vatDept, i.f_noVatDept, i.f_auto, i.f_rest, i.f_vatReception, i.f_ascode, i.f_astype,  "
+                    "i.f_asaccincome, i.f_accincome_novat, i.f_asaccexpense, i.f_accvat, i.f_accnovat, i.f_byeracc "
+                    "from f_invoice_item i "
+                    "inner join f_invoice_item_group g on g.f_id=i.f_group ";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<REInvoiceItem>(widths, fields, titles, title, icon, query);
 }
@@ -1711,7 +1683,6 @@ void MainWindow::on_actionRe_checkin_triggered()
 
 void MainWindow::on_actionTransfer_amount_triggered()
 {
-
     DlgTransferAnyAmount *d = new DlgTransferAnyAmount(this);
     d->exec();
     delete d;
@@ -1777,7 +1748,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     bool canClose = true;
     for (int i = 1; i < ui->tabWidget->count(); i++) {
-        BaseWidget *w = static_cast<BaseWidget*>(ui->tabWidget->widget(i));
+        BaseWidget *w = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
         if (!w->canClose()) {
             canClose = false;
             break;
@@ -1810,13 +1781,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     QMainWindow::mouseMoveEvent(event);
 }
 
-void MainWindow::secondDbError()
-{
-    QPixmap p(":/images/ball-red.png");
-    fStateOfSecondDb->setPixmap(p.scaled(20, 20, Qt::KeepAspectRatio));
-    fStateOfSecondDb->setMaximumSize(20, 20);
-}
-
 void MainWindow::shortcutFullScreen()
 {
     if (isFullScreen()) {
@@ -1837,7 +1801,7 @@ void MainWindow::shortcutSlot()
 
 void MainWindow::customReport()
 {
-    QAction *a = static_cast<QAction*>(sender());
+    QAction *a = static_cast<QAction *>(sender());
     if (!fCustomReports.contains(a)) {
         message_error(tr("Application error. Contact with developer. Message custom action == 0"));
         return;
@@ -1904,13 +1868,6 @@ void MainWindow::on_actionStatistics_triggered()
 void MainWindow::on_actionUtils_triggered()
 {
     DlgUtils *d = new DlgUtils(this);
-    d->exec();
-    delete d;
-}
-
-void MainWindow::on_actionExport_data_triggered()
-{
-    DlgExportOther *d = new DlgExportOther(this);
     d->exec();
     delete d;
 }
@@ -2128,16 +2085,8 @@ void MainWindow::on_actionDisable_second_database_triggered()
     if (!r__(cr__do_no_write_second_db)) {
         return;
     }
-    doubleDatabase = !doubleDatabase;
-    if (doubleDatabase) {
-        DoubleDatabase dd;
-        dd.resetDoNotUse();
-        setStyleSheet("");
-        ui->actionDisable_second_database->setText(tr("Disable second database"));
-    } else {
-        setStyleSheet("background: rgb(255,150,150);");
-        ui->actionDisable_second_database->setText(tr("Enable second database"));
-    }
+    setStyleSheet("background: rgb(255,150,150);");
+    ui->actionDisable_second_database->setText(tr("Enable second database"));
 }
 
 void MainWindow::on_actionRoom_arrangement_triggered()
@@ -2188,20 +2137,6 @@ void MainWindow::on_actionExpected_arrivals_departures_2_triggered()
 void MainWindow::on_actionGuest_Tray_Ledger_By_Date_triggered()
 {
     FCityTrayLedger2::openFilterReport<FCityTrayLedger2, WReportGrid>();
-}
-
-void MainWindow::on_actionRecover_invoice_triggered()
-{
-    DlgRecoverInvoice *d = new DlgRecoverInvoice(this);
-    d->exec();
-    d->deleteLater();
-}
-
-void MainWindow::on_actionTransfer_log_triggered()
-{
-    DlgTransferLog *d = new DlgTransferLog(this);
-    d->exec();
-    delete d;
 }
 
 void MainWindow::on_actionQuick_reservations_triggered()
@@ -2282,12 +2217,11 @@ void MainWindow::on_actionFiscal_report_triggered()
 
 void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
 {
-    DoubleDatabase dd(true, doubleDatabase);
-//    dd.exec("delete from r_dish");
-//    dd.exec("delete from r_dish_type");
-
+    DoubleDatabase dd;
+    //    dd.exec("delete from r_dish");
+    //    dd.exec("delete from r_dish_type");
     DoubleDatabase dr(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
-    if (!dr.open(true, false)) {
+    if (!dr.open()) {
         message_error(dr.fLastError);
         return;
     }
@@ -2305,7 +2239,6 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
         dd[":f_queue"] = dr.getInt(0);
         dd[":f_active"] = 1;
         dd.insert("r_dish_type", false);
-
         dd[":f_id"] = dr.getInt(0);
         dd[":f_part"] = 1;
         dd[":f_en"] = dr.getString(1);
@@ -2331,7 +2264,6 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
         dd[":f_unit"] = 1;
         dd[":f_adgt"] = adg[dr.getInt(1)];
         dd.insert("r_dish", false);
-
         dd[":f_id"] = dr.getInt(0);
         dd[":f_type"] = dr.getInt(1);
         dd[":f_en"] = dr.getString(2);
@@ -2382,4 +2314,3 @@ void MainWindow::on_actionIncomplete_guests_names_triggered()
 {
     FIncompleteGuestsNames::openFilterReport<FIncompleteGuestsNames, WReportGrid>();
 }
-

@@ -24,7 +24,7 @@ void PPrintVaucher::printVaucher(const QString &id)
     PPrintVaucher p;
     PPrintPreview *pv = new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage());
     PPrintScene *ps = pv->addScene(0, Portrait);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_id"] = id;
     fDD.exec("select f_source, f_user, f_room, f_guest, m.f_id, f_wdate, "
@@ -47,10 +47,10 @@ void PPrintVaucher::printVaucher(const QString &id)
     QList<QList<QVariant> > &fDbRows = fDD.fDbRows;
     int room = fDbRows.at(0).at(2).toInt();
     DoubleDatabase reserv;
-    reserv.open(true, false);
+    reserv.open();
     if (room > 0) {
         DoubleDatabase dq;
-        dq.open(true, false);
+        dq.open();
         dq[":f_id"] = id;
         dq.exec("select f_inv from m_register where f_id=:f_id");
         dq.nextRow();

@@ -23,7 +23,7 @@ void DlgReservationGuests::viewGuests(const QString &id)
 
 void DlgReservationGuests::load(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_reservation"] = id;    
     fDD.exec("select g.f_title, g.f_firstName, g.f_lastName, n.f_name, g.f_passport "
                    "from f_reservation_guests r "

@@ -48,7 +48,7 @@ void DlgCouponSales::on_btnSave_clicked()
         return;
     }
 
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_seria"] = ui->leSeriaNum->asInt();
     fDD.exec("select f_id from d_coupon where f_seria=:f_seria and (f_partner=0 or f_partner is null) and f_used=0");
     if (fDD.rowCount() < ui->leQty->asInt()) {

@@ -45,7 +45,7 @@ void DlgSearchInvoice::filter()
 
 void DlgSearchInvoice::on_btnRefresh_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_date1"] = ui->deStart->date();
     fDD[":f_date2"] = ui->deEnd->date();
     fDD.exec("select r.f_invoice, r.f_id, r.f_room, r.f_startDate, r.f_endDate, concat(g.f_firstName, ' ' , g.f_lastName) "

@@ -8,8 +8,8 @@ DlgExecFailedSqls::DlgExecFailedSqls(QWidget *parent) :
 {
     ui->setupUi(this);
     DoubleDatabase dd;
-    dd.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
-    dd.open(true, false);
+    dd.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
+    dd.open();
     dd[":f_src"] = __dd1Database;
     dd.exec("select count(f_id) from f_fail where f_src<>:f_src and f_norec=0 ");
     dd.nextRow();
@@ -35,30 +35,25 @@ void DlgExecFailedSqls::on_btnCancel_clicked()
 
 void DlgExecFailedSqls::on_btnStart_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     DoubleDatabase dempty; //local
-    dempty.open(true, false);
-
+    dempty.open();
     DoubleDatabase did;
-    did.open(true, false);
-
+    did.open();
     DoubleDatabase dsql; //remote
-    dsql.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1); //resort
-    dsql.open(true, false);
+    dsql.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass); //resort
+    dsql.open();
     dsql[":f_src"] = __dd1Database;
     dsql.exec("select * from airwick.f_fail where f_src<>:f_src and f_norec=0");
-
-    DoubleDatabase ddel(dsql);
-    ddel.open(true, false);
-
+    DoubleDatabase ddel;
+    ddel.open();
     DoubleDatabase dsrc;
     QString db = "hnaw";
 #ifdef QT_DEBUG
     db = "resort";
 #endif
-    dsrc.setDatabase(BaseUIDX::fAirHost, db, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1); //resort
-    dsrc.open(true, false);
-
+    dsrc.setDatabase(BaseUIDX::fAirHost, db, BaseUIDX::fAirUser, BaseUIDX::fAirPass); //resort
+    dsrc.open();
     while (dsql.nextRow()) {
         bool ok = true;
         if (dsql.getString("f_failId").isEmpty()) {
@@ -68,7 +63,6 @@ void DlgExecFailedSqls::on_btnStart_clicked()
             id.replace("'", "");
             QString op = dsql.getString("f_failOp").toLower();
             QString table = dsql.getString("f_failTable");
-
             if (op == "insert" || op == "update") {
                 dsrc[":f_id"] = id;
                 if (!dsrc.exec("select * from " + table + " where f_id=:f_id")) {
@@ -95,7 +89,6 @@ void DlgExecFailedSqls::on_btnStart_clicked()
             ddel.exec("delete from f_fail where f_id=:f_id");
         }
     }
-
     /*
 
     int i =0;

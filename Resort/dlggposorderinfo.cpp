@@ -38,7 +38,7 @@ void DlgGPOSOrderInfo::setOrder(const QString &id)
     setWindowTitle(QString("%1 %2")
                    .arg(tr("Order"))
                    .arg(id));
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_header"] = id;
     fDD[":f_state"] = DISH_STATE_READY;
     fDD.exec("select d.f_" + def_lang + ", o.f_qty, o.f_total, o.f_id, "
@@ -74,7 +74,7 @@ void DlgGPOSOrderInfo::setOrder(const QString &id)
 void DlgGPOSOrderInfo::setVaucher(const QString &id)
 {
     ui->leOrder->setText(id);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select f_id from m_register where f_id=:f_id");
     if (fDD.nextRow()) {
@@ -94,7 +94,7 @@ void DlgGPOSOrderInfo::selectPaymentMode(bool v)
     if (DlgPaymentMode::getPayment(pm, comment, cl)) {
         CachePaymentMode ci;
         ci.get(pm);
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_paymentMode"] = pm;
         fDD[":f_paymentModeComment"] = comment;
         fDD[":f_cityLedger"] = cl;
@@ -120,7 +120,7 @@ void DlgGPOSOrderInfo::on_btnOk_clicked()
 
 void DlgGPOSOrderInfo::on_btnSave_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         fDD[":f_qty"] = ui->tblData->item(i, 1)->data(Qt::EditRole).toDouble();
         fDD[":f_total"] = ui->tblData->item(i, 2)->data(Qt::EditRole).toDouble();
@@ -165,7 +165,7 @@ void DlgGPOSOrderInfo::on_btnPrint_clicked()
 
 void DlgGPOSOrderInfo::on_btnPrintTax_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->leOrder->text();
     fDD.exec("select f_paymentMode from o_header where f_id=:f_id");
     fDD.nextRow();

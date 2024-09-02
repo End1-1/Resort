@@ -49,7 +49,7 @@ void REInvoiceItem::valuesToWidgets()
     RowEditorDialog::valuesToWidgets();
     ui->tblTaxPrint->clearContents();
 
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     
     fDD.exec("select f_comp from serv_tax where f_active=1");
     ui->tblTaxPrint->setRowCount(fDD.rowCount());
@@ -77,7 +77,7 @@ void REInvoiceItem::on_tnCancel_clicked()
 void REInvoiceItem::on_btnOk_clicked()
 {
     save();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_item"] = ui->leCode->text();
     fDD.exec("delete from f_invoice_item_tax where f_item=:f_item");
     for (int i = 0; i < ui->tblTaxPrint->rowCount(); i++) {

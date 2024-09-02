@@ -105,7 +105,7 @@
      <x>0</x>
      <y>0</y>
      <width>1375</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWorking">
@@ -215,13 +215,11 @@
     <addaction name="actionReport_buillder"/>
     <addaction name="actionExport_invoices"/>
     <addaction name="actionExport_active_reservations"/>
-    <addaction name="actionExport_data"/>
     <addaction name="actionExport_reservations"/>
     <addaction name="actionUtils"/>
     <addaction name="actionWeb"/>
     <addaction name="actionExecute_failed_sql"/>
     <addaction name="actionTransfer_log"/>
-    <addaction name="actionRecover_invoice"/>
     <addaction name="actionUpload_menu_from_FrontDesk"/>
    </widget>
    <widget class="QMenu" name="menuRestaurant">
@@ -958,15 +956,6 @@
    </property>
    <property name="text">
     <string>Utils</string>
-   </property>
-  </action>
-  <action name="actionExport_data">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
-   </property>
-   <property name="text">
-    <string>Export other</string>
    </property>
   </action>
   <action name="actionAdvance_report">

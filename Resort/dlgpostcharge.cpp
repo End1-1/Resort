@@ -44,7 +44,7 @@ DlgPostCharge::DlgPostCharge(QWidget *parent) :
     ui->leVAT->setInitialValue(VAT_INCLUDED);
     ui->leCard->setSelector(this, cache(cid_credit_card), ui->leCardName, 0);
     ui->leItem->fFieldFilter["f_group"] << "1";
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     if (WORKING_USERGROUP != 1) {
         dd[":f_auto"] = 1;
     } else {
@@ -97,7 +97,7 @@ void DlgPostCharge::callback(int sel, const QString &code)
 void DlgPostCharge::setVoucher(const QString &id)
 {
     clearSelectors();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     fDoc.open(dd, id);
     fixTabWidget();
     setBalance();
@@ -218,7 +218,7 @@ void DlgPostCharge::on_btnSave_clicked()
         break;
     }
 
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     if (ii.fVaucher() == VAUCHER_ROOMING_N) {
         QString appendix;
         switch (message_yesnocancel(tr("The date will append to the name.<br>Click YES to use current working date<br>Click NO - to use previouse working date"))) {
@@ -388,7 +388,7 @@ void DlgPostCharge::on_btnPrintTax_clicked()
         TrackControl::insert(2, "Print fiscal", QString::number(d->fTaxCode), "", "", ui->wRoom->invoice());
         ui->btnPrintTax->setEnabled(false);
         ui->leFiscal->setInt(d->fTaxCode);
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         fDoc.save(dd);
     }
     d->deleteLater();

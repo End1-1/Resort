@@ -48,7 +48,7 @@ void DlgTaxBack2::on_btnOK_clicked()
             ch << ui->tblData->toInt(i, 3);
         }
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     foreach (int n, ch) {
         int taxCode = 0;
         if (DlgPrintTaxSM::printTaxback(fPreferences.getDb(def_default_fiscal_machine).toInt(), n, fInvoice, taxCode) == TAX_OK) {
@@ -68,7 +68,7 @@ void DlgTaxBack2::load(const QString &ids)
     if (ids.isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_finalName, f_amountAmd, f_fiscal, f_source from m_register where f_fiscal in (" + ids + ") ");
     ui->tblData->setRowCount(fDD.rowCount());
     for (int i = 0; i < ui->tblData->rowCount(); i++) {

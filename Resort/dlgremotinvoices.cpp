@@ -8,34 +8,34 @@ DlgRemotInvoices::DlgRemotInvoices(bool local, QWidget *parent) :
     ui->setupUi(this);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 120, 120, 120, 300);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (local) {
-        DoubleDatabase fSDb(fDD);
-        if (!fSDb.open(true, false)) {
+        DoubleDatabase fSDb;
+        if (!fSDb.open()) {
             message_error(tr("Cannot connect to database"));
             return;
         }
         fSDb.exec("select r.f_invoice, r.f_startDate, r.f_endDate, g.guest "
-                    "from f_reservation r "
-                    "left join guests g on g.f_id=r.f_guest "
-                    "where r.f_state=3 ");
+                  "from f_reservation r "
+                  "left join guests g on g.f_id=r.f_guest "
+                  "where r.f_state=3 ");
         Utils::fillTableWithData(ui->tblData, fSDb.fDbRows);
     } else {
-        DoubleDatabase fSDb(fDD);
+        DoubleDatabase fSDb;
         QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", QString::SkipEmptyParts);
         if (dbParams.count() < 4) {
             message_error(tr("Setup second database parameters"));
             return;
         }
-        fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3], 1);
-        if (!fSDb.open(true, false)) {
+        fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3]);
+        if (!fSDb.open()) {
             message_error(tr("Cannot connect to second database"));
             return;
         }
         fSDb.exec("select r.f_invoice, r.f_startDate, r.f_endDate, g.guest "
-                    "from f_reservation r "
-                    "left join guests g on g.f_id=r.f_guest "
-                    "where r.f_state=3 ");
+                  "from f_reservation r "
+                  "left join guests g on g.f_id=r.f_guest "
+                  "where r.f_state=3 ");
         Utils::fillTableWithData(ui->tblData, fSDb.fDbRows);
     }
 }
@@ -59,7 +59,7 @@ void DlgRemotInvoices::on_leSearch_textChanged(const QString &arg1)
                 goto NEXT;
             }
         }
-        NEXT:
+    NEXT:
         continue;
     }
 }

@@ -15,7 +15,7 @@ TravelLine::TravelLine(QWidget *parent) :
         ui->cbRate->addItem(jo["name"].toString(), jo["api"].toString());
     }
 
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fDD.exec("select * from travelline");
     if (fDD.nextRow()) {
         QJsonObject jo = QJsonDocument::fromJson(fDD.getString(1).toUtf8()).object();
@@ -86,7 +86,7 @@ void TravelLine::saveConfig()
         ja2.append(jrp);
     }
 
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fDD[":f_connection"] = QJsonDocument(jo).toJson(QJsonDocument::Compact);
     fDD[":f_room_types"] = QJsonDocument(ja).toJson(QJsonDocument::Compact);
     fDD[":f_rate_plans"] = QJsonDocument(ja2).toJson(QJsonDocument::Compact);

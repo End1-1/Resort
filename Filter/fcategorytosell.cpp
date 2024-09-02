@@ -67,7 +67,7 @@ void FCategoryToSell::apply(WReportGrid *rg)
     group.remove(group.length() - 1, 1);
     query += group;
     QMap<QString, int> map;
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db.exec(query);
     QString mapName;
     while (db.nextRow()) {

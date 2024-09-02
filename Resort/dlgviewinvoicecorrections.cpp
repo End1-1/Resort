@@ -6,7 +6,7 @@ DlgViewInvoiceCorrections::DlgViewInvoiceCorrections(const QString &invoice, QWi
     ui(new Ui::DlgViewInvoiceCorrections)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_inv"] = invoice;
     fDD.exec("select m.f_id, f_wdate, u1.f_username, f_finalName, f_amountAmd, u2.f_username, f_cancelDate, f_cancelReason "
                "from m_register m "

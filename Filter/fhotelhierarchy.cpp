@@ -49,7 +49,7 @@ void FHotelHierarchy::apply(WReportGrid *rg)
             .setColumn(80, "", "X");
     QList<QVariant> emptyRow;
     emptyRow << "" << "" << "" << "" << "" << "" << "" << "" << "" << "" << "";
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db.exec("select c.f_short, r.f_short, r.f_floor, r.f_building "
             "from f_room r "
             "left join f_room_classes c on c.f_id=r.f_class "

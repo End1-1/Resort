@@ -32,7 +32,7 @@ void DlgUtils::on_btnGenNumbers_clicked()
 
 void DlgUtils::on_btnCorrectReservGrantTotal_clicked()
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     QMap<QString, double> invoices;
     if (!dd.exec("select r.f_invoice, r.f_grandtotal, sum(m.f_amountamd) as f_amountamd "
             "from f_reservation r "

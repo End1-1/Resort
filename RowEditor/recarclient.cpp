@@ -62,7 +62,7 @@ void RECarClient::openReport()
 void RECarClient::valuesToWidgets()
 {
     RowEditorDialog::valuesToWidgets();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->leCode->text();
     fDD.exec("select f_mode from d_car_client where f_id=:f_id");
     if (fDD.rowCount() > 0) {
@@ -110,7 +110,7 @@ void RECarClient::on_btnSave_clicked()
         ui->leCarmodel->setText("0");
     }
     saveOnly();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_mode"] = mode;
     fDD.update("d_car_client", where_id(ui->leCode->asInt()));
     message_info(tr("Saved"));

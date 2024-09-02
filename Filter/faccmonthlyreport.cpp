@@ -26,7 +26,7 @@ FAccMonthlyReport::~FAccMonthlyReport()
 
 void FAccMonthlyReport::getInvoiceContent(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap, int col, const QString & item) {
     DoubleDatabase dd;
-    dd.open(true, false);
+    dd.open();
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
     QString date = "date_format(ic.f_wdate, '%d/%m/%Y')";
@@ -63,7 +63,7 @@ void FAccMonthlyReport::getAvailableRoom(QList<QList<QVariant> > &rows, QMap<QSt
     if (ui->rbYear->isChecked()) {
         date = "date_format(d.f_date, '%Y')";
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
     dd.exec("select " + date + ", count(rm.f_id) from f_room rm, s_days d where d.f_date between :f_date1 and :f_date2 group by 1");
@@ -89,7 +89,7 @@ void FAccMonthlyReport::getNights(QList<QList<QVariant> > &rows, QMap<QString, i
     if (fPreferences.getDb(def_penalty_list).toString().length() > 0) {
         rooming += "," + fPreferences.getDb(def_penalty_list).toString();
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
     dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
@@ -116,7 +116,7 @@ void FAccMonthlyReport::getFreeNights(QList<QList<QVariant> > &rows, QMap<QStrin
     if (ui->rbYear->isChecked()) {
         date = "date_format(m.f_wdate, '%Y')";
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
     dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
@@ -143,7 +143,7 @@ void FAccMonthlyReport::getGuest(QList<QList<QVariant> > &rows, QMap<QString, in
     if (ui->rbYear->isChecked()) {
         date = "date_format(m.f_wdate, '%Y')";
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_date1"] = ui->deStart->date();
     dd[":f_date2"] = ui->deEnd->date();
     dd[":f_canceled"] = (ui->chCanceled->isChecked() ? 1 : 0);
@@ -163,7 +163,7 @@ void FAccMonthlyReport::getGuest(QList<QList<QVariant> > &rows, QMap<QString, in
 
 void FAccMonthlyReport::getGPOSContent(QList<QList<QVariant> > &rows, QMap<QString, int> &dateMap, int col, const QString &store)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_date1"] = ui->deStart->date();
     fDD[":f_date2"] = ui->deEnd->date();
     QString date = "date_format(ic.f_date, '%d/%m/%Y')";
@@ -190,7 +190,7 @@ void FAccMonthlyReport::getGPOSContent(QList<QList<QVariant> > &rows, QMap<QStri
 
 void FAccMonthlyReport::apply(WReportGrid *rg)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select * from serv_monthly order by f_id");
     QMap<QString, QVariant> row;
     row["#"] = 0;
@@ -371,7 +371,7 @@ void FAccMonthlyReport::dblClick(const QModelIndex &index)
     if (index.column() < 2 || index.column() > 13) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = index.column() - 1;
     fDD.exec("select * from serv_monthly where f_id=:f_id");
     if (!fDD.nextRow()) {

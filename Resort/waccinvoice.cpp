@@ -43,11 +43,11 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->setupUi(this);
     ui->tblTotal->addRow();
     ui->tblTotal->addRow();
-    for (int i =0 ; i < ui->tblTotal->columnCount(); i++) {
-        for (int j =0; j < 2; j++)
-        ui->tblTotal->setItemWithValue(j, i, QVariant());
+    for (int i = 0 ; i < ui->tblTotal->columnCount(); i++) {
+        for (int j = 0; j < 2; j++)
+            ui->tblTotal->setItemWithValue(j, i, QVariant());
     }
-    fDb.open(true, doubleDatabase);
+    fDb.open();
     ui->leReservationId->setVisible(false);
     ui->deCheckIn->setReadOnly(!r__(cr__super_correction));
     ui->deDeparture->setReadOnly(!r__(cr__super_correction));
@@ -60,7 +60,7 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->btnMoveToCL->setVisible(r__(cr__super_correction));
     ui->btnExcel->setVisible(r__(cr__invoice_export_to_excel));
     fCurrentInvoicePosition = -1;
-    fReport = dynamic_cast<WReportGrid*>(parent);
+    fReport = dynamic_cast<WReportGrid *>(parent);
     if (fReport) {
         connect(fReport, SIGNAL(doubleClickOnRow(QList<QVariant>)), this, SLOT(handleValues(QList<QVariant>)));
     }
@@ -72,7 +72,6 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->addWidget(ui->deCheckIn, "Check in date");
     fTrackControl->addWidget(ui->deDeparture, "Departure date");
-
     ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardex, sel_cardex);
     ui->leVatCode->setSelector(this, cache(cid_vat_mode), ui->leVATMode, sel_vat_mode);
     ui->leCardexCode->setEnabled(r__(cr__super_correction));
@@ -92,7 +91,7 @@ void WAccInvoice::openInvoice(const QString &invoice)
 {
     WAccInvoice *w = nullptr;
     for (int i = 0; i < fMainWindow->fTab->count(); i++) {
-        w = dynamic_cast<WAccInvoice*>(fMainWindow->fTab->widget(i));
+        w = dynamic_cast<WAccInvoice *>(fMainWindow->fTab->widget(i));
         if (w) {
             if (w->invoice() == invoice) {
                 fMainWindow->fTab->setCurrentIndex(i);
@@ -111,31 +110,31 @@ void WAccInvoice::setupTab()
 
 void WAccInvoice::callback(int sel, const QString &code)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     switch (sel) {
-    case sel_invoice: {
-        CacheCheckoutInvoice c;
-        if (c.get(code)) {
-            ui->leInvoice->setText(c.fCode());
-            on_leInvoice_returnPressed();
-        }
-        break;
-    }
-    case sel_cardex: {
-        CacheCardex c;
-        if (c.get(code) && code != fOldCardexCode) {
-            if (message_confirm(tr("Change the cardex?")) == QDialog::Accepted) {
-                fOldCardex = c.fName();
-                fOldCardexCode = code;
-                fDD[":f_cardex"] = c.fCode();
-                fDD.update("f_reservation", where_id(ap(ui->leReservationId->text())));
-                fTrackControl->insert(TRACK_RESERVATION, "Cardex changed", fOldCardex, ui->leCardex->text());
-                //fTrackControl->saveChanges(ui->leReservationId->text());
+        case sel_invoice: {
+            CacheCheckoutInvoice c;
+            if (c.get(code)) {
+                ui->leInvoice->setText(c.fCode());
+                on_leInvoice_returnPressed();
             }
+            break;
         }
-        break;
-    }
-    case sel_vat_mode: {
+        case sel_cardex: {
+            CacheCardex c;
+            if (c.get(code) && code != fOldCardexCode) {
+                if (message_confirm(tr("Change the cardex?")) == QDialog::Accepted) {
+                    fOldCardex = c.fName();
+                    fOldCardexCode = code;
+                    fDD[":f_cardex"] = c.fCode();
+                    fDD.update("f_reservation", where_id(ap(ui->leReservationId->text())));
+                    fTrackControl->insert(TRACK_RESERVATION, "Cardex changed", fOldCardex, ui->leCardex->text());
+                    //fTrackControl->saveChanges(ui->leReservationId->text());
+                }
+            }
+            break;
+        }
+        case sel_vat_mode: {
             CacheVatMode c;
             if (c.get(code) && code != fOldVATCode) {
                 if (message_confirm(tr("Change the VAT mode?")) == QDialog::Accepted) {
@@ -169,7 +168,6 @@ QString WAccInvoice::invoiceId()
 
 void WAccInvoice::load(const QString &id)
 {
-
     disconnect(ui->deEntry, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deEntry_userDateChanged(QDate)));
     disconnect(ui->deDeparture, SIGNAL(userDateChanged(QDate)), this, SLOT(on_deDeparture_userDateChanged(QDate)));
     setupTabTextAndIcon(tr("Invoice") + " #?", ":/images/invoice.png");
@@ -179,38 +177,38 @@ void WAccInvoice::load(const QString &id)
     fDb[":f_id"] = id;
 #ifdef _METROPOL_
     QString query = "select r.f_startDate, r.f_endDate, r.f_checkInDate, r.f_checkInTime, "
-            "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
-            "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
-            "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
-            "r.f_cardex,  "
-            "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
-            "from f_reservation r "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_room_classes rc on rc.f_id=rm.f_class "
-            "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
-            "left join f_guests g on g.f_id=r.f_guest "
-            "left join f_nationality n on n.f_short=g.f_nation "
-            "left join users u1 on u1.f_id=r.f_checkInUser "
-            "left join users u2 on u2.f_id=r.f_checkOutUser "
-            "left join f_cardex c on r.f_cardex=c.f_cardex "
-            "where r.f_invoice=:f_id";
+                    "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
+                    "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
+                    "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
+                    "r.f_cardex,  "
+                    "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
+                    "from f_reservation r "
+                    "left join f_room rm on rm.f_id=r.f_room "
+                    "left join f_room_classes rc on rc.f_id=rm.f_class "
+                    "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
+                    "left join f_guests g on g.f_id=r.f_guest "
+                    "left join f_nationality n on n.f_short=g.f_nation "
+                    "left join users u1 on u1.f_id=r.f_checkInUser "
+                    "left join users u2 on u2.f_id=r.f_checkOutUser "
+                    "left join f_cardex c on r.f_cardex=c.f_cardex "
+                    "where r.f_invoice=:f_id";
 #else
     QString query = "select r.f_startDate, r.f_endDate, r.f_checkInDate, r.f_checkInTime, "
-            "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
-            "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
-            "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
-            "r.f_cardex,  "
-            "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
-            "from f_reservation r "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_room_classes rc on rc.f_id=rm.f_class "
-            "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
-            "left join f_guests g on g.f_id=r.f_guest "
-            "left join f_nationality n on n.f_short=g.f_nation "
-            "left join users u1 on u1.f_id=r.f_checkInUser "
-            "left join users u2 on u2.f_id=r.f_checkOutUser "
-            "left join f_cardex c on r.f_cardex=c.f_cardex "
-            "where r.f_invoice=:f_id";
+                    "r.f_checkOutTime, rc.f_short, r.f_room, ra.f_" + def_lang + ", "
+                    "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), n.f_name, "
+                    "concat(u1.f_firstName, ' ', u1.f_lastName), concat(u2.f_firstName, ' ', u2.f_lastName), "
+                    "r.f_cardex,  "
+                    "r.f_man + r.f_woman + r.f_child, r.f_id, r.f_vatMode, r.f_remarks, r.f_state "
+                    "from f_reservation r "
+                    "left join f_room rm on rm.f_id=r.f_room "
+                    "left join f_room_classes rc on rc.f_id=rm.f_class "
+                    "left join f_room_arrangement ra on ra.f_id=r.f_arrangement "
+                    "left join f_guests g on g.f_id=r.f_guest "
+                    "left join f_nationality n on n.f_short=g.f_nation "
+                    "left join users u1 on u1.f_id=r.f_checkInUser "
+                    "left join users u2 on u2.f_id=r.f_checkOutUser "
+                    "left join f_cardex c on r.f_cardex=c.f_cardex "
+                    "where r.f_invoice=:f_id";
 #endif
     fDb.exec(query);
     if (!fDb.nextRow()) {
@@ -249,7 +247,6 @@ void WAccInvoice::load(const QString &id)
     fOldVATCode = fDbRows.at(0).at(c++).toString();
     ui->leVatCode->setInitialValue(fOldVATCode);
     ui->teRemarks->setPlainText(fDbRows.at(0).at(c++).toString());
-
     CacheVatMode v;
     if (v.get(ui->leVATMode->fHiddenText)) {
         ui->leVATMode->setText(v.fName());
@@ -312,11 +309,11 @@ void WAccInvoice::viewEntries()
             for (QList<QList<QVariant> >::iterator row = proxyData.begin(); row != proxyData.end(); row++) {
                 if (row->at(3).toInt() == fDb.getInt(3) && row->at(1).toInt() == fDb.getInt(1)) {
                     if (row->at(1).toInt() == 1) {
-                        (*row)[5] = row->at(5).toDouble() + fDb.getDouble(5);
+                        ( *row)[5] = row->at(5).toDouble() + fDb.getDouble(5);
                     } else if (row->at(1).toInt() == -1) {
-                        (*row)[5] = row->at(5).toDouble() + fDb.getDouble(5);
+                        ( *row)[5] = row->at(5).toDouble() + fDb.getDouble(5);
                     }
-                    (*row)[6] = row->at(6).toDouble() + fDb.getDouble(6);
+                    ( *row)[6] = row->at(6).toDouble() + fDb.getDouble(6);
                     found = true;
                 }
             }
@@ -360,7 +357,7 @@ void WAccInvoice::viewEntries()
         ui->tblData->setItem(row, 7, Utils::tableItem(rowData.at(6)));
         //tax - 8
         C5TableWidgetItem *itemTax = new C5TableWidgetItem(rowData.at(7).toString());
-        itemTax->setFlags(itemTax->flags() ^ Qt::ItemIsUserCheckable);
+        itemTax->setFlags(itemTax->flags() ^Qt::ItemIsUserCheckable);
         itemTax->setCheckState(rowData.at(7).toInt() == 0  ? Qt::Unchecked : Qt::Checked);
         ui->tblData->setItem(row, 8, itemTax);
         //side - 9
@@ -396,7 +393,7 @@ void WAccInvoice::countAmounts()
 
 void WAccInvoice::correctCOCL()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_source"] = VAUCHER_RECEIPT_N;
     fDD.exec("select f_cityLedger, sum(f_amountAmd*f_sign) from m_register where f_cityLedger>0 and f_inv=:f_inv and f_source=:f_source and f_canceled=0");
@@ -462,7 +459,7 @@ void WAccInvoice::handleValues(const QList<QVariant> &values)
     }
     WAccInvoice *ai = nullptr;
     for (int i = 0, count = fMainWindow->fTab->count(); i < count; i++) {
-        ai = dynamic_cast<WAccInvoice*>(fMainWindow->fTab->widget(i));
+        ai = dynamic_cast<WAccInvoice *>(fMainWindow->fTab->widget(i));
         if (ai) {
             if (ai->invoiceId() == values.at(0).toString()) {
                 fMainWindow->fTab->setCurrentWidget(ai);
@@ -514,21 +511,21 @@ void WAccInvoice::on_btnPrint_clicked()
     double rate;
     bool printMeal;
     switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
-    case pio_none:
-        break;
-    case pio_guest:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
-        break;
-    case pio_comp:
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
-        break;
-    case pio_guestcomp_ser:
-        PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
-        PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
-        break;
-    case pio_guestcomp_tog:
-        PPrintInvoice(ui->leInvoice->text(), -1, ids, false, curr, rate, printMeal, this);
-        break;
+        case pio_none:
+            break;
+        case pio_guest:
+            PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
+            break;
+        case pio_comp:
+            PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
+            break;
+        case pio_guestcomp_ser:
+            PPrintInvoice(ui->leInvoice->text(), 0, ids, false, curr, rate, printMeal, this);
+            PPrintInvoice(ui->leInvoice->text(), 1, ids, false, curr, rate, printMeal, this);
+            break;
+        case pio_guestcomp_tog:
+            PPrintInvoice(ui->leInvoice->text(), -1, ids, false, curr, rate, printMeal, this);
+            break;
     }
 }
 
@@ -537,16 +534,15 @@ void WAccInvoice::on_btnTaxPrint_clicked()
     QString side;
     int result = DlgPrintTaxSideOption::printTaxSide();
     switch (result) {
-    case pts_none:
-        return;
-    case pts_guest:
-        side = "G";
-        break;
-    case pts_company:
-        side = "C";
-        break;
+        case pts_none:
+            return;
+        case pts_guest:
+            side = "G";
+            break;
+        case pts_company:
+            side = "C";
+            break;
     }
-
     //SET TAX MACHINES
     QSet<int> taxs;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
@@ -559,7 +555,6 @@ void WAccInvoice::on_btnTaxPrint_clicked()
         if (ui->tblData->toString(i, 9) != side) {
             continue;
         }
-
         CacheInvoiceItem c;
         if (!c.get(ui->tblData->toString(i, 3))) {
             message_error(tr("Error in tax print. c == 0, case 1."));
@@ -572,7 +567,6 @@ void WAccInvoice::on_btnTaxPrint_clicked()
         }
         taxs.insert(ci.fTax());
     }
-
     int taxnumber = 0;
     if (taxs.count() == 1) {
         taxnumber = taxs.toList().at(0);
@@ -584,21 +578,18 @@ void WAccInvoice::on_btnTaxPrint_clicked()
     if (taxnumber == 0) {
         return;
     }
-
     PrintTaxD *pt =  new PrintTaxD(taxnumber, this);
     pt->fInvoice = ui->leInvoice->text();
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (!isTaxPay(ui->tblData->toString(i, 10))) {
             continue;
         }
-
         if (ui->tblData->itemChecked(i, 8)) {
             continue;
         }
         if (ui->tblData->toString(i, 9) != side) {
             continue;
         }
-
         //HOTEL SOURCE
         if (ui->tblData->toString(i, 10) != VAUCHER_POINT_SALE_N ) {
             CacheInvoiceItem c;
@@ -651,14 +642,14 @@ void WAccInvoice::on_btnTaxPrint_clicked()
             if (ci.fTax() != taxnumber) {
                 continue;
             }
-            DoubleDatabase fDD(true, doubleDatabase);
+            DoubleDatabase fDD;
             fDD[":f_header"] = orderId;
             fDD[":f_state"] = DISH_STATE_READY;
             fDD.exec("select d.f_id, d.f_am, d.f_adgt, od.f_qty, od.f_price "
-                       "from o_dish od "
-                       "inner join r_dish d on d.f_id=od.f_dish "
-                       "where od.f_header=:f_header and od.f_state=:f_state "
-                       "and (od.f_complex=0 or (od.f_complex>0 and od.f_complexId>0)) ");
+                     "from o_dish od "
+                     "inner join r_dish d on d.f_id=od.f_dish "
+                     "where od.f_header=:f_header and od.f_state=:f_state "
+                     "and (od.f_complex=0 or (od.f_complex>0 and od.f_complexId>0)) ");
             while (fDD.nextRow()) {
                 QString vatReception = c.fVatDept();
                 if (!c.fVatReception().isEmpty()) {
@@ -675,7 +666,6 @@ void WAccInvoice::on_btnTaxPrint_clicked()
             }
         }
     }
-
     pt->build();
     if (pt->fRecList.count() > 0) {
         pt->exec();
@@ -718,18 +708,18 @@ void WAccInvoice::on_btnViewCorrections_clicked()
 
 void WAccInvoice::on_btnEliminate_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QModelIndexList rows = ui->tblData->selectionModel()->selectedRows();
     if (rows.count() == 0 && ui->tblData->rowCount() == 0) {
         if (message_confirm(tr("<b>This operation cannot be undon, continue?<b>")) != QDialog::Accepted) {
             return;
         }
         QStringList guestToDelete;
-        DoubleDatabase dbGuest(fDD);
-        dbGuest.open(true, false);
+        DoubleDatabase dbGuest;
+        dbGuest.open();
         dbGuest[":f_id"] = ui->leReservationId->text();
         dbGuest.exec("select f_guest from f_reservation where f_id=:f_id union select f_guest from f_reservation_guests where f_reservation=:f_id");
-        for (int i =0; i < dbGuest.rowCount(); i++) {
+        for (int i = 0; i < dbGuest.rowCount(); i++) {
             bool found = false;
             fDD[":f_guest"] = dbGuest.getValue(i, 0);
             fDD[":f_reservation"] = ui->leReservationId->text();
@@ -782,11 +772,11 @@ void WAccInvoice::on_btnEliminate_clicked()
         fDD.exec("delete from o_event where f_id=:f_id");
     }
     QString oldValue = QString("%1 %2(%3) %4 %5")
-            .arg(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString(),
-                 ui->tblData->item(rows.at(0).row(), 5)->data(Qt::EditRole).toString(),
-                 ui->tblData->item(rows.at(0).row(), 6)->data(Qt::EditRole).toString(),
-                 ui->tblData->item(rows.at(0).row(), 2)->data(Qt::EditRole).toDate().toString(def_date_format),
-                 ui->tblData->item(rows.at(0).row(), 4)->data(Qt::EditRole).toString());
+                       .arg(ui->tblData->item(rows.at(0).row(), 0)->data(Qt::EditRole).toString(),
+                            ui->tblData->item(rows.at(0).row(), 5)->data(Qt::EditRole).toString(),
+                            ui->tblData->item(rows.at(0).row(), 6)->data(Qt::EditRole).toString(),
+                            ui->tblData->item(rows.at(0).row(), 2)->data(Qt::EditRole).toDate().toString(def_date_format),
+                            ui->tblData->item(rows.at(0).row(), 4)->data(Qt::EditRole).toString());
     fTrackControl->insert("Entry eliminated", oldValue, "");
     fTrackControl->saveChanges();
     correctCOCL();
@@ -799,7 +789,7 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
     if (!index.isValid()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (index.column() == 2) {
         if (!r__(cr__super_correction)) {
             return;
@@ -811,7 +801,7 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
             fDD[":f_rdate"] = date;
             fDD.update("m_register", where_id(ap(ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString())));
             fTrackControl->insert("Manual change date for " + ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString(),
-                                      oldDate, date.toString(def_date_format));
+                                  oldDate, date.toString(def_date_format));
             if (ui->tblData->toString(index.row(), 10) == VAUCHER_POINT_SALE_N) {
                 fDD[":f_dateCash"] = date;
                 fDD[":f_id"] = ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString();
@@ -837,12 +827,12 @@ void WAccInvoice::on_tblData_doubleClicked(const QModelIndex &index)
         fDD[":f_amountVat"] = (index.column() == 5 ? Utils::countVATAmount(newAmount, ui->leVatCode->asInt()) : 0);
         fDD.update("m_register", where_id(ap(ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString())));
         fTrackControl->insert("Manual change amount for " + ui->tblData->item(index.row(), 0)->data(Qt::EditRole).toString(),
-                                  float_str(oldAmount, 1), float_str(newAmount, 1));
+                              float_str(oldAmount, 1), float_str(newAmount, 1));
         correctCOCL();
         fTrackControl->saveChanges();
         load(ui->leInvoice->text());
     } else if (index.column() == 8) {
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_replyTaxCode"] = ui->tblData->toInt(index.row(), 8);
         dd.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");
         if (dd.nextRow()) {
@@ -860,7 +850,7 @@ void WAccInvoice::on_deDeparture_userDateChanged(const QDate &date)
         load(ui->leInvoice->text());
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_startDate"] = date;
     fDD.update("m_register", where_id(ap(ui->leReservationId->text())));
     fTrackControl->saveChanges();
@@ -872,7 +862,7 @@ void WAccInvoice::on_deEntry_userDateChanged(const QDate &date)
         load(ui->leInvoice->text());
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_startDate"] = date;
     fDD.update("m_register", where_id(ap(ui->leReservationId->text())));
     fTrackControl->saveChanges();
@@ -895,16 +885,15 @@ void WAccInvoice::on_btnMoveItem_clicked()
         message_error(tr("Nothing was selected"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     int row = rows.at(0).row();
     DlgRemotInvoices *d = new DlgRemotInvoices(true, this);
     if (d->exec() == QDialog::Accepted) {
-        
         fDD[":f_invoice"] = d->fResult;
         fDD.exec("select r.f_id, r.f_room, g.guest "
-                  "from f_reservation r "
-                  "inner join guests g on g.f_id=r.f_guest "
-                  "where r.f_invoice=:f_invoice");
+                 "from f_reservation r "
+                 "inner join guests g on g.f_id=r.f_guest "
+                 "where r.f_invoice=:f_invoice");
         fDD.nextRow();
         fDD[":f_inv"] = d->fResult;
         fDD[":f_room"] = fDD.getValue("f_room");
@@ -921,12 +910,12 @@ void WAccInvoice::on_btnMoveItem_clicked()
             fDD.update("o_header", where_id(ap(ui->tblData->toString(row, 0))));
         }
         fTrackControl->insert("Entry moved to other invoice " + ui->tblData->item(row, 0)->data(Qt::EditRole).toString(),
-                                  ui->tblData->toString(row, 4) + ": " + ui->tblData->toString(row, 5) + "/" + ui->tblData->toString(row, 6),
-                                  d->fResult);
+                              ui->tblData->toString(row, 4) + ": " + ui->tblData->toString(row, 5) + "/" + ui->tblData->toString(row, 6),
+                              d->fResult);
         fTrackControl->saveChanges();
         fTrackControl->insert("Entry moved from other invoice " + ui->tblData->item(row, 0)->data(Qt::EditRole).toString(),
-                                  ui->tblData->toString(row, 4) + ": " + ui->tblData->toString(row, 5) + "/" + ui->tblData->toString(row, 6),
-                                  ui->leInvoice->text());
+                              ui->tblData->toString(row, 4) + ": " + ui->tblData->toString(row, 5) + "/" + ui->tblData->toString(row, 6),
+                              ui->leInvoice->text());
         fTrackControl->saveChanges();
         correctCOCL();
         load(ui->leInvoice->text());
@@ -942,7 +931,7 @@ void WAccInvoice::on_btnChangeCL_clicked()
         return;
     }
     int row = rows.at(0).row();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->tblData->toString(row, 0);
     fDD.exec("select f_source, f_itemCode, f_cityLedger from m_register  where f_id=:f_id");
     fDD.nextRow();
@@ -965,7 +954,7 @@ void WAccInvoice::on_btnChangeCL_clicked()
         fDD[":f_cityLedger"] = code.toInt();
         fDD.update("m_register", where_id(ap(ui->tblData->toString(row, 0))));
         fTrackControl->insert("CL Changed for  " + ui->tblData->toString(row, 0),
-                                  oldCL + "/" + cl.fName(), code + "/" + name);
+                              oldCL + "/" + cl.fName(), code + "/" + name);
         load(ui->leInvoice->text());
     }
 }
@@ -999,23 +988,22 @@ void WAccInvoice::on_btnExcel_clicked()
     double rate;
     bool printMeal;
     switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
-    case pio_none:
-        break;
-    case pio_guest:
-        PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 0);
-        break;
-    case pio_comp:
-        PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 1);
-        break;
-    case pio_guestcomp_ser:
-        PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 0);
-        PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 1);
-        break;
-    case pio_guestcomp_tog:
-        PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), -1);
-        break;
+        case pio_none:
+            break;
+        case pio_guest:
+            PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 0);
+            break;
+        case pio_comp:
+            PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 1);
+            break;
+        case pio_guestcomp_ser:
+            PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 0);
+            PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), 1);
+            break;
+        case pio_guestcomp_tog:
+            PExportInvoiceToExcel::exportInvoice(ui->leInvoice->text(), -1);
+            break;
     }
-
 }
 
 void WAccInvoice::on_btnEditRowVaucher_clicked()
@@ -1048,7 +1036,6 @@ void WAccInvoice::on_btnGuestInfo_clicked()
 
 void WAccInvoice::on_btnNext_clicked()
 {
-
 }
 
 void WAccInvoice::on_btnExportAS_clicked()
@@ -1065,26 +1052,26 @@ void WAccInvoice::on_btnExportAS_clicked()
 void WAccInvoice::on_btnExportASRetail_clicked()
 {
     DlgExportAS::exportInvoiceToAsAsRetailSaleOnlyTax(ui->leInvoice->text());
-//    QString curr;
-//    double rate;
-//    bool printMeal;
-//    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
-//    case pio_none:
-//        break;
-//    case pio_guest:
-//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
-//        break;
-//    case pio_comp:
-//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
-//        break;
-//    case pio_guestcomp_ser:
-//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
-//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
-//        break;
-//    case pio_guestcomp_tog:
-//        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), -1);
-//        break;
-//    }
+    //    QString curr;
+    //    double rate;
+    //    bool printMeal;
+    //    switch (DlgInvoicePrintOption::getOption(curr, rate, printMeal)) {
+    //    case pio_none:
+    //        break;
+    //    case pio_guest:
+    //        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+    //        break;
+    //    case pio_comp:
+    //        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+    //        break;
+    //    case pio_guestcomp_ser:
+    //        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 0);
+    //        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), 1);
+    //        break;
+    //    case pio_guestcomp_tog:
+    //        DlgExportAS::exportInvoiceToAsAsRetailSale(ui->leInvoice->text(), -1);
+    //        break;
+    //    }
     message_info("Finish");
 }
 
@@ -1096,18 +1083,18 @@ void WAccInvoice::on_btnMoveToCL_clicked()
         return;
     }
     int row = rows.at(0).row();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->tblData->toString(row, 0);
     fDD.exec("select f_source, f_itemCode, f_cityLedger from m_register  where f_id=:f_id");
     if (fDD.nextRow() == false) {
         message_error(tr("Invalid voucher code"));
         return;
     }
-//    if (fDD.getValue("f_source").toString() != "PS") {
-//        message_error(tr("The voucher must be the PS voucher"));
-//        return;
-//    }
-    if (DlgMoveToCL(ui->tblData->toString(row, 0), this).exec() == QDialog::Accepted){
+    //    if (fDD.getValue("f_source").toString() != "PS") {
+    //        message_error(tr("The voucher must be the PS voucher"));
+    //        return;
+    //    }
+    if (DlgMoveToCL(ui->tblData->toString(row, 0), this).exec() == QDialog::Accepted) {
         load(ui->leInvoice->text());
     }
 }

@@ -21,7 +21,7 @@ void DlgDebtPay::debtPay(int id)
 {
     DlgDebtPay *d = new DlgDebtPay(fPreferences.getDefaultParentForMessage());
     if (id > 0) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_id"] = id;
         fDD.exec("select * from o_debt_pay where f_id=:f_id");
         if (fDD.rowCount() > 0) {
@@ -42,7 +42,7 @@ void DlgDebtPay::on_btnCancel_clicked()
 
 void DlgDebtPay::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leCode->asInt() == 0) {
         ui->leCode->setInt(fDD.insert("o_debt_pay"));
     }

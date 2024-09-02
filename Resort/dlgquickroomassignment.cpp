@@ -74,7 +74,7 @@ void DlgQuickRoomAssignment::on_btnSave_clicked()
         message_error(err);
         return;
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_state"] = ROOM_STATE_DIRTY;
     dd.update("f_room", where_id(ui->lefrRoom->asInt()));
     dd[":f_room"] = ui->letoRoom->asInt();

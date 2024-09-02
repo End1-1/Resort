@@ -15,7 +15,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
     Base()
 {
     DoubleDatabase drh;
-    drh.open(true, false);
+    drh.open();
     drh[":f_id"] = number;
     drh.exec("select h.f_name as hname, t.f_name as tname, concat(u.f_firstName, ' ', u.f_lastName)  as staff,\
                oh.f_dateOpen, oh.f_dateClose, oh.f_dateCash, oh.f_total, oh.f_roomComment, oh.f_paymentMode, \
@@ -249,7 +249,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
         }
         lps[i]->render(&painter);
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_print"] = drh.getValue("f_print").toInt() + 1;
     fDD.update("o_header", where_id(ap(number)));
     TrackControl::insert(TRACK_REST_ORDER, "Print receipt", "", "", "", number);

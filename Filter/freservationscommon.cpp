@@ -111,7 +111,7 @@ void FReservationsCommon::openInvoice()
         message_info(tr("Nothing was selected"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = out.at(0);
     fDD.exec("select f_invoice from f_reservation where f_id=:f_id");
     if (!fDD.nextRow()) {

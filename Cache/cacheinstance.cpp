@@ -10,7 +10,7 @@ static QMutex __mutex;
 CacheInstance::CacheInstance(CacheBaseStruct *b) :
     QObject()
 {
-    QMutexLocker m(&__mutex);
+    QMutexLocker m( &__mutex);
     fStruct = b;
     load();
     fStruct->fInstance = this;
@@ -29,7 +29,7 @@ int CacheInstance::count()
 
 void CacheInstance::load()
 {
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fRows.clear();
     fColumnNameMap.clear();
     QString sql;
@@ -54,8 +54,8 @@ void CacheInstance::update(const QString &code)
     if (code == "0" || code.isEmpty()) {
         return;
     }
-    QMutexLocker m(&__mutex);
-    DoubleDatabase fDD(true, false);
+    QMutexLocker m( &__mutex);
+    DoubleDatabase fDD;
     fDD[":f_id"] = code;
     if (fStruct->fReplaceUpdateQuery.isEmpty()) {
         if (fStruct->fUpdateQuery.isEmpty()) {

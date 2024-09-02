@@ -6,7 +6,7 @@ WHotelStatus::WHotelStatus(QWidget *parent) :
     ui(new Ui::WHotelStatus)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QStringList row1, row2, row3, row4;
     row1 << "Working date" << "" << "Arrivals" << "" << "Empty room" << "" << "Paid occ." << "" << "Male" << "" << "F/B" << "0";
     row2 << "Rooms in hotel" << "" << "Departures" << "" << "Room to sell" << "" << "Comp. occ" << "" << "Female" << "" << "H/B" << "0";

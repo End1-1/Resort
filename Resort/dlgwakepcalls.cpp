@@ -34,7 +34,7 @@ void DlgWakepCalls::openWakeupCalls(const QString &room)
 void DlgWakepCalls::openWakeupCallsByInvoice(const QString &invoice)
 {
     DlgWakepCalls *dw = new DlgWakepCalls(__preferences.getDefaultParentForMessage());
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_invoice"] = invoice;
     db.exec("select g.guest, r.f_room from f_reservation r "
             "left join guests g on g.f_id=r.f_guest "
@@ -53,7 +53,7 @@ void DlgWakepCalls::openWakeupCallsByInvoice(const QString &invoice)
 void DlgWakepCalls::on_btnAddWakeup_clicked()
 {
     int row = ui->tbl->addRow();
-    DoubleDatabase db(true, doubleDatabase);
+    DoubleDatabase db;
     db[":f_invoice"] = ui->leInvoice->text();
     db[":f_date"] = ui->deDate->date();
     db[":f_time"] = ui->teTime->time();
@@ -68,7 +68,7 @@ void DlgWakepCalls::load()
 {
     ui->tbl->clearContents();
     ui->tbl->setRowCount(0);
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_invoice"] = ui->leInvoice->text();
     db.exec("select f_id, f_date, f_time, f_repeat from f_wakeupcalls where f_invoice=:f_invoice");
     while (db.nextRow()) {
@@ -98,7 +98,7 @@ void DlgWakepCalls::removeWakeup()
     if (message_confirm(tr("Are you sure?")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase db(true, doubleDatabase);
+    DoubleDatabase db;
     db[":f_id"] = ui->tbl->itemValue(ui->tbl->currentRow(), 0);
     db.exec("DELETE from f_wakeupcalls where f_id=:f_id");
     ui->tbl->removeRow(ui->tbl->currentRow());

@@ -37,7 +37,7 @@ bool RERestDishType::isDataCorrect()
         return false;
     }
     if (ui->leQueue->asInt() == 0) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD.exec("select max(f_queue) as f_queue from r_dish_type");
         fDD.nextRow();
         ui->leQueue->setInt(fDD.getInt(0));

@@ -43,7 +43,7 @@ void DlgRaiseUser::on_btnCancel_clicked()
 
 void DlgRaiseUser::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QString query = "select u.f_id, r.f_flag "
             "from users u "
             "inner join users_groups g on g.f_id=u.f_group "

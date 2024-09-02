@@ -94,7 +94,7 @@ void DlgTransfer::on_btnOk_clicked()
         message_error(errors);
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fTrackControl->fReservation = ui->leReserveFrom->text();
     fTrackControl->fInvoice = ui->leInvoiceFrom->text();

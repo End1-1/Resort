@@ -99,7 +99,7 @@ bool DlgPostBreakfast::postBreakfast(const QString &invoice, POST_TYPE pt)
 {
     DlgPostBreakfast *d = new DlgPostBreakfast(fPreferences.getDefaultParentForMessage());
     d->ui->leInvoice->setText(invoice);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_invoice"] = invoice;
     fDD.exec("select r.f_id, r.f_room, g.guest from f_reservation r left join guests g on r.f_guest=g.f_id where f_invoice=:f_invoice");
     if (fDD.nextRow()) {
@@ -192,7 +192,7 @@ void DlgPostBreakfast::on_btnSave_clicked()
         return;
     }
     bool isNew = false;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     if (ui->leVoucher->isEmpty()) {
         isNew = true;
@@ -360,7 +360,7 @@ void DlgPostBreakfast::on_btnPrintTax_clicked()
 
     int result = dpt.exec();
     if (result == TAX_OK) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_fiscal"] = dpt.fTaxCode;
         fDD.update("m_register", where_id(ap(ui->leVoucher->text())));
         ui->leTax->setInt(dpt.fTaxCode);

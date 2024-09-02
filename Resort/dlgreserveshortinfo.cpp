@@ -42,7 +42,7 @@ void DlgReserveShortInfo::on_btnCancel_clicked()
 
 void DlgReserveShortInfo::on_btnOK_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_startDate"] = ui->deCheckin->date();
     fDD[":f_checkinDate"] = ui->deCheckin->date();
     fDD[":f_endDate"] = ui->deDeparture->date();
@@ -61,7 +61,7 @@ void DlgReserveShortInfo::on_btnOK_clicked()
 
 bool DlgReserveShortInfo::loadInfo()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->leCode->text();
     fDD.exec("select * from f_reservation where f_id=:f_id");
     if (!fDD.nextRow()) {

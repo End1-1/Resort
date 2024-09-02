@@ -45,7 +45,7 @@ WRoomChart::WRoomChart(QWidget *parent) :
     installEventFilter(this);
     fDock = new WRoomChartDock(this);
     fDock->hide();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_id, f_short from f_room_classes order by f_queue");
     while (dd.nextRow()) {
         QPushButton *b = new QPushButton();
@@ -116,7 +116,7 @@ void WRoomChart::loadReservations()
         }
     }
     query += " order by rm.f_building, rm.f_id, rc.f_startdate desc ";
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec(query);
     qDebug() << "Reservation query" << t.elapsed();
     t.restart();

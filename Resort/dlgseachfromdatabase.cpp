@@ -33,7 +33,7 @@ void DlgSeachFromDatabase::on_leSearch_returnPressed()
     if (fSearchTemplate > 0) {
         fQuery = stQuery[fSearchTemplate] + fField.arg(ui->leSearch->text());
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec(fQuery);
     ui->tbl->setColumnCount(dd.columnCount());
     int row = 0;

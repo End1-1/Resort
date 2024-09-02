@@ -49,39 +49,39 @@ DlgNoShow::~DlgNoShow()
 void DlgNoShow::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_PAYMENT_MODE: {
-        ui->wGuest->setVisible(false);
-        CachePaymentMode ci;
-        if (ci.get(code)) {
-            switch( ci.fCode().toInt()) {
-            case PAYMENT_CL:
-                ui->leCLCode->setEnabled(true);
-                ui->btnPrintTax->setEnabled(true);
-                break;
-            case PAYMENT_CARD:
-                ui->leCardCode->setEnabled(true);
-                ui->btnPrintTax->setEnabled(true);
-                break;
-            case PAYMENT_ROOM:
-                ui->wGuest->setVisible(true);
-                adjustSize();
-                break;
+        case HINT_PAYMENT_MODE: {
+            ui->wGuest->setVisible(false);
+            CachePaymentMode ci;
+            if (ci.get(code)) {
+                switch( ci.fCode().toInt()) {
+                    case PAYMENT_CL:
+                        ui->leCLCode->setEnabled(true);
+                        ui->btnPrintTax->setEnabled(true);
+                        break;
+                    case PAYMENT_CARD:
+                        ui->leCardCode->setEnabled(true);
+                        ui->btnPrintTax->setEnabled(true);
+                        break;
+                    case PAYMENT_ROOM:
+                        ui->wGuest->setVisible(true);
+                        adjustSize();
+                        break;
+                }
+                ui->btnPrintTax->setEnabled(ci.fCode().toInt() != PAYMENT_CL);
             }
-            ui->btnPrintTax->setEnabled(ci.fCode().toInt() != PAYMENT_CL);
+            ui->leCardCode->setEnabled(ui->lePaymentMode->asInt() == PAYMENT_CARD);
+            break;
         }
-        ui->leCardCode->setEnabled(ui->lePaymentMode->asInt() == PAYMENT_CARD);
-        break;
-    }
-    case HINT_RED_RESERVE: {
-        CacheRedReservation ci;
-        if (ci.get(code)) {
-            ui->leReserve->setText(ci.fCode());
-            ui->leInvoice->setText(ci.fInvoice());
-            ui->leGuest->setText(ci.fGuest());
-            ui->leRoom->setText(ci.fRoom());
+        case HINT_RED_RESERVE: {
+            CacheRedReservation ci;
+            if (ci.get(code)) {
+                ui->leReserve->setText(ci.fCode());
+                ui->leInvoice->setText(ci.fInvoice());
+                ui->leGuest->setText(ci.fGuest());
+                ui->leRoom->setText(ci.fRoom());
+            }
+            break;
         }
-        break;
-    }
     }
 }
 
@@ -99,7 +99,7 @@ void DlgNoShow::setReservation(const QString &reserv)
 
 void DlgNoShow::load(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     ui->leCode->setText(id);
     fDD.exec("select * from m_register where f_id=:f_id");
@@ -163,7 +163,6 @@ void DlgNoShow::on_btnSave_clicked()
             return;
         }
     }
-
     if (ui->lePaymentMode->asInt() == 0) {
         message_error(tr("Payment mode was note selected"));
         return;
@@ -192,25 +191,25 @@ void DlgNoShow::on_btnSave_clicked()
         res = ui->wGuest->reserve();
         guest = ui->wGuest->guest();
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leCode->isEmpty()) {
         ui->leCode->setText(uuidx("CH"));
         DoubleDatabase did;
-        did.open(true, doubleDatabase);
+        did.open();
         did.insertId("m_register", ui->leCode->text());
         fDD[":f_source"] = VAUCHER_POSTCHARGE_N;
         fDD[":f_rdate"] = QDate::currentDate();
         fDD[":f_time"] = QTime::currentTime();
         fDD[":f_user"] = WORKING_USERID;
     }
-
     fDD[":f_wdate"] = ui->deDate->date();
     fDD[":f_res"] = res;
     fDD[":f_room"] = ui->leRoom->text();
     fDD[":f_guest"] = guest;
-    fDD[":f_itemCode"] = (ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toInt() : fPreferences.getDb(def_noshowfee_code).toInt());
+    fDD[":f_itemCode"] = (ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toInt() :
+                          fPreferences.getDb(def_noshowfee_code).toInt());
     fDD[":f_finalName"] = (ui->rbCancelation->isChecked() ? tr("Cancelation fee") + " " + res
-                                                              : tr("No show fee") + " " + res);
+                           : tr("No show fee") + " " + res);
     fDD[":f_amountAmd"] = ui->leAmount->asDouble();
     fDD[":f_amountVat"] = Utils::countVATAmount(ui->leAmount->asDouble(), ui->leVATCode->asInt());
     fDD[":f_amountUsd"] = def_usd;
@@ -236,7 +235,8 @@ void DlgNoShow::on_btnSave_clicked()
     tc.fInvoice = ui->leInvoice->text();
     tc.fReservation = ui->leReserve->text();
     tc.fRecord = ui->leCode->text();
-    tc.insert(ui->rbCancelation->isChecked() ? "CANCELATION FEE" : "NO SHOW FEE", ui->lePaymentName->text() + "/" + ui->leAmount->text(), "");
+    tc.insert(ui->rbCancelation->isChecked() ? "CANCELATION FEE" : "NO SHOW FEE",
+              ui->lePaymentName->text() + "/" + ui->leAmount->text(), "");
     message_info(tr("Saved"));
     getBalance();
 }
@@ -247,7 +247,8 @@ void DlgNoShow::on_btnPrintTax_clicked()
         message_error(tr("Save first"));
         return;
     }
-    QString itemCode = ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toString() : fPreferences.getDb(def_noshowfee_code).toString();
+    QString itemCode = ui->rbCancelation->isChecked() ? fPreferences.getDb(def_cancelfee_code).toString() :
+                       fPreferences.getDb(def_noshowfee_code).toString();
     CacheInvoiceItem ii;
     if (!ii.get(itemCode)) {
         return;
@@ -275,37 +276,36 @@ void DlgNoShow::on_btnPrintTax_clicked()
     dpt.fCardAmount = card;
     dpt.fPrepaid = prepaid;
     int result = dpt.exec();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (result == TAX_OK) {
         fDD[":f_fiscal"] = dpt.fTaxCode;
         fDD.update("m_register", where_id(ap(ui->leCode->text())));
         ui->leTaxCode->setInt(dpt.fTaxCode);
-
         fDD[":f_vaucher"] = ui->leCode->text();
         fDD[":f_invoice"] = ui->leInvoice->text();
         fDD[":f_date"] = QDate::currentDate();
         fDD[":f_time"] = QTime::currentTime();
         fDD[":f_name"] = (ui->rbCancelation->isChecked() ? tr("Cancelation fee") + " " + ui->leReserve->text()
-                                                             : tr("No show fee") + " " + ui->leReserve->text() );
+                          : tr("No show fee") + " " + ui->leReserve->text() );
         fDD[":f_amountCash"] = pm == PAYMENT_CASH ? ui->leAmount->asDouble() : 0;
         fDD[":f_amountCard"] = pm == PAYMENT_CARD ? ui->leAmount->asDouble() : 0;
         fDD[":f_amountPrepaid"] = pm == PAYMENT_ADVANCE ? ui->leAmount->asDouble() : 0;
         fDD[":f_user"] = WORKING_USERID;
         fDD[":f_comp"] = HOSTNAME;
         fDD.insert("m_tax_history");
-
-        TrackControl::insert(TRACK_RESERVATION, ui->rbCancelation->isChecked() ? tr("Cancelation fee tax") : tr("No show fee tax"),
-                      ui->leTaxCode->text(), ui->leCode->text(), ui->leCode->text(), ui->leInvoice->text(), ui->leReserve->text());
+        TrackControl::insert(TRACK_RESERVATION,
+                             ui->rbCancelation->isChecked() ? tr("Cancelation fee tax") : tr("No show fee tax"),
+                             ui->leTaxCode->text(), ui->leCode->text(), ui->leCode->text(), ui->leInvoice->text(), ui->leReserve->text());
         message_info(tr("Tax printed"));
     }
 }
 
 void DlgNoShow::getBalance()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD.exec("select sum(f_amountAmd*f_sign*-1) from m_register "
-               "where f_inv=:f_invoice and f_finance=1 and f_canceled=0");
+             "where f_inv=:f_invoice and f_finance=1 and f_canceled=0");
     if (fDD.nextRow()) {
         ui->leBalance->setText(fDD.getString(0));
     }

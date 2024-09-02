@@ -59,7 +59,7 @@ void RoomState::callback(int sel, const QString &code)
             crs.get(fRoom.fState());
             ui->leCurrentStateName->setText(crs.fName());
             ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
-            DoubleDatabase fDD(true, doubleDatabase);
+            DoubleDatabase fDD;
             fDD[":f_room"] = fRoom.fCode();
             fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
             if (fDD.nextRow()) {
@@ -105,7 +105,7 @@ void RoomState::on_btnOk_clicked()
     if (!ui->leNewState->isEnabled()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leNewState->asInt() == ROOM_STATE_NONE) {
         bool clear = true;
         fDD[":f_room"] = ui->leRoomCode->asInt();

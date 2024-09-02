@@ -69,7 +69,7 @@ DlgCreateGroupReservation::~DlgCreateGroupReservation()
 
 void DlgCreateGroupReservation::loadRooms()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_floor, f_short, f_rate from f_room order by f_floor, f_id");
     int floor = 0;
     int row = 0;

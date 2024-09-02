@@ -108,7 +108,7 @@ void DlgPaymentsDetails::callback(int sel, const QString &code)
 void DlgPaymentsDetails::setInvoice(const QString &id)
 {
     ui->leInvoice->setText(id);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":invoice"] = id;
     fDD.exec("select r.f_room, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
                "r.f_cityLedger, cl.f_name, r.f_startDate, r.f_endDate, r.f_id, rm.f_donotdisturbe "
@@ -554,7 +554,7 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             }
 
             QString rid = uuidx(t->item(i, 10)->text());
-            DoubleDatabase fDD(true, doubleDatabase);
+            DoubleDatabase fDD;
             fDD.insertId("m_register", rid);
             fDD[":f_source"] = t->item(i, 10)->text();
             fDD[":f_res"] = ui->leReservation->text();
@@ -674,7 +674,7 @@ void DlgPaymentsDetails::on_btnSave_clicked()
         }
     }
     QList<int> printRefundRow;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     QList<int> printRows1;
     QList<int> printRows2;

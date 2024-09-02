@@ -46,7 +46,7 @@ void DlgRefundVaucher::on_btnSave_clicked()
         message_error(tr("Reservation is not selected"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leVaucher->isEmpty()) {
         ui->leVaucher->setText(uuidx("RF"));
         fDD[":f_id"] = ui->leVaucher->text();
@@ -114,7 +114,7 @@ void DlgRefundVaucher::setReservation(const QString &reserv)
 
 void DlgRefundVaucher::getBalance()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD.exec("select sum(f_amountAmd*f_sign*-1) from m_register "
                "where f_inv=:f_invoice and f_finance=1 and f_canceled=0");

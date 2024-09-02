@@ -26,7 +26,7 @@ void PPrintStoreEntry::print(const QString &id)
 void PPrintStoreEntry::printDoc()
 {
     DoubleDatabase dr1;
-    dr1.open(true, false);
+    dr1.open();
     dr1[":f_id"] = fDockId;
     dr1.exec("select * from st_header where f_id=:f_id");
     if (dr1.rowCount() == 0) {
@@ -54,8 +54,8 @@ void PPrintStoreEntry::printDoc()
     top += ps->addTextRect(610, top, 400, rowHeight, crs.fName(), &trAll)->textHeight();
 
     DoubleDatabase dr2;
-    DoubleDatabase fDD(true, doubleDatabase);
-    dr2.open(true, false);
+    DoubleDatabase fDD;
+    dr2.open();
     fDD[":f_doc"] = fDockId;
     dr2.exec("select * from st_body where f_doc=:f_doc");
 

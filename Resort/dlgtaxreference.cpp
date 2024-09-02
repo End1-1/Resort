@@ -9,7 +9,7 @@ DlgTaxReference::DlgTaxReference(int itemId, QWidget *parent) :
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 0, 100, 100, 300, 100, 140);
     fItemId = itemId;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_item"] = itemId;
     fDD.exec("select t.f_id, r.f_room, t.f_invoice, i.f_" + def_lang + ", t.f_amount, f_date "
                "from m_free_tax t "
@@ -63,7 +63,7 @@ void DlgTaxReference::deleteRow()
     if (message_confirm(tr("Confirm to delete selected row")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->tblData->toInt(sel.at(0).row(), 0);
     fDD.exec("delete from m_free_tax where f_id=:f_id");
     ui->tblData->removeRow(sel.at(0).row());
@@ -79,7 +79,7 @@ void DlgTaxReference::on_tblData_doubleClicked(const QModelIndex &index)
     if (!index.isValid()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_fiscal"] = 1;
     fDD.update("m_register", where_id(fRecId));
     fDD[":f_used"] = 1;

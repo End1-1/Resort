@@ -7,7 +7,7 @@ DlgReportBuilderGroups::DlgReportBuilderGroups(QWidget *parent) :
     ui(new Ui::DlgReportBuilderGroups)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_name from serv_reports_group order by f_name");
     while (fDD.nextRow()) {
         QListWidgetItem *item = new QListWidgetItem(ui->lwList);
@@ -33,7 +33,7 @@ void DlgReportBuilderGroups::on_btnNew_clicked()
     if (name.isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_name"] = name;
     int id = fDD.insert("serv_reports_group");
     QListWidgetItem *item = new QListWidgetItem(ui->lwList);
@@ -53,7 +53,7 @@ void DlgReportBuilderGroups::on_btnEdit_clicked()
     if (name.isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_name"] = name;
     fDD.update("serv_reports_group", where_id(item->data(Qt::UserRole).toInt()));
     item->setText(name);
@@ -70,7 +70,7 @@ void DlgReportBuilderGroups::on_btnRemove_clicked()
     if (message_confirm(tr("Confirm to delete selected group.<br><b>ALL REPORTS THATS ASSIGNED TO THIS GROUP WILL BE REMOVE TOO!</b>")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_group"] = item->data(Qt::UserRole);
     fDD.exec("delete from serv_reports where f_group=:f_group");
     fDD[":f_id"] = item->data(Qt::UserRole);

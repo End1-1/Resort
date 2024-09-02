@@ -48,7 +48,7 @@ void RENationalityFile::on_btnCancel_clicked()
 
 void RENationalityFile::on_btnSave_clicked()
 {
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fDD[":f_short"] = ui->leShort->text();
     fDD.exec("select f_id from f_nationality where f_short=:f_short");
     QString err;

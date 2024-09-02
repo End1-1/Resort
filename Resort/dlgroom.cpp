@@ -10,28 +10,26 @@ DlgRoom::DlgRoom(QList<QVariant> &values, QWidget *parent) :
     ui(new Ui::DlgRoom)
 {
     ui->setupUi(this);
-
     ui->leBedCode->setSelector(this, cache(cid_bed), ui->leBedName);
     ui->leClassCode->setSelector(this, cache(cid_room_category), ui->leClassName);
     ui->leViewCode->setSelector(this, cache(cid_room_view), ui->leViewName);
-
     ui->btnOK->setText(tr("New"));
     addWidget(ui->leCode, "Code")
-             .addWidget(ui->leClassCode, "Class code")
-             .addWidget(ui->leClassName, "Class name")
-             .addWidget(ui->leViewCode, "View code")
-             .addWidget(ui->leViewName, "View name")
-             .addWidget(ui->leFloor, "Floor")
-             .addWidget(ui->leBuild, "Build")
-             .addWidget(ui->leShortName, "Shortname")
-             .addWidget(ui->leDescription, "Description")
-             .addWidget(ui->leRate, "Room rate")
-             .addWidget(ui->leBedCode, "Bed code")
-             .addWidget(ui->leBedName, "Bed name")
-             .addWidget(ui->leQty, "Qty")
-             .addWidget(ui->leQueue, "Queue")
-             .addWidget(ui->chSmoking, "Smoking")
-             .addWidget(ui->lePhone, "Phone");
+    .addWidget(ui->leClassCode, "Class code")
+    .addWidget(ui->leClassName, "Class name")
+    .addWidget(ui->leViewCode, "View code")
+    .addWidget(ui->leViewName, "View name")
+    .addWidget(ui->leFloor, "Floor")
+    .addWidget(ui->leBuild, "Build")
+    .addWidget(ui->leShortName, "Shortname")
+    .addWidget(ui->leDescription, "Description")
+    .addWidget(ui->leRate, "Room rate")
+    .addWidget(ui->leBedCode, "Bed code")
+    .addWidget(ui->leBedName, "Bed name")
+    .addWidget(ui->leQty, "Qty")
+    .addWidget(ui->leQueue, "Queue")
+    .addWidget(ui->chSmoking, "Smoking")
+    .addWidget(ui->lePhone, "Phone");
 }
 
 DlgRoom::~DlgRoom()
@@ -81,7 +79,7 @@ void DlgRoom::on_btnOK_clicked()
         message_error(err);
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (fTrackControl->oldValue(ui->leCode) != ui->leCode->text()) {
         fDD[":f_id"] = ui->leCode->text();
         fDD.exec("select * from f_room where f_id=:f_id");
@@ -89,7 +87,6 @@ void DlgRoom::on_btnOK_clicked()
             message_error(tr("Duplicate room code."));
             return;
         }
-
     }
     fDD[":f_id"] = ui->leCode->text();
     fDD[":f_class"] = ui->leClassCode->text();
@@ -106,7 +103,7 @@ void DlgRoom::on_btnOK_clicked()
     fDD[":f_phone"] = ui->lePhone->text();
     if (isNew) {
         QMap<QString, QVariant> e;
-        DoubleDatabase dd2(true, false);
+        DoubleDatabase dd2;
         dd2[":f_id"] = ui->leCode->text();
         dd2.exec("select f_id from f_room where f_id=" + ui->leCode->text());
         if (dd2.rowCount() > 0) {

@@ -26,7 +26,7 @@ DlgCLInitialBalance::~DlgCLInitialBalance()
 void DlgCLInitialBalance::openVaucher(const QString &id)
 {
     DlgCLInitialBalance *d = new DlgCLInitialBalance(0, fPreferences.getDefaultParentForMessage());
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select * from m_register where f_id=:f_id");
     if (!fDD.nextRow()) {
@@ -70,7 +70,7 @@ void DlgCLInitialBalance::on_btnOk_clicked()
     } else {
         item = fPreferences.getDb(def_invoice_default_negative_transfer_id).toInt();
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     CacheCityLedger ccl;
     ccl.get(fCLCode);

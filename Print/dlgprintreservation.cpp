@@ -61,7 +61,7 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     int top = 310;
     int rowHeight = 60;
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("To") + ":", &th, f));
-    DoubleDatabase dguest(true);
+    DoubleDatabase dguest;
     dguest[":f_invoice"] = fSource->invoiceId();
     dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name) "
                 "from f_reservation_guests rg "
@@ -176,7 +176,7 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     top += 5;
     top += ps->addTextRect(20, top, 2100, rowHeight, tr("Date") + " " + QDate::currentDate().toString(def_date_format),
                            &th)->textHeight();
-    DoubleDatabase dguest(true);
+    DoubleDatabase dguest;
     dguest[":f_invoice"] = fSource->invoiceId();
     dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name) "
                 "from f_reservation_guests rg "

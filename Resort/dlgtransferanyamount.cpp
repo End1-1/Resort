@@ -87,7 +87,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             ui->lefromGuest->setText(c.fGuestName());
             ui->defromEntry->setDate(c.fEntry());
             ui->defromDeparture->setDate(c.fDeparture());
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_inv"] = c.fInvoice();
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -123,7 +123,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             ui->lefromGuest->setText(c.fGuest());
             ui->defromEntry->setText(c.fEntry());
             ui->defromDeparture->setText(c.fDeparture());
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_inv"] = c.fInvoice();
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -147,7 +147,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
     case hint_from_cl: {
         CacheCityLedger c;
         if (c.get(code)) {
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_cityledger"] = code;
             dd.exec("select sum(f_amountamd*f_sign) from m_register where f_cityledger=:f_cityledger and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -171,7 +171,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             ui->letoGuest->setText(c.fGuestName());
             ui->detoEntry->setDate(c.fEntry());
             ui->detoDeparture->setDate(c.fDeparture());
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_inv"] = c.fInvoice();
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -202,7 +202,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             ui->letoGuest->setText(c.fGuest());
             ui->detoEntry->setText(c.fEntry());
             ui->detoDeparture->setText(c.fDeparture());
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_inv"] = c.fInvoice();
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -221,7 +221,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
     case hint_to_cl: {
         CacheCityLedger c;
         if (c.get(code)) {
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_cityledger"] = code;
             dd.exec("select sum(f_amountamd*f_sign) from m_register where f_cityledger=:f_cityledger and f_finance=1 and f_canceled=0");
             dd.nextRow();
@@ -510,7 +510,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         message_error(err);
         return;
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd.startTransaction();
     fDoc1.fSource = VAUCHER_TRANSFER_AMOUNT_N;
     fDoc1.fItemCode = fPreferences.getDb(def_transfer_amount_id).toUInt();

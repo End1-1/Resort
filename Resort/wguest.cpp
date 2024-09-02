@@ -11,28 +11,26 @@ WGuest::WGuest(QList<QVariant> &values, QWidget *parent) :
 {
     ui->setupUi(this);
     ui->btnRemove->setVisible(r__(cr__super_correction));
-
     ui->leTitle->setSelector(this, cache(cid_guest_title), ui->leTitle);
     ui->leNationalityCode->setSelector(this, cache(cid_nation), ui->leNationality);
     ui->cbSex->setCurrentIndex(-1);
     ui->deBirth->clear();
-
     addWidget(ui->leGuestCode, "Code")
-            .addWidget(ui->leTitle, "Title")
-            .addWidget(ui->leFirstname, "First name")
-            .addWidget(ui->leLastname, "Last name")
-            .addWidget(ui->cbSex, "Sex")
-            .addWidget(ui->deBirth, "Birth date")
-            .addWidget(ui->lePlaceBirth, "Place of birth")
-            .addWidget(ui->leNationalityCode, "")
-            .addWidget(ui->leNationality, "Nationality")
-            .addWidget(ui->lePassport, "Passport")
-            .addWidget(ui->leAddress, "Address")
-            .addWidget(ui->leTel1, "Tel.1")
-            .addWidget(ui->leTel2, "Tel.2")
-            .addWidget(ui->leEmail, "Email")
-            .addWidget(ui->lePostBox, "Postbox")
-            .addWidget(ui->teRemarks, "Remarks");
+    .addWidget(ui->leTitle, "Title")
+    .addWidget(ui->leFirstname, "First name")
+    .addWidget(ui->leLastname, "Last name")
+    .addWidget(ui->cbSex, "Sex")
+    .addWidget(ui->deBirth, "Birth date")
+    .addWidget(ui->lePlaceBirth, "Place of birth")
+    .addWidget(ui->leNationalityCode, "")
+    .addWidget(ui->leNationality, "Nationality")
+    .addWidget(ui->lePassport, "Passport")
+    .addWidget(ui->leAddress, "Address")
+    .addWidget(ui->leTel1, "Tel.1")
+    .addWidget(ui->leTel2, "Tel.2")
+    .addWidget(ui->leEmail, "Email")
+    .addWidget(ui->lePostBox, "Postbox")
+    .addWidget(ui->teRemarks, "Remarks");
     fTable = "f_guests";
     fCacheId = cid_guest;
 }
@@ -49,7 +47,6 @@ void WGuest::setValues()
         ui->leTitle->setInitialValue(fValues.at(1).toString());
     }
 }
-
 
 WGuest *WGuest::guest(QList<QVariant> &values, bool noCheckNation, bool fromReader)
 {
@@ -69,7 +66,7 @@ void WGuest::on_btnCancel_clicked()
 
 void WGuest::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (!ui->lePassport->isEmpty()) {
         fDD[":f_passport"] = ui->lePassport->text();
         fDD.exec("select f_id from f_guests where f_passport=:f_passport");
@@ -95,13 +92,12 @@ void WGuest::on_btnOk_clicked()
             return;
         }
     }
-
     save();
 }
 
 void WGuest::on_btnRemove_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leGuestCode->asInt() == 0) {
         return;
     }
@@ -114,7 +110,8 @@ void WGuest::on_btnRemove_clicked()
     fDD[":f_id"] = ui->leGuestCode->asInt();
     fDD.exec("delete from f_guests where f_id=:f_id");
     BroadcastThread::cmdRefreshCache(cid_guest, ui->leGuestCode->text());
-    fTrackControl->insert("Guest removed", ui->leGuestCode->text() + " " + ui->leFirstname->text() + " " + ui->leLastname->text(), "");
+    fTrackControl->insert("Guest removed",
+                          ui->leGuestCode->text() + " " + ui->leFirstname->text() + " " + ui->leLastname->text(), "");
     fTrackControl->saveChanges();
     message_info(tr("Guest was removed"));
     reject();
@@ -132,7 +129,7 @@ void WGuest::on_btnReadFromDevice_clicked()
     QString rawDocNum = src.mid(44, 9);
     QString nat = src.mid(54, 3);
     if (country == "D<<") {
-        country = "DNK";
+        country = "DEU";
     }
     QString dobRaw = src.mid(57, 6);
     QStringList names = rawName.split("<<", Qt::SkipEmptyParts);
@@ -147,7 +144,7 @@ void WGuest::on_btnReadFromDevice_clicked()
         year = "20" + year;
     }
     ui->deBirth->setDate(QDate::fromString(QString("%1/%2/%3").arg(day, month, year), "dd/MM/yyyy"));
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_alpha3"] = country;
     dd.exec("select f_short from f_nationality where f_alpha3=:f_alpha3");
     if (dd.nextRow() == false) {
@@ -171,7 +168,6 @@ void WGuest::on_btnReadFromDevice_clicked()
                 ui->leFirstname->setText(names.at(1));
                 if (names.count() > 2) {
                     if (names.at(2).contains("<")) {
-
                     } else {
                         ui->leFirstname->setText(ui->leFirstname->text() + " " + names.at(2));
                     }

@@ -60,7 +60,7 @@ void DlgGroupRevive::on_btnRevive_clicked()
             ui->tbl->setItemWithValue(i, 6, err);
         }
         cnt++;
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         dd[":f_state"] = RESERVE_RESERVE;
         dd.update("f_reservation", where_id(ap(ui->tbl->itemValue(i, 1).toString())));
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tbl->itemValue(i, 1).toString());

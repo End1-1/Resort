@@ -163,7 +163,7 @@ void DlgSinglePrintTax::on_btnPrint_clicked()
         d->fCardAmount = card;
         d->fPrepaid = prepaid;
         if (d->exec() == TAX_OK) {
-            DoubleDatabase dd(true, doubleDatabase);
+            DoubleDatabase dd;
             foreach (QString r, rows) {
                 dd[":f_fiscal"] = d->fTaxCode;
                 dd[":f_fiscaldate"] = QDate::currentDate();

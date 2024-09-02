@@ -160,7 +160,7 @@ void FInvoices::removeInvoiceWithAllReference()
         return;
     }
     QList<int> ps;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_inv"] = inv;
     fDD.exec("select f_doc from m_register where f_inv=:f_inv and f_source='PS'");
     while (fDD.nextRow()) {

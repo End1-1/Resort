@@ -22,7 +22,6 @@ RowEditorDialog::RowEditorDialog(QList<QVariant> &values, int trackId, QWidget *
 
 RowEditorDialog::~RowEditorDialog()
 {
-
 }
 
 void RowEditorDialog::setValues()
@@ -46,7 +45,6 @@ RowEditorDialog &RowEditorDialog::addWidget(QWidget *w, const QString &trackName
     return *this;
 }
 
-
 void RowEditorDialog::valuesToWidgets()
 {
     int j = 0;
@@ -54,31 +52,31 @@ void RowEditorDialog::valuesToWidgets()
     for (int i = 0; i < fWidgets.count(); i++) {
         QWidget *w = fWidgets[i];
         if (isLineEdit(w)) {
-            EQLineEdit *e = static_cast<EQLineEdit*>(w);
+            EQLineEdit *e = static_cast<EQLineEdit *>(w);
             e->setText(fValues.at(j).toString());
             if (e->getField() == "f_id") {
                 id = e;
             }
         } else if(isColorLineEdit(w)) {
-            static_cast<EColorLineEdit*>(w)->setText(fValues.at(j).toString());
+            static_cast<EColorLineEdit *>(w)->setText(fValues.at(j).toString());
         } else if (!strcmp(w->metaObject()->className(), "QDateEdit") ||
                    !strcmp(w->metaObject()->className(), "EQDateEdit")) {
-            static_cast<QDateEdit*>(w)->setDate(fValues.at(j).toDate());
+            static_cast<QDateEdit *>(w)->setDate(fValues.at(j).toDate());
         } else if (!strcmp(w->metaObject()->className(), "QDateTimeEdit")) {
-            static_cast<QDateTimeEdit*>(w)->setDateTime(fValues.at(j).toDateTime());
+            static_cast<QDateTimeEdit *>(w)->setDateTime(fValues.at(j).toDateTime());
         } else if(isTimeEdit(w)) {
-            static_cast<QTimeEdit*>(w)->setTime(QTime::fromString(fValues.at(j).toString(), "HH:mm:ss"));
+            static_cast<QTimeEdit *>(w)->setTime(QTime::fromString(fValues.at(j).toString(), "HH:mm:ss"));
         } else if (isComboBox(w)) {
-            static_cast<EQComboBox*>(w)->setCurrentIndex(static_cast<EQComboBox*>(w)->findData(fValues.at(j)));
+            static_cast<EQComboBox *>(w)->setCurrentIndex(static_cast<EQComboBox *>(w)->findData(fValues.at(j)));
             j++;
         } else if (!strcmp(w->metaObject()->className(), "QTextEdit") ||
                    !strcmp(w->metaObject()->className(), "EQTextEdit")) {
-            static_cast<QTextEdit*>(w)->setPlainText(fValues.at(j).toString());
+            static_cast<QTextEdit *>(w)->setPlainText(fValues.at(j).toString());
         } else if (!strcmp(w->metaObject()->className(), "QCheckBox") ||
                    !strcmp(w->metaObject()->className(), "EQCheckBox")) {
-            static_cast<QCheckBox*>(w)->setChecked(fValues.at(j).toInt());
+            static_cast<QCheckBox *>(w)->setChecked(fValues.at(j).toInt());
         } else if (isEDateEdit(w)) {
-            static_cast<EDateEdit*>(w)->setDate(fValues.at(j).toDate());
+            static_cast<EDateEdit *>(w)->setDate(fValues.at(j).toDate());
         } else {
             message_error("Application error. Please contact with developer and tell him next information:<br>"
                           "valuesToWidgets. Unknown classname: " + QString(w->metaObject()->className()));
@@ -96,27 +94,27 @@ void RowEditorDialog::widgetsToValues()
     for (int i = 0; i < fWidgets.count(); i++) {
         QWidget *w = fWidgets[i];
         if (isLineEdit(w)) {
-            fValues << static_cast<QLineEdit*>(w)->text();
+            fValues << static_cast<QLineEdit *>(w)->text();
         } else if (isEDateEdit(w)) {
-            fValues << static_cast<EDateEdit*>(w)->text();
+            fValues << static_cast<EDateEdit *>(w)->text();
         } else if(isColorLineEdit(w)) {
-            fValues << static_cast<EColorLineEdit*>(w)->text();
+            fValues << static_cast<EColorLineEdit *>(w)->text();
         } else if (!strcmp(w->metaObject()->className(), "QDateEdit") ||
                    !strcmp(w->metaObject()->className(), "EQDateEdit")) {
-            fValues << static_cast<QDateEdit*>(w)->date().toString(def_date_format);
+            fValues << static_cast<QDateEdit *>(w)->date().toString(def_date_format);
         } else if (!strcmp(w->metaObject()->className(), "QDateTimeEdit")) {
-            fValues << static_cast<QDateTimeEdit*>(w)->dateTime().toString(def_date_time_format);
+            fValues << static_cast<QDateTimeEdit *>(w)->dateTime().toString(def_date_time_format);
         } else if(isTimeEdit(w)) {
-            fValues << static_cast<QTimeEdit*>(w)->time().toString(def_time_format);
+            fValues << static_cast<QTimeEdit *>(w)->time().toString(def_time_format);
         } else if (isComboBox(w)) {
-            fValues << static_cast<QComboBox*>(w)->itemData(static_cast<QComboBox*>(w)->currentIndex());
-            fValues << static_cast<QComboBox*>(w)->currentText();
+            fValues << static_cast<QComboBox *>(w)->itemData(static_cast<QComboBox *>(w)->currentIndex());
+            fValues << static_cast<QComboBox *>(w)->currentText();
         } else if (!strcmp(w->metaObject()->className(), "QTextEdit") ||
                    !strcmp(w->metaObject()->className(), "EQTextEdit")) {
-            fValues << static_cast<QTextEdit*>(w)->toPlainText();
+            fValues << static_cast<QTextEdit *>(w)->toPlainText();
         } else if (!strcmp(w->metaObject()->className(), "QCheckBox") ||
                    !strcmp(w->metaObject()->className(), "EQCheckBox")) {
-            fValues << (int) static_cast<QCheckBox*>(w)->isChecked();
+            fValues << (int) static_cast<QCheckBox *>(w)->isChecked();
         } else {
             message_error("Application error. Please contact with developer and tell him next information:<br>"
                           "widgetToValues. Unknown classname: " + QString(w->metaObject()->className()));
@@ -126,36 +124,36 @@ void RowEditorDialog::widgetsToValues()
 
 void RowEditorDialog::clearWidgets()
 {
-    for (QList<QWidget*>::const_iterator it = fWidgets.begin(); it != fWidgets.end(); it++) {
+    for (QList<QWidget * >::const_iterator it = fWidgets.begin(); it != fWidgets.end(); it++) {
         QWidget *w = *it;
         if (!strcmp(w->metaObject()->className(), "EQLineEdit")) {
-            EQLineEdit *e = static_cast<EQLineEdit*>(w);
+            EQLineEdit *e = static_cast<EQLineEdit *>(w);
             e->clear();
         } else if (!strcmp(w->metaObject()->className(), "QLineEdit")) {
-            QLineEdit *e = static_cast<QLineEdit*>(w);
+            QLineEdit *e = static_cast<QLineEdit *>(w);
             e->clear();
         } else if (isColorLineEdit(w)) {
             //EColorLineEdit *c = static_cast<EColorLineEdit*>(w);
             //c->setText("-1");
         } else if (!strcmp(w->metaObject()->className(), "EQCheckBox") ||
                    !strcmp(w->metaObject()->className(), "QCheckBox")) {
-            QCheckBox *c = static_cast<QCheckBox*>(w);
+            QCheckBox *c = static_cast<QCheckBox *>(w);
             c->setCheckState(Qt::Unchecked);
         } else if (!strcmp(w->metaObject()->className(), "QTextEdit") ||
                    !strcmp(w->metaObject()->className(), "EQTextEdit")) {
-            QTextEdit *t = static_cast<QTextEdit*>(w);
+            QTextEdit *t = static_cast<QTextEdit *>(w);
             t->clear();
         } else if (isTimeEdit(w)) {
-            static_cast<QTimeEdit*>(w)->setTime(QTime::fromString("00:00", def_time_format));
+            static_cast<QTimeEdit *>(w)->setTime(QTime::fromString("00:00", def_time_format));
         } else if (isDateEdit(w)) {
-            static_cast<QDateEdit*>(w)->setDate(WORKING_DATE);
+            static_cast<QDateEdit *>(w)->setDate(WORKING_DATE);
         }
     }
 }
 
 bool RowEditorDialog::saveOnly()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDataErrors.clear();
     if (!isDataCorrect()) {
         QString error;
@@ -166,55 +164,55 @@ bool RowEditorDialog::saveOnly()
         return false;
     }
     EQLineEdit *id = nullptr;
-    for (QList<QWidget*>::const_iterator it = fWidgets.begin(); it != fWidgets.end(); it++) {
+    for (QList<QWidget * >::const_iterator it = fWidgets.begin(); it != fWidgets.end(); it++) {
         QWidget *w = *it;
         if (isLineEdit(w)) {
-            EQLineEdit *l = static_cast<EQLineEdit*>(w);
+            EQLineEdit *l = static_cast<EQLineEdit *>(w);
             if (l->getPrimaryKey()) {
                 id = l;
             } else {
                 if (!l->getField().isEmpty()) {
                     switch (l->property("Type").toInt()) {
-                    case 1:
-                        fDD[":" + l->getField()] = l->text().toInt();
-                        break;
-                    default:
-                        fDD[":" + l->getField()] = l->text();
+                        case 1:
+                            fDD[":" + l->getField()] = l->text().toInt();
+                            break;
+                        default:
+                            fDD[":" + l->getField()] = l->text();
                     }
                 }
             }
         } else if (isColorLineEdit(w)) {
-            EColorLineEdit *l = static_cast<EColorLineEdit*>(w);
+            EColorLineEdit *l = static_cast<EColorLineEdit *>(w);
             if (!l->getField().isEmpty()) {
                 fDD[":" + l->getField()] = l->text();
             }
         } else if (isComboBox(w)) {
-            EQComboBox *c = static_cast<EQComboBox*>(w);
+            EQComboBox *c = static_cast<EQComboBox *>(w);
             if (!c->getField().isEmpty()) {
                 fDD[":" + c->getField()] = c->asInt();
             }
         } else if (isDateEdit(w)) {
-            EQDateEdit *e = static_cast<EQDateEdit*>(w);
+            EQDateEdit *e = static_cast<EQDateEdit *>(w);
             if (!e->getField().isEmpty() && e->date().isValid()) {
                 fDD[":" + e->getField()] = e->date();
             }
         } else if (isTimeEdit(w)) {
-            EQTimeEdit *t = static_cast<EQTimeEdit*>(w);
+            EQTimeEdit *t = static_cast<EQTimeEdit *>(w);
             if (!t->getField().isEmpty() && t->time().isValid()) {
                 fDD[":" + t->getField()] = t->time();
             }
         } else if (isCheckBox(w)) {
-            EQCheckBox *c = static_cast<EQCheckBox*>(w);
+            EQCheckBox *c = static_cast<EQCheckBox *>(w);
             if (!c->getField().isEmpty()) {
                 fDD[":" + c->getField()] = c->isChecked() ? 1 : 0;
             }
         } else if (isTextEdit(w)) {
-            EQTextEdit *t = static_cast<EQTextEdit*>(w);
+            EQTextEdit *t = static_cast<EQTextEdit *>(w);
             if (!t->getField().isEmpty()) {
                 fDD[":" + t->getField()] = t->toPlainText();
             }
         } else if (isEDateEdit(w)) {
-            EDateEdit *e = static_cast<EDateEdit*>(w);
+            EDateEdit *e = static_cast<EDateEdit *>(w);
             if (!e->getField().isEmpty() && e->date().isValid()) {
                 fDD[":" + e->getField()] = e->date();
             }
@@ -227,10 +225,10 @@ bool RowEditorDialog::saveOnly()
         return false;
     }
     if (id->asInt() == 0) {
-        DoubleDatabase dd1(true, false);
+        DoubleDatabase dd1;
         dd1[":" + id->getField()] = 0;
         int newid = dd1.insert(fTable, true);
-        DoubleDatabase dd2(true, doubleDatabase);
+        DoubleDatabase dd2;
         dd2[":" + id->getField()] = newid;
         dd2.exec(QString("delete from %1 where %2=:%2").arg(fTable, id->getField()));
         id->setInt(newid);
@@ -239,7 +237,6 @@ bool RowEditorDialog::saveOnly()
     } else {
         fDD.update(fTable, where_id(id->text()));
     }
-
     widgetsToValues();
     if (fTrackControl->hasChanges()) {
         fTrackControl->fRecord = id->text();

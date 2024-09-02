@@ -59,7 +59,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
     QShortcut *sregInReports = new QShortcut(QKeySequence("Ctrl+Shift+R"), this);
     connect(sregInReports, SIGNAL(activated()), this, SLOT(registerInReportBuilder()));
     if (fReportOptions.count() == 0) {
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_group"] = WORKING_USERGROUP;
         dd.exec("select * from rp_main where f_group=:f_group");
         while (dd.nextRow()) {
@@ -449,7 +449,7 @@ void WReportGrid::printOnPaper()
 
 void WReportGrid::registerInReportBuilder(bool msg)
 {
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_report"] = fGridClassName;
     dd[":f_group"] = WORKING_USERGROUP;
     dd.exec("select f_id from rp_main where f_group=:f_group and lower(f_report)=lower(:f_report)");
@@ -1018,7 +1018,7 @@ void WReportGrid::on_btnConfigGrid_clicked()
     bool printOnly = false;
     int rowHeight = ui->tblMain->verticalHeader()->defaultSectionSize();
     registerInReportBuilder(false);
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_report"] = fGridClassName;
     dd[":f_group"] = WORKING_USERGROUP;
     dd.exec("select * from rp_main where f_group=:f_group and lower(f_report)=lower(:f_report)");

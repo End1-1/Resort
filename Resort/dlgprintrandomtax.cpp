@@ -29,7 +29,7 @@ void DlgPrintRandomTax::setHeader(const QString &room, const QString &guest, con
     ui->leRoom->setText(room);
     ui->leGuest->setText(guest);
     ui->leInvoice->setText(invoice);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_invoice"] = invoice;
     fDD.exec("select f_vatMode from f_reservation where f_invoice=:f_invoice");
     if (fDD.nextRow()) {
@@ -112,7 +112,7 @@ void DlgPrintRandomTax::btnClickWithTag(int tag)
     if (tag < 0) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->tblData->toInt(tag, 7) > 0) {
         fDD[":f_id"] = ui->tblData->toInt(tag, 7);
         fDD.exec("delete from m_free_tax where f_id=:f_id");
@@ -148,7 +148,7 @@ void DlgPrintRandomTax::on_btnPrint_clicked()
     dpt.fOrder = ui->leInvoice->text();
     dpt.fCardAmount = ui->leCard->asDouble();
     dpt.fPrepaid = ui->lePrepaiment->asDouble();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     int result = dpt.exec();
     if (result == TAX_OK) {
         for (int i = 0; i < ui->tblData->rowCount(); i++) {

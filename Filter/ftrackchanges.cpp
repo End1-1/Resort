@@ -10,8 +10,8 @@ FTrackChanges::FTrackChanges(QWidget *parent) :
     ui(new Ui::FTrackChanges)
 {
     ui->setupUi(this);
-    fReportGrid->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
-    fReportGrid->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 2);
+    fReportGrid->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser,
+                                         TrackControl::fDbPass);
     ui->deStart->setDate(QDate::currentDate().addDays(-30));
     ui->deEnd->setDate(QDate::currentDate());
     ui->leType->setSelector(this, cache(cid_tracking_tables), ui->leType);
@@ -30,11 +30,11 @@ void FTrackChanges::apply(WReportGrid *rg)
         return;
     }
     QString where = "where (c.f_date between '"
-            + ui->deStart->date().toString(def_mysql_date_format) + "' and '"
-            + ui->deEnd->date().toString(def_mysql_date_format) + "') "
-            + "and (c.f_time between '"
-            + ui->teStart->time().toString("HH:mm") + "' and '"
-            + ui->teEnd->time().toString("HH:mm") + "') ";
+                    + ui->deStart->date().toString(def_mysql_date_format) + "' and '"
+                    + ui->deEnd->date().toString(def_mysql_date_format) + "') "
+                    + "and (c.f_time between '"
+                    + ui->teStart->time().toString("HH:mm") + "' and '"
+                    + ui->teEnd->time().toString("HH:mm") + "') ";
     if (!ui->leUser->fHiddenText.isEmpty()) {
         where += " and c.f_user in (" + ui->leUser->fHiddenText + ") ";
     }
@@ -42,7 +42,7 @@ void FTrackChanges::apply(WReportGrid *rg)
         where += " and c.f_table in (" + ui->leType->fHiddenText + ") ";
     }
     where += " order by c.f_id desc ";
-    rg->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass, 1);
+    rg->fModel->fDD.setDatabase(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
     buildQuery(rg, where);
 }
 

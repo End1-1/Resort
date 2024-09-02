@@ -23,7 +23,7 @@ void RERoomBed::on_btnCancel_clicked()
 
 void RERoomBed::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->leCode->text();
     fDD[":f_name"] = ui->leName->text();
     if (isNew) {

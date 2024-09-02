@@ -7,7 +7,7 @@
 #include <QApplication>
 
 #ifdef WIN32
-#include <windows.h>
+    #include <windows.h>
 #endif
 
 QString __TAX_HOST;
@@ -42,14 +42,14 @@ void Preferences::saveConfig()
         return;
     }
     PreferencesDefault pd;
-    memset(&pd, 0, sizeof(pd));
+    memset( &pd, 0, sizeof(pd));
     pd.last_db_combo_index = fConfigPreferences[def_last_db_combo_index].toInt();
-    qstringToChar(&pd.last_username[0], fConfigPreferences[def_last_username].toString());
-    qstringToChar(&pd.password[0], fConfigPreferences[def_preferences_password].toString());
-    file.write(reinterpret_cast<const char*>(&pd), sizeof(pd));
+    qstringToChar( &pd.last_username[0], fConfigPreferences[def_last_username].toString());
+    qstringToChar( &pd.password[0], fConfigPreferences[def_preferences_password].toString());
+    file.write(reinterpret_cast<const char *>( &pd), sizeof(pd));
     for (QMap<QString, Db>::const_iterator it = fDatabases.begin(); it != fDatabases.end(); it++) {
         Db db = getDatabase(it.key());
-        file.write(reinterpret_cast<const char*>(&db), sizeof(Db));
+        file.write(reinterpret_cast<const char *>( &db), sizeof(Db));
     }
     file.close();
 }
@@ -135,17 +135,17 @@ void Preferences::appendDatabase(const QString &name, const QString &mainHost, c
                                  const QString &broadcast)
 {
     Db db;
-    memset(&db, 0, sizeof(db));
-    qstringToChar(&db.dc_name[0], name);
-    qstringToChar(&db.dc_main_host[0], mainHost);
-    qstringToChar(&db.dc_main_path[0], mainDb);
-    qstringToChar(&db.dc_main_user[0], mainUser);
-    qstringToChar(&db.dc_main_pass[0], mainPassword);
-    qstringToChar(&db.dc_log_host[0], logHost);
-    qstringToChar(&db.dc_log_path[0], logDb);
-    qstringToChar(&db.dc_log_user[0], logUser);
-    qstringToChar(&db.dc_log_pass[0], logPassword);
-    qstringToChar(&db.dc_broadcast[0], broadcast);
+    memset( &db, 0, sizeof(db));
+    qstringToChar( &db.dc_name[0], name);
+    qstringToChar( &db.dc_main_host[0], mainHost);
+    qstringToChar( &db.dc_main_path[0], mainDb);
+    qstringToChar( &db.dc_main_user[0], mainUser);
+    qstringToChar( &db.dc_main_pass[0], mainPassword);
+    qstringToChar( &db.dc_log_host[0], logHost);
+    qstringToChar( &db.dc_log_path[0], logDb);
+    qstringToChar( &db.dc_log_user[0], logUser);
+    qstringToChar( &db.dc_log_pass[0], logPassword);
+    qstringToChar( &db.dc_broadcast[0], broadcast);
     fDatabases[name] = db;
 }
 
@@ -182,8 +182,8 @@ void Preferences::initFromDb(const QString &dbName, const QString &additionalSet
 {
     Db &dbConf = fDatabases[dbName];
     DoubleDatabase db;
-    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass, 1);
-    db.open(true, false);
+    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
+    db.open();
     db.exec("select f_key, f_value from f_global_settings where f_settings = 1 order by f_key");
     fDbPreferences.clear();
     while (db.nextRow()) {
@@ -191,8 +191,8 @@ void Preferences::initFromDb(const QString &dbName, const QString &additionalSet
     }
     if (additionalSettings.length() > 0) {
         db.exec("select gs.f_key,  gs.f_value from f_global_settings gs "
-                  "inner join f_global_settings_names gn on gn.f_id=gs.f_settings "
-                  "where gn.f_name='" + additionalSettings + "'");
+                "inner join f_global_settings_names gn on gn.f_id=gs.f_settings "
+                "where gn.f_name='" + additionalSettings + "'");
         while (db.nextRow()) {
             fDbPreferences[db.getString(0)] = db.getValue(1);
         }
@@ -226,24 +226,23 @@ void Preferences::initFromConfig()
         fConfigPreferences[def_home_path] = s;
         if (!dir.exists(s))
             dir.mkpath(s);
-
         s = QString("%1/%2").arg(s).arg("preferences.dat");
         fConfigPreferences[def_preferences_file] = s;
         QFile file(s);
         PreferencesDefault pd;
-        memset(&pd, 0, sizeof(pd));
+        memset( &pd, 0, sizeof(pd));
         if (!file.exists() || file.size() == 0) {
             file.open(QIODevice::WriteOnly);
-            file.write(reinterpret_cast<const char*>(&pd), sizeof(pd));
+            file.write(reinterpret_cast<const char *>( &pd), sizeof(pd));
         } else {
             file.open(QIODevice::ReadOnly);
-            file.read(reinterpret_cast<char*>(&pd), sizeof(pd));
+            file.read(reinterpret_cast<char *>( &pd), sizeof(pd));
             fConfigPreferences[def_last_db_combo_index] = pd.last_db_combo_index;
             fConfigPreferences[def_last_username] = QString(pd.last_username);
             fConfigPreferences[def_preferences_password] = QString(pd.password);
             while (file.pos() < file.size()) {
                 Db db;
-                file.read(reinterpret_cast<char *>(&db), sizeof(db));
+                file.read(reinterpret_cast<char *>( &db), sizeof(db));
                 fDatabases[db.dc_name] = db;
             }
         }
@@ -266,8 +265,8 @@ void Preferences::setUser(const QString &connName, const QString &key, const QSt
     fUserPreferences[key] = value;
     Db &dbConf = fDatabases[connName];
     DoubleDatabase db;
-    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass, 1);
-    db.open(true, false);
+    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
+    db.open();
     db[":f_user"] = getLocal(def_working_user_id);
     db[":f_key"] = key;
     db.exec("delete from f_users_settings where f_user=:f_user and f_key=:f_key");

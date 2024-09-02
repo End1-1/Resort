@@ -177,7 +177,7 @@ void WVaucherEditor::newVaucher(const QString &invoice)
 
 void WVaucherEditor::loadVaucher(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     ui->leCode->setText(id);
     fDD[":f_id"] = id;    
     fDD.exec("select * from m_register where f_id=:f_id");
@@ -316,7 +316,7 @@ void WVaucherEditor::on_btnSave_clicked()
     if (!errorCheck()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (fFlagNew) {
         ui->leCode->setText(uuidx(ui->leSourceCode->text()));
         fDD[":f_id"] = ui->leCode->text();

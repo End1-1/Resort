@@ -16,7 +16,6 @@ PPrintCheckin::PPrintCheckin() :
     QObject(),
     Base()
 {
-
 }
 
 void PPrintCheckin::print(const QString &id, bool noPreview)
@@ -24,26 +23,23 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     PPrintCheckin p;
     PPrintPreview pv(fMainWindow->fPreferences.getDefaultParentForMessage());
     PPrintScene *ps = pv.addScene(0, Portrait);
-
     /* Data */
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select * from f_reservation where f_id=:f_id");
     if (!fDD.nextRow()) {
         message_error(QObject::tr("Could not open reservation"));
         return;
     }
-
-    PPrintHeader(ps, tr("REGISTRATION CARD"), QString("%1 / %2").arg(fDD.getValue("f_id").toString(), fDD.getValue("f_invoice").toString()));
+    PPrintHeader(ps, tr("REGISTRATION CARD"), QString("%1 / %2").arg(fDD.getValue("f_id").toString(),
+                 fDD.getValue("f_invoice").toString()));
     int top = 310;
-
     /* Header */
     PTextRect trHeader;
     trHeader.setBorders(false, false, false, false);
     trHeader.setFontSize(40);
     trHeader.setFontBold(true);
     trHeader.setTextAlignment(Qt::AlignCenter);
-
     top = 320;
     PTextRect trData;
     trData.setFontName("Times");
@@ -52,7 +48,8 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     QList<int> col;
     QStringList val;
     col << 20 << 230 << 230 << 230 << 230 << 230 << 230 << 150 << 550;
-    val << tr("ARRIVAL") << tr("DEPARTURE") << tr("ROOM ") << tr("ROOM RATE") << tr("EXTRA BED") << tr("PAX") << tr("ARR.") << tr("MODE OF PAYMENT");
+    val << tr("ARRIVAL") << tr("DEPARTURE") << tr("ROOM ") << tr("ROOM RATE") << tr("EXTRA BED") << tr("PAX") << tr("ARR.")
+        << tr("MODE OF PAYMENT");
     ps->addTableRow(top, 80, col, val, &trData);
     CacheRoomArrangment cra;
     CachePaymentMode cpm;
@@ -76,34 +73,32 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     top += 10;
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 10;
-
     /* Guest info */
     PTextRect trGuest;
     trGuest.setBorders(false, false, false, false);
     trGuest.setFontName("Times");
     trGuest.setFontSize(24);
-
-    DoubleDatabase dguest(true);
+    DoubleDatabase dguest;
     dguest[":f_id"] = id;
     dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name), if(length(coalesce(g.f_passport, 'N/A'))=0,'N/A',coalesce(g.f_passport, 'N/A')) as f_passport "
                 "from f_reservation_guests rg "
                 "left join f_guests g on g.f_id=rg.f_guest "
                 "left join f_nationality n on n.f_short=g.f_nation "
                 "where rg.f_reservation in "
-                    "(select f_id from f_reservation where f_id=:f_id) "
+                "(select f_id from f_reservation where f_id=:f_id) "
                 "order by rg.f_first desc ");
     top += ps->addTextRect(20, top, 2000, 70, tr("Guests:"), &trGuest)->textHeight();
     while (dguest.nextRow()) {
-        top += ps->addTextRect(20, top, 2000, 70, QString("%1, Passport: %2").arg(dguest.getString(0), dguest.getString(1)), &trGuest)->textHeight();
+        top += ps->addTextRect(20, top, 2000, 70, QString("%1, Passport: %2").arg(dguest.getString(0), dguest.getString(1)),
+                               &trGuest)->textHeight();
     }
-//    ps->addTextRect(20, top, 230, 80, tr("LAST NAME"), &trGuest);
-//    trGuest.setFontItalic(true);
-//    ps->addTextRect(240, top, 700, 80, g.fLastName(), &trGuest);
-//    trGuest.setFontItalic(false);
-//    ps->addTextRect(710, top, 230, 80, tr("FIRST NAME"), &trGuest);
-//    trGuest.setFontItalic(true);
-//    top += ps->addTextRect(1000, top, 700, 80, g.fFirstName(), &trGuest)->textHeight();
-
+    //    ps->addTextRect(20, top, 230, 80, tr("LAST NAME"), &trGuest);
+    //    trGuest.setFontItalic(true);
+    //    ps->addTextRect(240, top, 700, 80, g.fLastName(), &trGuest);
+    //    trGuest.setFontItalic(false);
+    //    ps->addTextRect(710, top, 230, 80, tr("FIRST NAME"), &trGuest);
+    //    trGuest.setFontItalic(true);
+    //    top += ps->addTextRect(1000, top, 700, 80, g.fFirstName(), &trGuest)->textHeight();
     trData.setBorders(false, false, false, false);
     trData.setTextAlignment(Qt::AlignLeft);
     ps->addTextRect(20, top, 230, 80, tr("ADDRESS"), &trData);
@@ -123,7 +118,6 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addTextRect(835, top, 230, 80, tr("EMAIL"), &trData);
     ps->addLine(1065, top + 80, 1600, top + 80, QPen(Qt::SolidPattern, 3));
     top += 80;
-
     CacheCardex c;
     if (c.get(fDD.getValue("f_cardex").toString())) {
         ps->addTextRect(20, top, 230, 80, tr("CARDEX"), &trData);
@@ -138,48 +132,55 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     top += 5;
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 10;
-
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 80;
-
     trData.setFontBold(true);
     top += ps->addTextRect(20, top, 2100, 80, tr("1- ALL RATES ARE SUBJECT 20% V.A.T."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("2- THE MANAGEMENT IS NOT RESPONSIBLE FOR ANY VALUABLE LEFT IN THE ROOM"), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("2- THE MANAGEMENT IS NOT RESPONSIBLE FOR ANY VALUABLE LEFT IN THE ROOM"),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("3- YOU WILL FIND A PRESONAL SAFETY DEPOSIT BOX IN YOUR ROOM FOR YOUR CONVEIENCE."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("3- YOU WILL FIND A PRESONAL SAFETY DEPOSIT BOX IN YOUR ROOM FOR YOUR CONVEIENCE."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("SHOULD YOU WISH TO USE THE HOTEL'S SAFETY DEPOSIT BOXES AT THE FRONT OFFICE."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("SHOULD YOU WISH TO USE THE HOTEL'S SAFETY DEPOSIT BOXES AT THE FRONT OFFICE."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("4- FOR YOUR SAFETY, KINDLY NOTE THAT WATER PIPE AND ANY OTHER RELATE ITEMS TO IT ARE NOT ALLOWED IN THE ROOMS."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("4- FOR YOUR SAFETY, KINDLY NOTE THAT WATER PIPE AND ANY OTHER RELATE ITEMS TO IT ARE NOT ALLOWED IN THE ROOMS."),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("5- OUR CHECK OUT TIME IS 12:00 (NOON)."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
 #ifdef _METROPOL_
-    top += ps->addTextRect(20, top, 2100, 80, tr("6- SMOKING IS NOT PERMITTED, EXCEPT IN THE DESIGNATED SMOKING AREAS."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("6- SMOKING IS NOT PERMITTED, EXCEPT IN THE DESIGNATED SMOKING AREAS."),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("SMOKING IS ALLOWED: ON BALCONY (IF YOUR ROOM HAS SUCH), IN THE 3RD FLOOR OPEN AIR TERAZZA (CAFÉ),"), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("SMOKING IS ALLOWED: ON BALCONY (IF YOUR ROOM HAS SUCH), IN THE 3RD FLOOR OPEN AIR TERAZZA (CAFÉ),"),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("IN THE HOOKAH CAFÉ (ON THE GROUND FLOOR, NEXT TO THE LOBBY) AND ON THE ENTRANCE AREA OF THE HOTEL."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("IN THE HOOKAH CAFÉ (ON THE GROUND FLOOR, NEXT TO THE LOBBY) AND ON THE ENTRANCE AREA OF THE HOTEL."),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("7- SMOKING IN A NON-SMOKING GUEST ROOM, CORRIDORS AND ANY OTHER RESTRICTED AREAS WILL RESULT IN CHARGES"), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("7- SMOKING IN A NON-SMOKING GUEST ROOM, CORRIDORS AND ANY OTHER RESTRICTED AREAS WILL RESULT IN CHARGES"),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-    top += ps->addTextRect(20, top, 2100, 80, tr("AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST."),
+                           &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
 #endif
-
-
     top += 200;
     trData.setTextAlignment(Qt::AlignCenter);
     ps->addTextRect(20, top, 2100, 80, tr("WE WISH YOU A NICE AND PLEASANT STAY!"), &trData);
     top += 200;
     ps->addTextRect(20, top, 300, 80, tr("GUEST SIGNATURE"), &trData);
     ps->addLine(305, top + 70, 800, top + 70, QPen(Qt::SolidPattern, 3));
-
     top += 200;
     trData.setTextAlignment(Qt::AlignLeft);
     top += ps->addTextRect(20, top, 2100, 80, tr("REMARKS"), &trData)->textHeight();
     top += ps->addTextRect(20, top, 2100, 80, fDD.getString("f_remarks"), &trData)->textHeight();
-
     pv.exec(noPreview);
 }

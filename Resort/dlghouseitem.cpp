@@ -130,7 +130,7 @@ void DlgHouseItem::loadRoom()
     ui->tblMain->clearContents();
     ui->tblMain->setRowCount(0);
     QList<int> inventories;
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_group"] = WORKING_USERGROUP;
     db.exec("select f_inventory from f_room_inventory_permission where f_group=:f_group and f_permit=1");
     while (db.nextRow()) {
@@ -201,7 +201,7 @@ int DlgHouseItem::addRow()
 void DlgHouseItem::checkForReady()
 {
     CacheRoomState rs;
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_room"] = ui->leRoomCode->asInt();
     db.exec("select * from f_room_inventory_journal where f_room=:f_room and f_state <> 1");
     if (db.nextRow()) {
@@ -272,7 +272,7 @@ void DlgHouseItem::on_btnSave_clicked()
             }
         }
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblMain->rowCount(); i++) {
         if (ui->tblMain->item(i, 0)->data(Qt::EditRole).toInt() == 0) {
             fDD[":f_id"] = 0;
@@ -294,7 +294,7 @@ void DlgHouseItem::on_btnRemoveItem_clicked()
     int row = ui->tblMain->currentRow();
     QTableWidgetItem *item = ui->tblMain->item(row, 0);
     if (item && item->data(Qt::EditRole).toInt() > 0) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_id"] = ui->tblMain->item(row, 0)->data(Qt::EditRole);
         fDD.exec("delete from f_room_inventory_journal where f_id=:f_id");
     }
@@ -303,7 +303,7 @@ void DlgHouseItem::on_btnRemoveItem_clicked()
 
 void DlgHouseItem::on_btnSaveStates_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblMain->rowCount(); i++) {
         if (fPreferences.getDb(def_touchscreen).toBool()) {
             fDD[":f_state"] = static_cast<DlgHouseItemOnOffWidget*>(ui->tblMain->cellWidget(i, 2))->isChecked() ? 1 : 0;
@@ -354,7 +354,7 @@ void DlgHouseItem::on_btnDontDisturbe_clicked(bool checked)
         ui->btnDontDisturbe->setChecked(!checked);
         return;
     }
-    DoubleDatabase dd(true);
+    DoubleDatabase dd;
     dd[":f_donotdisturbe"] = (int) checked;
     dd[":f_id"] = ui->leRoomCode->asInt();
     dd.exec("update f_room set f_donotdisturbe=:f_donotdisturbe where f_id=:f_id");

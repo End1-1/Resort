@@ -11,7 +11,7 @@ WCustomReports::WCustomReports(QWidget *parent) :
     ui(new Ui::WCustomReports)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select r.f_id, g.f_name as f_groupName, r.f_name, r.f_groupAccess "
               "from serv_reports r "
               "left join serv_reports_group g on g.f_id=r.f_group "
@@ -76,7 +76,7 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
     ui->lFilter->removeItem(ui->lFilter->takeAt(0));
     fFilterFields.clear();
     fFilterDefExpr.clear();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = index.data(Qt::UserRole);
     fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum, f_subtotal from serv_reports where f_id=:f_id");
     if (!fDD.nextRow()) {

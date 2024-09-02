@@ -21,7 +21,7 @@ DlgMoveToCL::DlgMoveToCL(const QString &voucher, QWidget *parent) :
     ui->leCurrPayment->setSelector(this, cache(cid_payment_mode), ui->leCurrPaymentName);
     ui->leDCL->setInitialValue(__s.value("dst_move_to_cl").toInt());
 
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_id"] = voucher;
     db.exec("select * from m_register where f_id=:f_id");
     if (db.nextRow() == false) {
@@ -75,7 +75,7 @@ void DlgMoveToCL::on_btnChange_clicked()
     if (message_confirm(tr("Confirm operation")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_sign"] = fSource == "RV" ? 1 : -1;
     db[":f_dc"] = fSource == "RV" ? "CREDIT" : "DEBIT";
     db[":f_guest"] = ui->leDCLName->text();

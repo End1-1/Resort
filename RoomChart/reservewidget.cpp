@@ -59,7 +59,7 @@ void ReserveWidget::createService()
         deleteLater();
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QString invId = uuidx(VAUCHER_INVOICE_N);
     fId = uuidx("RS");
     fDD.insertId("f_reservation", fId);
@@ -95,7 +95,7 @@ void ReserveWidget::removeService()
     if (fReservation.fArrangement() > 0) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = RESERVE_SERVICE_REMOVED;
     fDD.update("f_reservation", where_id(ap(fReservation.fId())));
 
@@ -157,7 +157,7 @@ void ReserveWidget::resizeEvent(QResizeEvent *e)
 
 void ReserveWidget::on_btnCancel_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (fReservation.fState() == RESERVE_OUTOFROOM) {
         DlgOORoomProp *d = new DlgOORoomProp(fReservation.fId(), fMainWindow);
         d->exec();

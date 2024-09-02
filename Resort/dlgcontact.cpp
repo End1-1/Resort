@@ -36,7 +36,7 @@ void DlgContact::setValues()
 
 void DlgContact::on_buttonBox_accepted()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     int code =ui->leId->text().toInt();
     fDD[":f_name"] = ui->leName->text();
     fDD[":f_tel1"] = ui->leTel1->text();

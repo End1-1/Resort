@@ -23,7 +23,7 @@ void TableModel::apply(WReportGrid *rg)
     beginResetModel();
     if (rg == nullptr || fQuery.count()> 0) {
         if (fQuery.count() > 0) {
-            if(!fDD.open(true, false)) {
+            if(!fDD.open()) {
                 message_error("Sql error<br>" + fDD.fLastError + "<br>Additional information in the log file");
             } else {
                 fBackgroundColors.clear();
@@ -46,7 +46,7 @@ void TableModel::apply(const QStringList &queries)
     fQuery = queries;
     clearProxyRows();
     beginResetModel();
-    fDD.open(true, false);
+    fDD.open();
     fBackgroundColors.clear();
     foreach(QString s, queries) {
         if (!fDD.exec(s)) {

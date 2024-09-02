@@ -117,7 +117,7 @@ void FReserveGroups::removeGroup()
     if (message_confirm(tr("Confirm remove group")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_canceled"] = 1;
     fDD[":f_cancelDate"] = QDateTime::currentDateTime();
     fDD[":f_cancelUser"] = WORKING_USERID;

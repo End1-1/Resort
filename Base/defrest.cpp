@@ -5,7 +5,7 @@ QMap<QString, QString> DefRest::fData;
 DefRest::DefRest(const QString &comp) :
     Base()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_comp"] = comp;
     fDD.exec("select f_key, f_value from r_config where upper(f_comp)=upper(:f_comp)");
     while (fDD.nextRow()) {

@@ -32,7 +32,7 @@ void DlgOORoomProp::on_btnOk_clicked()
         message_error(tr("Invalid date range"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_startDate"] = ui->deStart->date();
     fDD[":f_endDate"] = ui->deEnd->date();
     fDD[":f_remarks"] = ui->teRemarks->toPlainText();
@@ -97,7 +97,7 @@ void DlgOORoomProp::on_btmRemove_clicked()
             .arg(ui->deEnd->text())
             .arg(ui->teRemarks->toPlainText());
     fTrackControl->insert("O/O removed", ui->leRoom->text() , range);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD.update("f_reservation", where_id(ap(ui->leReserve->text())));
     if (fReservation.fDateStart() <= WORKING_DATE) {

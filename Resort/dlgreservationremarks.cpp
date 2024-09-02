@@ -7,7 +7,7 @@ DlgReservationRemarks::DlgReservationRemarks(QWidget *parent) :
 {
     ui->setupUi(this);
     fTrackControl = new TrackControl(TRACK_RESERVATION_REMARKS);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_text from f_reservation_remarks");
     ui->tblData->setColumnWidth(0, 0);
     ui->tblData->setColumnWidth(1, 500);
@@ -54,7 +54,7 @@ void DlgReservationRemarks::on_btnRemoveSelected_clicked()
     if (message_yesnocancel(tr("Are you sure to delete selected text?")) != RESULT_YES) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->tblData->toInt(row, 0);
     fDD.exec("delete from f_reservation_remarks where f_id=:f_id");
     ui->tblData->removeRow(row);
@@ -63,7 +63,7 @@ void DlgReservationRemarks::on_btnRemoveSelected_clicked()
 
 void DlgReservationRemarks::on_btnSaveAs_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_text"] = ui->teText->toPlainText();
     int id = fDD.insert("f_reservation_remarks");
     ui->tblData->setRowCount(ui->tblData->rowCount() + 1);
@@ -81,7 +81,7 @@ void DlgReservationRemarks::on_btnSaveCurrent_clicked()
         message_error(tr("No existing reservation was selected"));
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_text"] = ui->teText->toPlainText();
     fDD.update("f_reservation_remarks", where_id(ui->tblData->toInt(row, 0)));
     fTrackControl->insert("Remarks updated", ui->tblData->toString(row, 1), ui->teText->toPlainText());

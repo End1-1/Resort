@@ -55,7 +55,7 @@ QString BaseVoucher::genId(const QString &source)
 
 bool BaseVoucher::load(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;    
     fDD.exec("select * from m_register where f_id=:f_id");
     if (!fDD.nextRow()) {
@@ -82,7 +82,7 @@ void BaseVoucher::setFields()
     if (fFields.count() > 0) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("describe m_register");
     for (int i = 0; i < fDD.rowCount(); i++) {
         fFields.append(fDD.getValue(i, "Field").toString());
@@ -91,7 +91,7 @@ void BaseVoucher::setFields()
 
 void BaseVoucher::save()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (fNeedInsert) {
         fDD[":f_id"] = fValues["f_id"];
         fDD.insert("m_register");

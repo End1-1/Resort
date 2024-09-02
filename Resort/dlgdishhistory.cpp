@@ -7,7 +7,7 @@ DlgDishHistory::DlgDishHistory(const QString &dishId, QWidget *parent) :
 {
     ui->setupUi(this);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(), 100, 300, 200);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_rec"] = dishId;
     fDD.exec("select f_date, f_user, f_info from o_dish_qty where f_rec=:f_rec order by f_date");
     Utils::fillTableWithData(ui->tblData, fDD.fDbRows);

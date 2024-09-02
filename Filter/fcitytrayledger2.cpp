@@ -15,7 +15,7 @@ FCityTrayLedger2::FCityTrayLedger2(QWidget *parent) :
             return;
         }
         QString invoice = val.at(2).toString();
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_invoice"] = invoice;
         dd.exec("select f_state from f_reservation where f_invoice=:f_invoice");
         if (dd.nextRow()) {

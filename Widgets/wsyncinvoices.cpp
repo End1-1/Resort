@@ -14,11 +14,11 @@ WSyncInvoices::WSyncInvoices(QWidget *parent) :
     ui(new Ui::WSyncInvoices)
 {
     ui->setupUi(this);
-    ui->tblMain->setMaximumHeight(ui->tblMain->rowCount() * ui->tblMain->verticalHeader()->defaultSectionSize() + 25);
-    ui->tblMain->setMinimumHeight(ui->tblMain->rowCount() * ui->tblMain->verticalHeader()->defaultSectionSize() + 25);
+    ui->tblMain->setMaximumHeight(ui->tblMain->rowCount() *ui->tblMain->verticalHeader()->defaultSectionSize() + 25);
+    ui->tblMain->setMinimumHeight(ui->tblMain->rowCount() *ui->tblMain->verticalHeader()->defaultSectionSize() + 25);
     ui->tblMain->setSpan(0, 2, ui->tblMain->rowCount(), 1);
-    ui->tblPMain->setMaximumHeight(ui->tblPMain->rowCount() * ui->tblPMain->verticalHeader()->defaultSectionSize() + 25);
-    ui->tblPMain->setMinimumHeight(ui->tblPMain->rowCount() * ui->tblPMain->verticalHeader()->defaultSectionSize() + 25);
+    ui->tblPMain->setMaximumHeight(ui->tblPMain->rowCount() *ui->tblPMain->verticalHeader()->defaultSectionSize() + 25);
+    ui->tblPMain->setMinimumHeight(ui->tblPMain->rowCount() *ui->tblPMain->verticalHeader()->defaultSectionSize() + 25);
     ui->tblPMain->setSpan(0, 2, ui->tblPData->rowCount(), 1);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 30, 30, 110, 200, 100, 30);
@@ -31,22 +31,21 @@ WSyncInvoices::WSyncInvoices(QWidget *parent) :
     ui->tblSearch->setMaximumWidth(305);
     ui->wdtSearch->setMaximumWidth(ui->wdtSearch->width() - 10);
     ui->wdtSearch->setVisible(true);
-
     QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", QString::SkipEmptyParts);
     if (dbParams.count() < 4) {
         message_error(tr("Setup second database parameters"));
         return;
     }
-    fReserv.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password, 1);
-    fReserv.open(true, false);
-    fReservGuests.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password, 1);
-    fReservGuests.open(true, false);
-    fGuests.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password, 1);
-    fGuests.open(true, false);
-    fVauchers.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password, 1);
-    fVauchers.open(true, false);
-    fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3], 1);
-    if (!fSDb.open(true, false)) {
+    fReserv.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password);
+    fReserv.open();
+    fReservGuests.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password);
+    fReservGuests.open();
+    fGuests.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password);
+    fGuests.open();
+    fVauchers.setDatabase(__dd1Host, __dd1Database, __dd1Username, __dd1Password);
+    fVauchers.open();
+    fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3]);
+    if (!fSDb.open()) {
         message_error(tr("Cannot connect to second database"));
         return;
     }
@@ -74,19 +73,15 @@ void WSyncInvoices::loadInvoice(const QString &id)
         message_info(tr("Reservation state is not equal to checkout."));
         return;
     }
-
     fReservGuests[":f_reservation"] = fReserv.getValue(0, "f_id");
     fReservGuests.exec("select f_reservation, f_guest, f_first from f_reservation_guests where f_reservation=:f_reservation");
-
     //QString guestIds;
     //fReservGuests.makeIn("f_guest", guestIds);
     fGuests[":f_id"] = fReserv.getValue(0, "f_guest");
     fGuests.exec("select * from f_guests where f_id=:f_id");
     fGuests.nextRow();
-
     fVauchers[":f_inv"] = id;
     fVauchers.exec("select * from m_register where f_inv=:f_inv and f_canceled=0 order by f_wdate");
-
     /* loook 8
     ui->tblMain->setValue(0, 1, fReserv.getValue(0, "f_id"));
     ui->tblMain->setValue(1, 1, fGuests.getValue(0, "f_firstName").toString() + " " + fGuests.getValue(0, "f_lastName").toString());
@@ -102,14 +97,14 @@ void WSyncInvoices::loadInvoice(const QString &id)
         ui->tblData->setRowHidden(i, false);
         ui->tblData->setItemWithValue(i, 0, "");
         ui->tblData->setItemChecked(i, 0, true);
-        ui->tblData->item(i, 0)->setFlags(ui->tblData->item(i, 0)->flags() ^ Qt::ItemIsUserCheckable);
+        ui->tblData->item(i, 0)->setFlags(ui->tblData->item(i, 0)->flags() ^Qt::ItemIsUserCheckable);
         ui->tblData->setItemWithValue(i, 1, fVauchers.getValue(i, "f_source"));
         ui->tblData->setItemWithValue(i, 2, fVauchers.getValue(i, "f_wdate"));
         ui->tblData->setItemWithValue(i, 3, fVauchers.getValue(i, "f_finalName"));
         ui->tblData->setItemWithValue(i, 4, fVauchers.getValue(i, "f_amountAmd"));
         ui->tblData->setItemWithValue(i, 5, "");
         ui->tblData->setItemChecked(i, 5, fVauchers.getValue(i, "f_fiscal").toInt() > 0);
-        ui->tblData->item(i, 5)->setFlags(ui->tblData->item(i, 5)->flags() ^ Qt::ItemIsUserCheckable);
+        ui->tblData->item(i, 5)->setFlags(ui->tblData->item(i, 5)->flags() ^Qt::ItemIsUserCheckable);
         if (fVauchers.getValue(i, "f_source").toString() == VAUCHER_ADVANCE_N
                 || fVauchers.getValue(i, "f_source").toString() == VAUCHER_RECEIPT_N) {
             for (int j = 0; j < ui->tblData->columnCount(); j++) {
@@ -145,7 +140,7 @@ void WSyncInvoices::makeInvoiceCopy()
         ui->tblPData->setItemWithValue(i, 4, fVauchers.getValue(i, "f_amountAmd"));
         ui->tblPData->setItemWithValue(i, 5, "");
         ui->tblPData->setItemChecked(i, 5, fVauchers.getValue(i, "f_fiscal").toInt() > 0);
-        ui->tblPData->item(i, 5)->setFlags(ui->tblPData->item(i, 5)->flags() ^ Qt::ItemIsUserCheckable);
+        ui->tblPData->item(i, 5)->setFlags(ui->tblPData->item(i, 5)->flags() ^Qt::ItemIsUserCheckable);
         ui->tblPData->setItemWithValue(i, 6, fVauchers.getValue(i, "f_finance"));
         if (fVauchers.getValue(i, "f_source").toString() == VAUCHER_ADVANCE_N
                 || fVauchers.getValue(i, "f_source").toString() == VAUCHER_RECEIPT_N) {
@@ -162,15 +157,14 @@ void WSyncInvoices::makeInvoiceCopy()
 
 void WSyncInvoices::exportInvoice()
 {
-
     DoubleDatabase db;
     QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", QString::SkipEmptyParts);
     if (dbParams.count() < 4) {
         message_error(tr("Setup second database parameters"));
         return;
     }
-    db.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3], 1);
-    if (!db.open(true, false)) {
+    db.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3]);
+    if (!db.open()) {
         message_error(tr("Cannot connect to second database"));
         return;
     }
@@ -216,8 +210,8 @@ void WSyncInvoices::countPBalance()
         ui->lbSemaphore->setPixmap(QPixmap(":/images/ball-red.png"));
     }
     // looook
-//    ui->tblPMain->setItemWithValue(5, 1, debit);
-//    ui->tblPMain->setItemWithValue(5, 4, credit);
+    //    ui->tblPMain->setItemWithValue(5, 1, debit);
+    //    ui->tblPMain->setItemWithValue(5, 4, credit);
 }
 
 void WSyncInvoices::on_leInvoice_returnPressed()
@@ -273,18 +267,18 @@ void WSyncInvoices::on_tblPData_clicked(const QModelIndex &index)
 
 void WSyncInvoices::on_deDate_returnPressed()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_endDate"] = ui->deDate->date();
     fDD[":f_state"] = RESERVE_CHECKOUT;
     fDD.exec("select r.f_invoice, r.f_room, concat(g.f_firstName, ' ', g.f_lastName), f, "
-               "a.amount "
-               "from f_reservation r "
-               "left join f_guests g on g.f_id=r.f_guest "
-               "left join (select f_inv, sum(f_amountAmd) as amount "
-                    "from m_register where f_canceled=0 and f_finance=1 and f_sign=1 "
-                    "group by 1) a on a.f_inv=r.f_invoice "
-               "where r.f_endDate=:f_endDate and r.f_state=:f_state "
-               "order by r.f_room");
+             "a.amount "
+             "from f_reservation r "
+             "left join f_guests g on g.f_id=r.f_guest "
+             "left join (select f_inv, sum(f_amountAmd) as amount "
+             "from m_register where f_canceled=0 and f_finance=1 and f_sign=1 "
+             "group by 1) a on a.f_inv=r.f_invoice "
+             "where r.f_endDate=:f_endDate and r.f_state=:f_state "
+             "order by r.f_room");
     Utils::fillTableWithData(ui->tblSearch, fDD.fDbRows);
     for (int i = 0; i < ui->tblSearch->rowCount(); i++) {
         if (ui->tblSearch->toInt(i, 3) > 0) {
@@ -323,9 +317,9 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
 {
     bool result = true;
     QString errors;
-    DoubleDatabase fDD(true, false);
-    DoubleDatabase fSec(fSDb);
-    fSec.open(true, false);
+    DoubleDatabase fDD;
+    DoubleDatabase fSec;
+    fSec.open();
     fDD.startTransaction();
     fSDb.startTransaction();
     if (fReserv.getValue(0, "f").toInt() > 0) {
@@ -336,7 +330,6 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
     QDate minDate = QDate::currentDate();
     QDate maxDate = QDate::currentDate().addDays(-360);
     QDate maxDate2 = QDate::currentDate().addDays(-360);
-
     /* RESERVATION */
     fReserv.getBindValues(0, fSDb.fBindValues);
     QString reservCode = fSDb.fBindValues[":f_id"].toString();
@@ -347,7 +340,6 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
     if (!result) {
         errors += "[Dst f_reservation] " + fSDb.fLastError + "<br>";
     }
-
     /* RESERVATION GUESTS */
     fSec[":f_reservation"] = reservCode;
     fSec.exec("delete from f_reservation_guests where f_reservation=:f_reservation");
@@ -359,7 +351,6 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
             break;
         }
     }
-
     /* VAUCHERS */
     QStringList fPSCodes;
     for (int i = 0; i < fVauchers.rowCount(); i++) {
@@ -368,8 +359,8 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
         }
         fVauchers.getBindValues(i, fSDb.fBindValues);
         if (fSDb.fBindValues[":f_cityledger"].toInt() > 0) {
-            DoubleDatabase drbe(fSDb);
-            drbe.open(true, false);
+            DoubleDatabase drbe;
+            drbe.open();
             drbe[":f_id"] = fSDb.fBindValues[":f_cityledger"];
             drbe.exec("select * from f_city_ledger where f_id=:f_id");
             if (!drbe.nextRow()) {
@@ -382,7 +373,6 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
                         || fSDb.fBindValues[":f_source"].toString() == VAUCHER_ROOM_RATE_N
                         || fSDb.fBindValues[":f_source"].toString() == VAUCHER_POINT_SALE_N) {
                     fSDb.fBindValues[":f_paymentcomment"] = drbe.getValue("f_name").toString();
-
                     if (fSDb.fBindValues[":f_source"].toString() == VAUCHER_RECEIPT_N) {
                         fSDb.fBindValues[":f_finalname"] = tr("PAYMENT") + " " + drbe.getValue("f_name").toString();
                     }
@@ -398,14 +388,12 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
             maxDate = fSDb.fBindValues[":f_wdate"].toDate() > maxDate ? fSDb.fBindValues[":f_wdate"].toDate() : maxDate;
         }
         maxDate2 = fSDb.fBindValues[":f_wdate"].toDate() > maxDate2 ? fSDb.fBindValues[":f_wdate"].toDate() : maxDate2;
-
         if (fSDb.fBindValues[":f_source"].toString() == VAUCHER_POINT_SALE_N) {
             fPSCodes.append(fSDb.fBindValues[":f_id"].toString());
         }
-
         if (ui->chOverrideDuplicate->isChecked()) {
-            DoubleDatabase dd(fSDb);
-            dd.open(true, false);
+            DoubleDatabase dd;
+            dd.open();
             dd.exec("delete from m_register where f_id=" + ap(fSDb.fBindValues[":f_id"].toString()));
         }
         result = result && fSDb.insert("m_register", false);
@@ -413,19 +401,17 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
             errors += "[Dst m_register] " + fSDb.fLastError + "<br>";
             break;
         }
-
         fDD[":p"] = 1;
         result = result && fDD.update("m_register", where_id(ap(mregCode)));
         if (!result) {
             errors += "[Src] " + fDD.fLastError + "<br>";
         }
-
     }
     /* POINT OF SALE */
     foreach (QString s, fPSCodes) {
         DoubleDatabase dHeader, dDish;
-        dHeader.open(true, false);
-        dDish.open(true, false);
+        dHeader.open();
+        dDish.open();
         /* GET FROM MAIN */
         dHeader[":f_id"] = s;
         dHeader.exec("select * from o_header where f_id=:f_id");
@@ -435,20 +421,19 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
         /* EXPORT COPY */
         dHeader.getBindValues(0, fSDb.fBindValues);
         if (ui->chOverrideDuplicate->isChecked()) {
-            DoubleDatabase dd(fSDb);
-            dd.open(true, false);
+            DoubleDatabase dd;
+            dd.open();
             dd.exec("delete from o_header where f_id=" + ap(s));
         }
         result = result && fSDb.insert("o_header", false);
         if (!result) {
             errors += "[Dst o_header] " + fSDb.fLastError + "<br>";
         }
-
         for (int i = 0; i < dDish.rowCount(); i++) {
             dDish.getBindValues(i, fSDb.fBindValues);
             if (ui->chOverrideDuplicate->isChecked()) {
-                DoubleDatabase dd(fSDb);
-                dd.open(true, false);
+                DoubleDatabase dd;
+                dd.open();
                 dd.exec("delete from o_dish where f_id=" + ap(fSDb.fBindValues[":f_id"].toString()));
             }
             result = result && fSDb.insert("o_dish", false);
@@ -462,7 +447,6 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
         if (!result) {
             errors += "[Src] " + fDD.fLastError + "<br>";
         }
-
     }
     fSDb[":f_startdate"] = minDate;
     fSDb[":f_checkindate"] = minDate;
@@ -471,23 +455,21 @@ void WSyncInvoices::on_btnSaveCopy_clicked()
     if (!result) {
         errors += "[Dst f_reservation] " + fSDb.fLastError + "<br>";
     }
-
     /* GUESTS */
     DoubleDatabase guests;
-    guests.open(true, false);
+    guests.open();
     guests[":f_reservation"] = reservCode;
     guests.exec("select * from f_guests where f_id in "
-                  "(select f_guest from f_reservation_guests where f_reservation=:f_reservation)");
+                "(select f_guest from f_reservation_guests where f_reservation=:f_reservation)");
     for (int i = 0; i < guests.rowCount(); i++) {
         guests.getBindValues(i, fSDb.fBindValues);
         int id = fSDb.fBindValues[":f_id"].toInt();
-        DoubleDatabase dd(fSDb);
-        dd.open(true, false);
+        DoubleDatabase dd;
+        dd.open();
         dd[":f_id"] = id;
         dd.exec("delete from f_guests where f_id=:f_id");
         fSDb.insert("f_guests", false);
     }
-
     fDD[":f"] = 1;
     fDD.update("f_reservation", where_id(ap(reservCode)));
     /* SET COLOR IN SEARCH TABLE, IF INVOICE NUMBER EXISTS */
@@ -538,36 +520,36 @@ void WSyncInvoices::on_tblPData_doubleClicked(const QModelIndex &index)
     QMap<QString, QVariant> bind;
     fVauchers.getBindValues(index.row(), bind);
     switch (index.column()) {
-    case 2: {
-        QDate date = bind[":f_wdate"].toDate();
-        if (DlgChartDateRange::getDate(date)) {
-            fVauchers.setValue(index.row(), "f_wdate", date);
-            fVauchers.setValue(index.row(), "f_rdate", date);
-            ui->tblPData->setItemWithValue(index.row(), 2, date);
+        case 2: {
+            QDate date = bind[":f_wdate"].toDate();
+            if (DlgChartDateRange::getDate(date)) {
+                fVauchers.setValue(index.row(), "f_wdate", date);
+                fVauchers.setValue(index.row(), "f_rdate", date);
+                ui->tblPData->setItemWithValue(index.row(), 2, date);
+            }
+            break;
         }
-        break;
+        case 3: {
+            DlgChangeExportVaucher *d = new DlgChangeExportVaucher(fVauchers, this);
+            d->setDatabaseResult(index.row());
+            if (d->exec()) {
+                ui->tblPData->setItemWithValue(index.row(), 2, fVauchers.getValue(index.row(), "f_wdate"));
+                ui->tblPData->setItemWithValue(index.row(), 3, fVauchers.getValue(index.row(), "f_finalName"));
+                ui->tblPData->setItemWithValue(index.row(), 4, fVauchers.getValue(index.row(), "f_amountAmd"));
+                ui->tblPData->setItemWithValue(index.row(), 1, fVauchers.getValue(index.row(), "f_source"));
+                countPBalance();
+            }
+            delete d;
+            break;
         }
-    case 3: {
-        DlgChangeExportVaucher *d = new DlgChangeExportVaucher(fVauchers, this);
-        d->setDatabaseResult(index.row());
-        if (d->exec()) {
-            ui->tblPData->setItemWithValue(index.row(), 2, fVauchers.getValue(index.row(), "f_wdate"));
-            ui->tblPData->setItemWithValue(index.row(), 3, fVauchers.getValue(index.row(), "f_finalName"));
-            ui->tblPData->setItemWithValue(index.row(), 4, fVauchers.getValue(index.row(), "f_amountAmd"));
-            ui->tblPData->setItemWithValue(index.row(), 1, fVauchers.getValue(index.row(), "f_source"));
+        case 4:
+            double newAmount = QInputDialog::getDouble(this, tr("New amount"), tr("New amount"), bind[":f_amountAmd"].toDouble());
+            if (newAmount < 1) {
+                return;
+            }
+            fVauchers.setValue(index.row(), "f_amountAmd", newAmount);
+            ui->tblPData->setItemWithValue(index.row(), 4, newAmount);
             countPBalance();
-        }
-        delete d;
-        break;
-    }
-    case 4:
-        double newAmount = QInputDialog::getDouble(this, tr("New amount"), tr("New amount"), bind[":f_amountAmd"].toDouble());
-        if (newAmount < 1) {
-            return;
-        }
-        fVauchers.setValue(index.row(), "f_amountAmd", newAmount);
-        ui->tblPData->setItemWithValue(index.row(), 4, newAmount);
-        countPBalance();
     }
 }
 
@@ -598,7 +580,6 @@ void WSyncInvoices::on_btnExcel_clicked()
         for (int i = 0; i < colCount; i++) {
             s->addCell(j + 2, i + 1, ui->tblSearch->toString(j, i));
         }
-
     }
     QString err;
     if (!d.save(err, true)) {

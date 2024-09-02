@@ -82,7 +82,7 @@ void DlgQuickAdvanceApply::on_btnApply_clicked()
             return;
         }
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_id"] = ui->leReserve->text();
     dd.exec("select f_state from f_reservation where f_id=:f_id");
     if (dd.nextRow()) {

@@ -47,7 +47,7 @@ void WQuickReservationsCheckin::setReservations(const QStringList &codes)
         }
         ids += ap(s);
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select r.f_id, r.f_room, r.f_man+r.f_woman+r.f_child as f_pax, g.guest, r.f_startdate, r.f_enddate, '', "
             "r.f_invoice "
             "from f_reservation r "
@@ -370,7 +370,7 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
 void WQuickReservationsCheckin::timeout()
 {
     fTimer.stop();
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         ui->tbl->setCurrentCell(i, 0);
         checkIn(i, dd);

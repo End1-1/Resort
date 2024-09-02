@@ -48,7 +48,7 @@ DlgCardex::~DlgCardex()
 
 bool DlgCardex::isDataCorrect()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_cardex"] = ui->leCardex->text();
     fDD.exec("select f_id from f_cardex where f_cardex=:f_cardex");
     if (fDD.nextRow()) {
@@ -78,9 +78,9 @@ void DlgCardex::on_btnCancel_clicked()
 
 void DlgCardex::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     DoubleDatabase did;
-    did.open(true, doubleDatabase);
+    did.open();
     if (ui->leCardexGroupCode->isEmpty()) {
         message_error(tr("Cardex group is not selected"));
         return;
@@ -108,7 +108,7 @@ void DlgCardex::on_btnOk_clicked()
             ui->leCardex->setText(QString("%1%2").arg(ui->leCardexGroupName->text()).arg(groupMax, 3, 10, QChar('0')));
         }
         if (groupMax > 0) {
-            fDD[":f_max"]= groupMax + 1;
+            fDD[":f_max"] = groupMax + 1;
             fDD.update("f_cardex_group", where_id(ui->leCardexGroupCode->asInt()));
         } else {
             message_error(tr("Application error. Contact to developer. Message: cardex group max = 0"));
@@ -126,7 +126,7 @@ void DlgCardex::on_btnOk_clicked()
 
 void DlgCardex::on_btnRemove_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (message_confirm(tr("Confirm to delete")) != QDialog::Accepted) {
         return;
     }

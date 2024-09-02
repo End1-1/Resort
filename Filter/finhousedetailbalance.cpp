@@ -76,7 +76,7 @@ void FInhouseDetailBalance::apply(WReportGrid *rg)
             "left join f_payment_type pm on pm.f_id=m.f_paymentMode "
             "where f_source='AV' and m.f_wdate=:date and m.f_canceled=0 and m.f_finance=1 ";
     query.replace(":date", ui->wd->ds2());
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec(query);
     while (dd.nextRow()) {
         QList<QVariant> row;

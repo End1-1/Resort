@@ -53,7 +53,7 @@ void RERestDishComplex::callback(int sel, const QString &code)
 void RERestDishComplex::valuesToWidgets()
 {
     RowEditorDialog::valuesToWidgets();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (!isNew) {
         fDD[":f_complex"] = ui->leCode->asInt();
         fDD.exec("select rc.f_id, rc.f_dish, mn.f_" + def_lang + ", d.f_" + def_lang + ", m.f_price "
@@ -106,7 +106,7 @@ void RERestDishComplex::removeRow(int row)
         return;
     }
     if (ui->tblDishes->toInt(row, 0) > 0) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_dish"] = ui->tblDishes->toInt(row, 1);
         fDD[":f_complex"] = ui->leCode->asInt();
         fDD.exec("delete from r_dish_complex_list where f_complex=:f_complex and f_dish=:f_dish");
@@ -127,7 +127,7 @@ void RERestDishComplex::on_btnOK_clicked()
     save();
     for (int i = 0; i < ui->tblDishes->rowCount(); i++) {
         if (ui->tblDishes->toInt(i, 0) == 0) {
-            DoubleDatabase fDD(true, doubleDatabase);
+            DoubleDatabase fDD;
             fDD[":f_complex"] = ui->leCode->asInt();
             fDD[":f_dish"] = ui->tblDishes->toInt(i, 1);
             fDD.insert("r_dish_complex_list");

@@ -93,7 +93,7 @@ void FEvents::removeEvent()
         return;
     }
     QString reason = QInputDialog::getText(this, tr("Reason"), tr("Input reason"));
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_canceled"] = 1;
     fDD[":f_cancelUser"] = WORKING_USERID;
@@ -131,7 +131,7 @@ void FEvents::eliminate()
     if (message_confirm(tr("THIS WILL REMOVE PERMANENTLY EVENT DATE!")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] =out.at(0);
     fDD.exec("delete from o_event where f_id=:f_id");
     fDD[":f_id"] =out.at(0);

@@ -4,10 +4,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-
 TravelLineConfig::TravelLineConfig(QObject *parent) : QObject(parent)
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select * from travelline");
     if (dd.nextRow()) {
         QJsonObject jo = QJsonDocument::fromJson(dd.getString(1).toUtf8()).object();
@@ -22,8 +21,8 @@ TravelLineConfig::TravelLineConfig(QObject *parent) : QObject(parent)
 }
 
 void TravelLineConfig::updateAvailability(const QDate &startdate, const QDate &enddate,
-                                          const QString &roomtypecode,
-                                          const QString &rateplancode, int bookinglimit)
+        const QString &roomtypecode,
+        const QString &rateplancode, int bookinglimit)
 {
     QString q = queryAvailability;
     q.replace("%username", username);
@@ -34,12 +33,9 @@ void TravelLineConfig::updateAvailability(const QDate &startdate, const QDate &e
     q.replace("%enddate", enddate.toString("yyyy-MM-dd"));
     q.replace("%inputtypecode", roomtypecode);
     q.replace("%rateplancode", rateplancode);
-
     qDebug() << q;
-
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     QNetworkRequest request;
-
     //request.setRawHeader("POST", "/Api/TLConnect.svc HTTP/1.1");
     request.setRawHeader("Content-Type", "text/xml;charset=UTF-8");
     request.setRawHeader("Content-Length", QString::number(q.toUtf8().length()).toLatin1());

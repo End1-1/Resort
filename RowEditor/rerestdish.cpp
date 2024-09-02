@@ -39,7 +39,7 @@ RERestDish::RERestDish(QList<QVariant> &values, QWidget *parent) :
     ui->leQueue->setValidator(new QIntValidator());
     Utils::tableSetColumnWidths(ui->tblMenu, ui->tblMenu->columnCount(),
                                 30, 0, 0, 100, 100, 100, 100, 100, 0, 50);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_en from r_menu_names");
     ui->tblMenu->setRowCount(fDD.rowCount());
     int row = 0;
@@ -121,7 +121,7 @@ bool RERestDish::isDataCorrect()
         fDataErrors.append(tr("Type code must be defined"));
     }
     if (ui->leQueue->asInt() == 0) {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD.exec("select max(f_queue) as f_queue from r_dish");
         fDD.nextRow();
         ui->leQueue->setInt(fDD.getInt(0));
@@ -131,7 +131,7 @@ bool RERestDish::isDataCorrect()
 
 void RERestDish::valuesToWidgets()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     RowEditorDialog::valuesToWidgets();
     ui->tblRecipe->clearContents();
     ui->tblRecipe->setRowCount(0);
@@ -262,7 +262,7 @@ void RERestDish::clearWidgets()
 void RERestDish::save()
 {
     RowEditorDialog::save();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_dish"] = ui->leCode->text();
     fDD.exec("delete from r_menu where f_dish=:f_dish");
     for (int i = 0, rowCount = ui->tblMenu->rowCount(); i < rowCount; i++) {
@@ -354,7 +354,7 @@ void RERestDish::tabPageIndexChanged(int index)
     if (index == 3) {
         if (!fImageLoaded) {
             if (ui->leCode->asInt() > 0) {
-                DoubleDatabase fDD(true, doubleDatabase);
+                DoubleDatabase fDD;
                 fDD[":f_id"] = ui->leCode->asInt();
                 fDD.exec("select f_image from r_dish where f_id=:f_id");
                 QPixmap p;

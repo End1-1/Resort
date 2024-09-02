@@ -69,7 +69,7 @@ void WCityLedger::setBalance()
     if (ui->leCL->asInt() == 0) {
         return;
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_cityledger"] = ui->leCL->asInt();
 #ifdef _METROPOL_
     dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \

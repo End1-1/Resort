@@ -65,7 +65,7 @@ DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, in
     ui->btnLog->setVisible(fPreferences.getDb(def_show_logs).toBool());
     on_tabWidget_currentChanged(0);
     fDoc.fFiscalMachine = fiscalmachine;
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     if (fDoc.fFiscalMachine > 0) {
         if (row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
             ui->leFiscalMachine->setText(dd.getString("f_name"));
@@ -86,7 +86,7 @@ DlgReceiptVaucher::~DlgReceiptVaucher()
 void DlgReceiptVaucher::setVoucher(const QString &id)
 {
     clearSelectors();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     fDoc.open(dd, id);
     switch (ui->lePaymentCode->asInt()) {
         case PAYMENT_BANK:
@@ -203,7 +203,7 @@ void DlgReceiptVaucher::setCL(int cl)
 
 void DlgReceiptVaucher::setInvoice(const QString &invoice)
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_invoice"] = invoice;
     dd.exec("select f_room from f_reservation where f_invoice=:f_invoice");
     if (dd.nextRow()) {
@@ -324,7 +324,7 @@ void DlgReceiptVaucher::on_btnSave_clicked()
         return;
     }
 
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDoc.fDC = dc;
     fDoc.fSign = sign;
     if (ui->tabWidget->currentIndex() == 0) {

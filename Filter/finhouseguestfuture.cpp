@@ -41,7 +41,7 @@ void FInhouseGuestFuture::apply(WReportGrid *rg)
     for (int i = 0; i < 7; i++) {
         er.append(QVariant());
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     do {
         dd[":f_date"] = d;
         dd.exec("select f_startdate, f_enddate, count(f_man+f_woman+f_child) "

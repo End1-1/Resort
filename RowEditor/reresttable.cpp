@@ -39,7 +39,7 @@ void RERestTable::on_btnCancel_clicked()
 
 void RERestTable::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leQueue->asInt() == 0) {
         fDD.exec("select max(f_queue) + 1 as q from r_table");
         fDD.nextRow();

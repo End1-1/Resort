@@ -17,7 +17,6 @@ DlgPrintTaxSM::DlgPrintTaxSM(int taxid, QWidget *parent) :
     fCardAmount = 0;
     fPrepaid = 0;
     fTaxID = taxid;
-
     if (debug_tax_number == 0) {
         unsigned int ms = static_cast<unsigned>(QDateTime::currentMSecsSinceEpoch());
         std::mt19937 gen(ms);
@@ -31,7 +30,8 @@ DlgPrintTaxSM::~DlgPrintTaxSM()
     delete ui;
 }
 
-void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty)
+void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name,
+                             double price, double qty)
 {
     fPrintTax.addGoods(dep.toInt(), adgt, code, name, price, qty, 0.00);
 }
@@ -39,8 +39,8 @@ void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QStr
 int DlgPrintTaxSM::exec()
 {
     fPrintMode = tm_receipt;
-    connect(&fTimer, &QTimer::timeout, [this](){
-       load();
+    connect( &fTimer, &QTimer::timeout, [this]() {
+        load();
     });
     fTimer.start(2000);
     return BaseExtendedDialog::exec();
@@ -49,8 +49,8 @@ int DlgPrintTaxSM::exec()
 int DlgPrintTaxSM::execAdvance()
 {
     fPrintMode = tm_advance;
-    connect(&fTimer, &QTimer::timeout, [this](){
-       loadAdvance();
+    connect( &fTimer, &QTimer::timeout, [this]() {
+        loadAdvance();
     });
     fTimer.start(2000);
     return BaseExtendedDialog::exec();
@@ -59,14 +59,15 @@ int DlgPrintTaxSM::execAdvance()
 int DlgPrintTaxSM::execTaxback()
 {
     fPrintMode = tm_taxback;
-    connect(&fTimer, &QTimer::timeout, [this]() {
+    connect( &fTimer, &QTimer::timeout, [this]() {
         loadTaxback();
     });
     fTimer.start(2000);
     return BaseExtendedDialog::exec();
 }
 
-bool DlgPrintTaxSM::printAdvance(int taxid, double amountCash, double amountCard, const QString &invoice, const QString &vaucher, int &taxCode, QString &json)
+bool DlgPrintTaxSM::printAdvance(int taxid, double amountCash, double amountCard, const QString &invoice,
+                                 const QString &vaucher, int &taxCode, QString &json)
 {
     DlgPrintTaxSM *d = new DlgPrintTaxSM(taxid, fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(tr("Printing advance") + " " + vaucher);
@@ -74,7 +75,7 @@ bool DlgPrintTaxSM::printAdvance(int taxid, double amountCash, double amountCard
     d->fCashAmount = amountCash;
     d->fCardAmount = amountCard;
     bool result = d->execAdvance() == TAX_OK;
-    taxCode = d->fTaxCode;    
+    taxCode = d->fTaxCode;
     json = d->fJson;
     TrackControl::insert(2, "Print fiscal", taxCode, "", vaucher, invoice);
     delete d;
@@ -100,10 +101,9 @@ void DlgPrintTaxSM::load()
     fPrintTax.setParams(tp.ip, tp.port, tp.password);
     QString inJson, outJson, err;
     int result = fPrintTax.makeJsonAndPrint(fCardAmount, fPrepaid, inJson, outJson, err);
-
     DoubleDatabase v;
-    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
-    v.open(true, false);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
+    v.open();
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;
@@ -119,7 +119,8 @@ void DlgPrintTaxSM::load()
 #ifdef QT_DEBUG
     qDebug() << outJson << err;
     result = pt_err_ok;
-    outJson = QString("{\"rseq\":%1,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}").arg(debug_tax_number++);
+    outJson = QString("{\"rseq\":%1,\"crn\":\"63219817\",\"sn\":\"V98745506068\",\"tin\":\"01588771\",\"taxpayer\":\"«Ռոգա էնդ կոպիտա ՍՊԸ»\",\"address\":\"Արշակունյանց 34\",\"time\":1527853613000.0,\"fiscal\":\"98198105\",\"lottery\":\"00000000\",\"prize\":0,\"total\":1540.0,\"change\":0.0}").arg(
+                  debug_tax_number++);
 #endif
     if (result == pt_err_ok) {
         fJson = outJson;
@@ -142,16 +143,15 @@ void DlgPrintTaxSM::loadAdvance()
 {
     fTimer.stop();
     fPrintTax.setParams(fPreferences.getDb(def_tax_address).toString(),
-                fPreferences.getDb(def_tax_port).toInt(),
-                fPreferences.getDb(def_tax_password).toString());
+                        fPreferences.getDb(def_tax_port).toInt(),
+                        fPreferences.getDb(def_tax_password).toString());
     QString inJson;
     QString outJson;
     QString err;
     int result = fPrintTax.printAdvanceJson(fCashAmount, fCardAmount, inJson, outJson, err);
-
     DoubleDatabase v;
-    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
-    v.open(true, false);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
+    v.open();
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;
@@ -172,7 +172,7 @@ void DlgPrintTaxSM::loadAdvance()
         v[":f_replyTaxCode"] = jo["rseq"].toInt();
         v[":f_id"] = id;
         v.exec("update tax_print set f_replyTaxCode=:f_replyTaxCode where f_id=:f_id");
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_fiscal"] = fTaxCode;
         fDD[":f_fiscaldate"] = QDate::currentDate();
         fDD[":f_fiscaltime"] = QTime::currentTime();
@@ -189,15 +189,14 @@ void DlgPrintTaxSM::loadTaxback()
 {
     fTimer.stop();
     fPrintTax.setParams(fPreferences.getDb(def_tax_address).toString(),
-                fPreferences.getDb(def_tax_port).toInt(),
-                fPreferences.getDb(def_tax_password).toString());
+                        fPreferences.getDb(def_tax_port).toInt(),
+                        fPreferences.getDb(def_tax_password).toString());
     QString inJson;
     QString outJson;
     QString err;
-
     DoubleDatabase v;
-    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass, 1);
-    v.open(true, false);
+    v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
+    v.open();
     v[":f_replyTaxCode"] = fTaxback;
     v.exec("select * from airwick.tax_print where f_replyTaxCode=:f_replyTaxCode");
     QString crn;
@@ -219,9 +218,7 @@ void DlgPrintTaxSM::loadTaxback()
             return;
         }
     }
-
     result = fPrintTax.printTaxback(fTaxback, crn, inJson, outJson, err);
-
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;
@@ -234,7 +231,6 @@ void DlgPrintTaxSM::loadTaxback()
     v[":f_replyText"] = err;
     v[":f_replyTaxCode"] = "-";
     int id = v.insert("tax_print", true);
-
     if (result == pt_err_ok) {
         QJsonDocument jd = QJsonDocument::fromJson(outJson.toUtf8());
         QJsonObject jo = jd.object();
@@ -261,15 +257,15 @@ void DlgPrintTaxSM::on_btnRetry_clicked()
     ui->teResult->setPlainText(QString("%1: %2").arg(tr("Retry printing")).arg(fOrder));
     qApp->processEvents();
     switch (fPrintMode) {
-    case tm_receipt:
-        load();
-        break;
-    case tm_advance:
-        loadAdvance();
-        break;
-    case tm_taxback:
-        loadTaxback();
-        break;
+        case tm_receipt:
+            load();
+            break;
+        case tm_advance:
+            loadAdvance();
+            break;
+        case tm_taxback:
+            loadTaxback();
+            break;
     }
 }
 

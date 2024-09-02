@@ -177,7 +177,7 @@ void WQuickReservations::on_btnRefresh_clicked()
 
 void WQuickReservations::refresh()
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     QString query = "select rm.f_state, r.f_id, r.f_room, rm.f_short, r.f_startdate, r.f_enddate, r.f_roomfee, "
                     "r.f_man+r.f_woman+r.f_child as f_pax, "
                     "g.f_firstname, g.f_lastname, g.f_passport, n.f_name, cx.f_name, cl.f_name, "
@@ -322,7 +322,7 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
             break;
         }
         case ROOM_STATE_CHECKIN: {
-            DoubleDatabase dd(true, false);
+            DoubleDatabase dd;
             dd[":f_room"] = fSrc->room(index.row());
             dd[":f_state"] = RESERVE_CHECKIN;
             dd.exec("select f_invoice from f_reservation where f_room=:f_room and f_state=:f_state");
@@ -342,7 +342,7 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         if (r->exec() == QDialog::Accepted) {
             QString err;
             if (WReservationRoomTab::check(r->fCode.toInt(), fSrc->dateEntry(index.row()), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
-                DoubleDatabase dd(true, doubleDatabase);
+                DoubleDatabase dd;
                 dd[":f_room"] = r->fCode.toInt();
                 dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
                 dd[":f_room"] = r->fCode;
@@ -394,7 +394,7 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         auto *c = cache(cid_nation);
         QStringList codes, names;
         if (c->selector(codes, names, false)) {
-            DoubleDatabase dd(true, doubleDatabase);
+            DoubleDatabase dd;
             dd[":f_reservation"] = fSrc->reservationCode(index.row());
             dd.exec("select f_guest from f_reservation_guests where f_reservation=:f_reservation");
             bool first = true;
@@ -419,7 +419,7 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         auto *c = cache(cid_cardex);
         QStringList codes, names;
         if (c->selector(codes, names, false)) {
-            DoubleDatabase dd(true, doubleDatabase);
+            DoubleDatabase dd;
             dd[":f_cardex"] = codes.at(0);
             dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
             QModelIndex mc = fSrc->model()->index(index.row(), col_cardex);
@@ -472,7 +472,7 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
             auto *d = static_cast<EDateEdit*>(editor);
             QString err;
             if (WReservationRoomTab::check(fSrc->room(index.row()), d->date(), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
-                DoubleDatabase dd(true, doubleDatabase);
+                DoubleDatabase dd;
                 dd[":f_startdate"] = d->date();
                 dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
                 TrackControl::insert(TRACK_RESERVATION, "Entry date", model->data(index).toString(), d->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
@@ -487,7 +487,7 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
         auto *d = static_cast<EDateEdit*>(editor);
         QString err;
         if (WReservationRoomTab::check(fSrc->room(index.row()), fSrc->dateEntry(index.row()), d->date(), fSrc->reservationCode(index.row()), err)) {
-            DoubleDatabase dd(true, doubleDatabase);
+            DoubleDatabase dd;
             dd[":f_enddate"] = d->date();
             dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
             TrackControl::insert(TRACK_RESERVATION, "Departure date", model->data(index).toString(), d->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
@@ -500,7 +500,7 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
     }
     case col_rate: {
         auto *l = static_cast<EDoubleEdit*>(editor);
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         dd[":f_roomfee"] = l->getDouble();
         dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
         dd[":f_id"] = fSrc->reservationCode(index.row());
@@ -518,7 +518,7 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
     }
     case col_first_name: {
             auto *l = static_cast<EQLineEdit*>(editor);
-            DoubleDatabase dd(true, doubleDatabase);
+            DoubleDatabase dd;
             dd[":f_firstname"] = l->text();
             dd.update("f_guests", where_id(fSrc->guestCode(index.row())));
             TrackControl::insert(TRACK_RESERVATION, "First name of guest of " + fSrc->guestFullName(index.row()), fSrc->model()->data(fSrc->model()->index(index.row(), col_first_name)).toString(), l->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
@@ -527,7 +527,7 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
         }
     case col_last_name: {
         auto *l = static_cast<EQLineEdit*>(editor);
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         dd[":f_lastname"] = l->text();
         dd.update("f_guests", where_id(fSrc->guestCode(index.row())));
         TrackControl::insert(TRACK_RESERVATION, "Last name of guest of " + fSrc->guestFullName(index.row()), fSrc->model()->data(fSrc->model()->index(index.row(), col_last_name)).toString(), l->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
@@ -599,7 +599,7 @@ void WQuickReservations::on_btnClearSelectedRooms_clicked()
     if (message_confirm(tr("Confirm to clean the selected rooms")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     TrackControl tc(TRACK_ROOM_STATE);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (roomState(i) != ROOM_STATE_DIRTY) {
@@ -640,7 +640,7 @@ void WQuickReservations::on_btnMassNation_clicked()
     auto *c = cache(cid_nation);
     QStringList codes, names;
     if (c->selector(codes, names, false)) {
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         if (message_confirm(tr("Confirm to change the nationality of selected guests")) == QDialog::Accepted) {
             for (int i = 0; i < ui->tbl->rowCount(); i++) {
                 if (ui->tbl->itemValue(i, 0, Qt::UserRole).toInt() != 1) {
@@ -671,7 +671,7 @@ void WQuickReservations::on_btnMassNation_clicked()
 
 void WQuickReservations::on_btnRoomRate_clicked()
 {
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     if (message_confirm(tr("Confirm to change the rate of room of selection")) == QDialog::Accepted) {
         bool ok;
         double price = QInputDialog::getDouble(this, tr("Room rate"), tr("Rate"), 0, 0, 999999999, 0, &ok);

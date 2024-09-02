@@ -37,8 +37,8 @@ void DatabaseConnection::on_btnOk_clicked()
     if (!fAppendMode) {
         fPreferences.removeDatabase(fOldDbName);
     }
-
-    fPreferences.appendDatabase(ui->leName->text(), ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(), ui->leMainPassword->text(),
+    fPreferences.appendDatabase(ui->leName->text(), ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(),
+                                ui->leMainPassword->text(),
                                 "", "", "", "", ui->leBroadcastServer->text());
     fPreferences.saveConfig();
     accept();
@@ -47,13 +47,13 @@ void DatabaseConnection::on_btnOk_clicked()
 void DatabaseConnection::on_btnTest_clicked()
 {
     DoubleDatabase db;
-    db.setDatabase(ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(), ui->leMainPassword->text(), 1);
-    if (db.open(true, false)) {
+    db.setDatabase(ui->leMainHost->text(), ui->leMainDb->text(), ui->leMainUser->text(), ui->leMainPassword->text());
+    if (db.open()) {
         message_info(tr("Connected!"));
     } else {
         message_info(QString("%1<br>%2")
-                        .arg(tr("Connection failed!"))
-                        .arg(db.fLastError));
+                     .arg(tr("Connection failed!"))
+                     .arg(db.fLastError));
     }
     db.close();
 }

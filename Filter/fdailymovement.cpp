@@ -219,7 +219,7 @@ void FDailyMovement::processPayments(QList<QVariant> &emptyRow)
 
 void FDailyMovement::processItems(QString items, bool canceled)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     bool totalRowSeparate = items.contains("+");
     if (totalRowSeparate) {
         items.remove("+");

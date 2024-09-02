@@ -21,7 +21,7 @@ WQuickReservationsGuests::~WQuickReservationsGuests()
 void WQuickReservationsGuests::setRoom(const QString &reserve)
 {
     fReserve = reserve;
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_id"] = fReserve;
     dd.exec("select f_room, f_invoice from f_reservation where f_id=:f_id");
     if (dd.nextRow()) {
@@ -60,7 +60,7 @@ void WQuickReservationsGuests::setRoom(const QString &reserve)
 
 void WQuickReservationsGuests::closeEvent(QCloseEvent *event)
 {
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (ui->tbl->lineEdit(i, 2)->isEmpty()) {
             message_error("Check the all names of guests");
@@ -136,7 +136,7 @@ void WQuickReservationsGuests::on_btnRemoveGuest_clicked()
     if (message_confirm(tr("Confirm to remove the guest")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_reservation"] = fReserve;
     dd[":f_guest"] = ui->tbl->itemValue(row, 0);
     dd.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_guest=:f_guest");
@@ -171,7 +171,7 @@ void WQuickReservationsGuests::on_btnFullInfo_clicked()
     if (row < 0) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->tbl->toInt(row, 0);
     fDD.exec("select g.f_id, g.f_title, g.f_firstName, g.f_lastName, g.f_sex, s.f_" + def_lang + ", g.f_dateBirth, "
                "g.f_placeBirth, "
@@ -202,7 +202,7 @@ void WQuickReservationsGuests::on_btnChangeGuest_clicked()
     if (row < 0) {
         return;
     }
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     dd[":f_reservation"] = fReserve;
     dd[":f_guest"] = ui->tbl->itemValue(row, 0);
     dd.exec("delete from f_reservation_guests where f_reservation=:f_reservation and f_guest=:f_guest");

@@ -36,7 +36,7 @@ void DlgTaxBack::on_btnCancel_clicked()
 
 void DlgTaxBack::on_btnOK_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (ui->tblData->item(i, 4)->checkState() == Qt::Checked) {
             fDD[":f_fiscal"] = 0;

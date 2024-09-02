@@ -188,7 +188,7 @@ void DlgUserRights::setup(QList<QVariant> &values)
             .addWidget(ui->chTravelLine, QString::number(fGroupId) + ": " + "TravelLine")
             .addWidget(ui->chInitRestaurantFromOffice, QString::number(fGroupId) + ": " + "Init restaurant dishes from external db");
             ;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_group"] = fGroupId;
     fDD.exec("select f_right, f_flag from users_rights where f_group=:f_group");
     QMap<int, QString> fTags;
@@ -216,7 +216,7 @@ void DlgUserRights::on_btnCancel_clicked()
 
 void DlgUserRights::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_group"] = fGroupId;
     fDD.exec("delete from users_rights where f_group=:f_group");

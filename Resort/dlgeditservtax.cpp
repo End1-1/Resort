@@ -25,7 +25,7 @@ void DlgEditServTax::setParams(int id, const QString &comp, int active, const QS
 
 void DlgEditServTax::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_host"] = ui->leHost->text();
     fDD[":f_port"] = ui->lePort->text();
     fDD[":f_password"] = ui->lePass->text();

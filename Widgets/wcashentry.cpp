@@ -16,7 +16,6 @@ WCashEntry::WCashEntry(QWidget *parent) :
     ui(new Ui::WCashEntry)
 {
     ui->setupUi(this);
-
     ui->leDebit->setSelector(this, cache(cid_cash_desk), ui->leDebitName);
     ui->leCashout->setSelector(this, cache(cid_cash_desk), ui->leCashOutName);
     ui->leCredit->setSelector(this, cache(cid_invoice_item), ui->leCreditName);
@@ -33,9 +32,9 @@ WCashEntry::~WCashEntry()
 
 void WCashEntry::save()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
-    DoubleDatabase d2(fDD);
-    d2.open(true, doubleDatabase);
+    DoubleDatabase fDD;
+    DoubleDatabase d2;
+    d2.open();
     if (!ui->chEnable->isChecked()) {
         return;
     }
@@ -82,7 +81,6 @@ void WCashEntry::save()
         fDD[":f_amount"] = (fIn ? ui->leAmount->asDouble() : ui->leAmount->asDouble() * -1);
         fDD[":f_comment"] = ui->leComment->text();
         fDD.update("c_cash", where_id(ui->leCode->asInt()));
-
         fDD[":f_date"] = ui->deDate->date();
         fDD[":f_docType"] = ui->leDocTypeNum->asInt();
         fDD[":f_docNum"] = ui->leCode->asInt();
@@ -100,7 +98,7 @@ void WCashEntry::load(int doc)
 {
     ui->wOp->setEnabled(false);
     ui->leCode->setInt(doc);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = doc;
     fDD.exec("select * from c_cash where f_id=:f_id");
     if (fDD.rowCount() == 0) {
@@ -131,7 +129,6 @@ void WCashEntry::load(int doc)
     ui->leCredit->setInitialValue(fDD.getValue("f_credit").toInt());
     ui->lePartnerCode->setInitialValue(fDD.getValue("f_partner").toInt());
     ui->leComment->setText(fDD.getValue("f_comment").toString());
-
     if (ui->rbCashMove->isChecked()) {
         if (ui->leAmount->asDouble() > 0.1) {
             fIn = true;
@@ -189,29 +186,29 @@ int WCashEntry::cashOp()
 void WCashEntry::cashOp(int c)
 {
     switch (c) {
-    case CASHOP_NONE:
-        ui->rbCashIn->setChecked(false);
-        ui->rbCashOut->setChecked(false);
-        ui->rbCashMove->setChecked(false);
-        ui->lbCashIn->setVisible(false);
-        ui->leDebit->setVisible(false);
-        ui->leDebitName->setVisible(false);
-        ui->lbCachout->setVisible(false);
-        ui->leCashout->setVisible(false);
-        ui->leCashOutName->setVisible(false);
-        break;
-    case CASHOP_IN:
-        ui->rbCashIn->setChecked(true);
-        break;
-    case CASHOP_OUT:
-        ui->rbCashOut->setChecked(true);
-        break;
-    case CASHOP_MOVE:
-        ui->rbCashMove->setChecked(true);
-        ui->leDocTypeNum->setInt(CASHDOC_MOVE);
-        break;
-    default:
-        break;
+        case CASHOP_NONE:
+            ui->rbCashIn->setChecked(false);
+            ui->rbCashOut->setChecked(false);
+            ui->rbCashMove->setChecked(false);
+            ui->lbCashIn->setVisible(false);
+            ui->leDebit->setVisible(false);
+            ui->leDebitName->setVisible(false);
+            ui->lbCachout->setVisible(false);
+            ui->leCashout->setVisible(false);
+            ui->leCashOutName->setVisible(false);
+            break;
+        case CASHOP_IN:
+            ui->rbCashIn->setChecked(true);
+            break;
+        case CASHOP_OUT:
+            ui->rbCashOut->setChecked(true);
+            break;
+        case CASHOP_MOVE:
+            ui->rbCashMove->setChecked(true);
+            ui->leDocTypeNum->setInt(CASHDOC_MOVE);
+            break;
+        default:
+            break;
     }
     ui->lbCashIn->setVisible(c == CASHOP_IN || c == CASHOP_MOVE);
     ui->leDebit->setVisible(c == CASHOP_IN || c == CASHOP_MOVE);
@@ -254,11 +251,10 @@ void WCashEntry::amount(double a)
 void WCashEntry::docType(int t)
 {
     ui->leDocTypeNum->setInitialValue(t);
-
     switch (t) {
-    case CASHDOC_DEBT:
-        ui->rbCashOut->setChecked(true);
-        cashOp(CASHOP_OUT);
+        case CASHDOC_DEBT:
+            ui->rbCashOut->setChecked(true);
+            cashOp(CASHOP_OUT);
     }
 }
 
@@ -322,15 +318,14 @@ void WCashEntry::on_btnSave_clicked()
 
 void WCashEntry::on_chEnable_stateChanged(int arg1)
 {
-//    ui->leCode->setEnabled(ui->leCode->isEnabled() && arg1);
-//    ui->leDocTypeNum->setEnabled(ui->leDocTypeNum->isEnabled() && arg1);
-//    ui->deDate->setEnabled(ui->deDate->isEnabled() && arg1);
-//    ui->leAmount->setEnabled(ui->leAmount->isEnabled() && arg1);
-//    ui->leDebit->setEnabled(ui->leDebit->isEnabled() && arg1);
-//    ui->leCredit->setEnabled(ui->leCredit->isEnabled() && arg1);
-//    ui->lePartnerCode->setEnabled(ui->lePartnerCode->isEnabled() && arg1);
-//    ui->leComment->setEnabled(ui->leComment->isEnabled() && arg1);
-
+    //    ui->leCode->setEnabled(ui->leCode->isEnabled() && arg1);
+    //    ui->leDocTypeNum->setEnabled(ui->leDocTypeNum->isEnabled() && arg1);
+    //    ui->deDate->setEnabled(ui->deDate->isEnabled() && arg1);
+    //    ui->leAmount->setEnabled(ui->leAmount->isEnabled() && arg1);
+    //    ui->leDebit->setEnabled(ui->leDebit->isEnabled() && arg1);
+    //    ui->leCredit->setEnabled(ui->leCredit->isEnabled() && arg1);
+    //    ui->lePartnerCode->setEnabled(ui->lePartnerCode->isEnabled() && arg1);
+    //    ui->leComment->setEnabled(ui->leComment->isEnabled() && arg1);
     ui->leCode->setEnabled(arg1);
     ui->leDocTypeNum->setEnabled(arg1);
     ui->deDate->setEnabled(arg1);

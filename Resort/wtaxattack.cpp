@@ -56,7 +56,7 @@ void WTaxAttack::uncheckAll()
 
 void WTaxAttack::on_btnRefresh_clicked()
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_state"] = RESERVE_CHECKOUT;
     dd[":date1"] = ui->deStart->date();
     dd[":date2"] = ui->deEnd->date();
@@ -126,7 +126,7 @@ void WTaxAttack::on_leSearch_textChanged(const QString &arg1)
                 ui->tbl->setRowHidden(i, true);
             }
         }
-        CONT:
+    CONT:
         continue;
     }
     countAmounts();
@@ -140,13 +140,13 @@ void WTaxAttack::on_leInvoice_returnPressed()
         invoices.append("");
     }
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
-        for (const QString &s: invoices) {
+        for (const QString &s : invoices) {
             if (ui->tbl->toString(i, 0).contains(s, Qt::CaseInsensitive)) {
                 goto CONT;
             }
         }
         ui->tbl->setRowHidden(i, true);
-        CONT:
+    CONT:
         continue;
     }
     countAmounts();
@@ -191,14 +191,14 @@ void WTaxAttack::on_btnPrintTax_clicked()
                 message_error(tr("Tax department undefined for ") + c.fName());
                 return;
             }
-            DoubleDatabase fDD(true, false);
+            DoubleDatabase fDD;
             fDD[":f_header"] = ui->tbl->toString(i, col_voucher);
             fDD[":f_state"] = DISH_STATE_READY;
             fDD.exec("select d.f_id, d.f_am, d.f_adgt, od.f_qty, od.f_price "
-                       "from o_dish od "
-                       "inner join r_dish d on d.f_id=od.f_dish "
-                       "where od.f_header=:f_header and od.f_state=:f_state "
-                       "and (od.f_complex=0 or (od.f_complex>0 and od.f_complexId>0)) ");
+                     "from o_dish od "
+                     "inner join r_dish d on d.f_id=od.f_dish "
+                     "where od.f_header=:f_header and od.f_state=:f_state "
+                     "and (od.f_complex=0 or (od.f_complex>0 and od.f_complexId>0)) ");
             while (fDD.nextRow()) {
                 QString vatReception = c.fVatDept();
                 if (!c.fVatReception().isEmpty()) {

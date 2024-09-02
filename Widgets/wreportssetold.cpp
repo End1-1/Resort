@@ -86,7 +86,7 @@ QString WReportsSetOld::title()
 void WReportsSetOld::rbClicked()
 {
     ERadioButton *rb = static_cast<ERadioButton*>(sender());
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = rb->fData["rep"];
     fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum from serv_reports where f_id=:f_id");
     if (!fDD.nextRow()) {
@@ -353,7 +353,7 @@ void WReportsSetOld::on_btnGo_clicked()
             break;
         }
     } else {
-        DoubleDatabase fDD(true, doubleDatabase);
+        DoubleDatabase fDD;
         fDD[":f_id"] = eb->fData["rep"];
         fDD.exec("select f_sql, f_widths, f_titles_en, f_filter, f_sum, f_name from serv_reports where f_id=:f_id");
         if (!fDD.nextRow()) {
@@ -421,7 +421,7 @@ void WReportsSetOld::category(QList<QList<QVariant> > &rows, const QString &mont
     er << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_description from f_room_classes");
     QMap<QString, int> catMap;
     while (dd.nextRow()) {
@@ -592,7 +592,7 @@ void WReportsSetOld::occupancy(QList<QList<QVariant> > &rows, const QString &mon
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_description from f_room_classes");
     QMap<QString, int> catMap;
     while (dd.nextRow()) {
@@ -699,7 +699,7 @@ void WReportsSetOld::roomArrangement(QList<QList<QVariant> > &rows, const QStrin
     er <<QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_description from f_room_classes");
     QMap<QString, int> catMap;
     while (dd.nextRow()) {
@@ -765,7 +765,7 @@ void WReportsSetOld::roomArrangementByAge(QList<QList<QVariant> > &rows, const Q
        << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant()
           << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant() << QVariant() << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     if (ui->chUseDateRange->isChecked()) {
         dd.exec("select f_sql from serv_sql where f_name='roomArrangementByAge11'");
     } else {
@@ -812,7 +812,7 @@ void WReportsSetOld::nationality(QList<QList<QVariant> > &rows, const QString &m
     er <<QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_name from f_nationality order by 1");
     QMap<QString, int> natMap;
     while (dd.nextRow()) {
@@ -950,7 +950,7 @@ void WReportsSetOld::nationalityYearly(QList<QList<QVariant> > &rows, const QStr
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_name from f_nationality order by 1");
     QMap<QString, int> natMap;
     while (dd.nextRow()) {
@@ -1018,7 +1018,7 @@ void WReportsSetOld::cardex(QList<QList<QVariant> > &rows, const QString &month)
     er << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_name from f_cardex");
     QMap<QString, int> catMap;
     while (dd.nextRow()) {
@@ -1188,7 +1188,7 @@ void WReportsSetOld::marketsigment(QList<QList<QVariant> > &rows, const QString 
     er << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant() << QVariant() << QVariant() << QVariant()
        << QVariant();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_group from f_cardex");
     QMap<QString, int> catMap;
     while (dd.nextRow()) {
@@ -1355,7 +1355,7 @@ void WReportsSetOld::cardexCategory(QList<QList<QVariant> > &rows, const QString
 {
     widths << 140 << 80;
     titles << "CATEGORY"  << "TOTAL";
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_short from f_room_classes");
     QMap<QString, int> mCatRows;
     while (dd.nextRow()) {

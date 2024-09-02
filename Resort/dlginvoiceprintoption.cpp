@@ -7,7 +7,7 @@ DlgInvoicePrintOption::DlgInvoicePrintOption(QWidget *parent) :
 {
     ui->setupUi(this);
     fResult = pio_none;
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db.exec("select * from f_acc_currencies");
     QList<QVariant> row;
     while (db.nextRow(row)) {

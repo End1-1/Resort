@@ -95,7 +95,7 @@ void WQuickCheckout::refresh()
     } else {
         query.replace(":group", QString(" and r.f_group=%1").arg(ui->wGroup->group()));
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_state"] = RESERVE_CHECKIN;
     dd.exec(query);
     Utils::fillTableWithData(ui->tbl, dd.fDbRows);
@@ -152,7 +152,7 @@ void WQuickCheckout::setRowSelected(int flag)
 
 void WQuickCheckout::updateRow(int row)
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_inv"] = ui->tbl->toString(row, 1);
     dd.exec("select m.f_amountamd, m.f_sign, m.f_side "
             "from m_register m "
@@ -223,7 +223,7 @@ void WQuickCheckout::on_tbl_doubleClicked(const QModelIndex &index)
     if (!index.isValid()) {
         return;
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     auto *rv = new DlgReceiptVaucher(0, 0, 0, this);
     auto *pt =  new PrintTaxD(fPreferences.getDb(def_default_fiscal_machine).toInt(), this);
     rv->setRoom(ui->tbl->toInt(index.row(), 0));
@@ -275,7 +275,7 @@ void WQuickCheckout::on_tbl_doubleClicked(const QModelIndex &index)
                     message_error(tr("Tax department undefined for ") + c.fName());
                     return;
                 }
-                DoubleDatabase fDD(true, doubleDatabase);
+                DoubleDatabase fDD;
                 fDD[":f_header"] = orderId;
                 fDD[":f_state"] = DISH_STATE_READY;
                 fDD.exec("select d.f_id, d.f_am, d.f_adgt, od.f_qty, od.f_price "
@@ -377,7 +377,7 @@ void WQuickCheckout::on_btnCommonPostCharge_clicked()
             return;
         }
         invoices.removeAt(0);
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         for (const QString &s: invoices) {
             dd[":f_invoice"] = s;
             dd.exec("select * from f_reservation where f_invoice=:f_invoice");

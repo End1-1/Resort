@@ -9,7 +9,7 @@ DlgClearLog::DlgClearLog(QWidget *parent) :
 {
     ui->setupUi(this);
     DoubleDatabase db(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
-    db.open(true, false);
+    db.open();
     db.exec("select distinct(f_user) from airlog.log order by 1");
     while (db.nextRow()) {
         ui->cbUser->addItem(db.getString(0));
@@ -27,7 +27,7 @@ void DlgClearLog::on_btnClear_clicked()
         return;
     }
     DoubleDatabase db(TrackControl::fDbHost, TrackControl::fDbDb, TrackControl::fDbUser, TrackControl::fDbPass);
-    db.open(true, false);
+    db.open();
     if (ui->cbUser->currentText() == "") {
         db.exec("delete from airlog.log where f_user is null or f_user=''");
     } else {

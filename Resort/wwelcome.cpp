@@ -25,7 +25,7 @@ void WWelcome::configureLabels()
 
 void WWelcome::loadInfo()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     Utils::tableSetColumnWidths(ui->tblBirthDay, ui->tblBirthDay->columnCount(), 50, 200, 100);
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD[":f_day1"] = QDate::currentDate().day();

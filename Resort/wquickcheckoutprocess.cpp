@@ -41,7 +41,7 @@ void WQuickCheckoutProcess::setListOfInvoices(const QStringList &invoices)
                             "where m.f_finance=1 and m.f_canceled=0 and r.f_invoice in (%1) "
                             "group by 1, 2, 3 "
                             "order by 1").arg(inv);
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec(query);
     Utils::fillTableWithData(ui->tbl, dd.fDbRows);
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
@@ -61,7 +61,7 @@ int WQuickCheckoutProcess::exec()
 
 void WQuickCheckoutProcess::timeout()
 {
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     TrackControl tc(TRACK_RESERVATION);
     fTimer.stop();
     for (int i = 0; i < ui->tbl->rowCount(); i++) {

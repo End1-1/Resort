@@ -71,8 +71,8 @@ void EComboBoxCompleter::refreshData()
     Preferences p;
     Db d = p.getDatabase(fDatabaseName);
     DoubleDatabase db;
-    db.setDatabase(d.dc_main_host, d.dc_main_path, d.dc_main_user, d.dc_main_pass, 1);
-    db.open(true, false);
+    db.setDatabase(d.dc_main_host, d.dc_main_path, d.dc_main_user, d.dc_main_pass);
+    db.open();
     db.exec(fSql);
     while (db.nextRow()) {
         map[db.getString(1)] = db.getString(0);
@@ -84,7 +84,8 @@ void EComboBoxCompleter::refreshData()
 void EComboBoxCompleter::setData()
 {
     clear();
-    QMap<QString, QString> &map = fCache[QCryptographicHash::hash(QString(fSql + fDatabaseName).toLatin1(), QCryptographicHash::Md5).toHex()];
+    QMap<QString, QString> &map = fCache[QCryptographicHash::hash(QString(fSql + fDatabaseName).toLatin1(),
+                                         QCryptographicHash::Md5).toHex()];
     foreach (QString k, map.keys()) {
         addItem(k, map[k]);
     }

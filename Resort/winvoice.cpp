@@ -129,7 +129,7 @@ void WInvoice::callback(int sel, const QString &code)
 
 void WInvoice::loadInvoice(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     ui->btnTaxPrint->setEnabled(false);
     if (fTrackControl) {
         if (fTrackControl->hasChanges()) {
@@ -288,7 +288,7 @@ void WInvoice::loadInvoice(const QString &id)
 
 void WInvoice::loadReservation(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select f_invoice from f_reservation where f_id=:f_id");
     if (fDD.nextRow()) {
@@ -336,7 +336,7 @@ void WInvoice::openInvoiceWindow(const QString &invoice)
 
 void WInvoice::openInvoiceFromReservation(const QString &reserve)
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_id"] = reserve;
     dd.exec("select f_invoice from f_reservation where f_id=:f_id");
     if (dd.nextRow()) {
@@ -421,7 +421,7 @@ void WInvoice::on_btnLeft_clicked()
 
 void WInvoice::moveTableRow(EQTableWidget *from, EQTableWidget *to)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QModelIndexList sel = from->selectionModel()->selectedRows();
     QString fromTo = QString("%1->%2")
             .arg((from == ui->tblInvLeft ? tr("Guest") : tr("Company")))
@@ -539,7 +539,7 @@ void WInvoice::on_btnPostingCharges_clicked()
 
 void WInvoice::on_btnCheckout_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     save();
     DlgOfferInvoiceExtra *o = new DlgOfferInvoiceExtra(this);
     o->setRoom(ui->leRoomCode->asInt());
@@ -780,7 +780,7 @@ void WInvoice::on_btnPaymentsDetails_clicked()
 
 void WInvoice::on_btnTaxPrint_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     EQTableWidget *t = nullptr;
     int result = DlgPrintTaxSideOption::printTaxSide();
     switch (result) {
@@ -1085,7 +1085,7 @@ void WInvoice::on_btnTrack_clicked()
 
 void WInvoice::save()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_remarks"] = ui->teRemark->toPlainText();
     fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
     fTrackControl->saveChanges();
@@ -1385,7 +1385,7 @@ void WInvoice::on_btnAdvance_clicked()
 
 void WInvoice::on_btnManualTax_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     DlgPrintRandomTax *d = new DlgPrintRandomTax(this);
     d->setHeader(ui->leRoomCode->text(), ui->leGuest->text(), ui->leInvoice->text());
     d->exec();
@@ -1534,7 +1534,7 @@ void WInvoice::on_btnDoNotDisturbe_clicked(bool checked)
         ui->btnDoNotDisturbe->setChecked(!checked);
         return;
     }
-    DoubleDatabase dd(true);
+    DoubleDatabase dd;
     dd[":f_donotdisturbe"] = (int) checked;
     dd[":f_id"] = ui->leRoomCode->asInt();
     dd.exec("update f_room set f_donotdisturbe=:f_donotdisturbe where f_id=:f_id");
@@ -1550,7 +1550,7 @@ void WInvoice::on_btnResetAdvanceAmount_clicked()
     if (message_confirm(tr("Reset available amount of advance?")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase dd(true);
+    DoubleDatabase dd;
     dd[":f_invoice"] = ui->leInvoice->text();
     dd[":f_amount"] = ui->lePrepaid->asDouble();
     dd.insert("f_used_advance", false);

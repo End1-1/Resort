@@ -33,8 +33,9 @@ static QString dbPass;
 static bool fail = false;
 
 static const QColor COLOR_CHANGED = QColor::fromRgb(255, 255, 150);
-static const QString QUERY  = "insert into airlog.log (f_comp, f_date, f_time, f_user, f_type, f_rec, f_invoice, f_reservation, f_action, f_value1, f_value2) "
-                "values (:f_comp, :f_date, :f_time, :f_user, :f_type, :f_rec, :f_invoice, :f_reservation, :f_action, :f_value1, :f_value2)";
+static const QString QUERY  =
+    "insert into airlog.log (f_comp, f_date, f_time, f_user, f_type, f_rec, f_invoice, f_reservation, f_action, f_value1, f_value2) "
+    "values (:f_comp, :f_date, :f_time, :f_user, :f_type, :f_rec, :f_invoice, :f_reservation, :f_action, :f_value1, :f_value2)";
 
 QStringList TrackControl::currentDb()
 {
@@ -56,7 +57,7 @@ TrackControl::TrackControl(int table)
 
 bool TrackControl::contains(QWidget *w)
 {
-    for (TrackWidget *tw: fTrackWidgets) {
+    for (TrackWidget *tw : fTrackWidgets) {
         if (w == tw->fWidget) {
             return true;
         }
@@ -74,34 +75,34 @@ TrackControl &TrackControl::addWidget(QWidget *w, const QString &key)
     TrackWidget *t = new TrackWidget();
     t->fKey = key;
     t->fWidget = w;
-    setOldValue(*t);
+    setOldValue( *t);
     fTrackWidgets << t;
     fTrackWidgetsMap.insert(key, t);
     if (isLineEdit(w)) {
-        connect(static_cast<EQLineEdit*>(w), SIGNAL(textChanged(QString)), this, SLOT(lineEditTextChanged(QString)));
+        connect(static_cast<EQLineEdit *>(w), SIGNAL(textChanged(QString)), this, SLOT(lineEditTextChanged(QString)));
     } else if (isDateEdit(w)) {
-        connect(static_cast<EQDateEdit*>(w), SIGNAL(dateChanged(QDate)), this, SLOT(dateEditChanged(QDate)));
+        connect(static_cast<EQDateEdit *>(w), SIGNAL(dateChanged(QDate)), this, SLOT(dateEditChanged(QDate)));
     } else if (isTextEdit(w)) {
-        connect(static_cast<EQTextEdit*>(w), SIGNAL(textChanged()), this, SLOT(textEditTextChanged()));
+        connect(static_cast<EQTextEdit *>(w), SIGNAL(textChanged()), this, SLOT(textEditTextChanged()));
     } else if (isCheckBox(w)) {
-        connect(static_cast<EQCheckBox*>(w), SIGNAL(clicked()), this, SLOT(checkBoxClicked()));
+        connect(static_cast<EQCheckBox *>(w), SIGNAL(clicked()), this, SLOT(checkBoxClicked()));
     } else if (isComboBox(w)) {
-        connect(static_cast<QComboBox*>(w), SIGNAL(currentIndexChanged(int)), this, SLOT(comboIndexChanged(int)));
+        connect(static_cast<QComboBox *>(w), SIGNAL(currentIndexChanged(int)), this, SLOT(comboIndexChanged(int)));
     } else if(isSpinBox(w)) {
-        connect(static_cast<QSpinBox*>(w), SIGNAL(valueChanged(int)), this, SLOT(spinValueChanged(int)));
+        connect(static_cast<QSpinBox *>(w), SIGNAL(valueChanged(int)), this, SLOT(spinValueChanged(int)));
     } else if (isTimeEdit(w)) {
-        connect(static_cast<QTimeEdit*>(w), SIGNAL(timeChanged(QTime)), this, SLOT(timeEditChanged(QTime)));
+        connect(static_cast<QTimeEdit *>(w), SIGNAL(timeChanged(QTime)), this, SLOT(timeEditChanged(QTime)));
     } else if (isEDateEdit(w)) {
-        connect(static_cast<EDateEdit*>(w), SIGNAL(textChanged(QString)), this, SLOT(edateTextChanged(QString)));
+        connect(static_cast<EDateEdit *>(w), SIGNAL(textChanged(QString)), this, SLOT(edateTextChanged(QString)));
     } else if (isDoubleEdit(w)) {
-        connect(static_cast<EQDoubleEdit*>(w), SIGNAL(textChanged(QString)), this, SLOT(lineEditTextChanged(QString)));
+        connect(static_cast<EQDoubleEdit *>(w), SIGNAL(textChanged(QString)), this, SLOT(lineEditTextChanged(QString)));
     }
     return *this;
 }
 
 QListIterator<TrackWidget *> TrackControl::widgetIterator()
 {
-    return QListIterator<TrackWidget*>(fTrackWidgets);
+    return QListIterator<TrackWidget *>(fTrackWidgets);
 }
 
 bool TrackControl::hasChanges()
@@ -110,7 +111,7 @@ bool TrackControl::hasChanges()
         return false;
     }
     foreach (TrackWidget *t, fTrackWidgets) {
-        if (isTrackChanged(*t))
+        if (isTrackChanged( *t))
             return true;
     }
     if (fMsgMsg.count() > 0) {
@@ -129,10 +130,10 @@ void TrackControl::saveChanges()
         return;
     }
     foreach (TrackWidget *t, fTrackWidgets) {
-        if (isTrackChanged(*t)) {
-            this->insert(t->fKey, t->fOldValue, getNewValue(*t));
+        if (isTrackChanged( *t)) {
+            this->insert(t->fKey, t->fOldValue, getNewValue( *t));
             t->fOldValue = "";
-            setOldValue(*t);
+            setOldValue( *t);
         }
     }
     for (int i = 0; i < fMsgMsg.count(); i++) {
@@ -146,7 +147,7 @@ void TrackControl::saveChanges()
 void TrackControl::resetChanges()
 {
     foreach (TrackWidget *t, fTrackWidgets) {
-        setOldValue(*t);
+        setOldValue( *t);
     }
 }
 
@@ -154,7 +155,7 @@ bool TrackControl::isValueChanged(QWidget *w)
 {
     foreach (TrackWidget *t, fTrackWidgets) {
         if (t->fWidget == w) {
-            return isTrackChanged(*t);
+            return isTrackChanged( *t);
         }
     }
     return false;
@@ -175,7 +176,7 @@ QString TrackControl::newValue(const QString &trackName)
     if (!fTrackWidgetsMap.contains(trackName)) {
         return "No widget for " + trackName;
     }
-    return getNewValue(*fTrackWidgetsMap[trackName]);
+    return getNewValue( *fTrackWidgetsMap[trackName]);
 }
 
 void TrackControl::insertMessage(const QString &msg, const QString &v1, const QString &v2)
@@ -194,7 +195,7 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
         return;
     }
     DoubleDatabase db(dbHost, dbDb, dbUser, dbPass);
-    if (!db.open(true, false)) {
+    if (!db.open()) {
         if (fail) {
             db.logEvent("Track control: " + db.fLastError);
             return;
@@ -203,8 +204,8 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
         dbDb = fDbDbReserve;
         dbUser = fDbUserReserve;
         dbPass = fDbPassReserve;
-        db.setDatabase(dbHost, dbDb, dbUser, dbPass, 1);
-        if (!db.open(true, false)) {
+        db.setDatabase(dbHost, dbDb, dbUser, dbPass);
+        if (!db.open()) {
             fail = true;
             db.logEvent("Track control: " + db.fLastError);
             return;
@@ -233,7 +234,7 @@ void TrackControl::del()
         return;
     }
     DoubleDatabase db(dbHost, dbDb, dbUser, dbPass);
-    if (!db.open(true, false)) {
+    if (!db.open()) {
         QMessageBox::critical(nullptr, tr("TrackControl error"), db.fLastError);
         return;
     }
@@ -254,7 +255,8 @@ void TrackControl::setFirstConnection()
     fail = false;
 }
 
-void TrackControl::insert(int table, const QString &action, const QVariant &value1, const QVariant &value2, const QString &record, const QString &invoice, const QString &reservation)
+void TrackControl::insert(int table, const QString &action, const QVariant &value1, const QVariant &value2,
+                          const QString &record, const QString &invoice, const QString &reservation)
 {
     TrackControl tc(table);
     tc.fRecord = record;
@@ -279,62 +281,62 @@ bool TrackControl::isTrackChanged(TrackWidget &t)
 void TrackControl::setOldValue(TrackWidget &t)
 {
     if (isLineEdit(t.fWidget)) {
-        t.fOldValue = static_cast<QLineEdit*>(t.fWidget)->text();
-        static_cast<EQLineEdit*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = static_cast<QLineEdit *>(t.fWidget)->text();
+        static_cast<EQLineEdit *>(t.fWidget)->setBgColor(Qt::white);
     } else if (isTimeEdit(t.fWidget)) {
-        t.fOldValue = static_cast<QTimeEdit*>(t.fWidget)->time().toString(def_time_format);
-        static_cast<EQTimeEdit*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = static_cast<QTimeEdit *>(t.fWidget)->time().toString(def_time_format);
+        static_cast<EQTimeEdit *>(t.fWidget)->setBgColor(Qt::white);
     } else if (isDateEdit(t.fWidget)) {
-        t.fOldValue = static_cast<QDateEdit*>(t.fWidget)->date().toString(def_date_format);
-        static_cast<EQDateEdit*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = static_cast<QDateEdit *>(t.fWidget)->date().toString(def_date_format);
+        static_cast<EQDateEdit *>(t.fWidget)->setBgColor(Qt::white);
     } else if(isCheckBox(t.fWidget)) {
-        t.fOldValue = static_cast<QCheckBox*>(t.fWidget)->isChecked() ? "1" : "0";
-        static_cast<QCheckBox*>(t.fWidget)->setStyleSheet("");
+        t.fOldValue = static_cast<QCheckBox *>(t.fWidget)->isChecked() ? "1" : "0";
+        static_cast<QCheckBox *>(t.fWidget)->setStyleSheet("");
     } else if (isTextEdit(t.fWidget)) {
-        t.fOldValue = static_cast<QTextEdit*>(t.fWidget)->toPlainText();
-        static_cast<EQTextEdit*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = static_cast<QTextEdit *>(t.fWidget)->toPlainText();
+        static_cast<EQTextEdit *>(t.fWidget)->setBgColor(Qt::white);
     } else if (isComboBox(t.fWidget)) {
-        t.fOldValue = static_cast<QComboBox*>(t.fWidget)->currentText();
-        static_cast<QComboBox*>(t.fWidget)->setStyleSheet("");
+        t.fOldValue = static_cast<QComboBox *>(t.fWidget)->currentText();
+        static_cast<QComboBox *>(t.fWidget)->setStyleSheet("");
     } else if (isSpinBox(t.fWidget)) {
-        t.fOldValue = QString::number(static_cast<QSpinBox*>(t.fWidget)->value());
-        static_cast<EQSpinBox*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = QString::number(static_cast<QSpinBox *>(t.fWidget)->value());
+        static_cast<EQSpinBox *>(t.fWidget)->setBgColor(Qt::white);
     } else if (isEDateEdit(t.fWidget)) {
-        t.fOldValue = static_cast<EDateEdit*>(t.fWidget)->text();
-        static_cast<EDateEdit*>(t.fWidget)->setStyleSheet("");
+        t.fOldValue = static_cast<EDateEdit *>(t.fWidget)->text();
+        static_cast<EDateEdit *>(t.fWidget)->setStyleSheet("");
     } else if (isDoubleEdit(t.fWidget)) {
-        t.fOldValue = static_cast<EQDoubleEdit*>(t.fWidget)->text();
-        static_cast<EQDoubleEdit*>(t.fWidget)->setBgColor(Qt::white);
+        t.fOldValue = static_cast<EQDoubleEdit *>(t.fWidget)->text();
+        static_cast<EQDoubleEdit *>(t.fWidget)->setBgColor(Qt::white);
     }
 }
 
 QString TrackControl::getNewValue(TrackWidget &t)
 {
     if (isLineEdit(t.fWidget)) {
-        return static_cast<QLineEdit*>(t.fWidget)->text();
+        return static_cast<QLineEdit *>(t.fWidget)->text();
     } else if (isTimeEdit(t.fWidget)) {
-        return static_cast<QTimeEdit*>(t.fWidget)->time().toString(def_time_format);
+        return static_cast<QTimeEdit *>(t.fWidget)->time().toString(def_time_format);
     } else if (isDateEdit(t.fWidget)) {
-        return static_cast<QDateEdit*>(t.fWidget)->date().toString(def_date_format);
+        return static_cast<QDateEdit *>(t.fWidget)->date().toString(def_date_format);
     } else if (isCheckBox(t.fWidget)) {
-        return (static_cast<QCheckBox*>(t.fWidget)->isChecked() ? "1" : "0");
+        return (static_cast<QCheckBox *>(t.fWidget)->isChecked() ? "1" : "0");
     } else if (isTextEdit(t.fWidget)) {
-        return static_cast<QTextEdit*>(t.fWidget)->toPlainText();
+        return static_cast<QTextEdit *>(t.fWidget)->toPlainText();
     } else if (isComboBox(t.fWidget)) {
-        return static_cast<QComboBox*>(t.fWidget)->currentText();
+        return static_cast<QComboBox *>(t.fWidget)->currentText();
     } else if (isSpinBox(t.fWidget)) {
-        return QString::number(static_cast<QSpinBox*>(t.fWidget)->value());
+        return QString::number(static_cast<QSpinBox *>(t.fWidget)->value());
     } else if (isEDateEdit(t.fWidget)) {
-        return static_cast<EDateEdit*>(t.fWidget)->text();
+        return static_cast<EDateEdit *>(t.fWidget)->text();
     } else  if (isDoubleEdit(t.fWidget)) {
-        return static_cast<EQDoubleEdit*>(t.fWidget)->text();
+        return static_cast<EQDoubleEdit *>(t.fWidget)->text();
     }
     return "";
 }
 
 void TrackControl::lineEditTextChanged(const QString &text)
 {
-    EQLineEdit *l = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *l = static_cast<EQLineEdit *>(sender());
     if (text != oldValue(l)) {
         l->setBgColor(COLOR_CHANGED);
     } else {
@@ -344,7 +346,7 @@ void TrackControl::lineEditTextChanged(const QString &text)
 
 void TrackControl::edateTextChanged(const QString &text)
 {
-    EDateEdit *e = static_cast<EDateEdit*>(sender());
+    EDateEdit *e = static_cast<EDateEdit *>(sender());
     if (!e->valid()) {
         e->setStyleSheet("background:red");
         return;
@@ -358,7 +360,7 @@ void TrackControl::edateTextChanged(const QString &text)
 
 void TrackControl::dateEditChanged(const QDate &date)
 {
-    EQDateEdit *d = static_cast<EQDateEdit*>(sender());
+    EQDateEdit *d = static_cast<EQDateEdit *>(sender());
     if (!d->date().isValid()) {
         d->setBgColor(Qt::red);
     }
@@ -371,7 +373,7 @@ void TrackControl::dateEditChanged(const QDate &date)
 
 void TrackControl::textEditTextChanged()
 {
-    EQTextEdit *t = static_cast<EQTextEdit*>(sender());
+    EQTextEdit *t = static_cast<EQTextEdit *>(sender());
     if (t->toPlainText() == oldValue(t)) {
         t->setBgColor(Qt::white);
     } else {
@@ -384,7 +386,7 @@ void TrackControl::checkBoxClicked()
     QString styleUnchanged("");
     QString styleChanged("QCheckBox::indicator:checked {image: url(:/images/ch_checked_changed.png)} \
                         QCheckBox::indicator:unchecked {image: url(:/images/ch_unchecked_changed.png)}");
-    EQCheckBox *c = static_cast<EQCheckBox*>(sender());
+    EQCheckBox *c = static_cast<EQCheckBox *>(sender());
     if (QString::number(c->isChecked()) == oldValue(c)) {
         c->setStyle(styleUnchanged);
     } else {
@@ -395,7 +397,7 @@ void TrackControl::checkBoxClicked()
 void TrackControl::comboIndexChanged(int index)
 {
     Q_UNUSED(index)
-    QComboBox *c = static_cast<QComboBox*>(sender());
+    QComboBox *c = static_cast<QComboBox *>(sender());
     if (c->currentText() != oldValue(c)) {
         c->setStyleSheet("QComboBox {background-color:rgb(255,255,150)}");
     } else {
@@ -405,7 +407,7 @@ void TrackControl::comboIndexChanged(int index)
 
 void TrackControl::spinValueChanged(int value)
 {
-    EQSpinBox *s = static_cast<EQSpinBox*>(sender());
+    EQSpinBox *s = static_cast<EQSpinBox *>(sender());
     if (QString::number(value) == oldValue(s)) {
         s->setBgColor(Qt::white);
     } else {
@@ -415,7 +417,7 @@ void TrackControl::spinValueChanged(int value)
 
 void TrackControl::timeEditChanged(const QTime &time)
 {
-    EQTimeEdit *t = static_cast<EQTimeEdit*>(sender());
+    EQTimeEdit *t = static_cast<EQTimeEdit *>(sender());
     if (time.toString(def_time_format) == oldValue(t)) {
         t->setBgColor(Qt::white);
     } else {
@@ -436,7 +438,7 @@ bool cmpWidgetName(QWidget *w, const QString &with)
 bool isLineEdit(QWidget *w)
 {
     bool cmpOK = cmpWidgetName(w, "QLineEdit")
-            || cmpWidgetName(w, "EQLineEdit");
+                 || cmpWidgetName(w, "EQLineEdit");
     return cmpOK;
 }
 

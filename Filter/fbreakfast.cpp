@@ -79,7 +79,7 @@ void FBreakfast::eliminate()
     if (message_confirm(tr("THIS WILL REMOVE PERMANENTLY BREAKFAST DATA!")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] =out.at(0);
     fDD.exec("delete from o_breakfast where f_id=:f_id");
     fDD[":f_id"] =out.at(0);

@@ -43,7 +43,7 @@ void RECityLedger::on_btnRemove_clicked()
     if (message_yesnocancel(tr("Are you sure to delete this city ledger record?")) != RESULT_YES) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_cityLedger"] = ui->leCode->asInt();
     fDD.exec("select * from m_register where f_cityLedger=:f_cityLedger");
     if (fDD.rowCount() > 0) {

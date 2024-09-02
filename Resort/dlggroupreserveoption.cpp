@@ -21,7 +21,7 @@ DlgGroupReserveOption::~DlgGroupReserveOption()
 void DlgGroupReserveOption::addRemove(const QString &id)
 {
     DlgGroupReserveOption *d = new DlgGroupReserveOption(fPreferences.getDefaultParentForMessage());
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select * from f_reservation where f_id=:f_id");
     fDD.nextRow();
@@ -38,7 +38,7 @@ void DlgGroupReserveOption::addRemove(const QString &id)
 
 void DlgGroupReserveOption::on_btnAddToGroup_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_group"] = ui->leGroupCode->asInt();
     fDD.update("f_reservation", where_id(ap(ui->leReservation->text())));
     TrackControl::insert(TRACK_RESERVATION_GROUP, "Merging with group", ui->leGroupCode->text() + "/" + ui->leGroupName->text(), "", "-", "-", ui->leReservation->text());
@@ -51,7 +51,7 @@ void DlgGroupReserveOption::on_bgtnRemoveFromGroup_clicked()
     if (message_confirm(tr("Confirm removing from group")) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_group"] = 0;
     fDD.update("f_reservation", where_id(ap(ui->leReservation->text())));
     TrackControl::insert(TRACK_RESERVATION_GROUP, "Removed from group", ui->leGroupCode->text() + "/" + ui->leGroupName->text(), "", "-", "-", ui->leReservation->text());

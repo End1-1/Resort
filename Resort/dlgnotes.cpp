@@ -58,7 +58,7 @@ void DlgNotes::setScheduleVisible(bool value)
 
 void DlgNotes::on_buttonBox_accepted()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->wdSchedule->isVisible()) {
         message_info(tr("You must schedule or dissmis the task"));
         return;
@@ -99,7 +99,7 @@ void DlgNotes::on_buttonBox_accepted()
 
 void DlgNotes::on_btnSchedule_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = 1;
     fDD[":f_dateLastComplete"] = QDateTime::currentDateTime();
     fDD.update("f_reminder", "where f_id=" + ui->leCode->text());
@@ -108,7 +108,7 @@ void DlgNotes::on_btnSchedule_clicked()
 
 void DlgNotes::on_btnDissmiss_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = 2;
     fDD[":f_dateLastComplete"] = QDateTime::currentDateTime();
     fDD.update("f_reminder", "where f_id=" + ui->leCode->text());

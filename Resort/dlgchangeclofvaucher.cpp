@@ -26,7 +26,7 @@ bool DlgChangeCLOfVaucher::changeCL(const QString &vaucher, const QString &oldCL
     }
     d->ui->leName->setText(name);
     d->ui->leAmount->setText(amount);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select * from m_register where f_id=" + ap(d->ui->leVaucher->text()));
     if (fDD.nextRow()) {
         d->ui->leRoom->setText(fDD.getValue("f_room").toString());
@@ -46,7 +46,7 @@ void DlgChangeCLOfVaucher::on_btnOk_clicked()
     if (ui->leNewCLCode->isEmpty()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (ui->leRoom->text() == "-" || ui->leRoom->isEmpty()) {
         fDD[":f_guest"] = ui->leNewCLName->text();
         fDD[":f_paymentComment"] = ui->leNewCLName->text();

@@ -89,7 +89,7 @@ void WQuickRoomAssignment::on_btnRefresh_clicked()
     }
     sql.replace(":date1", ui->deStart->dateMySql());
     sql.replace(":date2", ui->deEnd->dateMySql());
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec(sql);
     while (dd.nextRow()) {
         int row = ui->tbl->addRow();
@@ -123,7 +123,7 @@ void WQuickRoomAssignment::on_btnRefresh_clicked()
 
 void WQuickRoomAssignment::on_btnSave_clicked()
 {
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (ui->tbl->toString(i, 5) == "INVALID ROOM" && ui->tbl->lineEdit(i, 1)->asInt() != 0) {
             continue;

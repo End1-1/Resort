@@ -6,7 +6,6 @@ TaxHelper *TaxHelper::fInstance = nullptr;
 
 TaxHelper::TaxHelper(QObject *parent) : QObject(parent)
 {
-
 }
 
 void TaxHelper::init()
@@ -17,7 +16,7 @@ void TaxHelper::init()
     fInstance->fTaxPoints.clear();
     fInstance->fTaxVAT.clear();
     fInstance->fTaxNoVAT.clear();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select * from s_tax_map");
     while (dd.nextRow()) {
         TaxPoint t;

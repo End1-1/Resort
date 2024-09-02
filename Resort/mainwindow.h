@@ -11,7 +11,8 @@
 #include <QLabel>
 #include <QUdpSocket>
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -32,7 +33,6 @@ public:
     void configureLabels();
     QTabWidget *fTab;
     void hideMenu();
-    void secondDbError();
 
 public slots:
     void parseSocketCommand(const QString &command);
@@ -115,7 +115,6 @@ public slots:
     void on_actionList_of_source_reservation_triggered();
     void on_actionYearly_financial_report_triggered();
     void on_actionUtils_triggered();
-    void on_actionExport_data_triggered();
     void on_actionAdvance_report_triggered();
     void on_actionRestaurant_online_triggered();
     void on_actionPartners_group_triggered();
@@ -181,8 +180,6 @@ private slots:
     void on_actionRoom_assignment_triggered();
     void on_actionTemporary_receipts_triggered();
     void on_actionGuest_Tray_Ledger_By_Date_triggered();
-    void on_actionRecover_invoice_triggered();
-    void on_actionTransfer_log_triggered();
     void on_actionQuick_reservations_triggered();
     void on_actionTax_server_triggered();
     void on_actionQuick_checkout_triggered();
@@ -199,7 +196,6 @@ private slots:
     void on_actionCategory_statistics_triggered();
 
     void on_actionTravelline_triggered();
-
 
     void on_lstTravelLine_itemClicked(QListWidgetItem *item);
 
@@ -224,7 +220,7 @@ private:
     void lock();
     void enableMainMenu(bool value);
     void disableMainMenu();
-    QMap<QAction*, int> fCustomReports;
+    QMap<QAction *, int> fCustomReports;
 
 signals:
     void updateCache(int cache, const QString &code);

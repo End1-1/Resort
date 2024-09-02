@@ -11,7 +11,7 @@ DlgCheckAdvanceBeforeCancel::DlgCheckAdvanceBeforeCancel(const QString &inv, QWi
 {
     ui->setupUi(this);
     fInvoice = inv;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_invoice"] = inv;
     fDD.exec("select r.f_id, r.f_room, g.guest from f_reservation r "
               "left join guests g on g.f_id=r.f_guest "
@@ -41,7 +41,7 @@ int DlgCheckAdvanceBeforeCancel::checkAdvance(const QString &inv, QString &reaso
 
 bool DlgCheckAdvanceBeforeCancel::getBalance()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_inv"] = fInvoice;    
     fDD.exec("select sum(f_amountAmd*f_sign*-1) as amount from m_register where f_inv=:f_inv "
               "and f_finance=1 and f_canceled=0");

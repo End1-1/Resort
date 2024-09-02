@@ -68,7 +68,7 @@ void DlgPreTax::on_btnOk_clicked()
                 return;
             }
             if (DlgPrintTaxSM::printAdvance(ci.fTax(), ui->tblData->toDouble(i, 2),  0, ui->tblData->toString(i, 0), ui->tblData->toString(i, 0), tc, out)) {
-                DoubleDatabase fDD(true, doubleDatabase);
+                DoubleDatabase fDD;
                 fDD[":f_fiscal"] = tc;
                 fDD.update("m_register", where_id(ap(ui->tblData->toInt(i, 0))));
                 if (fInvoice > 0) {

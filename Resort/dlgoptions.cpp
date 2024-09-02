@@ -7,7 +7,7 @@ DlgOptions::DlgOptions(QWidget *parent) :
 {
     ui->setupUi(this);
     QString text;
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd.exec("select f_id, f_en from f_invoice_item where f_id in (" + fPreferences.getDb(def_rooming_list).toString() + ")");
     text += "ROOMING VOUCHERS: ";
     bool f = true;

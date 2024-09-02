@@ -53,7 +53,7 @@ void RERoomCategoryRate::on_btnAddRate_clicked()
 
 void RERoomCategoryRate::load()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_category"] = fCategory;
     fDD.exec("select r.f_id, f_month1, f_day1, f_month2, f_day2, f_bed, b.f_name, f_rate from "
                "f_room_rate r "
@@ -66,7 +66,7 @@ void RERoomCategoryRate::load()
 
 void RERoomCategoryRate::on_btnRemoveRate_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     QModelIndexList sel = ui->tblData->selectionModel()->selectedRows();
     if (sel.count() == 0) {
         return;

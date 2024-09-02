@@ -19,7 +19,7 @@ FCardexSales::FCardexSales(QWidget *parent) :
 
     ui->leCardex->setSelector(this, cache(cid_cardex), ui->leCardex);
     //fReportGrid->setHelp("cardexanalysis");
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_title, f_width, f_items from serv_cardex_analysis");
     for (int i = 0; i < fDD.rowCount(); i++) {
         Field f;
@@ -84,7 +84,7 @@ void FCardexSales::finalPrint(PPrintScene *ps, int top)
     prTempl.setFont(QFont(qApp->font().family(), 17));
     prTempl.setBorders(false, false, false, false);
     prTempl.setTextPen(QPen(Qt::black, Qt::SolidLine));
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     for (QMap<int, Field> ::const_iterator it = fItems.begin(); it != fItems.end(); it++) {
         fDD.exec("select f_en from f_invoice_item where f_id in (" + it.value().fItems + ")");
         QString name;

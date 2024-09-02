@@ -7,7 +7,7 @@ FCommonFilterByDate::FCommonFilterByDate(int sqlId, QWidget *parent) :
     ui(new Ui::FCommonFilterByDate)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = sqlId;
     fDD.exec("select f_name, f_sql, f_widths, f_titles_" + def_lang + ", f_sum from serv_reports where f_id=:f_id");
     if (fDD.rowCount() == 0) {

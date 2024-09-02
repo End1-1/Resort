@@ -33,7 +33,7 @@ void DlgQuickAdvance::on_btnNew_clicked()
     DlgQuickAdvanceAction *d = new DlgQuickAdvanceAction(this);
     d->exec();
     if (d->taxNumber() > 0) {
-        DoubleDatabase dd(true, doubleDatabase);
+        DoubleDatabase dd;
         dd[":f_date"] = QDate::currentDate();
         dd[":f_time"] = QTime::currentTime();
         dd[":f_type"] = d->type();
@@ -51,7 +51,7 @@ void DlgQuickAdvance::on_btnNew_clicked()
 
 void DlgQuickAdvance::refresh()
 {
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_date1"] = ui->wDate->d1();
     dd[":f_date2"] = ui->wDate->d2();
     dd.exec("select * from m_temp_advance where f_date between :f_date1 and :f_date2 order by f_date desc, f_time desc");

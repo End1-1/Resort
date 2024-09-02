@@ -28,7 +28,7 @@ bool CacheRights::checkGroup(int right, int user)
         return true;
     }
     DoubleDatabase dd;
-    dd.open(true, false);
+    dd.open();
     dd[":f_id"] = user;
     dd.exec("select f_group from users where f_id=:f_id");
     dd.nextRow();

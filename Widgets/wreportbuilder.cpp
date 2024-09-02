@@ -8,7 +8,7 @@ WReportBuilder::WReportBuilder(QWidget *parent) :
     ui(new Ui::WReportBuilder)
 {
     ui->setupUi(this);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec("select f_id, f_name from serv_reports order by f_name");
     while (fDD.nextRow()) {
         QListWidgetItem *item = new QListWidgetItem(ui->lwNames);
@@ -42,7 +42,7 @@ void WReportBuilder::on_lwNames_clicked(const QModelIndex &index)
     ui->leColWidth->clear();    
     clearFilterFields();
     ui->lwFilters->clear();
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = index.data(Qt::UserRole);
     fDD.exec("select f_name, f_group, f_groupAccess, f_sql, f_widths, f_titles_en, "
                "f_sum, f_filter, f_fields, f_menu, f_subtotal "
@@ -142,7 +142,7 @@ void WReportBuilder::on_btnSave_clicked()
         filter += ui->lwFilters->item(i)->data(Qt::UserRole + 4).toString() + "^";
         filter += ";";
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_name"] = ui->leName->text();
     fDD[":f_group"] = ui->cbMenu->currentData();
     fDD[":f_groupAccess"] = ui->leGroupAccess->text();
@@ -199,7 +199,7 @@ void WReportBuilder::on_btnRemove_clicked()
     if (message_confirm(tr("Confirm to remove ") + ui->leName->text()) != QDialog::Accepted) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = ui->leCode->asInt();
     fDD.exec("delete from serv_reports where f_id=:f_id");
     for (int i = 0; i < ui->lwNames->count(); i++) {

@@ -155,7 +155,7 @@ void PrintTaxD::on_btnPrint_clicked()
     if (!print()) {
         return;
     }
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     double pre = ui->lePre->asDouble();
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         if (!ui->tblData->itemChecked(i, 4)) {

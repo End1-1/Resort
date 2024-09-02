@@ -24,7 +24,6 @@ int _IDGENMODE_ = 0;
 
 BaseUIDX::BaseUIDX()
 {
-
 }
 
 QString BaseUIDX::genID(const QString &prefix)
@@ -34,11 +33,9 @@ QString BaseUIDX::genID(const QString &prefix)
 
 QString BaseUIDX::ID(const QString &vaucher)
 {
-
     DoubleDatabase d;
-    d.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass, 1);
+    d.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass);
     d.setNoSqlErrorLogMode(true);
-
     int idlen = 8;
     if (vaucher == "DR") {
         idlen = 10;
@@ -49,15 +46,14 @@ QString BaseUIDX::ID(const QString &vaucher)
     if (vaucher == "RV") {
         idlen = 9;
     }
-
     QString errstr;
-    if (!d.open(true, false)) {
-        QMessageBox::critical(nullptr, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL (CANNOT OPEN DB) </font></h1>")
+    if (!d.open()) {
+        QMessageBox::critical(nullptr, "ID ERROR",
+                              QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL (CANNOT OPEN DB) </font></h1>")
                               + "<br>" + fAirHost + ":" + fAirDbName
                               + "<br>" + d.fLastError);
         exit(0);
     }
-
     QString src2;
     QString result;
     qsrand(QTime::currentTime().msec());
@@ -88,13 +84,14 @@ QString BaseUIDX::ID(const QString &vaucher)
             result += src2.at(qrand() % h);
         }
         for (int i = 0; i < result.length(); i++) {
-            bool dr = d.exec(QString("insert into airwick.f_id (f_value, f_try, f_comp, f_user, f_date, f_time, f_db) values ('%1-%2', %3, '%4', '%5', '%6', '%7', database())")
-                                     .arg(vaucher.toUpper())
-                                     .arg(result).arg(totaltrynum)
-                                     .arg(QHostInfo::localHostName().toUpper())
-                                     .arg(fUserId)
-                                     .arg(QDate::currentDate().toString("yyyy-MM-dd"))
-                                     .arg(QTime::currentTime().toString("HH:mm:ss")));
+            bool dr = d.exec(
+                          QString("insert into airwick.f_id (f_value, f_try, f_comp, f_user, f_date, f_time, f_db) values ('%1-%2', %3, '%4', '%5', '%6', '%7', database())")
+                          .arg(vaucher.toUpper())
+                          .arg(result).arg(totaltrynum)
+                          .arg(QHostInfo::localHostName().toUpper())
+                          .arg(fUserId)
+                          .arg(QDate::currentDate().toString("yyyy-MM-dd"))
+                          .arg(QTime::currentTime().toString("HH:mm:ss")));
             if (!dr) {
                 QString err = d.fLastError;
                 errstr = err;
@@ -115,7 +112,7 @@ QString BaseUIDX::ID(const QString &vaucher)
         trynum++;
         result = "";
     }
-    DONE:
+DONE:
     if (!find) {
         QMessageBox::critical(nullptr, "ID ERROR", QString("<H1><font color=\"red\">RANDOM ID GENERATOR FAIL </font></h1>")
                               + "<br>" + errstr);
@@ -128,19 +125,15 @@ QString BaseUIDX::ID(const QString &vaucher)
 QString BaseUIDX::INTID(const QString &prefix)
 {
     DoubleDatabase db;
-    db.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass, 1);
-
+    db.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass);
     int totaltrynum = 0;
-    if (!db.isOpened()) {
-        db.open(true, false);
-    }
-
     bool done = false;
     QString result;
     do {
         QString query = QString ("select f_max, f_zero from serv_id_counter where f_id='%1' for update").arg(prefix);
         if (!db.exec(query)) {
-            QMessageBox::critical(nullptr, "ID ERROR", "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL</font></h1><br>" + db.fLastError);
+            QMessageBox::critical(nullptr, "ID ERROR",
+                                  "<H1><font color=\"red\">COUNTER ID GENERATOR FAIL</font></h1><br>" + db.fLastError);
             exit(0);
         }
         if (db.nextRow()) {
@@ -158,12 +151,12 @@ QString BaseUIDX::INTID(const QString &prefix)
             continue;
         }
         db.exec(QString("insert into airwick.f_id (f_value, f_try, f_comp, f_user, f_date, f_time, f_db) values ('%1-%2', %3, '%4', '%5', '%6', '%7', database())")
-                                             .arg(prefix.toUpper())
-                                             .arg(result).arg(totaltrynum)
-                                             .arg(QHostInfo::localHostName().toUpper())
-                                             .arg(fUserId)
-                                             .arg(QDate::currentDate().toString("yyyy-MM-dd"))
-                                             .arg(QTime::currentTime().toString("HH:mm:ss")));
+                .arg(prefix.toUpper())
+                .arg(result).arg(totaltrynum)
+                .arg(QHostInfo::localHostName().toUpper())
+                .arg(fUserId)
+                .arg(QDate::currentDate().toString("yyyy-MM-dd"))
+                .arg(QTime::currentTime().toString("HH:mm:ss")));
         if (db.fLastError.toLower().contains("duplicate entry")) {
             totaltrynum++;
         } else {

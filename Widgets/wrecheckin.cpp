@@ -32,7 +32,7 @@ void WReCheckIn::on_btnRefresh_clicked()
     ui->tblData->setRowCount(0);
     Utils::tableSetColumnWidths(ui->tblData, ui->tblData->columnCount(),
                                 100, 100, 300, 30);
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = RESERVE_CHECKOUT;
     fDD[":f_endDate"] = WORKING_DATE;
     fDD.exec("select r.f_id, r.f_room, concat(g.f_title, ' ' , g.f_firstName, ' ', g.f_lastName), ' ' "

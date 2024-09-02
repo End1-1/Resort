@@ -13,13 +13,13 @@ DlgExportSingleVaucher::DlgExportSingleVaucher(QWidget *parent) :
         message_error(tr("Setup second database parameters"));
         return;
     }
-    fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3], 1);
-    if (!fSDb.open(true, false)) {
+    fSDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3]);
+    if (!fSDb.open()) {
         message_error(tr("Cannot connect to second database"));
         return;
     }
     connect(ui->leInvoice, SIGNAL(customButtonClicked(bool)), this, SLOT(showInvoices(bool)));
-    fVoucher.open(true, false);
+    fVoucher.open();
 }
 
 DlgExportSingleVaucher::~DlgExportSingleVaucher()
@@ -65,7 +65,7 @@ void DlgExportSingleVaucher::on_btnCancel_clicked()
 
 void DlgExportSingleVaucher::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fSDb.startTransaction();
     fVoucher.getBindValues(0, fSDb.fBindValues);
     bool ps = fSDb[":f_source"].toString() == VAUCHER_POINT_SALE_N;
@@ -84,14 +84,14 @@ void DlgExportSingleVaucher::on_btnOk_clicked()
         fSDb.rollback();
         return;
     }
-    if (ps) {        
+    if (ps) {
         fDD.exec("select * from o_header where f_id=" + ap(id));
         fDD.getBindValues(0, fSDb.fBindValues);
         fSDb[":f_dateCash"] = ui->deDate->date();
         fSDb[":f_dateOpen"] = ui->deDate->date();
         fSDb[":f_dateClose"] = ui->deDate->date();
         fSDb[":f_roomComment"] = QString("%1, %2").arg(ui->leRoom->text())
-                .arg(ui->leGuest->text());
+                                 .arg(ui->leGuest->text());
         fSDb[":f_paymentModeComment"] = fDD[":f_roomComment"];
         if (!fSDb.insert("o_header", false)) {
             message_error(fSDb.fLastError);
@@ -109,7 +109,6 @@ void DlgExportSingleVaucher::on_btnOk_clicked()
         }
     }
     if (pe) {
-        
         fDD.exec("select * from o_event where f_id=" + ap(id));
         for (int i = 0; i < fDD.rowCount(); i++) {
             fDD.getBindValues(i, fSDb.fBindValues);
@@ -134,9 +133,9 @@ void DlgExportSingleVaucher::on_leInvoice_returnPressed()
 {
     fSDb[":f_invoice"] = ui->leInvoice->text();
     fSDb.exec("select r.f_room, concat(g.f_firstName, ' ', g.f_lastName) "
-                "from f_reservation r "
-                "left join f_guests g on g.f_id=r.f_guest "
-                "where r.f_invoice=:f_invoice");
+              "from f_reservation r "
+              "left join f_guests g on g.f_id=r.f_guest "
+              "where r.f_invoice=:f_invoice");
     if (!fSDb.nextRow()) {
         message_error(tr("Invalid invoice number"));
         return;

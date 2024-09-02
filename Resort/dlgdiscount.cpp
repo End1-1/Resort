@@ -49,7 +49,7 @@ void DlgDiscount::callback(int sel, const QString &code)
     case HINT_ROOM: {
         CacheActiveRoom c;
         if (c.get(code)) {
-            DoubleDatabase fDD(true, doubleDatabase);
+            DoubleDatabase fDD;
             fDD[":invoice"] = c.fInvoice();
             ui->leInvoice->setText(c.fInvoice());
             ui->leReservation->setText(c.fCode());
@@ -67,7 +67,7 @@ void DlgDiscount::callback(int sel, const QString &code)
         break;
     }
     case HINT_CL: {
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_cityledger"] = ui->leCLCode->asInt();
 #ifdef _METROPOL_
         dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
@@ -115,7 +115,7 @@ void DlgDiscount::setParams(const QString &room, double guestAmount, double comp
 void DlgDiscount::openVaucher(const QString &id)
 {
     DlgDiscount *d = new DlgDiscount(fPreferences.getDefaultParentForMessage());
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select * from m_register where f_id=:f_id");
     if (!fDD.nextRow()) {
@@ -197,7 +197,7 @@ void DlgDiscount::on_btnOk_clicked()
 //        return;
 //    }
     bool isNew = true;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     QString rid = uuidx(VAUCHER_DISCOUNT_N);
     fDD.insertId("m_register", rid);

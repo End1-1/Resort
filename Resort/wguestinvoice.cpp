@@ -43,7 +43,7 @@ void WGuestInvoice::callback(int sel, const QString &code)
         ui->deEntry->clear();
         ui->deDeparture->clear();
         ui->leBalanceUSD->clear();
-        DoubleDatabase dd(true, false);
+        DoubleDatabase dd;
         dd[":f_id"] = code;
         dd.exec("select r.f_id, r.f_invoice, r.f_room, r.f_startdate, r.f_enddate, g.guest as f_guest, rm.f_short "
                 "from f_reservation r "
@@ -84,7 +84,7 @@ void WGuestInvoice::setInvoice(const QString &invoice)
 {
     ui->leRoom->clearSelector();
     ui->leRoom->setReadOnly(true);
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_invoice"] = invoice;
     dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest as f_guest, rm.f_short, r.f_room "
             "from f_reservation r "
@@ -108,7 +108,7 @@ void WGuestInvoice::initRoom(int room)
     ui->deEntry->clear();
     ui->deDeparture->clear();
     ui->leBalanceUSD->clear();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_room"] = room;
     dd[":f_state"] = RESERVE_CHECKIN;
     dd.exec("select r.f_id, r.f_invoice, r.f_startdate, r.f_enddate, g.guest as f_guest, r.f_room, rm.f_short, "
@@ -134,7 +134,7 @@ void WGuestInvoice::setBalance()
     if (ui->leInvoice->isEmpty()) {
         return;
     }
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_inv"] = ui->leInvoice->text();
     dd.exec("select r.f_startdate, r.f_enddate, sum(m.f_amountamd*m.f_sign) as f_amountamd, sum(m.f_amountamd/m.f_amountusd*m.f_sign) as f_amountusd "
             "from m_register m "

@@ -77,7 +77,7 @@ void DlgAdvanceEntry::setFiscal(int id)
 void DlgAdvanceEntry::setVoucher(const QString &id)
 {
     clearSelector();
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     fDoc.open(dd, id);
     ui->wInvoice->setBalance();
 }
@@ -140,7 +140,7 @@ void DlgAdvanceEntry::on_btnSave_clicked()
     finalName = tr("ADVANCE") + " " + finalName;
     ui->leFinalName->setText(finalName);
 
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDoc.fPaymentComment = ui->wPayment->paymentComment();
     if (!fDoc.save(fDD)) {
         message_error(fDoc.fError);
@@ -213,7 +213,7 @@ void DlgAdvanceEntry::on_btnPrintTax_clicked()
         return;
     }
     ui->wPayment->setTaxReceipt(taxCode);
-    DoubleDatabase dd(true, doubleDatabase);
+    DoubleDatabase dd;
     if (!fDoc.save(dd)) {
         message_error(fDoc.fError);
         return;

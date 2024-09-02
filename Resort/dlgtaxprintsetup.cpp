@@ -12,7 +12,7 @@ DlgTaxPrintSetup::DlgTaxPrintSetup(QWidget *parent) :
     ui->leHallCode->setSelector(this, cache(cid_rest_hall), ui->leHallName);
     ui->leMenuCode->setSelector(this, cache(cid_rest_menu), ui->leMenuName);
 
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_comp"] = QHostInfo::localHostName();
     fDD.exec("select f_address, f_port, f_password, f_adg, f_hall, f_menu from s_tax_print where f_comp=:f_comp");
     if (fDD.nextRow()) {
@@ -39,7 +39,7 @@ void DlgTaxPrintSetup::on_btnCancel_clicked()
 
 void DlgTaxPrintSetup::on_btnOk_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_comp"] = QHostInfo::localHostName();
     fDD.exec("delete from s_tax_print where f_comp=:f_comp");
     fDD[":f_comp"] = QHostInfo::localHostName();

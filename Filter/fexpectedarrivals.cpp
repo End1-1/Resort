@@ -139,7 +139,7 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
     double totalPosted = 0;
     int r = 0;
     QDate entryDate;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec(query);
     QList<QVariant> row;
     while (fDD.nextRow()) {
@@ -319,7 +319,7 @@ void FExpectedArrivals::printDeparture(WReportGrid *rg)
     double totalPosted = 0;
     int r = 0;
     QDate entryDate;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec(query);
     QList<QVariant> row;
     while (fDD.nextRow()) {
@@ -484,7 +484,7 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
     double totalPosted = 0;
     int r = 0;
     QDate entryDate;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.exec(query);
     QList<QVariant> row;
     while (fDD.nextRow()) {

@@ -59,11 +59,9 @@ SOURCES += main.cpp\
     dlgpostcharge.cpp \
     dlgprintvoucherasinvoice.cpp \
     dlgquickadvanceaction.cpp \
-    dlgrecoverinvoice.cpp \
     dlgseachfromdatabase.cpp \
     dlgselectfiscalmachin.cpp \
     dlgsingleprinttax.cpp \
-    dlgtransferlog.cpp \
     mainwindow.cpp \
     login.cpp \
     loginsettings.cpp \
@@ -301,7 +299,6 @@ SOURCES += main.cpp\
     ../Cache/cachecheckoutinvoice.cpp \
     dlgremotinvoices.cpp \
     dlgopengrouporsingle.cpp \
-    dlgexportother.cpp \
     dlgreserveconfirmstatus.cpp \
     ../Filter/freservaionremarks.cpp \
     dlgchangeexportvaucher.cpp \
@@ -499,11 +496,9 @@ HEADERS  += mainwindow.h \
     dlgpostcharge.h \
     dlgprintvoucherasinvoice.h \
     dlgquickadvanceaction.h \
-    dlgrecoverinvoice.h \
     dlgseachfromdatabase.h \
     dlgselectfiscalmachin.h \
     dlgsingleprinttax.h \
-    dlgtransferlog.h \
     login.h \
     loginsettings.h \
     message.h \
@@ -743,7 +738,6 @@ HEADERS  += mainwindow.h \
     ../Cache/cachecheckoutinvoice.h \
     dlgremotinvoices.h \
     dlgopengrouporsingle.h \
-    dlgexportother.h \
     dlgreserveconfirmstatus.h \
     ../Filter/freservaionremarks.h \
     dlgchangeexportvaucher.h \
@@ -924,11 +918,9 @@ FORMS    += mainwindow.ui \
     dlgpostcharge.ui \
     dlgprintvoucherasinvoice.ui \
     dlgquickadvanceaction.ui \
-    dlgrecoverinvoice.ui \
     dlgseachfromdatabase.ui \
     dlgselectfiscalmachin.ui \
     dlgsingleprinttax.ui \
-    dlgtransferlog.ui \
     login.ui \
     loginsettings.ui \
     message.ui \
@@ -1064,7 +1056,6 @@ FORMS    += mainwindow.ui \
     dlgdishhistory.ui \
     dlgremotinvoices.ui \
     dlgopengrouporsingle.ui \
-    dlgexportother.ui \
     dlgreserveconfirmstatus.ui \
     ../Filter/freservaionremarks.ui \
     dlgchangeexportvaucher.ui \

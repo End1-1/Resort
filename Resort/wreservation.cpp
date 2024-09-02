@@ -57,7 +57,7 @@ void WReservation::loadReservation(const QString &id)
 
 void WReservation::loadGroup(int id, int initFromRoom)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_group"] = id;
     fDD.exec("select f_id from f_reservation where f_group=:f_group");
     while (fDD.nextRow()) {
@@ -135,7 +135,7 @@ void WReservation::setGroup(int group)
     ui->btnCancelGroup->setVisible(r__(cr__reserve_cancelation) && visible);
     ui->btnSetGroupParams->setVisible(r__(cr__edit_reservation) && visible);
     ui->leGroup->setInt(group);
-    DoubleDatabase dd(true, false);
+    DoubleDatabase dd;
     dd[":f_id"] = group;
     dd.exec("select f_name from f_reservation_group where f_id=:f_id");
     if (dd.nextRow()) {
@@ -145,7 +145,7 @@ void WReservation::setGroup(int group)
 
 void WReservation::openReserveWindows(const QString &code )
 {
-    DoubleDatabase fDD(true, false);
+    DoubleDatabase fDD;
     fDD[":f_id"] = code;
     fDD.exec("select f_id, f_group from f_reservation where f_id=:f_id");
     if (!fDD.nextRow()) {
@@ -178,7 +178,7 @@ void WReservation::openReserveGroup(int group)
 
 void WReservation::openVaucher(const QString &id)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_id"] = id;
     fDD.exec("select f_res from m_register where f_id=:f_id");
     if (fDD.nextRow()) {
@@ -253,7 +253,7 @@ void WReservation::loadFromData(const QList<QVariant> &data)
 
 WReservationRoomTab *WReservation::newRoomTab(bool autocreate)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     WReservationRoomTab *rlast = 0;
     if (ui->tab->count() == 1 && ui->leGroup->asInt() == 0) {
         if (!autocreate) {
@@ -487,7 +487,7 @@ WReservationRoomTab *WReservation::activeRoom()
 
 void WReservation::on_btnCancelGroup_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     if (message_confirm(tr("Confirm to remove reservation group")) != QDialog::Accepted) {
         return;
     }

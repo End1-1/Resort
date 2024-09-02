@@ -29,7 +29,7 @@ void DlgCalculateOutputOfRestaurant::on_btnCancel_clicked()
 
 void DlgCalculateOutputOfRestaurant::on_btnGo_clicked()
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":d1"] = ui->deStart->date();
     fDD[":d2"] = ui->deEnd->date();
     fDD[":f_type"] = STORE_DOC_IN;
@@ -52,7 +52,7 @@ void DlgCalculateOutputOfRestaurant::on_btnGo_clicked()
 
 void DlgCalculateOutputOfRestaurant::calculateForDate(const QDate &date)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     /* remove old calculation */
     fDD[":f_dateCash"] = date;
     fDD.exec("delete from o_recipe where f_header in (select f_id from o_header where f_dateCash=:f_dateCash)");
@@ -90,7 +90,7 @@ void DlgCalculateOutputOfRestaurant::calculateForDate(const QDate &date)
 
 void DlgCalculateOutputOfRestaurant::calculateForStore(int store, const QDate &date)
 {
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     ui->pb->setValue(ui->pb->value() + 1);
     fDD[":f_store"] = store;
     fDD[":f_date"] = date;

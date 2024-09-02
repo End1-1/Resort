@@ -41,7 +41,7 @@ void RERoomInventory::setValues()
 {
     RowEditorDialog::setValues();
     ui->lst->clear();
-    DoubleDatabase db(true, false);
+    DoubleDatabase db;
     db[":f_inventory"] = ui->leCode->asInt();
     db.exec("select g.f_en, g.f_id, i.f_permit from users_groups g left join f_room_inventory_permission i on g.f_id=i.f_group and i.f_inventory=:f_inventory");
     while (db.nextRow()) {
@@ -57,7 +57,7 @@ void RERoomInventory::setValues()
 void RERoomInventory::save()
 {
     if (RowEditorDialog::saveOnly()) {
-        DoubleDatabase db(true, doubleDatabase);
+        DoubleDatabase db;
         db[":f_inventory"] = ui->leCode->asInt();
         db.exec("delete from f_room_inventory_permission where f_inventory=:f_inventory");
         for (int i = 0; i < ui->lst->count(); i++) {

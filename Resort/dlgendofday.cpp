@@ -54,7 +54,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     QString query;
     bool first = true;
     bool result = true;
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD.startTransaction();
     for (int i = 0, count = ui->tblCharges->rowCount(); i < count; i++) {
 
@@ -351,7 +351,7 @@ void DlgEndOfDay::on_btnOk_clicked()
         fPreferences.setLocalDate(def_working_day, WORKING_DATE.addDays(1));
         if (!fPreferences.getDb(def_external_rest_db).toString().isEmpty()) {
             DoubleDatabase de(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
-            if (de.open(true, false)) {
+            if (de.open()) {
                 de[":f_datecash"] = WORKING_DATE;
                 de.exec("update s_station_conf set f_datecash=:f_datecash");
             }
@@ -375,7 +375,7 @@ void DlgEndOfDay::loadData()
     ui->tblCharges->clearContents();
     ui->tblCharges->setRowCount(0);
     ui->lbSemaphore->setPixmap(QPixmap(":/images/ball-green.png"));
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, "
                "concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "

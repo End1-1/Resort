@@ -2,12 +2,10 @@
 #define MAINWINDOW_H
 
 #include "base.h"
-#include "command.h"
 #include "cacheone.h"
 #include "listener.h"
 #include <QMainWindow>
 #include <QTimer>
-#include <QTcpSocket>
 #include <QLabel>
 #include <QUdpSocket>
 
@@ -48,7 +46,6 @@ public slots:
     void on_actionCash_report_total_triggered();
     void on_actionCardex_analysis_triggered();
     void on_actionVauchers_triggered();
-    void on_actionExport_invoices_triggered();
     void on_actionExport_active_reservations_triggered();
     void on_actionSynchronization_triggered();
     void on_actionRestaurant_triggered();
@@ -152,15 +149,13 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private slots:
+    void websocketDisconnected();
     void shortcutFullScreen();
     void shortcutSlot();
     void customReport();
     void tabCloseRequested(int index);
     void timeout();
     void timeout2();
-    void socketReadyRead();
-    void socketError(QAbstractSocket::SocketError f_cityLedger);
-    void socketDisconnected();
     void on_actionBreakfast_report_triggered();
     void on_actionRefund_voucher_triggered();
     void on_actionRoom_inventory_triggered();
@@ -208,10 +203,6 @@ private:
     QTimer fTimeErrLabel;
     bool fTimeErrLableValue;
     bool fTouchscreen;
-    Command fCommand;
-    QTcpSocket fSocket;
-    QUdpSocket fUdpSocket;
-    QTcpSocket fSocketDraft;
     QString actionTitle(QObject *a);
     QLabel *fStatusLabelLeft;
     QLabel *fStatusLabelRight;

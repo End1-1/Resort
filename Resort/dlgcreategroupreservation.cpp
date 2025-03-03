@@ -24,7 +24,6 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
     ui->tblSmoke->setItem(0, 0, i1);
     ui->tblSmoke->setItem(0, 1, i2);
     ui->tblSmoke->setItem(0, 2, i3);
-
     CacheInstance *ci = cache(cid_room_category);
     ui->tblCategory->setColumnCount(ci->count());
     ui->tblCategory->setRowCount(1);
@@ -34,9 +33,10 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
         ui->tblCategory->setItem(0, col++, new C5TableWidgetItem(it.value().at(1).toString()));
         it++;
     }
-    ui->tblCategory->setMinimumWidth(ui->tblCategory->columnCount() * ui->tblCategory->horizontalHeader()->defaultSectionSize());
-    ui->tblCategory->setMaximumWidth(10 + (ui->tblCategory->columnCount() * ui->tblCategory->horizontalHeader()->defaultSectionSize()));
-
+    ui->tblCategory->setMinimumWidth(ui->tblCategory->columnCount()
+                                     *ui->tblCategory->horizontalHeader()->defaultSectionSize());
+    ui->tblCategory->setMaximumWidth(10 + (ui->tblCategory->columnCount()
+                                           *ui->tblCategory->horizontalHeader()->defaultSectionSize()));
     ci = cache(cid_bed);
     ui->tblBed->setColumnCount(ci->count());
     ui->tblBed->setRowCount(1);
@@ -46,20 +46,18 @@ DlgCreateGroupReservation::DlgCreateGroupReservation(QWidget *parent) :
         ui->tblBed->setItem(0, col++, new C5TableWidgetItem(it.value().at(0).toString()));
         it++;
     }
-    ui->tblBed->setMinimumWidth(ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize());
-    ui->tblBed->setMaximumWidth(10 + (ui->tblBed->columnCount() * ui->tblBed->horizontalHeader()->defaultSectionSize()));
-
+    ui->tblBed->setMinimumWidth(ui->tblBed->columnCount() *ui->tblBed->horizontalHeader()->defaultSectionSize());
+    ui->tblBed->setMaximumWidth(10 + (ui->tblBed->columnCount() *ui->tblBed->horizontalHeader()->defaultSectionSize()));
     col = 0;
     ui->tblFloor->setColumnCount(9);
     ui->tblFloor->setRowCount(1);
     for (int i = 0; i < ui->tblFloor->columnCount(); i++) {
         ui->tblFloor->setItem(0, i, new C5TableWidgetItem(QString::number(i + 1)));
     }
-    ui->tblFloor->setMinimumWidth(ui->tblFloor->columnCount() * ui->tblFloor->horizontalHeader()->defaultSectionSize());
-    ui->tblFloor->setMaximumWidth(10 + (ui->tblFloor->columnCount() * ui->tblFloor->horizontalHeader()->defaultSectionSize()));
-
+    ui->tblFloor->setMinimumWidth(ui->tblFloor->columnCount() *ui->tblFloor->horizontalHeader()->defaultSectionSize());
+    ui->tblFloor->setMaximumWidth(10 + (ui->tblFloor->columnCount()
+                                        *ui->tblFloor->horizontalHeader()->defaultSectionSize()));
     fSingleMode = false;
-    setMinimumWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + ui->tblData->horizontalHeader()->defaultSectionSize());
 }
 
 DlgCreateGroupReservation::~DlgCreateGroupReservation()
@@ -99,10 +97,11 @@ void DlgCreateGroupReservation::loadRooms()
     }
     ui->tblData->setVerticalHeaderLabels(floors);
     QSize size(ui->tblData->size());
-    size.setWidth((ui->tblData->columnCount() * ui->tblData->horizontalHeader()->defaultSectionSize()) + 40);
-    size.setHeight((floors.count() * ui->tblData->verticalHeader()->defaultSectionSize()) + 25);
+    size.setWidth((ui->tblData->columnCount() *ui->tblData->horizontalHeader()->defaultSectionSize()) + 40);
+    size.setHeight((floors.count() *ui->tblData->verticalHeader()->defaultSectionSize()) + 25);
     ui->tblData->setMinimumHeight(size.height());
     ui->tblData->setMaximumHeight(size.height());
+    ui->tblData->resizeColumnsToContents();
     adjustSize();
     makeRooms();
 }
@@ -139,11 +138,11 @@ void DlgCreateGroupReservation::singleHandle(bool v)
     if (!v) {
         return;
     }
-    WGroupReserveRect *gro = static_cast<WGroupReserveRect*>(sender());
+    WGroupReserveRect *gro = static_cast<WGroupReserveRect *>(sender());
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         for (int j = 0; j < ui->tblData->columnCount(); j++) {
             if (ui->tblData->cellWidget(i, j)) {
-                WGroupReserveRect *gr = static_cast<WGroupReserveRect*>(ui->tblData->cellWidget(i, j));
+                WGroupReserveRect *gr = static_cast<WGroupReserveRect *>(ui->tblData->cellWidget(i, j));
                 if (gr->isEnabled()) {
                     if (gr->checked()) {
                         if (gr != gro) {
@@ -170,7 +169,7 @@ void DlgCreateGroupReservation::makeRooms()
     }
     QModelIndexList selBed = ui->tblBed->selectionModel()->selectedIndexes();
     QStringList lstBed;
-    for (int i = 0;i < selBed.count(); i++) {
+    for (int i = 0; i < selBed.count(); i++) {
         lstBed << selBed.at(i).data(Qt::DisplayRole).toString();
     }
     QModelIndexList selSmoke = ui->tblSmoke->selectionModel()->selectedIndexes();
@@ -184,7 +183,7 @@ void DlgCreateGroupReservation::makeRooms()
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         for (int j = 0; j < ui->tblData->columnCount(); j++) {
             if (ui->tblData->cellWidget(i, j)) {
-                WGroupReserveRect *gr = static_cast<WGroupReserveRect*>(ui->tblData->cellWidget(i, j));
+                WGroupReserveRect *gr = static_cast<WGroupReserveRect *>(ui->tblData->cellWidget(i, j));
                 CacheRoom room;
                 if (!room.get(gr->code())) {
                     continue;
@@ -206,22 +205,19 @@ void DlgCreateGroupReservation::makeRooms()
             }
         }
     }
-
 }
-
 
 void DlgCreateGroupReservation::on_btnCreate_clicked()
 {
     bool noReservation = true;
     if (!fSingleMode) {
-
     } else {
         noReservation = false;
         QString code;
         for (int i = 0; i < ui->tblData->rowCount(); i++) {
             for (int j = 0; j < ui->tblData->columnCount(); j++) {
                 if (ui->tblData->cellWidget(i, j)) {
-                    WGroupReserveRect *gr = static_cast<WGroupReserveRect*>(ui->tblData->cellWidget(i, j));
+                    WGroupReserveRect *gr = static_cast<WGroupReserveRect *>(ui->tblData->cellWidget(i, j));
                     if (gr->isEnabled()) {
                         if (gr->checked()) {
                             code = gr->code();
@@ -298,4 +294,3 @@ void DlgCreateGroupReservation::on_deDeparture_textEdited(const QString &arg1)
     }
     makeRooms();
 }
-

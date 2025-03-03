@@ -11,6 +11,9 @@ typedef struct {
     QString password;
     QString dept;
     QString name;
+    QString opcode;
+    QString oppin;
+    QString extPos;
 } TaxPoint;
 
 class TaxHelper : public QObject

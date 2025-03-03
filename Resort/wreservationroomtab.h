@@ -2,7 +2,6 @@
 #define WRESERVATIONROOMTAB_H
 
 #include "basewidget.h"
-#include "cacheroom.h"
 #include "cacheguest.h"
 
 #define cache_reserv_state 2
@@ -21,7 +20,8 @@
 
 class WReservation;
 
-namespace Ui {
+namespace Ui
+{
 class WReservationRoomTab;
 }
 
@@ -77,6 +77,7 @@ public:
     void sendConfirmation();
     void openInvoice();
     void callback(int sel, const QString &code);
+    void setModifiedByOther(const QMap<QString, QVariant> &d);
 
 protected:
     virtual void setupTab();

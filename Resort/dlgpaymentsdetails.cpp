@@ -23,27 +23,21 @@
 #define HINT_ROOM 4
 #define HINT_ACTIVE_ROOM 5
 
-
 DlgPaymentsDetails::DlgPaymentsDetails(QWidget *parent) :
     BaseExtendedDialog(parent),
     ui(new Ui::DlgPaymentsDetails)
 {
     ui->setupUi(this);
-
     Utils::tableSetColumnWidths(ui->tblGuest, ui->tblGuest->columnCount(),
                                 0, 120, 0, 200, 90, 90, 90, 200, 25, 30, 0);
     Utils::tableSetColumnWidths(ui->tblCompany, ui->tblCompany->columnCount(),
                                 0, 120, 0, 200, 90, 90, 90, 200, 25, 30, 0);
     Utils::tableSetColumnWidths(ui->tblRefund, ui->tblRefund->columnCount(),
                                 0, 120, 100, 100, 80, 200, 100, 30, 0);
-
     ui->leRoomCode->setSelector(this, cache(cid_active_room), nullptr, HINT_ACTIVE_ROOM);
-
-
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->fInvoice = ui->leInvoice->text();
     fTrackControl->fReservation = ui->leReservation->text();
-
     fCheckoutFlag = 0;
 }
 
@@ -55,53 +49,53 @@ DlgPaymentsDetails::~DlgPaymentsDetails()
 void DlgPaymentsDetails::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_CITY_LEDGER: {
-        CacheCityLedger c;
-        if (c.get(code)) {
-            EQTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
-            int row = t->currentRow();
-            if (row < 0) {
-                return;
+        case HINT_CITY_LEDGER: {
+            CacheCityLedger c;
+            if (c.get(code)) {
+                EQTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
+                int row = t->currentRow();
+                if (row < 0) {
+                    return;
+                }
+                if (lineEdit(t, row, 10)->text() == "RV") {
+                    lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
+                } else {
+                    lineEdit(t, row, 3)->setText("ADVANCE " + c.fName());
+                }
             }
-            if (lineEdit(t, row, 10)->text() == "RV") {
-                lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
-            } else{
-                lineEdit(t, row, 3)->setText("ADVANCE " + c.fName());
-            }
+            break;
         }
-        break;
-    }
-    case HINT_REFUND: {
-        break;
-    }
-    case HINT_CREDIT_CARD: {
-        CacheCreditCard c;
-        if (c.get(code)) {
-            QTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
-            int row = t->currentRow();
-            if (row < 0) {
-                return;
-            }
-            if (lineEdit(t, row, 10)->text() == "RV") {
-                 lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
-            } else{
-                lineEdit(t, row, 3)->setText("ADVANCE " + c.fName());
-            }
+        case HINT_REFUND: {
+            break;
         }
-        break;
-    }
-    case HINT_ROOM: {
-        break;
-    }
-    case HINT_ACTIVE_ROOM: {
-        CacheActiveRoom c;
-        if (c.get(code)) {
-            ui->leInvoice->setText(c.fInvoice());
-            setInvoice(c.fInvoice());
-            ui->leRoomCode->setText(c.fRoomCode());
+        case HINT_CREDIT_CARD: {
+            CacheCreditCard c;
+            if (c.get(code)) {
+                QTableWidget *t  = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
+                int row = t->currentRow();
+                if (row < 0) {
+                    return;
+                }
+                if (lineEdit(t, row, 10)->text() == "RV") {
+                    lineEdit(t, row, 3)->setText("PAYMENT " + c.fName());
+                } else {
+                    lineEdit(t, row, 3)->setText("ADVANCE " + c.fName());
+                }
+            }
+            break;
         }
-        break;
-    }
+        case HINT_ROOM: {
+            break;
+        }
+        case HINT_ACTIVE_ROOM: {
+            CacheActiveRoom c;
+            if (c.get(code)) {
+                ui->leInvoice->setText(c.fInvoice());
+                setInvoice(c.fInvoice());
+                ui->leRoomCode->setText(c.fRoomCode());
+            }
+            break;
+        }
     }
 }
 
@@ -111,12 +105,12 @@ void DlgPaymentsDetails::setInvoice(const QString &id)
     DoubleDatabase fDD;
     fDD[":invoice"] = id;
     fDD.exec("select r.f_room, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-               "r.f_cityLedger, cl.f_name, r.f_startDate, r.f_endDate, r.f_id, rm.f_donotdisturbe "
-               "from f_reservation r "
-               "inner join f_guests g on g.f_id=r.f_guest "
-               "inner join f_room rm on rm.f_id=r.f_room "
-               "left join f_city_ledger cl on cl.f_id=r.f_cityLedger "
-               "where r.f_invoice=:invoice");
+             "r.f_cityLedger, cl.f_name, r.f_startDate, r.f_endDate, r.f_id, rm.f_donotdisturbe "
+             "from f_reservation r "
+             "inner join f_guests g on g.f_id=r.f_guest "
+             "inner join f_room rm on rm.f_id=r.f_room "
+             "left join f_city_ledger cl on cl.f_id=r.f_cityLedger "
+             "where r.f_invoice=:invoice");
     if (fDD.nextRow()) {
         QList<QList<QVariant> > &fDbRows = fDD.fDbRows;
         ui->leRoomCode->setText(fDbRows.at(0).at(0).toString());
@@ -134,14 +128,14 @@ void DlgPaymentsDetails::setInvoice(const QString &id)
     fDD[":f_group3"] = IG_NEGATIVE_BALANCE;
     fDD[":f_group4"] = IG_POSITIVE_BALANCE;*/
     fDD.exec("select sum(f_amountAmd * f_sign),sum(f_amountAmd / (f_amountUSD * f_sign)), 1 "
-               "from m_register m "
-               "where f_side=0 and f_finance=1 and f_canceled=0 and f_inv=" + ap(ui->leInvoice->text()) + " "
-               "and f_sign=1  "
-               " union "
-               "select sum(f_amountAmd * f_sign),sum(f_amountUSD * f_sign), 2 "
-               "from m_register "
-               "where f_side=1 and f_finance=1 and f_canceled=0 and f_inv=" + ap(ui->leInvoice->text()) + " "
-               "and f_sign=1  ");
+             "from m_register m "
+             "where f_side=0 and f_finance=1 and f_canceled=0 and f_inv=" + ap(ui->leInvoice->text()) + " "
+             "and f_sign=1  "
+             " union "
+             "select sum(f_amountAmd * f_sign),sum(f_amountUSD * f_sign), 2 "
+             "from m_register "
+             "where f_side=1 and f_finance=1 and f_canceled=0 and f_inv=" + ap(ui->leInvoice->text()) + " "
+             "and f_sign=1  ");
     while (fDD.nextRow()) {
         if (fDD.getInt(2) == 1) {
             ui->leTotalAmdGuest->setDouble(fDD.getDouble(0));
@@ -152,20 +146,18 @@ void DlgPaymentsDetails::setInvoice(const QString &id)
         }
     }
     /*-------------------- END INVOICE ------------------*/
-
     /*------------------- BEGIN PAID --------------------*/
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD.exec("select m.f_id, m.f_wdate, m.f_itemCode, m.f_finalName, "
-               "m.f_paymentComment, m.f_amountAmd, "
-               "m.f_amountAmd / m.f_amountUSD as amountUSD, m.f_remarks, m.f_side "
-               "from m_register m "
-               "where m.f_inv=:f_invoice and m.f_canceled=0 and f_finance=1 "
-               "and m.f_sign=-1");
+             "m.f_paymentComment, m.f_amountAmd, "
+             "m.f_amountAmd / m.f_amountUSD as amountUSD, m.f_remarks, m.f_side "
+             "from m_register m "
+             "where m.f_inv=:f_invoice and m.f_canceled=0 and f_finance=1 "
+             "and m.f_sign=-1");
     QTableWidget *tg = ui->tblGuest;
     QTableWidget *tc = ui->tblCompany;
     tg->setRowCount(0);
     tc->setRowCount(0);
-
     while (fDD.nextRow()) {
         QTableWidget *t = fDD.getInt(8) == 0 ? tg : tc;
         int row = t->rowCount();
@@ -185,19 +177,19 @@ void DlgPaymentsDetails::setInvoice(const QString &id)
                << ""
                << ""
                << ""
-                  ;
+               ;
         setRowValues(t, row, values);
     }
     /*------------------- END PAID --------------------*/
     /*-------------- BEGIN REFUND ---------------------*/
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD.exec("select m.f_id, m.f_wdate, m.f_amountAmd, "
-               "m.f_amountAmd/m.f_amountUsd, m.f_cityLedger, cl.f_name,"
-               "m.f_remarks, '',  m.f_side "
-               "from m_register m "
-               "left join f_city_ledger cl on cl.f_id=m.f_cityLedger "
-               "where m.f_inv=:f_invoice and m.f_canceled=0 "
-               "and m.f_source='RF'");
+             "m.f_amountAmd/m.f_amountUsd, m.f_cityLedger, cl.f_name,"
+             "m.f_remarks, '',  m.f_side "
+             "from m_register m "
+             "left join f_city_ledger cl on cl.f_id=m.f_cityLedger "
+             "where m.f_inv=:f_invoice and m.f_canceled=0 "
+             "and m.f_source='RF'");
     for (int i = 0, count = fDD.rowCount(); i < count; i++) {
         Utils::tableAppendRowData(ui->tblRefund, fDD.fDbRows.at(i), Qt::DisplayRole);
     }
@@ -220,7 +212,7 @@ void DlgPaymentsDetails::setCheckoutFlag()
 void DlgPaymentsDetails::refundRemove(int tag)
 {
     tag = -1;
-    EPushButton *b = static_cast<EPushButton*>(sender());
+    EPushButton *b = static_cast<EPushButton *>(sender());
     for (int i = 0; i < ui->tblRefund->rowCount(); i++) {
         if (ui->tblRefund->cellWidget(i, 7) == b) {
             tag = i;
@@ -241,7 +233,7 @@ void DlgPaymentsDetails::refundRemove(int tag)
 
 void DlgPaymentsDetails::refundTextChanged(const QString &text)
 {
-    EQLineEdit *l = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *l = static_cast<EQLineEdit *>(sender());
     ui->tblRefund->setValue(l->fRow, l->fColumn + 1, text.toDouble() / def_usd);
     double totalAmd = ui->tblRefund->sumOfColumn(l->fColumn);
     double totalUsd = ui->tblRefund->sumOfColumn(l->fColumn + 1);
@@ -253,21 +245,21 @@ void DlgPaymentsDetails::refundTextChanged(const QString &text)
 void DlgPaymentsDetails::removeRowClicked(int tag)
 {
     Q_UNUSED(tag)
-    EPushButton *btn = static_cast<EPushButton*>(sender());
+    EPushButton *btn = static_cast<EPushButton *>(sender());
     QTableWidget *t = ui->tabWidget->currentIndex() == 0 ? ui->tblGuest : ui->tblCompany;
     for (int i = 0; i < t->rowCount(); i++) {
         if (t->cellWidget(i, btn->fColumn) == btn) {
             for (int j = 0; j < t->columnCount(); j++) {
-//                EQLineEdit *l = lineEdit(t, i, j);
-//                if (fDockCard->selector() == l) {
-//                    fDockCard->setSelector(0);
-//                }
-//                if (fDockCityLedger->selector() == l) {
-//                    fDockCityLedger->setSelector(0);
-//                }
-//                if (l) {
-//                    delete l;
-//                }
+                //                EQLineEdit *l = lineEdit(t, i, j);
+                //                if (fDockCard->selector() == l) {
+                //                    fDockCard->setSelector(0);
+                //                }
+                //                if (fDockCityLedger->selector() == l) {
+                //                    fDockCityLedger->setSelector(0);
+                //                }
+                //                if (l) {
+                //                    delete l;
+                //                }
             }
             t->removeRow(i);
         }
@@ -277,7 +269,7 @@ void DlgPaymentsDetails::removeRowClicked(int tag)
 
 void DlgPaymentsDetails::amountLineEditEdited(const QString &text)
 {
-    EQLineEdit *leAmd = static_cast<EQLineEdit*>(sender());
+    EQLineEdit *leAmd = static_cast<EQLineEdit *>(sender());
     QTableWidget *t = leAmd->fTag == 0 ? ui->tblGuest : ui->tblCompany;
     EQLineEdit *leUsd = lineEdit(t, leAmd->fRow, leAmd->fColumn + 1);
     leUsd->setDouble(text.toDouble() / def_usd);
@@ -288,8 +280,10 @@ void DlgPaymentsDetails::countTotal()
 {
     ui->lePaidAMDGuest->setDouble(countTotal(ui->tblGuest, 0));
     ui->lePaidUSDGuest->setDouble(countTotal(ui->tblGuest, 1));
-    ui->leBalanceAMDGuest->setDouble(ui->leTotalAmdGuest->asDouble() + ui->leRefund->asDouble() - ui->lePaidAMDGuest->asDouble());
-    ui->leBalanceUSDGuest->setDouble(ui->leTotalUSDGuest->asDouble() + ui->leRefundUSD->asDouble() - ui->lePaidUSDGuest->asDouble());
+    ui->leBalanceAMDGuest->setDouble(ui->leTotalAmdGuest->asDouble() + ui->leRefund->asDouble() -
+                                     ui->lePaidAMDGuest->asDouble());
+    ui->leBalanceUSDGuest->setDouble(ui->leTotalUSDGuest->asDouble() + ui->leRefundUSD->asDouble() -
+                                     ui->lePaidUSDGuest->asDouble());
     ui->lePaidCompAMD->setDouble(countTotal(ui->tblCompany, 0));
     ui->lePaidCompUSD->setDouble(countTotal(ui->tblCompany, 1));
     ui->leBalanceCompAMD->setDouble(ui->leTotalCompAMD->asDouble() - ui->lePaidCompAMD->asDouble());
@@ -345,7 +339,6 @@ void DlgPaymentsDetails::newPaidRow(int mode)
     if (amount < 0.01) {
         amount = 0;
     }
-
     CachePaymentMode ci;
     ci.get(mode);
     QTableWidget *t = side == 0 ? ui->tblGuest : ui->tblCompany;
@@ -357,7 +350,6 @@ void DlgPaymentsDetails::newPaidRow(int mode)
         EQLineEdit *l = createLineEdit(t, row, i);
         l->fTag = side;
     }
-
     EQLineEdit *le = lineEdit(t, row, 4);
     if (mode == PAYMENT_CL) {
         le->setSelector(this, cache(cid_city_ledger), lineEdit(t, row, 7), HINT_CITY_LEDGER);
@@ -366,7 +358,6 @@ void DlgPaymentsDetails::newPaidRow(int mode)
         le->setSelector(this, cache(cid_credit_card), lineEdit(t, row, 7), HINT_CREDIT_CARD);
         cardCLSelect = le;
     }
-
     EPushButton *b = new EPushButton(this);
     b->setMaximumSize(25, 25);
     b->setMinimumSize(25, 25);
@@ -376,15 +367,11 @@ void DlgPaymentsDetails::newPaidRow(int mode)
     connect(b, SIGNAL(clickedWithTag(int)), this, SLOT(removeRowClicked(int)));
     t->setCellWidget(row, 8, b);
     QList<QVariant> values;
-#ifdef _METROPOL_
     if (mode == PAYMENT_CL) {
         finalName = "CHECKOUT C/L";
     } else {
         finalName += " " + ci.fName();
     }
-#else
-    finalName += " " + ci.fName();
-#endif
     values << ""
            << WORKING_DATE.toString(def_date_format)
            << ci.fCode()
@@ -423,18 +410,17 @@ void DlgPaymentsDetails::newRefundRow(int mode)
     return;
     int side = 0;
     switch (mode) {
-    case PAYMENT_CASH:
-    break;
-    case PAYMENT_CARD:
-        message_error(tr("This mode is not available for refund."));
-        break;
-    case PAYMENT_BANK:
-        break;
-    case PAYMENT_CL:
-        side = 1;
-        break;
+        case PAYMENT_CASH:
+            break;
+        case PAYMENT_CARD:
+            message_error(tr("This mode is not available for refund."));
+            break;
+        case PAYMENT_BANK:
+            break;
+        case PAYMENT_CL:
+            side = 1;
+            break;
     }
-
     int row = ui->tblRefund->rowCount();
     ui->tblRefund->setRowCount(row + 1);
     ui->tblRefund->setItemWithValue(row, 0, "");
@@ -479,7 +465,7 @@ void DlgPaymentsDetails::setRowValues(QTableWidget *t, int row, const QList<QVar
         l->fColumn = i;
         l->fTable = t;
         connect(l, &EQLineEdit::textChanged, [this](const QString &text) {
-            EQLineEdit *e = dynamic_cast<EQLineEdit*>(sender());
+            EQLineEdit *e = dynamic_cast<EQLineEdit *>(sender());
             if (!e) {
                 return;
             }
@@ -503,14 +489,13 @@ EQLineEdit *DlgPaymentsDetails::createLineEdit(QTableWidget *t, int row, int col
 
 EQLineEdit *DlgPaymentsDetails::lineEdit(QTableWidget *t, int row, int column)
 {
-    EQLineEdit *l = dynamic_cast<EQLineEdit*>(t->cellWidget(row, column));
+    EQLineEdit *l = dynamic_cast<EQLineEdit *>(t->cellWidget(row, column));
     return l;
 }
 
 bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &printRows)
 {
     if (fCheckoutFlag) {
-
     }
     //QString sideRemarks = (side == 0 ? "Payment, guest" : "Payment, company");
     for (int i = 0, rowCount = t->rowCount(); i < rowCount; i++) {
@@ -526,33 +511,29 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             int clCode = 0;
             QString modeName = "";
             switch (pmMode) {
-            case PAYMENT_CASH:
-                modeName = "CASH";
-                break;
-            case PAYMENT_CARD:
-                creditCard = lineEdit(t, i, 4)->text().toInt();
-                modeName = lineEdit(t, i, 7)->text();
-                break;
-            case PAYMENT_BANK:
-                modeName = "BANK";
-                break;
-            case PAYMENT_CL:
-#ifdef _METROPOL_
-                lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, %2").arg(ui->leRoomCode->text()).arg(ui->leGuest->text()));
-#endif
-                clCode = lineEdit(t, i, 4)->text().toInt();
-                modeName = "CHECKOUT " + lineEdit(t, i, 7)->text();
-                break;
+                case PAYMENT_CASH:
+                    modeName = "CASH";
+                    break;
+                case PAYMENT_CARD:
+                    creditCard = lineEdit(t, i, 4)->text().toInt();
+                    modeName = lineEdit(t, i, 7)->text();
+                    break;
+                case PAYMENT_BANK:
+                    modeName = "BANK";
+                    break;
+                case PAYMENT_CL:
+                    lineEdit(t, i, 3)->setText(QString("CHECKOUT %1, %2").arg(ui->leRoomCode->text()).arg(ui->leGuest->text()));
+                    clCode = lineEdit(t, i, 4)->text().toInt();
+                    modeName = "CHECKOUT " + lineEdit(t, i, 7)->text();
+                    break;
             }
-
             QString finalName = QString("%1 #%2 %3")
-                    .arg("PAYMENT")
-                    .arg(ui->leInvoice->text())
-                    .arg(modeName);
+                                .arg("PAYMENT")
+                                .arg(ui->leInvoice->text())
+                                .arg(modeName);
             if (fCheckoutFlag) {
                 finalName = "STL. #" + ui->leInvoice->text() + " " + modeName;
             }
-
             QString rid = uuidx(t->item(i, 10)->text());
             DoubleDatabase fDD;
             fDD.insertId("m_register", rid);
@@ -585,20 +566,18 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
             fDD[":f_cancelReason"] = "";
             fDD[":f_side"] = side;
             fDD[":f_cash"] = pmMode == PAYMENT_CL ? 0 : 1;
-            fDD[":f_session"] = WORKING_SESSION;
+            fDD[":f_session"] = 0;
             fDD.update("m_register", where_id(ap(rid)));
-
             t->item(i, 0)->setText(rid);
             lineEdit(t, i, 0)->setText(rid);
-
             fTrackControl->fRecord = rid;
-            fTrackControl->insert("Payment" + QString(fCheckoutFlag ? " before checkout" : " from invoice"), t->item(i, 0)->text(), lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
-
+            fTrackControl->insert("Payment" + QString(fCheckoutFlag ? " before checkout" : " from invoice"), t->item(i, 0)->text(),
+                                  lineEdit(t, i, 3)->text() + " " + lineEdit(t, i, 5)->text());
             if (t->item(i, 10)->text() == "AV") {
-                if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i, 5)->text() + " AMD") == QDialog::Accepted) {
+                if (message_confirm(QString::fromUtf8("Տպել կանխավճարի ՀԴՄ՞ ") + lineEdit(t, i,
+                                    5)->text() + " AMD") == QDialog::Accepted) {
                     int tc;
                     QString outJson;
-
                     CacheInvoiceItem c;
                     if (!c.get(fPreferences.getDb(def_advance_voucher_id).toInt())) {
                         message_error(tr("Error in tax print. c == 0, case 2."));
@@ -609,7 +588,8 @@ bool DlgPaymentsDetails::savePayment(QTableWidget *t, int side, QList<int> &prin
                         message_error(tr("No taxmap for ") + c.fName());
                         return false;
                     }
-                    if (DlgPrintTaxSM::printAdvance(ci.fTax(), lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(), ui->leInvoice->text(),
+                    if (DlgPrintTaxSM::printAdvance(ci.fTax(), lineEdit(t, i, 5)->text().toDouble(),  lineEdit(t, i, 2)->asInt(),
+                                                    ui->leInvoice->text(),
                                                     rid, tc, outJson)) {
                         fDD[":f_prepaid"] = lineEdit(t, i, 5)->text().toDouble();
                         fDD[":f_id"] = ui->leInvoice->text();
@@ -690,7 +670,6 @@ void DlgPaymentsDetails::on_btnSave_clicked()
         }
         return;
     }
-
     for (int i = 0, rowCount = ui->tblRefund->rowCount(); i < rowCount; i++) {
         if (ui->tblRefund->toString(i, 0).isEmpty()) {
             printRefundRow << i;
@@ -725,7 +704,7 @@ void DlgPaymentsDetails::on_btnSave_clicked()
             fDD[":f_cancelReason"] = "";
             fDD[":f_side"] = ui->tblRefund->toInt(i, 8);
             fDD[":f_cash"] = 0;
-            fDD[":f_session"] = WORKING_SESSION;
+            fDD[":f_session"] = 0;
             fDD.update("m_register", where_id(ap(rid)));
             ui->tblRefund->setValue(i, 0, rid);
             fTrackControl->insert("Refund", ui->tblRefund->toString(i, 2), "");

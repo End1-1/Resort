@@ -153,5 +153,6 @@
         <file>images/AS.png</file>
         <file>images/card-reader.png</file>
         <file>images/TravelLine.png</file>
+        <file>images/drop-down.png</file>
     </qresource>
 </RCC>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>914</width>
-    <height>427</height>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1756,54 +1756,6 @@ Invoices</string>
        </widget>
       </item>
       <item>
-       <widget class="EToolbarButton" name="btnExportInvoices">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>5555</width>
-          <height>5555</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Export
-invoices</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-        <property name="autoRaise">
-         <bool>true</bool>
-        </property>
-        <property name="Tag" stdset="0">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="EToolbarButton" name="btnExportRestaurant">
         <property name="minimumSize">
          <size>
@@ -2011,7 +1963,6 @@ reservations</string>
   <tabstop>btnDiscount</tabstop>
   <tabstop>btnCallHistory</tabstop>
   <tabstop>btnTransfer</tabstop>
-  <tabstop>btnExportInvoices</tabstop>
   <tabstop>btnCashReportSummary</tabstop>
   <tabstop>btnCityLedgerDetailedBalance</tabstop>
   <tabstop>btnCashReportDetailed</tabstop>

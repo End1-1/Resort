@@ -213,7 +213,6 @@
     <addaction name="actionGlobal_config"/>
     <addaction name="menuPreferences"/>
     <addaction name="actionReport_buillder"/>
-    <addaction name="actionExport_invoices"/>
     <addaction name="actionExport_active_reservations"/>
     <addaction name="actionExport_reservations"/>
     <addaction name="actionUtils"/>
@@ -865,15 +864,6 @@
    </property>
    <property name="text">
     <string>Cardex analysis</string>
-   </property>
-  </action>
-  <action name="actionExport_invoices">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
-   </property>
-   <property name="text">
-    <string>Export invoices</string>
    </property>
   </action>
   <action name="actionComplimentary_comment">

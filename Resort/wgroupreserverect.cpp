@@ -6,6 +6,9 @@ WGroupReserveRect::WGroupReserveRect(QWidget *parent) :
     ui(new Ui::WGroupReserveRect)
 {
     ui->setupUi(this);
+    QFont f(qApp->font());
+    f.setPointSize(f.pointSize() - 4);
+    setFont(f);
 }
 
 WGroupReserveRect::~WGroupReserveRect()

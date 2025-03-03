@@ -7,7 +7,8 @@
 
 class WReservationRoomTab;
 
-namespace Ui {
+namespace Ui
+{
 class WReservation;
 }
 
@@ -28,6 +29,7 @@ public:
     static void openReserveWindows(const QString &code);
     static void openReserveGroup(int group);
     static void openVaucher(const QString &id);
+    void handleBroadcast(const QMap<QString, QVariant> &data) override;
 
 public slots:
     WReservationRoomTab *newRoomTab(bool autocreate = false);

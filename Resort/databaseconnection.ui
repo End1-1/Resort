@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>386</width>
-    <height>240</height>
+    <height>250</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -127,12 +127,23 @@ name</string>
      <item row="1" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Broadcast server</string>
+        <string>Protocol</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="leBroadcastServer"/>
+      <widget class="QComboBox" name="cbProto">
+       <item>
+        <property name="text">
+         <string>http</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>https</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </item>

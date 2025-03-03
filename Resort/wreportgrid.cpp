@@ -1,6 +1,5 @@
 #include "wreportgrid.h"
 #include "ui_wreportgrid.h"
-#include "xlsxall.h"
 #include "dlgfiltervalues.h"
 #include "wfilterbase.h"
 #include "pprintscene.h"
@@ -8,6 +7,7 @@
 #include "ptextrect.h"
 #include "dlgconfiggrid.h"
 #include "dlghelp.h"
+#include <QXlsx/header/xlsxdocument.h>
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QMenu>
@@ -15,7 +15,9 @@
 #include <QPrinter>
 #include <QException>
 #include <QClipboard>
+#include <QFileDialog>
 #include <QPrinterInfo>
+#include <QDesktopServices>
 
 QMap<QString, Report> WReportGrid::fReportOptions;
 static const int font_size_print_delta = 16;
@@ -40,8 +42,10 @@ WReportGrid::WReportGrid(QWidget *parent) :
     fRgDoubleClick = nullptr;
     ui->tblMain->horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     fTableMenu = new QMenu();
-    connect(fTableMenu->addAction("Filter on column values"), SIGNAL(triggered(bool)), this, SLOT(actionFilterColumn(bool)));
-    connect(ui->tblMain->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tblMainCustomeMenu(QPoint)));
+    connect(fTableMenu->addAction("Filter on column values"), SIGNAL(triggered(bool)), this,
+            SLOT(actionFilterColumn(bool)));
+    connect(ui->tblMain->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(tblMainCustomeMenu(QPoint)));
     connect(ui->tblTotals->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(totalGridHScroll(int)));
     connect(ui->tblMain->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(tblMainGridHScroll(int)));
     connectHeaderResize();
@@ -50,7 +54,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
     connect(fGridMenu->addAction("Copy"), SIGNAL(triggered(bool)), this, SLOT(actionCopyGrid(bool)));
     connect(ui->tblMain, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(tblMaingridCustomMenu(QPoint)));
     fTrackControl = new TrackControl(TRACK_REPORT);
-    connect(fModel, SIGNAL(newSum(QList<int>,QList<double>)), this, SLOT(newSum(QList<int>,QList<double>)));
+    connect(fModel, SIGNAL(newSum(QList<int>, QList<double>)), this, SLOT(newSum(QList<int>, QList<double>)));
     connect(fModel, SIGNAL(endApply()), this, SLOT(endApply()));
     ui->btnHelp->setVisible(false);
     ui->scrollArea->setVisible(false);
@@ -102,12 +106,14 @@ void WReportGrid::setHelp(const QString &helpFile)
 
 void WReportGrid::connectHeaderResize()
 {
-    connect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(tblMainHeaderResized(int,int,int)));
+    connect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int, int, int)), this, SLOT(tblMainHeaderResized(int,
+            int, int)));
 }
 
 void WReportGrid::disconnectHeaderResize()
 {
-    disconnect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(tblMainHeaderResized(int,int,int)));
+    disconnect(ui->tblMain->horizontalHeader(), SIGNAL(sectionResized(int, int, int)), this, SLOT(tblMainHeaderResized(int,
+               int, int)));
 }
 
 void WReportGrid::dontResizeSave(bool v)
@@ -164,7 +170,8 @@ void WReportGrid::tblMainGridHScroll(int value)
     ui->tblTotals->horizontalScrollBar()->setValue(value);
 }
 
-QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &text, const char *slot, QObject *receiver, int pos)
+QToolButton *WReportGrid::addToolBarButton(const QString &image, const QString &text, const char *slot,
+        QObject *receiver, int pos)
 {
     QToolButton *b = new QToolButton(this);
     b->setIcon(QIcon(image));
@@ -269,44 +276,47 @@ void WReportGrid::on_btnExcel_clicked()
         message_error(tr("Empty report!"));
         return;
     }
-    XlsxDocument d;
-    XlsxSheet *s = d.workbook()->addSheet("Sheet1");
+    QXlsx::Document d;
+    d.addSheet("Sheet1");
     /* HEADER */
-    QColor color = QColor::fromRgb(200, 200, 250);
+    QColor color = QColor::fromRgb(0, 0, 0);
     QFont headerFont(qApp->font());
     headerFont.setBold(true);
-    d.style()->addFont("header", headerFont);
-    d.style()->addBackgrounFill("header", color);
+    QXlsx::Format formatHeader;
+    formatHeader.setFont(headerFont);
+    formatHeader.setBorderStyle(QXlsx::Format::BorderThin);
     for (int i = 0; i < colCount; i++) {
-        s->addCell(1, i + 1, fModel->columnTitle(i), d.style()->styleNum("header"));
-        s->setColumnWidth(i + 1, fModel->columnWidth(i) / 7);
+        d.write(1, i + 1, fModel->columnTitle(i), formatHeader);
+        d.setColumnWidth(i + 1, fModel->columnWidth(i) / 7 );
     }
-    //e.setHorizontalAlignment(e.address(0, 0), e.address(0, colCount - 1), Excel::hCenter);
     /* BODY */
     QFont bodyFont(qApp->font());
-    d.style()->addFont("body", bodyFont);
+    QXlsx::Format formatBody;
+    formatBody.setFontColor(color);
+    formatBody.setFontSize(bodyFont.pointSize());
+    formatBody.setBorderStyle(QXlsx::Format::BorderThin);
     for (int j = 0; j < rowCount; j++) {
         for (int i = 0; i < colCount; i++) {
-            s->addCell(j + 2, i + 1, fModel->data(j, i, Qt::EditRole), d.style()->styleNum("body"));
+            QVariant v = fModel->data(j, i, Qt::EditRole);
+            d.write(j + 2, i + 1, v, formatBody);
         }
     }
     /* TOTALS ROWS */
     if (ui->tblTotals->isVisible()) {
-        QFont totalFont(qApp->font());
-        totalFont.setBold(true);
-        d.style()->addFont("footer", headerFont);
-        color = QColor::fromRgb(193, 206, 221);
-        d.style()->addBackgrounFill("footer", color);
         for (int i = 0; i < colCount; i++) {
-            s->addCell(1 + fModel->rowCount() + 1, i + 1, ui->tblTotals->itemValue(0, i, Qt::EditRole), d.style()->styleNum("footer"));
+            QVariant v = ui->tblTotals->itemValue(0, i, Qt::EditRole);
+            d.write(1 + fModel->rowCount() + 1, i + 1,  v, formatHeader);
         }
     }
-    QString err;
-    if (!d.save(err, true)) {
-        if (!err.isEmpty()) {
-            message_error(err);
-        }
+    QString filename = QFileDialog::getSaveFileName(this, "", "", "*.xlsx");
+    if (filename.isEmpty()) {
+        return;
     }
+    if (!d.saveAs(filename)) {
+        QMessageBox::critical(this, tr("Error"), tr("Excel file not saved"));
+        return;
+    }
+    QDesktopServices::openUrl(filename);
 }
 
 void WReportGrid::on_tblMain_doubleClicked(const QModelIndex &index)
@@ -368,12 +378,12 @@ PPrintScene *WReportGrid::addScene(int tmpl, PrintOrientation po)
 {
     PPrintScene *ps = nullptr;
     switch (tmpl) {
-    case 0:
-        ps = new PPrintScene(po, this);
-        break;
-    case 1:
-        ps = new PPrintScene(this);
-        break;
+        case 0:
+            ps = new PPrintScene(po, this);
+            break;
+        case 1:
+            ps = new PPrintScene(this);
+            break;
     }
     QSize s = po == Portrait ? sizePortrait : sizeLandscape;
     QSize wSize = s;
@@ -411,38 +421,39 @@ void WReportGrid::printOnPaper()
     }
     QList<int> printPages;
     switch (ui->cbPrintSelection->currentIndex()) {
-    case 0:
-        for (int i = 0; i < fPrintScene.count(); i++) {
-            printPages << i;
-        }
-        break;
-    case 1:
-        printPages << fPageNumber - 1;
-        break;
-    case 2: {
-        QStringList p = ui->lePages->text().replace(" ", "").split(",", QString::SkipEmptyParts);
-        foreach (QString s, p) {
-            int page = s.toInt() - 1;
-            if (page < 0 || page > fPrintScene.count() - 1) {
-                continue;
+        case 0:
+            for (int i = 0; i < fPrintScene.count(); i++) {
+                printPages << i;
             }
-            printPages << page;
+            break;
+        case 1:
+            printPages << fPageNumber - 1;
+            break;
+        case 2: {
+            QStringList p = ui->lePages->text().replace(" ", "").split(",", QString::SkipEmptyParts);
+            foreach (QString s, p) {
+                int page = s.toInt() - 1;
+                if (page < 0 || page > fPrintScene.count() - 1) {
+                    continue;
+                }
+                printPages << page;
+            }
+            break;
         }
-        break;
     }
-    }
-
     QPrinter prn;
     prn.setPaperSize(QPrinter::A4);
     prn.setPrinterName(ui->cbPrinters->currentText());
-    prn.setOrientation(fPrintScene.at(printPages.at(0))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
-    QPainter painter(&prn);
+    prn.setOrientation(fPrintScene.at(printPages.at(0))->fPrintOrientation == Portrait ? QPrinter::Portrait :
+                       QPrinter::Landscape);
+    QPainter painter( &prn);
     for (int i = 0; i < printPages.count(); i++) {
         if (i > 0) {
-            prn.setOrientation(fPrintScene.at(printPages.at(i))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
+            prn.setOrientation(fPrintScene.at(printPages.at(i))->fPrintOrientation == Portrait ? QPrinter::Portrait :
+                               QPrinter::Landscape);
             prn.newPage();
         }
-        fPrintScene.at(printPages.at(i))->render(&painter);
+        fPrintScene.at(printPages.at(i))->render( &painter);
     }
     fTrackControl->insert("Print report", title, "");
 }
@@ -489,29 +500,29 @@ void WReportGrid::addFilterWidget(WFilterBase *f)
 void WReportGrid::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
-    case Qt::Key_E:
-        if (event->modifiers() & Qt::ControlModifier) {
-            on_btnExcel_clicked();
-        }
-        break;
-    case Qt::Key_P:
-        if (event->modifiers() & Qt::ControlModifier) {
-            on_btnPrint_clicked();
-        }
-        break;
-    case Qt::Key_S:
-        if (event->modifiers() & Qt::ControlModifier) {
-            ui->leQuickSearch->setFocus();
-        }
-        break;
-    case Qt::Key_Enter:
-    case Qt::Key_Return:
-        if (fFilter) {
-            if (focusWidget() == fFilter->lastElement()) {
-                on_btnRefresh_clicked();
+        case Qt::Key_E:
+            if (event->modifiers() &Qt::ControlModifier) {
+                on_btnExcel_clicked();
             }
-        }
-        break;
+            break;
+        case Qt::Key_P:
+            if (event->modifiers() &Qt::ControlModifier) {
+                on_btnPrint_clicked();
+            }
+            break;
+        case Qt::Key_S:
+            if (event->modifiers() &Qt::ControlModifier) {
+                ui->leQuickSearch->setFocus();
+            }
+            break;
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+            if (fFilter) {
+                if (focusWidget() == fFilter->lastElement()) {
+                    on_btnRefresh_clicked();
+                }
+            }
+            break;
     }
     QWidget::keyPressEvent(event);
 }
@@ -519,20 +530,20 @@ void WReportGrid::keyPressEvent(QKeyEvent *event)
 bool WReportGrid::event(QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *ke = static_cast<QKeyEvent*>(event);
+        QKeyEvent *ke = static_cast<QKeyEvent *>(event);
         switch (ke->key()) {
-        case Qt::Key_Enter:
-        case Qt::Key_Return: {
-            QWidget *w = focusWidget();
-            focusNextChild();
-            if (fFilter) {
-                QWidget *l = fFilter->lastElement();
-                if (w == l) {
-                    on_btnRefresh_clicked();
+            case Qt::Key_Enter:
+            case Qt::Key_Return: {
+                QWidget *w = focusWidget();
+                focusNextChild();
+                if (fFilter) {
+                    QWidget *l = fFilter->lastElement();
+                    if (w == l) {
+                        on_btnRefresh_clicked();
+                    }
                 }
+                return true;
             }
-            return true;
-        }
         }
     }
     return BaseWidget::event(event);
@@ -666,7 +677,6 @@ void WReportGrid::on_btnClearQuickSearch_clicked()
     ui->tblMain->clearSelection();
 }
 
-
 void WReportGrid::on_btnPrint_clicked()
 {
     if (fFilter) {
@@ -688,7 +698,7 @@ void WReportGrid::on_btnPrint_clicked()
     distanceCol << 10.000 ;
     for (int i = 0, colCount = fModel->columnCount(); i < colCount; i++) {
         int colw = ui->tblMain->columnWidth(i);
-        totalWidth += (colw * resize_factor);
+        totalWidth += (colw *resize_factor);
         distanceCol << (distanceCol.at(i) + colw);
     }
     Report rs;
@@ -705,7 +715,6 @@ void WReportGrid::on_btnPrint_clicked()
     if (fFilter) {
         rs.fFontSize -= fFilter->fDec;
     }
-
     QBrush b(Qt::white, Qt::SolidPattern);
     PTextRect trFooter;
     trFooter.setBrush(b);
@@ -716,7 +725,6 @@ void WReportGrid::on_btnPrint_clicked()
     trFooter.setFont(f);
     trFooter.setBorders(false, false, false, false);
     trFooter.setTextAlignment(Qt::AlignLeft);
-
     PrintOrientation po = (totalWidth > sizePortrait.width() - 50 ? Landscape : Portrait);
     QSize paperSize = (po == Portrait ? sizePortrait : sizeLandscape);
     int footerTop = paperSize.height() - 50;
@@ -731,7 +739,6 @@ void WReportGrid::on_btnPrint_clicked()
     prHead.setFont(fb);
     prHead.setBrush(QBrush(QColor::fromRgb(215, 215, 215), Qt::SolidPattern));
     prHead.setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-
     int rowHeight = rs.fRowHeight;
     int headerHeight = ui->tblMain->horizontalHeader()->height() * resize_factor * 2;
     PPrintScene *ps = addScene(0, po);
@@ -771,7 +778,7 @@ void WReportGrid::on_btnPrint_clicked()
                                            .arg(title));
         caption->setWrapMode(QTextOption::NoWrap);
         caption->setFont(fb);
-        caption->setRect(20, 0, totalWidth, (rowHeight * resize_factor) + 50);
+        caption->setRect(20, 0, totalWidth, (rowHeight *resize_factor) + 50);
         caption->setBorders(false, false, false, false);
         caption->setTextAlignment(Qt::AlignHCenter);
         ps->addTextRect(caption);
@@ -779,18 +786,16 @@ void WReportGrid::on_btnPrint_clicked()
         //caption->adjustRect();
         topOffcet += caption->height();
     }
-
     prTempl.setWrapMode(QTextOption::NoWrap);
     top += topOffcet;
     for (int i = 0; i < fModel->columnCount(); i++) {
-        if (ui->tblMain->columnWidth(i) == 0){
+        if (ui->tblMain->columnWidth(i) == 0) {
             continue;
         }
-        PTextRect *tr = new PTextRect(distanceCol.at(i) * resize_factor, top,
-                                      ui->tblMain->columnWidth(i) * resize_factor, headerHeight ,
+        PTextRect *tr = new PTextRect(distanceCol.at(i) *resize_factor, top,
+                                      ui->tblMain->columnWidth(i) *resize_factor, headerHeight,
                                       fModel->columnTitle(i), &prHead);
         ps->addTextRect(tr);
-
     }
     top += headerHeight;
     for (int i = 0, rowCount = fModel->rowCount(); i < rowCount; i++) {
@@ -860,12 +865,11 @@ void WReportGrid::on_btnPrint_clicked()
                 }
                 top += topOffcet;
                 for (int n = 0; n < fModel->columnCount(); n++) {
-                    PTextRect *tr = new PTextRect(distanceCol.at(n) * resize_factor, top,
-                                                  ui->tblMain->columnWidth(n) * resize_factor,
-                                                  headerHeight  ,
+                    PTextRect *tr = new PTextRect(distanceCol.at(n) *resize_factor, top,
+                                                  ui->tblMain->columnWidth(n) *resize_factor,
+                                                  headerHeight,
                                                   fModel->columnTitle(n), &prHead);
                     ps->addTextRect(tr);
-
                 }
                 top += headerHeight;
             }
@@ -878,14 +882,13 @@ void WReportGrid::on_btnPrint_clicked()
                 }
             }
             rowHeight = ui->tblMain->rowHeight(i);
-            PTextRect *tr = new PTextRect(distanceCol.at(j) * resize_factor, top,
-                                          colwidth * resize_factor, (rowHeight * resize_factor) + 20,
+            PTextRect *tr = new PTextRect(distanceCol.at(j) *resize_factor, top,
+                                          colwidth *resize_factor, (rowHeight *resize_factor) + 20,
                                           fModel->data(i, j).toString(), &prTempl);
-
             j += span - 1;
             ps->addTextRect(tr);
         }
-        top += (rowHeight * resize_factor) + 20;
+        top += (rowHeight *resize_factor) + 20;
     }
     top += rowHeight;
     //TOTAL ROW
@@ -942,12 +945,11 @@ void WReportGrid::on_btnPrint_clicked()
                 }
                 top += topOffcet;
                 for (int n = 0; n < fModel->columnCount(); n++) {
-                    PTextRect *tr = new PTextRect(distanceCol.at(n) * resize_factor, top,
-                                                  ui->tblMain->columnWidth(n) * resize_factor,
-                                                  headerHeight  ,
+                    PTextRect *tr = new PTextRect(distanceCol.at(n) *resize_factor, top,
+                                                  ui->tblMain->columnWidth(n) *resize_factor,
+                                                  headerHeight,
                                                   fModel->columnTitle(n), &prHead);
                     ps->addTextRect(tr);
-
                 }
                 top += headerHeight ;
             }
@@ -962,20 +964,17 @@ void WReportGrid::on_btnPrint_clicked()
             if (!ui->tblTotals->item(0, j)) {
                 ui->tblTotals->setItem(0, j, new C5TableWidgetItem());
             }
-            PTextRect *tr = new PTextRect(distanceCol.at(j) * resize_factor, top,
-                                          colwidth * resize_factor, (rowHeight * resize_factor) + 20,
+            PTextRect *tr = new PTextRect(distanceCol.at(j) *resize_factor, top,
+                                          colwidth *resize_factor, (rowHeight *resize_factor) + 20,
                                           ui->tblTotals->toString(0, j), &prTempl);
-
             j += span - 1;
             ps->addTextRect(tr);
         }
-        top += (rowHeight * resize_factor) + 20;
+        top += (rowHeight *resize_factor) + 20;
     }
-
     if (fFilter) {
         fFilter->finalPrint(ps, top);
     }
-
     ps->addTextRect(20, footerTop, 1800, rowHeight * 3, QString("%1: %2 %3")
                     .arg(tr("Printed"))
                     .arg(QDateTime::currentDateTime().toString(def_date_time_format))
@@ -986,7 +985,6 @@ void WReportGrid::on_btnPrint_clicked()
                     .arg(page)
                     .arg(__dd1Database.left(2)), &trFooter);
     trFooter.setTextAlignment(Qt::AlignLeft);
-
     if (fPrintOut) {
         ui->tblMain->setVisible(false);
         ui->cbZoom->setCurrentIndex(4);
@@ -1058,7 +1056,6 @@ void WReportGrid::on_btnConfigGrid_clicked()
     r.fFontBold = fBold;
     r.fRowHeight = rowHeight;
     fReportOptions[fGridClassName] = r;
-
     QFont f(fName, fSize);
     f.setBold(fBold);
     ui->tblMain->setFont(f);

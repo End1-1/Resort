@@ -13,7 +13,8 @@
 #define tm_advance 2
 #define tm_taxback 3
 
-namespace Ui {
+namespace Ui
+{
 class DlgPrintTaxSM;
 }
 
@@ -24,7 +25,8 @@ class DlgPrintTaxSM : public BaseExtendedDialog
 public:
     explicit DlgPrintTaxSM(int taxid, QWidget *parent = nullptr);
     ~DlgPrintTaxSM();
-    void addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price, double qty);
+    void addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name, double price,
+                  double qty);
     virtual int exec();
     int execAdvance();
     int execTaxback();
@@ -36,7 +38,8 @@ public:
     int fTaxCode;
     QString fTaxback;
     int fTaxID;
-    static bool printAdvance(int taxid, double amountCash, double amountCard, const QString &invoice, const QString &vaucher, int &taxCode, QString &json);
+    static bool printAdvance(int taxid, double amountCash, double amountCard, const QString &invoice,
+                             const QString &vaucher, int &taxCode, QString &json);
     static int printTaxback(int taxid, int number, const QString &vaucher, int &taxCode);
 
 private slots:
@@ -49,7 +52,7 @@ private:
     int fPrintMode;
     QTimer fTimer;
     QString fDep;
-    PrintTaxN fPrintTax;
+    PrintTaxN *fPrintTax;
     void load();
     void loadAdvance();
     void loadTaxback();

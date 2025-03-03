@@ -72,7 +72,7 @@ void WReservation::loadGroup(int id, int initFromRoom)
     }
     if (initFromRoom > 0) {
         for (int i = 0; i < ui->tab->count(); i++) {
-            WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+            WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
             if (r->roomCode().toInt() == initFromRoom) {
                 ui->tab->setCurrentIndex(i);
                 break;
@@ -85,15 +85,15 @@ void WReservation::setInitialParams(const QDate &date1, const QDate &date2, QLis
 {
     fDate1 = date1;
     fDate2 = date2;
-    for (QList<CacheRoom*>::const_iterator it = rooms.begin(); it != rooms.end(); it++) {
+    for (QList<CacheRoom * >::const_iterator it = rooms.begin(); it != rooms.end(); it++) {
         WReservationRoomTab *r = newRoomTab();
         if (!r) {
             return;
         }
-        if (!(*it)) {
+        if (!( *it)) {
             return;
         }
-        r->setBaseData(date1, date2, (*it)->fCode());
+        r->setBaseData(date1, date2, ( *it)->fCode());
         if (ui->tab->count() == 1) {
             ui->tab->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
         }
@@ -107,7 +107,7 @@ void WReservation::setInitialParams(const QDate &date1, const QDate &date2, QLis
 bool WReservation::activateDoc(const QString &id)
 {
     for (int i = 0; i < ui->tab->count(); i++) {
-        WReservationRoomTab *wr = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *wr = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         if (wr->docId() == id) {
             ui->tab->setCurrentIndex(i);
             return true;
@@ -154,7 +154,7 @@ void WReservation::openReserveWindows(const QString &code )
     }
     WReservation *w = nullptr;
     for (int i = 0; i < fMainWindow->fTab->count(); i++) {
-        w = dynamic_cast<WReservation*>(fMainWindow->fTab->widget(i));
+        w = dynamic_cast<WReservation *>(fMainWindow->fTab->widget(i));
         if (w) {
             if (w->activateDoc(fDD.getString(0))) {
                 fMainWindow->fTab->setCurrentIndex(i);
@@ -187,6 +187,19 @@ void WReservation::openVaucher(const QString &id)
     }
 }
 
+void WReservation::handleBroadcast(const QMap<QString, QVariant> &data)
+{
+    if (data.contains("modified")) {
+        for (int i = 0, count = ui->tab->count(); i < count; i++) {
+            WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
+            r->setModifiedByOther(data);
+            QString why;
+            ui->btnCheckIn->setEnabled(r->canCheckIn(why));
+            ui->btnCheckIn->setToolTip(why);
+        }
+    }
+}
+
 void WReservation::setupTab()
 {
     setupTabTextAndIcon(tr("Reservation"), ":/images/checkin.png");
@@ -196,39 +209,39 @@ bool WReservation::canClose()
 {
     bool canClose = true;
     for (int i = 0, count = ui->tab->count(); i < count; i++) {
-        WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         bool tabClose = r->canClose();
         if (!tabClose) {
             switch (message_yesnocancel(QString("%1 #%2 %3")
-                                .arg(tr("Room"))
-                                .arg(r->roomCode())
-                                .arg(tr("modified, save changes?")))) {
-            case RESULT_YES: {
-                QStringList errors;
-                if (!r->checkDoc(errors)) {
+                                        .arg(tr("Room"))
+                                        .arg(r->roomCode())
+                                        .arg(tr("modified, save changes?")))) {
+                case RESULT_YES: {
+                    QStringList errors;
+                    if (!r->checkDoc(errors)) {
+                        fMainWindow->setCurrentWidget(this);
+                        ui->tab->setCurrentIndex(i);
+                        QString errorMsg;
+                        for (QStringList::const_iterator it = errors.begin(); it != errors.end(); it++) {
+                            errorMsg += *it + "<br>";
+                        }
+                        message_error(errorMsg);
+                        return false;
+                    }
+                    canClose = canClose && r->save();
+                    break;
+                }
+                case RESULT_NO:
+                    canClose = canClose && true;
+                    break;
+                case RESULT_NOALL:
+                    canClose = true;
+                    return canClose;
+                case RESULT_CANCEL:
+                    canClose = canClose && false;
                     fMainWindow->setCurrentWidget(this);
                     ui->tab->setCurrentIndex(i);
-                    QString errorMsg;
-                    for (QStringList::const_iterator it = errors.begin(); it != errors.end(); it++) {
-                        errorMsg += *it + "<br>";
-                    }
-                    message_error(errorMsg);
                     return false;
-                }
-                canClose = canClose && r->save();
-                break;
-            }
-            case RESULT_NO:
-                canClose = canClose && true;
-                break;
-            case RESULT_NOALL:
-                canClose = true;
-                return canClose;
-            case RESULT_CANCEL:
-                canClose = canClose && false;
-                fMainWindow->setCurrentWidget(this);
-                ui->tab->setCurrentIndex(i);
-                return false;
             }
         }
     }
@@ -239,7 +252,7 @@ void WReservation::loadFromData(const QList<QVariant> &data)
 {
     WReservation *w = 0;
     for (int i = 0; i < fMainWindow->fTab->count(); i++) {
-        w = dynamic_cast<WReservation*>(fMainWindow->fTab->widget(i));
+        w = dynamic_cast<WReservation *>(fMainWindow->fTab->widget(i));
         if (w) {
             if (w->activateDoc(data.at(0).toString())) {
                 fMainWindow->fTab->setCurrentIndex(i);
@@ -263,22 +276,20 @@ WReservationRoomTab *WReservation::newRoomTab(bool autocreate)
                 fDD[":f_time"] = QTime::currentTime();
                 groupId = fDD.insert("f_reservation_group");
                 setGroup(groupId);
-                rlast = static_cast<WReservationRoomTab*>(ui->tab->widget(0));
+                rlast = static_cast<WReservationRoomTab *>(ui->tab->widget(0));
             } else {
                 return 0;
             }
         }
     }
-
     if (!rlast && ui->tab->count() > 0) {
-        rlast = static_cast<WReservationRoomTab*>(ui->tab->widget(0));
+        rlast = static_cast<WReservationRoomTab *>(ui->tab->widget(0));
     }
-
     WReservationRoomTab *r = new WReservationRoomTab(this);
     r->setTab(ui->tab, ui->tab->count());
     ui->tab->addTab(r, QIcon(":/images/room-key.png"), tr("Room"));
     ui->tab->setCurrentIndex(ui->tab->count() - 1);
-    connect(r, SIGNAL(roomChanged(QString,int)), this, SLOT(roomNameChanged(QString,int)));
+    connect(r, SIGNAL(roomChanged(QString, int)), this, SLOT(roomNameChanged(QString, int)));
     connect(r, SIGNAL(commonChanges()), this, SLOT(commonChanges()));
     r->startTrackControl();
     if (rlast) {
@@ -289,7 +300,7 @@ WReservationRoomTab *WReservation::newRoomTab(bool autocreate)
 
 void WReservation::commonChanges()
 {
-    WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(ui->tab->currentIndex()));
+    WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(ui->tab->currentIndex()));
     if (r->date1() != fDate1 || r->date2() != fDate2) {
         fDate1 = r->date1();
         fDate2 = r->date2();
@@ -315,35 +326,35 @@ void WReservation::tabCloseRequest(int index)
         return;
     }
     bool cc = true;
-    WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(index));
+    WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(index));
     if (!r->canClose()) {
         int msgResult = message_yesnocancel(QString("%1 #%2 %3")
                                             .arg(tr("Room"))
                                             .arg(r->roomCode())
                                             .arg(tr("was changed, save modifications?")));
         switch (msgResult) {
-        case RESULT_YES: {
-            QStringList errors;
-            if (!r->checkDoc(errors)) {
+            case RESULT_YES: {
+                QStringList errors;
+                if (!r->checkDoc(errors)) {
+                    fMainWindow->setCurrentWidget(this);
+                    ui->tab->setCurrentIndex(index);
+                    QString errorMsg;
+                    for (QStringList::const_iterator it = errors.constBegin(); it != errors.constEnd(); it++) {
+                        errorMsg += *it + "<br>";
+                    }
+                    message_error(errorMsg);
+                    return;
+                }
+                cc = r->save();
+                break;
+            }
+            case RESULT_NO:
+                break;
+            case RESULT_CANCEL:
                 fMainWindow->setCurrentWidget(this);
                 ui->tab->setCurrentIndex(index);
-                QString errorMsg;
-                for (QStringList::const_iterator it = errors.constBegin(); it != errors.constEnd(); it++) {
-                    errorMsg += *it + "<br>";
-                }
-                message_error(errorMsg);
-                return;
-            }
-            cc = r->save();
-            break;
-        }
-        case RESULT_NO:
-            break;
-        case RESULT_CANCEL:
-            fMainWindow->setCurrentWidget(this);
-            ui->tab->setCurrentIndex(index);
-            cc = false;
-            break;
+                cc = false;
+                break;
         }
     }
     if (cc) {
@@ -369,7 +380,7 @@ void WReservation::roomNameChanged(const QString &name, int index)
         } else {
             rooms += ",";
         }
-        WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         if (r->roomName().length() == 0) {
             rooms += "#0";
         } else {
@@ -383,7 +394,7 @@ void WReservation::on_btnSave_clicked()
 {
     QStringList errors;
     for (int i = 0; i < ui->tab->count(); i++) {
-        WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         r->checkDoc(errors);
     }
     if (errors.count() > 0) {
@@ -397,7 +408,7 @@ void WReservation::on_btnSave_clicked()
     bool allSaved = true;
     bool saved = false;
     for (int i = 0; i < ui->tab->count(); i++) {
-        WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         allSaved = allSaved && r->save();
         if (!saved && allSaved) {
             saved = true;
@@ -415,7 +426,7 @@ void WReservation::on_btnCheckIn_clicked()
     bool allSaved = true;
     QString errorString;
     logging::justLog("Before checkin pressed");
-    WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->currentWidget());
+    WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->currentWidget());
     logging::justLog(QString("Checkin pressed. %1 %2").arg(r->reserveId()).arg(r->roomCode()));
     allSaved = allSaved && r->checkIn(errorString);
     ui->btnCheckIn->setEnabled(r->reserveState() == RESERVE_RESERVE);
@@ -432,7 +443,7 @@ void WReservation::on_btnCheckIn_clicked()
 
 void WReservation::on_btnCancelation_clicked()
 {
-    WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->currentWidget());
+    WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->currentWidget());
     if (r->cancelReservation()) {
         ui->btnCancelation->setEnabled(false);
     }
@@ -440,7 +451,7 @@ void WReservation::on_btnCancelation_clicked()
 
 void WReservation::on_btnCopyLast_clicked()
 {
-    WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->currentWidget());
+    WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->currentWidget());
     r->copyLast();
 }
 
@@ -452,7 +463,7 @@ void WReservation::on_btnPrint_clicked()
 void WReservation::on_btnTracking_clicked()
 {
     DlgTracking::showTracking(TRACK_RESERVATION,
-                              static_cast<WReservationRoomTab*>(ui->tab->currentWidget())->reserveId());
+                              static_cast<WReservationRoomTab *>(ui->tab->currentWidget())->reserveId());
 }
 
 void WReservation::on_btnRecheckin_clicked()
@@ -470,7 +481,7 @@ void WReservation::on_btnRecheckin_clicked()
 
 void WReservation::on_btnRevive_clicked()
 {
-    WReservationRoomTab *r =  static_cast<WReservationRoomTab*>(ui->tab->widget(ui->tab->currentIndex()));
+    WReservationRoomTab *r =  static_cast<WReservationRoomTab *>(ui->tab->widget(ui->tab->currentIndex()));
     if (!r->canRevive()) {
         return;
     }
@@ -482,7 +493,7 @@ WReservationRoomTab *WReservation::activeRoom()
     if (ui->tab->count() == 0) {
         return 0;
     }
-    return static_cast<WReservationRoomTab*>(ui->tab->widget(ui->tab->currentIndex()));
+    return static_cast<WReservationRoomTab *>(ui->tab->widget(ui->tab->currentIndex()));
 }
 
 void WReservation::on_btnCancelGroup_clicked()
@@ -502,9 +513,9 @@ void WReservation::on_btnCancelGroup_clicked()
     fDD[":f_state1"] = RESERVE_RESERVE;
     fDD.exec("update f_reservation set f_state=:f_state, f_cancelUser=:f_cancelUser, f_cancelDate=:f_cancelDate where f_group=:f_group and f_state=:f_state1");
     for (int i = 0; i < ui->tab->count(); i++) {
-        WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
+        WReservationRoomTab *r = static_cast<WReservationRoomTab *>(ui->tab->widget(i));
         r->loadReservation(r->reserveId());
-           // ui->btnCancelation->setEnabled(false);
+        // ui->btnCancelation->setEnabled(false);
     }
     ui->btnCancelGroup->setEnabled(false);
     ui->btnSetGroupParams->setEnabled(false);
@@ -604,7 +615,7 @@ void WReservation::on_btnSetGroupParams_clicked()
             if (d->arrangement(v)) {
                 r->setArrangement(v.toInt());
                 fDD[":f_arrangement"] = v.toString();
-            }            
+            }
             r->trackControl()->resetChanges(r->reserveId());
         }
     }
@@ -612,7 +623,6 @@ void WReservation::on_btnSetGroupParams_clicked()
     */
     DlgGroupReservationFuck *d = addTab<DlgGroupReservationFuck>();
     d->loadGroup(ui->leGroup->asInt());
-
     /*
     for (int i = 0; i < ui->tab->count(); i++) {
         WReservationRoomTab *r = static_cast<WReservationRoomTab*>(ui->tab->widget(i));
@@ -635,7 +645,7 @@ void WReservation::on_btnAddRemoveGroup_clicked()
 
 WReservationRoomTab *WReservation::r()
 {
-    return  static_cast<WReservationRoomTab*>(ui->tab->widget(ui->tab->currentIndex()));
+    return  static_cast<WReservationRoomTab *>(ui->tab->widget(ui->tab->currentIndex()));
 }
 
 void WReservation::on_btnSendConfirmation_clicked()

@@ -30,6 +30,8 @@
 #include "dlgreservationremarks.h"
 #include "pprintcheckin.h"
 #include <QKeyEvent>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #define HINT_SEARCH_GUEST 1
 #define HINT_CARDEX 2
@@ -91,6 +93,7 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
         checkDatesCross();
     });
     ui->cbArrangment->setIndexForData(fPreferences.getDb(def_room_arrangement).toInt());
+    ui->wmodified->setVisible(false);
 }
 
 WReservationRoomTab::~WReservationRoomTab()
@@ -440,7 +443,14 @@ bool WReservationRoomTab::save()
         emit commonChanges();
         fTrackControl->saveChanges();
         saveVaucher(createUser);
-        BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
+        QString updmsg = QJsonDocument(QJsonObject{{"comp", HOSTNAME},
+            {"user", WORKING_USERNAME},
+            {"deliver_windows", true},
+            {"modified", true},
+            {"session", WORKING_SESSION_ID}}).toJson(
+            QJsonDocument::Compact);
+        updmsg = updmsg.remove("{").remove("}");
+        BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text(), "," + updmsg);
         BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->leReservId->text());
         BroadcastThread::cmdRefreshCache(cid_reservation_cardex, ui->leReservId->text());
@@ -1468,6 +1478,18 @@ void WReservationRoomTab::callback(int sel, const QString &code)
             ui->lbCLedgerError->setPixmap(QPixmap(":/images/ok.png"));
             fCityLedgerOk = true;
             break;
+        }
+    }
+}
+
+void WReservationRoomTab::setModifiedByOther(const QMap<QString, QVariant> &d)
+{
+    if (d["item"].toString() == ui->leReservId->text()) {
+        if (d["modified"].toBool() == true && d["session"].toInt() != WORKING_SESSION_ID) {
+            ui->lbModified->setText(QString("Reservation was modified by %1 %2")
+                                    .arg(d["comp"].toString(), d["user"].toString()));
+            ui->wmodified->setVisible(true);
+            setDisabled(true);
         }
     }
 }

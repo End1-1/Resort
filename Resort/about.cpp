@@ -7,11 +7,7 @@ About::About(QWidget *parent) :
     ui(new Ui::About)
 {
     ui->setupUi(this);
-    QString edition = " (NED) ";
-#ifdef _METROPOL_
-    edition = " (MED) ";
-#endif
-    ui->lbVersion->setText("v " + Utils::getVersionString(qApp->applicationFilePath()) + edition);
+    ui->lbVersion->setText("v " + Utils::getVersionString(qApp->applicationFilePath()));
     ui->lbDebug->setVisible(false);
 #ifdef QT_DEBUG
     ui->lbDebug->setVisible(true);
@@ -26,5 +22,4 @@ About::~About()
 
 void About::on_buttonBox_accepted()
 {
-
 }

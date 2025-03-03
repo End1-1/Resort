@@ -1008,42 +1008,6 @@ Invoices</string>
           </widget>
          </item>
          <item>
-          <widget class="EToolbarButton" name="btnExportInvoices">
-           <property name="minimumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>70</width>
-             <height>70</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Export
-invoices</string>
-           </property>
-           <property name="icon">
-            <iconset resource="res.qrc">
-             <normaloff>:/images/database.png</normaloff>:/images/database.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>32</width>
-             <height>32</height>
-            </size>
-           </property>
-           <property name="toolButtonStyle">
-            <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-           <property name="Tag" stdset="0">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="EToolbarButton" name="btnExportRestaurant">
            <property name="minimumSize">
             <size>

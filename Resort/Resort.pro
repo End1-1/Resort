@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql network xml printsupport
+QT       += core gui sql network xml printsupport websockets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,8 +17,6 @@ DEFINES += _RESORT_
 DEFINES += _HOTEL_
 
 SOURCES += main.cpp\
-    ../../XLSX/src/xlsxborder.cpp \
-    ../Base/broadcast1.cpp \
     ../Base/dlgexitbyversion.cpp \
     ../Base/dlgselector.cpp \
     ../Base/doubleutils.cpp \
@@ -45,7 +43,7 @@ SOURCES += main.cpp\
     ../Server2/listener.cpp \
     ../Server2/socketconnection.cpp \
     ../Threads/broadcastthread.cpp \
-    ../Threads/objectthread.cpp \
+    appwebsocket.cpp \
     databaserow.cpp \
     dbminvoice.cpp \
     dlgconfigtaxserver.cpp \
@@ -123,7 +121,6 @@ SOURCES += main.cpp\
     wcardex.cpp \
     dlgcardex.cpp \
     dwmaindeskhint.cpp \
-    ../Base/command.cpp \
     ../Cache/cacheinvoiceitem.cpp \
     ../Cache/cacheactiveroom.cpp \
     dlgpaymentsdetails.cpp \
@@ -272,7 +269,6 @@ SOURCES += main.cpp\
     dlgprintrandomtax.cpp \
     dlgtaxreference.cpp \
     ../Widgets/wvauchereditor.cpp \
-    ../Widgets/wsyncinvoices.cpp \
     ../RowEditor/recomplimentarycomment.cpp \
     dlgexportsinglevaucher.cpp \
     ../Controls/etoolbarbutton.cpp \
@@ -432,19 +428,6 @@ SOURCES += main.cpp\
     wquickroomassignment.cpp \
     dlgquickadvanceapply.cpp \
     dlggrouprevive.cpp \
-    ../../XLSX/src/xlsx.cpp \
-    ../../XLSX/src/xlsxcell.cpp \
-    ../../XLSX/src/xlsxcontenttype.cpp \
-    ../../XLSX/src/xlsxdocpropsapp.cpp \
-    ../../XLSX/src/xlsxdocpropscore.cpp \
-    ../../XLSX/src/xlsxdocument.cpp \
-    ../../XLSX/src/xlsxrels.cpp \
-    ../../XLSX/src/xlsxsharedstring.cpp \
-    ../../XLSX/src/xlsxsheet.cpp \
-    ../../XLSX/src/xlsxstyles.cpp \
-    ../../XLSX/src/xlsxtheme.cpp \
-    ../../XLSX/src/xlsxworkbook.cpp \
-    ../../XLSX/src/xlsxwriter.cpp \
     dlgtransferanyamount.cpp \
     ../Controls/radiogroupwidget.cpp \
     ../Filter/fexpectedarrivals2.cpp \
@@ -453,8 +436,6 @@ SOURCES += main.cpp\
     ../Filter/wcardexlist.cpp
 
 HEADERS  += mainwindow.h \
-    ../../XLSX/src/xlsxborder.h \
-    ../Base/broadcast1.h \
     ../Base/dlgexitbyversion.h \
     ../Base/dlgselector.h \
     ../Base/doubleutils.h \
@@ -482,7 +463,7 @@ HEADERS  += mainwindow.h \
     ../Server2/listener.h \
     ../Server2/socketconnection.h \
     ../Threads/broadcastthread.h \
-    ../Threads/objectthread.h \
+    appwebsocket.h \
     databaserow.h \
     dbminvoice.h \
     dlgconfigtaxserver.h \
@@ -560,7 +541,6 @@ HEADERS  += mainwindow.h \
     wcardex.h \
     dlgcardex.h \
     dwmaindeskhint.h \
-    ../Base/command.h \
     ../Cache/cacheinvoiceitem.h \
     ../Cache/cacheactiveroom.h \
     dlgpaymentsdetails.h \
@@ -711,7 +691,6 @@ HEADERS  += mainwindow.h \
     dlgprintrandomtax.h \
     dlgtaxreference.h \
     ../Widgets/wvauchereditor.h \
-    ../Widgets/wsyncinvoices.h \
     ../RowEditor/recomplimentarycomment.h \
     dlgexportsinglevaucher.h \
     ../Controls/etoolbarbutton.h \
@@ -872,22 +851,6 @@ HEADERS  += mainwindow.h \
     wquickroomassignment.h \
     dlgquickadvanceapply.h \
     dlggrouprevive.h \
-    ../../XLSX/src/crs32.h \
-    ../../XLSX/src/xlsx.h \
-    ../../XLSX/src/xlsxall.h \
-    ../../XLSX/src/xlsxcell.h \
-    ../../XLSX/src/xlsxcontenttype.h \
-    ../../XLSX/src/xlsxdocpropsapp.h \
-    ../../XLSX/src/xlsxdocpropscore.h \
-    ../../XLSX/src/xlsxdocument.h \
-    ../../XLSX/src/xlsxrels.h \
-    ../../XLSX/src/xlsxsharedstring.h \
-    ../../XLSX/src/xlsxsheet.h \
-    ../../XLSX/src/xlsxstyles.h \
-    ../../XLSX/src/xlsxtheme.h \
-    ../../XLSX/src/xlsxworkbook.h \
-    ../../XLSX/src/xlsxwriter.h \
-    ../../XLSX/src/zip.h \
     dlgtransferanyamount.h \
     ../Controls/radiogroupwidget.h \
     ../Filter/fexpectedarrivals2.h \
@@ -1036,7 +999,6 @@ FORMS    += mainwindow.ui \
     dlgprintrandomtax.ui \
     dlgtaxreference.ui \
     ../Widgets/wvauchereditor.ui \
-    ../Widgets/wsyncinvoices.ui \
     ../RowEditor/recomplimentarycomment.ui \
     dlgexportsinglevaucher.ui \
     dlgwelcomebuttonconfig.ui \
@@ -1184,7 +1146,9 @@ INCLUDEPATH += $$PWD/../Server2
 INCLUDEPATH += C:/Soft/OpenSSLWin64/include
 INCLUDEPATH += C:/Soft/OpenSSLWin64/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src
-INCLUDEPATH += c:/projects/XLSX/src
+
+
+include(C:/projects/QXlsx/QXlsx/QXlsx.pri)
 
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"

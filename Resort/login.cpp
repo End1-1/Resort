@@ -7,6 +7,8 @@
 #include "appconfig.h"
 #include "cachecheckoutinvoice.h"
 #include "ecomboboxcompleter.h"
+#include "appwebsocket.h"
+#include <QRandomGenerator>
 #include <QProcess>
 #include <windows.h>
 #include <QJsonDocument>
@@ -28,24 +30,16 @@ Login::Login(QWidget *parent) :
         ui->lePassword->setFocus();
     }
     fLockUser = 0;
-    QShortcut *shortcut = new QShortcut(QKeySequence("F1"), this);
-    connect(shortcut, SIGNAL(activated()), this, SLOT(shortcutSlot()));
     QFile f("./logo_login.png");
     if (f.exists()) {
         QPixmap p("./logo_login.png");
         ui->lbLogo->setPixmap(p);
     }
-    if (__s.value("db_direct_connection").toBool()) {
-        getDatabases();
-    } else {
-        connect( &fUdpSocket, SIGNAL(readyRead()), this, SLOT(readDatagram()));
-        timeout();
-        connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
-        fTimer.start(2000);
-    }
+    getDatabases();
     ui->wPin->setVisible(fPreferences.getDb(def_touchscreen).toBool());
     ui->wUsernamePassword->setVisible(!fPreferences.getDb(def_touchscreen).toBool());
     adjustSize();
+    connect(AppWebSocket::instance, &AppWebSocket::socketConnected, this, &Login::socketConnected);
 }
 
 Login::~Login()
@@ -57,89 +51,6 @@ void Login::setLockUser(int id)
 {
     fLockUser = id;
     ui->cbDatabase->setEnabled(false);
-}
-
-void Login::shortcutSlot()
-{
-    if (ui->cbDatabase->count() > 0) {
-        return;
-    }
-    QString password = QInputDialog::getText(this, tr("First setup"), tr("MySQL server password"), QLineEdit::Password);
-    if (password.isEmpty()) {
-        return;
-    }
-    QJsonObject jObj;
-    jObj["first_setup"] = password;
-    jObj["client"] = HOSTNAME + "." + fPreferences.hostUsername();
-    QJsonDocument jDoc(jObj);
-    QByteArray datagram = jDoc.toJson();
-    fUdpSocket.writeDatagram(datagram, QHostAddress::Broadcast, DATAGRAM_PORT);
-}
-
-void Login::readDatagram()
-{
-    fTimer.stop();
-    while (fUdpSocket.hasPendingDatagrams()) {
-        QByteArray datagram;
-        datagram.resize(fUdpSocket.pendingDatagramSize());
-        fUdpSocket.readDatagram(datagram.data(), datagram.size());
-        QJsonDocument jDoc = QJsonDocument::fromJson(datagram);
-        QJsonObject jObj = jDoc.object();
-        if (jObj.contains("server")) {
-            QString rep = jObj.value("server").toString();
-            if (rep == "me") {
-                DoubleDatabase db(jObj.value("host").toString(),
-                                  jObj.value("database").toString(),
-                                  jObj.value("username").toString(),
-                                  jObj.value("password").toString());
-                if (!db.open()) {
-                    message_error(tr("Cannot connect to main database")
-                                  + "<br>"
-                                  + db.fLastError
-                                  + "<br>Server: "
-                                  + jObj.value("host").toString()
-                                  + ":" + jObj.value("database").toString());
-                    return;
-                }
-                DoubleDatabase::logEvent(QString("use direct: ") + (__s.value("db_direct_connection").toBool() ? "true" : "false"));
-                if (!__s.value("db_direct_connection").toBool()) {
-                    AppConfig::fServerAddress =  jObj.value("host").toString();
-                    AppConfig::fServerPort = jObj.value("port").toInt();
-                    BaseUIDX::fAirHost = jObj.value("host").toString();
-                    BaseUIDX::fAirDbName = jObj.value("database").toString();
-                    BaseUIDX::fAirUser = jObj.value("username").toString();
-                    BaseUIDX::fAirPass = jObj.value("password").toString();
-                    DoubleDatabase::logEvent("Base::fAirHost" + BaseUIDX::fAirHost);
-                }
-                //                TrackControl::fDbHost = jObj["loghost"].toString();
-                //                TrackControl::fDbDb = jObj["logdb"].toString();
-                //                TrackControl::fDbUser = jObj["loguser"].toString();
-                //                TrackControl::fDbPass = jObj["logpass"].toString();
-                //                TrackControl::setFirstConnection();
-                _IDGENMODE_ = jObj["idgen"].toInt();
-                db[":f_user"] = HOSTNAME + "." + fPreferences.hostUsername();
-                db.exec("select * from f_db where f_id in (select f_db from f_access where lower(f_user)=lower(:f_user) and f_right=1)");
-                for (int i = 0; i < db.rowCount(); i++) {
-                    QMap<QString, QString> conn;
-                    conn["f_host"] = db.getString(i, "f_host");
-                    conn["f_database"] = db.getString(i, "f_database");
-                    conn["f_username"] = db.getString(i, "f_username");
-                    conn["f_password"] = db.getString(i, "f_password");
-                    fDatabaseList[db.getString(i, "f_name")] = conn;
-                }
-                getDatabases();
-                return;
-            }
-        } else if (jObj.contains("first_setup")) {
-            QString reply = jObj["first_setup"].toString();
-            if (reply != "ok") {
-                message_error(tr("First setup failed"));
-                return;
-            }
-            timeout();
-        }
-    }
-    fTimer.start(2000);
 }
 
 void Login::on_btnCancel_clicked()
@@ -162,46 +73,29 @@ void Login::on_btnAddDatabase_clicked()
 void Login::getDatabases()
 {
     ui->cbDatabase->clear();
-    if (!__s.value("db_direct_connection").toBool()) {
-        QStringList dbNames = fDatabaseList.keys();
-        fPreferences.clearDatabase();
-        foreach (QString s, dbNames) {
-            fPreferences.appendDatabase(s,
-                                        fDatabaseList[s]["f_host"],
-                                        fDatabaseList[s]["f_database"],
-                                        fDatabaseList[s]["f_username"],
-                                        fDatabaseList[s]["f_password"],
-                                        "", "", "", "", fDatabaseList[s]["f_broadcast"]);
-        }
-        ui->cbDatabase->addItems(dbNames);
-    } else {
-        QStringList dbNames;
-        fPreferences.setDatabasesNames(dbNames);
-        for (QStringList::const_iterator it = dbNames.begin(); it != dbNames.end(); it++) {
-            Db db = fPreferences.getDatabase( *it);
-            fPreferences.appendDatabase(db.dc_name,
-                                        db.dc_main_host,
-                                        db.dc_main_path,
-                                        db.dc_main_user,
-                                        db.dc_main_pass,
-                                        "", "", "", "", db.dc_broadcast);
-            ui->cbDatabase->addItem(db.dc_name);
-            AppConfig::fServerAddress = __s.value("db_broadcast_server").toString();
-            AppConfig::fServerPort = SERVER_DEFAULT_PORT;
-            DoubleDatabase::logEvent("O, shit!");
-        }
+    QStringList dbNames;
+    fPreferences.setDatabasesNames(dbNames);
+    for (QStringList::const_iterator it = dbNames.constBegin(); it != dbNames.constEnd(); it++) {
+        Db db = fPreferences.getDatabase( *it);
+        fPreferences.appendDatabase(db.dc_name,
+                                    db.dc_main_host,
+                                    db.dc_main_path,
+                                    db.dc_main_user,
+                                    db.dc_main_pass,
+                                    "", "", "", "", db.dc_broadcast);
+        ui->cbDatabase->addItem(db.dc_name);
+        AppConfig::fServerAddress = __s.value("db_broadcast_server").toString();
+        AppConfig::fServerPort = SERVER_DEFAULT_PORT;
     }
     ui->cbDatabase->setCurrentIndex(ui->cbDatabase->findText(__s.value("_last_login_db_name").toString()));
     on_leUsername_textChanged(ui->leUsername->text());
-    ui->lbF1->setVisible(ui->cbDatabase->count() == 0);
 }
 
 void Login::on_btnLogin_clicked()
 {
     QString connName = ui->cbDatabase->currentText();
     Db conn = fPreferences.getDatabase(connName);
-    DoubleDatabase fDD;
-    fDD.setDatabase(conn.dc_main_host, conn.dc_main_path, conn.dc_main_user, conn.dc_main_pass);
+    DoubleDatabase fDD(conn.dc_main_host, conn.dc_main_path, conn.dc_main_user, conn.dc_main_pass);
     if (!fDD.open()) {
         message_error(fDD.fLastError);
         return;
@@ -303,6 +197,8 @@ void Login::on_btnLogin_clicked()
     CacheBaseStruct::fWorkingDate = WORKING_DATE;
     BaseUIDX::fUserId = WORKING_USERID;
     EDateEditFirstDate = WORKING_DATE;
+    auto *gen = QRandomGenerator::global();
+    WORKING_SESSION_ID = gen->bounded(1, 999999999);
     CacheRights::fGroup = WORKING_USERGROUP;
     CacheUsersGroups ug;
     if (ug.get(WORKING_USERGROUP)) {
@@ -313,7 +209,6 @@ void Login::on_btnLogin_clicked()
     fDD.exec("select f_id, f_start from s_user_session where f_user=:f_user and f_end<'2000-01-01'");
     QString message;
     if (fDD.nextRow()) {
-        fPreferences.setLocal(def_session_id, fDD.getInt(0));
         message = QString("%1, %2<br>%3 %4<br>%5 %6")
                   .arg(tr("Welcome"))
                   .arg(WORKING_USERNAME)
@@ -324,13 +219,11 @@ void Login::on_btnLogin_clicked()
     } else {
         fDD[":f_user"] = WORKING_USERID;
         fDD[":f_start"] = QDateTime::currentDateTime();
-        int newSession = fDD.insert("s_user_session");
-        fPreferences.setLocal(def_session_id, newSession);
         message = QString("%1, %2<br>%3 %4 %5")
                   .arg(tr("Welcome"))
                   .arg(WORKING_USERNAME)
                   .arg(tr("Your session number is"))
-                  .arg(newSession)
+                  .arg(WORKING_SESSION_ID)
                   .arg(tr("started at right now"));
     }
     if (!fPreferences.getDb(def_user_auto_session).toBool()) {
@@ -354,12 +247,15 @@ void Login::on_btnLogin_clicked()
             fDD.insert("serv_years");
         }
     }
-    accept();
+    AppWebSocket::instance->setServerAddress(conn.dc_broadcast, conn.dc_main_host);
 }
 
 void Login::on_leUsername_textChanged(const QString &arg1)
 {
     QString connName = ui->cbDatabase->currentText();
+    if (connName.isEmpty()) {
+        return;
+    }
     Db conn = fPreferences.getDatabase(connName);
     DoubleDatabase db(conn.dc_main_host, conn.dc_main_path, conn.dc_main_user, conn.dc_main_pass);
     if (!db.open()) {
@@ -375,20 +271,6 @@ void Login::on_leUsername_textChanged(const QString &arg1)
         ui->lbFullName->clear();
     }
     db.close();
-}
-
-void Login::timeout()
-{
-    if (__s.value("db_direct_connection").toBool()) {
-        getDatabases();
-    } else {
-        QJsonObject jObj;
-        jObj["server"] = "who";
-        jObj["client"] = HOSTNAME + "." + fPreferences.hostUsername();
-        QJsonDocument jDoc(jObj);
-        QByteArray datagram = jDoc.toJson();
-        fUdpSocket.writeDatagram(datagram, QHostAddress::Broadcast, DATAGRAM_PORT);
-    }
 }
 
 void Login::on_btnCancel2_clicked()
@@ -507,25 +389,24 @@ void Login::on_btnLoginPin_clicked()
     fDD[":f_user"] = WORKING_USERID;
     fDD.exec("select f_id, f_start from s_user_session where f_user=:f_user and f_end<'2000-01-01'");
     QString message;
+    auto *gen = QRandomGenerator::global();
+    WORKING_SESSION_ID = gen->bounded(1, 999999999);
     if (fDD.nextRow()) {
-        fPreferences.setLocal(def_session_id, fDD.getInt(0));
         message = QString("%1, %2<br>%3 %4<br>%5 %6")
                   .arg(tr("Welcome"))
                   .arg(WORKING_USERNAME)
                   .arg(tr("Your session number is"))
-                  .arg(fDD.getInt(0))
+                  .arg(WORKING_SESSION_ID)
                   .arg(tr("started at"))
                   .arg(fDD.getDateTime(1).toString(def_date_time_format));
     } else {
         fDD[":f_user"] = WORKING_USERID;
         fDD[":f_start"] = QDateTime::currentDateTime();
-        int newSession = fDD.insert("s_user_session");
-        fPreferences.setLocal(def_session_id, newSession);
         message = QString("%1, %2<br>%3 %4 %5")
                   .arg(tr("Welcome"))
                   .arg(WORKING_USERNAME)
                   .arg(tr("Your session number is"))
-                  .arg(newSession)
+                  .arg(WORKING_SESSION_ID)
                   .arg(tr("started at right now"));
     }
     if (!fPreferences.getDb(def_user_auto_session).toBool()) {
@@ -605,4 +486,15 @@ void Login::on_btn0_clicked()
 void Login::on_btnClearPin_clicked()
 {
     ui->lePin->clear();
+}
+
+void Login::socketConnected()
+{
+    QJsonObject jo;
+    jo["command"] = "register_socket";
+    jo["socket_type"] = 1;
+    jo["database"] = __dd1Database;
+    jo["userid"] = WORKING_USERID;
+    AppWebSocket::instance->sendMessage(QJsonDocument(jo).toJson(QJsonDocument::Compact));
+    accept();
 }

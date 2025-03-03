@@ -17,6 +17,7 @@ DlgPrintTaxSM::DlgPrintTaxSM(int taxid, QWidget *parent) :
     fCardAmount = 0;
     fPrepaid = 0;
     fTaxID = taxid;
+    fPrintTax = new PrintTaxN("", 1025, "", "", "1234", "1234", this);
     if (debug_tax_number == 0) {
         unsigned int ms = static_cast<unsigned>(QDateTime::currentMSecsSinceEpoch());
         std::mt19937 gen(ms);
@@ -33,7 +34,7 @@ DlgPrintTaxSM::~DlgPrintTaxSM()
 void DlgPrintTaxSM::addGoods(const QString &dep, const QString &adgt, const QString &code, const QString &name,
                              double price, double qty)
 {
-    fPrintTax.addGoods(dep.toInt(), adgt, code, name, price, qty, 0.00);
+    fPrintTax->addGoods(dep.toInt(), adgt, code, name, price, qty, 0.00);
 }
 
 int DlgPrintTaxSM::exec()
@@ -98,9 +99,9 @@ void DlgPrintTaxSM::load()
 {
     fTimer.stop();
     TaxPoint tp = TaxHelper::fInstance->fTaxPoints[fTaxID];
-    fPrintTax.setParams(tp.ip, tp.port, tp.password);
+    fPrintTax->setParams(tp.ip, tp.port, tp.password, tp.opcode, tp.oppin, tp.extPos);
     QString inJson, outJson, err;
-    int result = fPrintTax.makeJsonAndPrint(fCardAmount, fPrepaid, inJson, outJson, err);
+    int result = fPrintTax->makeJsonAndPrint(fCardAmount, fPrepaid, inJson, outJson, err);
     DoubleDatabase v;
     v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
     v.open();
@@ -142,13 +143,12 @@ void DlgPrintTaxSM::load()
 void DlgPrintTaxSM::loadAdvance()
 {
     fTimer.stop();
-    fPrintTax.setParams(fPreferences.getDb(def_tax_address).toString(),
-                        fPreferences.getDb(def_tax_port).toInt(),
-                        fPreferences.getDb(def_tax_password).toString());
+    TaxPoint tp = TaxHelper::fInstance->fTaxPoints[fTaxID];
+    fPrintTax->setParams(tp.ip, tp.port, tp.password, tp.opcode, tp.oppin, tp.extPos);
     QString inJson;
     QString outJson;
     QString err;
-    int result = fPrintTax.printAdvanceJson(fCashAmount, fCardAmount, inJson, outJson, err);
+    int result = fPrintTax->printAdvanceJson(fCashAmount, fCardAmount, inJson, outJson, err);
     DoubleDatabase v;
     v.setDatabase(BaseUIDX::fAirHost, BaseUIDX::fAirDbName, BaseUIDX::fAirUser, BaseUIDX::fAirPass);
     v.open();
@@ -188,9 +188,8 @@ void DlgPrintTaxSM::loadAdvance()
 void DlgPrintTaxSM::loadTaxback()
 {
     fTimer.stop();
-    fPrintTax.setParams(fPreferences.getDb(def_tax_address).toString(),
-                        fPreferences.getDb(def_tax_port).toInt(),
-                        fPreferences.getDb(def_tax_password).toString());
+    TaxPoint tp = TaxHelper::fInstance->fTaxPoints[fTaxID];
+    fPrintTax->setParams(tp.ip, tp.port, tp.password, tp.opcode, tp.oppin, tp.extPos);
     QString inJson;
     QString outJson;
     QString err;
@@ -218,7 +217,7 @@ void DlgPrintTaxSM::loadTaxback()
             return;
         }
     }
-    result = fPrintTax.printTaxback(fTaxback, crn, inJson, outJson, err);
+    result = fPrintTax->printTaxback(fTaxback.toInt(), crn, inJson, outJson, err);
     v[":f_date"] = QDate::currentDate();
     v[":f_time"] = QTime::currentTime();
     v[":f_db"] = 1;

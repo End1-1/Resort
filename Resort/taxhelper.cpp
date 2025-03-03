@@ -25,6 +25,9 @@ void TaxHelper::init()
         t.port = dd.getInt("f_port");
         t.password = dd.getString("f_password");
         t.name = dd.getString("f_name");
+        t.opcode = dd.getString("f_opcode");
+        t.oppin = dd.getString("f_oppin");
+        t.extPos = dd.getString("f_extpos");
         fInstance->fTaxPoints[t.id] = t;
     }
     dd.exec(QString("select f_item, f_vatdept, f_novatdept, f_tax "

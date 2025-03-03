@@ -14,19 +14,20 @@
 #include "dlgadvanceentry.h"
 #include <QPlainTextEdit>
 
-static const QString voucher_query = "select m.f_id, m.f_source, m.f_res, m.f_inv, m.f_wdate, m.f_rdate, m.f_time, m.f_user, u.f_username, "
-                                     "m.f_room, m.f_guest, m.f_itemcode, i.f_en as f_itemname, m.f_finalname, m.f_amountamd, m.f_amountusd, m.f_usedprepaid, "
-                                     "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
-                                     "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
-                                     "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename, "
-                                     "m.f_session, m.f_fiscalmachine "
-                                     "from m_register m "
-                                     "left join users u on u.f_id=m.f_user "
-                                     "left join f_invoice_item i on i.f_id=m.f_itemcode "
-                                     "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
-                                     "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
-                                     "left join f_credit_card cc on cc.f_id=m.f_creditcard "
-                                     "left join f_vat_mode vm on vm.f_id=m.f_vatmode ";
+static const QString voucher_query =
+    "select m.f_id, m.f_source, m.f_res, m.f_inv, m.f_wdate, m.f_rdate, m.f_time, m.f_user, u.f_username, "
+    "m.f_room, m.f_guest, m.f_itemcode, i.f_en as f_itemname, m.f_finalname, m.f_amountamd, m.f_amountusd, m.f_usedprepaid, "
+    "m.f_amountvat, m.f_fiscal, m.f_paymentmode, pm.f_en as f_paymentmodename, m.f_creditcard, cc.f_name as f_creditcardname, "
+    "m.f_cityledger, cl.f_name as f_cityledgername, m.f_paymentcomment, m.f_dc, m.f_sign, m.f_doc, m.f_rec, m.f_finance, "
+    "m.f_remarks, m.f_canceled, m.f_cancelreason, m.f_canceluser, m.f_canceldate, m.f_side, m.f_rb, m.f_vatmode, vm.f_en as f_vatmodename, "
+    "m.f_session, m.f_fiscalmachine "
+    "from m_register m "
+    "left join users u on u.f_id=m.f_user "
+    "left join f_invoice_item i on i.f_id=m.f_itemcode "
+    "left join f_city_ledger cl on cl.f_id=m.f_cityledger "
+    "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
+    "left join f_credit_card cc on cc.f_id=m.f_creditcard "
+    "left join f_vat_mode vm on vm.f_id=m.f_vatmode ";
 
 DBMRegister::DBMRegister()
 {
@@ -34,7 +35,7 @@ DBMRegister::DBMRegister()
     fRDate = QDate::currentDate();
     fTime = QTime::currentTime();
     fUser = __preferences.getLocal(def_working_user_id).toUInt();
-    fSession = __preferences.getLocal(def_session_id).toInt();
+    fSession = 0;
     fRoom = 0;
     fItemCode = 0;
     fUsedPrepaid = 0;
@@ -566,7 +567,6 @@ void DBMRegister::init()
     leVatModeName = nullptr;
     leTaxCode = nullptr;
     ptRemarks = nullptr;
-
     fTc = new TrackControl(TRACK_VAUCHER);
 }
 
@@ -641,7 +641,7 @@ void DBMRegister::userNameChanged(const QString &s)
 void DBMRegister::wdateChanged(const QString &s)
 {
     Q_UNUSED(s);
-    EDateEdit *d = static_cast<EDateEdit*>(sender());
+    EDateEdit *d = static_cast<EDateEdit *>(sender());
     fWDate = d->date();
 }
 
@@ -750,6 +750,6 @@ void DBMRegister::fiscalChanged(const QString &s)
 
 void DBMRegister::remarksChanged()
 {
-    QPlainTextEdit *p = static_cast<QPlainTextEdit*>(sender());
+    QPlainTextEdit *p = static_cast<QPlainTextEdit *>(sender());
     fRemarks = p->toPlainText();
 }

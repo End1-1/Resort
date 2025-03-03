@@ -17,6 +17,7 @@
 #include "fcanceledreservations.h"
 #include "dlgconfigtaxserver.h"
 #include "freportbypayment.h"
+#include "appwebsocket.h"
 #include "cachetraveline.h"
 #include "fexpectedarrivals2.h"
 #include "wquickroomassignment.h"
@@ -32,7 +33,6 @@
 #include "wreportroom.h"
 #include "fexportreservation.h"
 #include "wcardexlist.h"
-#include "broadcast1.h"
 #include "fexpectedsimple.h"
 #include "ftaxreport.h"
 #include "dlgpostcharge.h"
@@ -135,7 +135,6 @@
 #include "rerestdishcomplex.h"
 #include "reroombed.h"
 #include "reroomcategoryrate.h"
-#include "wsyncinvoices.h"
 #include "finvoices.h"
 #include "waccinvoice.h"
 #include "frestauranttotal.h"
@@ -174,8 +173,7 @@
 
 MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    fCommand(nullptr)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->grTravelLine->hide();
@@ -205,12 +203,8 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     fTab = ui->tabWidget;
     connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     logout();
-    fSocket.setProxy(QNetworkProxy::NoProxy);
-    fCommand.setSocket( &fSocket);
-    connect( &fSocket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
-    connect( &fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
-    connect( &fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    connect( &fCommand, SIGNAL(parseCommand(QString)), this, SLOT(parseSocketCommand(QString)));
+    disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
+    connect(AppWebSocket::instance, &AppWebSocket::messageReceived, this, &MainWindow::parseSocketCommand);
     QShortcut *shortcut = new QShortcut(QKeySequence("F2"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(shortcutSlot()));
     QShortcut *shortcut12 = new QShortcut(QKeySequence("F12"), this);
@@ -237,9 +231,6 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    disconnect( &fSocket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-    disconnect( &fSocket, SIGNAL(error(QAbstractSocket::SocketError)), this,
-                SLOT(socketError(QAbstractSocket::SocketError)));
     delete ui;
 }
 
@@ -277,56 +268,17 @@ void MainWindow::on_actionDatabases_triggered()
 
 void MainWindow::login()
 {
+    if (WORKING_USERID > 0) {
+        if (message_confirm(tr("Confirm to logout")) != QDialog::Accepted) {
+            return;
+        }
+    }
+    logout();
     Login l(this);
     if (l.exec() == QDialog::Rejected) {
         return;
     }
-    logout();
     Db db = fPreferences.getDatabase(fDbName);
-    fSocket.disconnectFromHost();
-    fSocket.connectToHost(AppConfig::fServerAddress, 1250);
-    if (fSocket.waitForConnected()) {
-        QString data = QString("{\"db\" : {\"database\" : \"%1\", \"user\" : \"%2\", \"password\" : \"password\"}, "
-                               "\"command\" : {\"command\": \"identify\"}}")
-                       .arg(db.dc_main_path)
-                       .arg(WORKING_USERNAME);
-        int size = data.toUtf8().length();
-        QByteArray dataToSend;
-        dataToSend.append(reinterpret_cast<const char *>( &size), sizeof(size));
-        dataToSend.append(data.toUtf8(), data.toUtf8().length());
-        fSocket.write(dataToSend, dataToSend.length());
-        fSocket.flush();
-    } else {
-        //TODO LINUX BROADCAST
-        //        message_error(QString("Cannot connect to broadcast server, force logout")
-        //                      + QString("<br>") + fSocket.errorString() +
-        //                      "<br>Host: " + AppConfig::fServerAddress);
-        //        logout();
-        //        return;
-    }
-    fSocketDraft.disconnectFromHost();
-    fSocketDraft.setProxy(QNetworkProxy::NoProxy);
-    fSocketDraft.connectToHost(AppConfig::fServerAddress, 1250);
-    if (fSocketDraft.waitForConnected()) {
-        QString data = QString("{\"db\" : {\"database\" : \"%1\", \"user\" : \"%2\", \"password\" : \"password\"}, "
-                               "\"command\" : {\"command\": \"draft\"}}")
-                       .arg(db.dc_main_path)
-                       .arg(WORKING_USERNAME);
-        int size = data.toUtf8().length();
-        QByteArray dataToSend;
-        dataToSend.append(reinterpret_cast<const char *>( &size), sizeof(size));
-        dataToSend.append(data.toUtf8(), data.toUtf8().length());
-        fSocketDraft.write(dataToSend, dataToSend.length());
-        fSocketDraft.flush();
-    } else {
-        Broadcast1::SOCKET_CONNECTED = 0;
-        //TODO: LINUX BROADCAST
-        //        message_error(QString("Cannot connect to broadcast server, force logout")
-        //                      + QString("<br>") + fSocket.errorString()
-        //                      + "<br>Host: " + AppConfig::fServerAddress);
-        //        logout();
-        //        return;
-    }
     enableMainMenu(true);
     WWelcome *ww = addTab<WWelcome>();
     ww->setSlogan(fPreferences.getLocalString("Slogan"));
@@ -365,6 +317,7 @@ void MainWindow::login()
         }
     }
     ui->grTravelLine->setVisible(ui->lstTravelLine->count() > 0);
+    connect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
 }
 
 void MainWindow::addTabWidget(BaseWidget *widget)
@@ -478,87 +431,64 @@ void MainWindow::timeout2()
     fStateOfSecondDb->setVisible(fTimeErrLableValue);
 }
 
-void MainWindow::socketReadyRead()
-{
-    QTcpSocket *s = static_cast<QTcpSocket *>(sender());
-    fCommand.readBytes(s->readAll());
-}
-
 void MainWindow::parseSocketCommand(const QString &command)
 {
-    writelog("ManiWindow: start parsesocket command");
     QJsonDocument jDoc = QJsonDocument::fromJson(command.toUtf8());
     QJsonObject jObj = jDoc.object();
-    QString cmd = jObj.value("command").toString();
-    if (cmd == "refresh_reservations") {
-        //  Remove after some time
-        //        refreshReservationList(); Bye, tormoz
-    } else if (cmd == "update_cache") {
-        int cacheId = jObj.value("cache").toInt();
-        QString item = jObj.value("item").toString();
-        if (cacheId == cache_travelline) {
-            if (r__(cr__travelline)) {
-                QListWidgetItem *litem = new QListWidgetItem(ui->lstTravelLine);
-                litem->setText(item);
-                ui->lstTravelLine->addItem(litem);
-                ui->grTravelLine->show();
-                return;
+    if (jObj["command"].toString() == "hotel_cache_update") {
+        if (jObj.contains("cache")) {
+            int cacheId = jObj.value("cache").toInt();
+            QString item = jObj.value("item").toString();
+            if (cacheId == cache_travelline) {
+                if (r__(cr__travelline)) {
+                    QListWidgetItem *litem = new QListWidgetItem(ui->lstTravelLine);
+                    litem->setText(item);
+                    ui->lstTravelLine->addItem(litem);
+                    ui->grTravelLine->show();
+                    return;
+                }
+            }
+            emit updateCache(cacheId, item);
+        } else {
+            QVariantMap m = jObj.toVariantMap();
+            for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
+                BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
+                if (!b) {
+                    return;
+                }
+                b->handleBroadcast(m);
             }
         }
-        emit updateCache(cacheId, item);
-    } else if (cmd == "session") {
-        AppConfig::fAppSession = jObj["session"].toString();
-    } else {
-        QVariantMap m = jObj.toVariantMap();
-        for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
-            BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
-            if (!b) {
-                return;
+        if (jObj.contains("deliver_windows")) {
+            QVariantMap m = jObj.toVariantMap();
+            for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
+                BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
+                if (!b) {
+                    return;
+                }
+                b->handleBroadcast(m);
             }
-            b->handleBroadcast(m);
         }
     }
-    writelog("ManiWindow: end parsesocket command");
-}
-
-void MainWindow::socketError(QAbstractSocket::SocketError f_cityLedger)
-{
-    Broadcast1::SOCKET_CONNECTED = 0;
-    //TODO: LINUX BROADCAST
-    //    Q_UNUSED(f_cityLedger)
-    //    if (fTimer.isActive()) {
-    //        DlgExitByVersion::exit(tr("Lost connection to broadcast server, force logout") + "<br>" + fSocket.errorString());
-    //        logout();
-    //    }
-}
-
-void MainWindow::socketDisconnected()
-{
-    Broadcast1::SOCKET_CONNECTED = 0;
-    //TODO: LINUX BROADCAST
-    //    if (fTimer.isActive()) {
-    //        message_error(tr("Lost connection to broadcast server, force logout"));
-    //        logout();
-    //    }
 }
 
 void MainWindow::logout()
 {
+    fPreferences.set(def_working_user_id, 0);
+    disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
     fTimer.stop();
     disableMainMenu();
     while (ui->tabWidget->count() > 0) {
         tabCloseRequested(0);
     }
     CacheOne::clearAll();
-    QString session = QString("{\"command\":{\"command\":\"logout\",\"session\":\"%1\"}}").arg(AppConfig::fAppSession);
-    int s = session.length();
-    QByteArray bs;
-    bs.append(reinterpret_cast<const char *>( &s), sizeof(s));
-    bs.append(session);
-    fSocket.write(bs.data(), bs.length());
-    fSocket.flush();
-    fSocket.waitForBytesWritten();
-    fSocket.close();
+    QJsonObject jo;
+    jo["command"] = "unregister_socket";
+    jo["socket_type"] = 1;
+    jo["database"] = __dd1Database;
+    jo["userid"] = WORKING_USERID;
+    AppWebSocket::instance->sendMessage(QJsonDocument(jo).toJson(QJsonDocument::Compact));
+    AppWebSocket::instance->disconnectFromServer();
     ui->actionChange_password->setVisible(false);
     fStatusLabelLeft->setText(tr("Not connected"));
     fStatusLabelRight->clear();
@@ -716,7 +646,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionPreferences->setVisible(r__(cr__global_config));
     ui->actionUpdate_program->setVisible(r__(cr__update_program));
     ui->actionReport_buillder->setVisible(WORKING_USERGROUP == 1);
-    ui->actionExport_invoices->setVisible(r__(cr__bookkeeper_sync) && fPreferences.getDb("HC").toInt() > 0);
     ui->actionSynchronization->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_event_etc));
     ui->actionExport_back->setVisible(fPreferences.getDb("HC").toBool() && r__(cr__export_active_reservations));
     ui->actionExport_active_reservations->setVisible(fPreferences.getDb("HC").toBool()
@@ -1781,6 +1710,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     QMainWindow::mouseMoveEvent(event);
 }
 
+void MainWindow::websocketDisconnected()
+{
+    DlgExitByVersion::exit("Server connection lost, quitting");
+}
+
 void MainWindow::shortcutFullScreen()
 {
     if (isFullScreen()) {
@@ -1813,11 +1747,6 @@ void MainWindow::customReport()
 void MainWindow::on_actionCardex_analysis_triggered()
 {
     FCardexSales::open();
-}
-
-void MainWindow::on_actionExport_invoices_triggered()
-{
-    WSyncInvoices::open();
 }
 
 void MainWindow::on_actionComplimentary_comment_triggered()

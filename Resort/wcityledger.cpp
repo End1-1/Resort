@@ -22,9 +22,9 @@ void WCityLedger::callback(int sel, const QString &code)
 {
     Q_UNUSED(code);
     switch (sel) {
-    case hint_cl:
-        setBalance();
-        break;
+        case hint_cl:
+            setBalance();
+            break;
     }
 }
 
@@ -71,16 +71,8 @@ void WCityLedger::setBalance()
     }
     DoubleDatabase dd;
     dd[":f_cityledger"] = ui->leCL->asInt();
-#ifdef _METROPOL_
     dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
              where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ");
-#else
-    if (!dd.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-             m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as f_amountamd from m_register m \
-            where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ")) {
-        message_error(dd.fLastError);
-    }
-#endif
     if (dd.nextRow()) {
         ui->leBalance->setDouble(dd.getDouble(0));
     }

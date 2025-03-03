@@ -33,21 +33,20 @@ void WWelcome::loadInfo()
     fDD[":f_month1"] = QDate::currentDate().month();
     fDD[":f_month2"] = QDate::currentDate().addDays(1).month();
     fDD.exec("select r.f_room, concat(g.f_firstName, ' ', g.f_lastName), g.f_dateBirth "
-               "from f_reservation_guests rg "
-               "left join f_reservation r on r.f_id=rg.f_reservation "
-               "left join f_guests g on g.f_id=rg.f_guest "
-               "where r.f_state=:f_state "
-               "and ((extract(day from g.f_dateBirth) = :f_day1 and extract(month from g.f_dateBirth)=:f_month1) "
-                "or  (extract(day from g.f_dateBirth) = :f_day2 and extract(month from g.f_dateBirth)=:f_month2)) ");
+             "from f_reservation_guests rg "
+             "left join f_reservation r on r.f_id=rg.f_reservation "
+             "left join f_guests g on g.f_id=rg.f_guest "
+             "where r.f_state=:f_state "
+             "and ((extract(day from g.f_dateBirth) = :f_day1 and extract(month from g.f_dateBirth)=:f_month1) "
+             "or  (extract(day from g.f_dateBirth) = :f_day2 and extract(month from g.f_dateBirth)=:f_month2)) ");
     Utils::fillTableWithData(ui->tblBirthDay, fDD.fDbRows);
-
     Utils::tableSetColumnWidths(ui->tblArrival, ui->tblArrival->columnCount(), 50, 150, 50, 100);
     fDD[":f_startDate"] = QDate::currentDate();
     fDD[":f_state"] = RESERVE_RESERVE;
     fDD.exec("select r.f_room, concat(g.f_firstName, ' ', g.f_lastName), r.f_man+r.f_woman+r.f_child, r.f_arrivalTime "
-               "from f_reservation r "
-               "left join f_guests g on g.f_id=r.f_guest "
-               "where r.f_startDate=:f_startDate and r.f_state=:f_state and f_pickup=1 ");
+             "from f_reservation r "
+             "left join f_guests g on g.f_id=r.f_guest "
+             "where r.f_startDate=:f_startDate and r.f_state=:f_state and f_pickup=1 ");
     Utils::fillTableWithData(ui->tblArrival, fDD.fDbRows);
 }
 
@@ -61,7 +60,6 @@ WWelcome::WWelcome(QWidget *parent) :
         ui->lbLogo->setPixmap(QPixmap("logo.png"));
     }
     configureLabels();
-
     ui->btnRoomChart->setVisible(r__(cr__room_chart));
     //ui->btnNewRoomChart->setVisible(r__(cr__room_chart));
     ui->btnNewRoomChart->setVisible(false);
@@ -86,10 +84,10 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnCashReportSummary->setVisible(r__(cr__report_cash));
     ui->btnCardexAnalysis->setVisible(r__(cr__cardex_analysis));
     ui->btnVauchers->setVisible(r__(cr__report_vauchers));
-    ui->btnExportInvoices->setVisible(r__(cr__bookkeeper_sync));
     ui->btnExportActiveReservation->setVisible(r__(cr__export_active_reservations));
     ui->btnExportRestaurant->setVisible(r__(cr__export_event_etc));
-    ui->btnCallHistory->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin) || r__(cr__call_tout));
+    ui->btnCallHistory->setVisible(r__(cr__call_in) || r__(cr__call_out) || r__(cr__call_int) || r__(cr__call_tin)
+                                   || r__(cr__call_tout));
     ui->btnRestaurant->setVisible(r__(cr__report_restaurant));
     ui->btnRemarks->setVisible(r__(cr__remarks));
     ui->tabInfo->setVisible(r__(cr__airpickup_birthday));
@@ -104,8 +102,7 @@ WWelcome::WWelcome(QWidget *parent) :
     ui->btnArrivalsSimple->setVisible(r__(cr__expected_arrivals_simple));
     ui->btnDeparutersSimple->setVisible(r__(cr__expeced_departures_simple));
     loadInfo();
-
-    connect(&fTimer, SIGNAL(timeout()), SLOT(loadInfo()));
+    connect( &fTimer, SIGNAL(timeout()), SLOT(loadInfo()));
     fTimer.start(30000);
 }
 
@@ -121,19 +118,15 @@ void WWelcome::setSlogan(const QString &slogan)
 
 void WWelcome::handleBroadcast(const QMap<QString, QVariant> &data)
 {
-    int cmd = data["command"].toInt();
+    int cmd = data["subcommand"].toInt();
     switch (cmd) {
-    case cmd_global_settings:
-    case cmd_end_of_day:
-        //message_info(tr("The global configuration of program was modified, you need to logout then login again to load new configuration"));
-        //fMainWindow->logout();
-        DlgExitByVersion::exit(tr("The global configuration of program was modified, you need to close program, then login again to load new configuration"));
-        break;
-    case cmd_update_program: {
-        QProcess *p = new QProcess();
-        p->start("./updater.exe");
-        break;
-    }
+        case cmd_global_settings:
+        case cmd_end_of_day:
+            DlgExitByVersion::exit(
+                tr("The global configuration of program was modified, <br>"
+                   "you need to close program, <br>"
+                   "then login again to load new configuration"));
+            break;
     }
 }
 
@@ -147,7 +140,7 @@ void WWelcome::showEvent(QShowEvent *event)
     BaseWidget::showEvent(event);
     QObjectList ol = ui->w1->children();
     foreach (QObject *o, ol) {
-        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        EToolbarButton *t = dynamic_cast<EToolbarButton *>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
             if (t->property("config").toBool()) {
@@ -160,7 +153,7 @@ void WWelcome::showEvent(QShowEvent *event)
     int cnt = ui->wv1->width() / ui->btnCheckoutInvoices->width();
     int cntt = 0;
     foreach (QObject *o, ol) {
-        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        EToolbarButton *t = dynamic_cast<EToolbarButton *>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
             if (t->isVisible()) {
@@ -179,7 +172,7 @@ void WWelcome::showEvent(QShowEvent *event)
     ui->wl2->addStretch();
     ol = ui->w3->children();
     foreach (QObject *o, ol) {
-        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        EToolbarButton *t = dynamic_cast<EToolbarButton *>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
             if (t->isVisible()) {
@@ -197,7 +190,7 @@ void WWelcome::showEvent(QShowEvent *event)
     }
     ol = ui->w4->children();
     foreach (QObject *o, ol) {
-        EToolbarButton *t = dynamic_cast<EToolbarButton*>(o);
+        EToolbarButton *t = dynamic_cast<EToolbarButton *>(o);
         if (t) {
             t->setVisible(t->isVisible() && (fPreferences.getUser("welbtn_" + t->text()).toInt() == 1));
             if (t->property("config").toBool()) {
@@ -243,7 +236,7 @@ void WWelcome::on_btnDiscount_clicked()
 void WWelcome::on_btnNewReservation_clicked()
 {
     WReservation *w = nullptr;
-    QList<CacheRoom*> rooms;
+    QList<CacheRoom *> rooms;
     rooms.append(nullptr);
     w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
@@ -281,7 +274,7 @@ void WWelcome::on_btnContacts_clicked()
 
 void WWelcome::on_btnCallHistory_clicked()
 {
-   fMainWindow->on_actionHistory_of_calls_triggered();
+    fMainWindow->on_actionHistory_of_calls_triggered();
 }
 
 void WWelcome::on_btnCityLedgerDetailedBalance_clicked()
@@ -322,11 +315,6 @@ void WWelcome::on_btnCardexAnalysis_clicked()
 void WWelcome::on_btnVauchers_clicked()
 {
     fMainWindow->on_actionVauchers_triggered();
-}
-
-void WWelcome::on_btnExportInvoices_clicked()
-{
-    fMainWindow->on_actionExport_invoices_triggered();
 }
 
 void WWelcome::on_btnExportRestaurant_clicked()

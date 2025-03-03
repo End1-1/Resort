@@ -4,7 +4,8 @@
 #include "basewidget.h"
 #include <QTime>
 
-namespace Ui {
+namespace Ui
+{
 class WWelcome;
 }
 
@@ -43,7 +44,6 @@ private slots:
     void on_btnCashReportDetailed_clicked();
     void on_btnCardexAnalysis_clicked();
     void on_btnVauchers_clicked();
-    void on_btnExportInvoices_clicked();
     void on_btnExportRestaurant_clicked();
     void on_btnExportActiveReservation_clicked();
     void on_btnButtonsConfig_clicked();

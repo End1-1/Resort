@@ -18,24 +18,21 @@ DlgDiscount::DlgDiscount(QWidget *parent) :
     ui->leInvoice->setVisible(false);
     ui->leReservation->setVisible(false);
     ui->leValue->setValidator(new QDoubleValidator(0, 999999999, 2));
-
     ui->leTypeCode->setSelector(this, cache(cid_invoice_item), ui->leType);
     ui->leTypeCode->setInitialValue(fPreferences.getDb(def_invoice_default_discount_id).toString());
     ui->leTypeCode->fFieldFilter["f_group"] << "4";
-
     ui->leRoomCode->setSelector(this, cache(cid_active_room), ui->leRoomCode, HINT_ROOM);
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName, HINT_CL);
-
     sideChanged(true);
     fTrackControl = new TrackControl(TRACK_RESERVATION);
     fTrackControl->addWidget(ui->deDate, "Date")
-            .addWidget(ui->leCLCode, "City ledger")
-            .addWidget(ui->leValue, "Discount amount")
-            .addWidget(ui->leFinalAmount, "Final amount")
-            .addWidget(ui->leGuest, "Guest")
-            .addWidget(ui->leRoomCode, "Room")
-            .addWidget(ui->rbGuest, "Guest/Company")
-            .addWidget(ui->peRemarks, "Remarks");
+    .addWidget(ui->leCLCode, "City ledger")
+    .addWidget(ui->leValue, "Discount amount")
+    .addWidget(ui->leFinalAmount, "Final amount")
+    .addWidget(ui->leGuest, "Guest")
+    .addWidget(ui->leRoomCode, "Room")
+    .addWidget(ui->rbGuest, "Guest/Company")
+    .addWidget(ui->peRemarks, "Remarks");
 }
 
 DlgDiscount::~DlgDiscount()
@@ -46,46 +43,38 @@ DlgDiscount::~DlgDiscount()
 void DlgDiscount::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_ROOM: {
-        CacheActiveRoom c;
-        if (c.get(code)) {
-            DoubleDatabase fDD;
-            fDD[":invoice"] = c.fInvoice();
-            ui->leInvoice->setText(c.fInvoice());
-            ui->leReservation->setText(c.fCode());
-            fDD.exec("select l.f_amount, r.f_amount "
-                       "from m_register i "
-                       "left join (select f_inv, sum(f_amountAmd*f_sign)as f_amount from m_register where f_inv=:invoice and f_side=0 and f_finance=1 and f_canceled=0 group by 1) l on l.f_inv=i.f_inv "
-                       "left join (select f_inv, sum(f_amountAmd*f_sign)as f_amount from m_register where f_inv=:invoice and f_side=1 and f_finance=1 and f_canceled=0 group by 1) r on r.f_inv=i.f_inv "
-                       "where i.f_inv=:invoice ");
-            if (fDD.nextRow()) {
-                setParams(c.fRoomCode(), fDD.getDouble(0), fDD.getDouble(1));
-            } else {
-                message_error(tr("No active invoice for this room"));
+        case HINT_ROOM: {
+            CacheActiveRoom c;
+            if (c.get(code)) {
+                DoubleDatabase fDD;
+                fDD[":invoice"] = c.fInvoice();
+                ui->leInvoice->setText(c.fInvoice());
+                ui->leReservation->setText(c.fCode());
+                fDD.exec("select l.f_amount, r.f_amount "
+                         "from m_register i "
+                         "left join (select f_inv, sum(f_amountAmd*f_sign)as f_amount from m_register where f_inv=:invoice and f_side=0 and f_finance=1 and f_canceled=0 group by 1) l on l.f_inv=i.f_inv "
+                         "left join (select f_inv, sum(f_amountAmd*f_sign)as f_amount from m_register where f_inv=:invoice and f_side=1 and f_finance=1 and f_canceled=0 group by 1) r on r.f_inv=i.f_inv "
+                         "where i.f_inv=:invoice ");
+                if (fDD.nextRow()) {
+                    setParams(c.fRoomCode(), fDD.getDouble(0), fDD.getDouble(1));
+                } else {
+                    message_error(tr("No active invoice for this room"));
+                }
             }
+            break;
         }
-        break;
-    }
-    case HINT_CL: {
-        DoubleDatabase dd;
-        dd[":f_cityledger"] = ui->leCLCode->asInt();
-#ifdef _METROPOL_
-        dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
-                 where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ");
-#else
-        if (!dd.exec("select sum(if(m.f_source in ('CH', 'PS', 'PE', 'RF', 'RM'), m.f_amountamd, if(m.f_source in ('RV','CR', 'AV', 'DS'), \
-                 m.f_amountAmd*m.f_sign*-1, m.f_amountAmd*m.f_sign*1))) as f_amountamd from m_register m \
-                where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ")) {
-            message_error(dd.fLastError);
+        case HINT_CL: {
+            DoubleDatabase dd;
+            dd[":f_cityledger"] = ui->leCLCode->asInt();
+            dd.exec("select sum(m.f_amountamd*f_sign) from m_register m \
+                where f_cityLedger=:f_cityledger and f_canceled=0 and f_finance=1 ");
+            if (dd.nextRow()) {
+                ui->leAmount->setDouble(dd.getDouble(0));
+            } else {
+                ui->leAmount->setDouble(0);
+            }
+            break;
         }
-#endif
-        if (dd.nextRow()) {
-            ui->leAmount->setDouble(dd.getDouble(0));
-        } else {
-            ui->leAmount->setDouble(0);
-        }
-        break;
-    }
     }
 }
 
@@ -192,10 +181,10 @@ void DlgDiscount::on_btnOk_clicked()
         return;
     }
     // may be this is remove
-//    if (ui->leFinalAmount->asDouble() < -0.001 && ui->rbGuest->isChecked()) {
-//        message_error(tr("You cannot to do this :)"));
-//        return;
-//    }
+    //    if (ui->leFinalAmount->asDouble() < -0.001 && ui->rbGuest->isChecked()) {
+    //        message_error(tr("You cannot to do this :)"));
+    //        return;
+    //    }
     bool isNew = true;
     DoubleDatabase fDD;
     fDD.startTransaction();
@@ -233,18 +222,17 @@ void DlgDiscount::on_btnOk_clicked()
     fDD[":f_side"] = 0;
     fDD.update("m_register", where_id(ap(ui->leVaucher->text())));
     fDD.commit();
-
     QString msg = isNew ? "New Discount" : "Discount modified";
     msg += " " + ui->leVaucher->text();
     QString value = ui->deDate->text() + "/" + ui->leRoomCode->text()
-            + "/" + ui->leGuest->text() + "/" + ui->leAmount->text()
-            + "/" + ui->leCLName->text() + "/" + ui->leType->text();
+                    + "/" + ui->leGuest->text() + "/" + ui->leAmount->text()
+                    + "/" + ui->leCLName->text() + "/" + ui->leType->text();
     fTrackControl->fInvoice = ui->leInvoice->text();
     fTrackControl->fReservation = ui->leReservation->text();
     fTrackControl->fRecord = ui->leVaucher->text();
     fTrackControl->insert(msg, value, "");
     fTrackControl->insert("Discount", float_str(ui->leAmount->asDouble(), 2),
-                              QString("%1AMD, Final amount: %2AMD").arg(ui->leValue->asDouble()).arg(ui->leFinalAmount->text()));
+                          QString("%1AMD, Final amount: %2AMD").arg(ui->leValue->asDouble()).arg(ui->leFinalAmount->text()));
     ui->btnOk->setEnabled(false);
     ui->btnPrint->setEnabled(true);
 }

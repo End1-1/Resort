@@ -4,7 +4,8 @@
 #include "basewidget.h"
 #include <QListWidgetItem>
 
-namespace Ui {
+namespace Ui
+{
 class WGlobalDbConfig;
 }
 
@@ -41,13 +42,9 @@ private slots:
     void on_lwrpGroups_currentRowChanged(int currentRow);
     void on_lwrpReports_currentRowChanged(int currentRow);
     void on_chDebug_clicked(bool checked);
-
     void on_btnAddRoomType_clicked();
-
     void on_btnRemoveRoomType_clicked();
-
     void on_btnAddRatePlan_clicked();
-
     void on_btnRemoveRatePlan_clicked();
 
 private:

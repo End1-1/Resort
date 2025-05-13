@@ -1,6 +1,7 @@
 #include "wglobaldbconfig.h"
 #include "ui_wglobaldbconfig.h"
 #include "message.h"
+#include "logging.h"
 #include "defrest.h"
 #include "cacheresthall.h"
 #include "dlgeditservtax.h"
@@ -275,8 +276,7 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     .addWidget(ui->chAutoSession, ui->lbAutoSession->text())
     .addWidget(ui->leRemovalVoucherId, "Removal voucher id")
     .addWidget(ui->chPrintTaxAfterReceipt, "Print tax after receipt")
-    .addWidget(ui->chDebug, "Debug mode")
-    ;
+    .addWidget(ui->chDebug, "Debug mode");
     getCompSettings();
     getAccess();
     getDatabases();

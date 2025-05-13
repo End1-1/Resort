@@ -9,11 +9,10 @@ class AppWebSocket : public QObject
 {
     Q_OBJECT
 public:
-    enum ConnectionState {disconnected = 0, connecting, connected};
 
     explicit AppWebSocket(QObject *parent = nullptr);
 
-    ConnectionState mConnectionState;
+    QAbstractSocket::SocketState connectionState() const;
 
     static AppWebSocket *instance;
 

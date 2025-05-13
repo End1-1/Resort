@@ -297,7 +297,9 @@ void MainWindow::login()
     //btnMenu->show();
     //ui->tabWidget->setCornerWidget(btnMenu, Qt::TopLeftCorner);
 #ifndef QT_DEBUG
-    logEnabled = fPreferences.getDb(def_debug_mode).toInt() > 0;
+    if (!logEnabled) {
+        logEnabled = fPreferences.getDb(def_debug_mode).toInt() > 0;
+    }
 #endif
     TaxHelper::init();
     DoubleDatabase dd;

@@ -36,6 +36,7 @@ SOURCES += main.cpp\
     ../Filter/fforecastoccupancycategoryreal.cpp \
     ../Filter/fincompleteguestsnames.cpp \
     ../Filter/finhouseguestfuture.cpp \
+    ../Filter/frestguestview.cpp \
     ../Filter/froomcatsale.cpp \
     ../Filter/froomstates.cpp \
     ../Filter/ftaxreport.cpp \
@@ -456,6 +457,7 @@ HEADERS  += mainwindow.h \
     ../Filter/fforecastoccupancycategoryreal.h \
     ../Filter/fincompleteguestsnames.h \
     ../Filter/finhouseguestfuture.h \
+    ../Filter/frestguestview.h \
     ../Filter/froomcatsale.h \
     ../Filter/froomstates.h \
     ../Filter/ftaxreport.h \
@@ -867,6 +869,7 @@ FORMS    += mainwindow.ui \
     ../Filter/fforecastoccupancycategoryreal.ui \
     ../Filter/fincompleteguestsnames.ui \
     ../Filter/finhouseguestfuture.ui \
+    ../Filter/frestguestview.ui \
     ../Filter/froomcatsale.ui \
     ../Filter/froomstates.ui \
     ../Filter/ftaxreport.ui \
@@ -1148,7 +1151,7 @@ INCLUDEPATH += C:/Soft/OpenSSLWin64/include/openssl
 INCLUDEPATH += C:/projects/NewTax/Src
 
 
-include(C:/projects/QXlsx/QXlsx/QXlsx.pri)
+include(C:/projects/QXlsx/QXlsx.pri)
 
 DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"

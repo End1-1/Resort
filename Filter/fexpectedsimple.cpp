@@ -10,9 +10,7 @@ FExpectedSimple::FExpectedSimple(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("Expected arrivals / simple"),
                                      ":/images/arrival.png");
     connect(ui->wd, SIGNAL(changed()), this, SLOT(refresh()));
-#ifndef _METROPOL_
     ui->wd->setVisible(false);
-#endif
 }
 
 FExpectedSimple::~FExpectedSimple()
@@ -24,14 +22,14 @@ void FExpectedSimple::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "", tr("Room"))
-            .setColumn(120, "", tr("Nation"))
-            .setColumn(70, "", tr("Guests"))
-            .setColumn(70, "", tr("Adults"))
-            .setColumn(70, "", tr("Childs"))
-            .setColumn(110, "", tr("Entry"))
-            .setColumn(110, "", tr("Departure"))
-            .setColumn(200, "", tr("Cardex"))
-            .setColumn(300, "", tr("Remarks"));
+    .setColumn(120, "", tr("Nation"))
+    .setColumn(70, "", tr("Guests"))
+    .setColumn(70, "", tr("Adults"))
+    .setColumn(70, "", tr("Childs"))
+    .setColumn(110, "", tr("Entry"))
+    .setColumn(110, "", tr("Departure"))
+    .setColumn(200, "", tr("Cardex"))
+    .setColumn(300, "", tr("Remarks"));
     rg->fModel->setSqlQuery("select rm.f_short, n.f_name, r.f_man+r.f_woman + r.f_child, "
                             "r.f_man+r.f_woman, r.f_child, "
                             "r.f_startdate, r.f_enddate, ca.f_name, r.f_remarks "

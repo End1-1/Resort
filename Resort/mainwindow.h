@@ -29,7 +29,7 @@ public:
     void addTabWidget(BaseWidget *widget);
     void setCurrentWidget(QWidget *w);
     void configureLabels();
-    QTabWidget *fTab;
+    QTabWidget* fTab;
     void hideMenu();
 
 public slots:
@@ -196,22 +196,24 @@ private slots:
 
     void on_actionIncomplete_guests_names_triggered();
 
+    void on_actionArrival_Departures_for_restaurant_triggered();
+
 private:
     Listener fServer2Listener;
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     QTimer fTimer;
     QTimer fTimeErrLabel;
     bool fTimeErrLableValue;
     bool fTouchscreen;
     QString actionTitle(QObject *a);
-    QLabel *fStatusLabelLeft;
-    QLabel *fStatusLabelRight;
-    QLabel *fStateOfSecondDb;
+    QLabel* fStatusLabelLeft;
+    QLabel* fStatusLabelRight;
+    QLabel* fStateOfSecondDb;
     CacheOne fCacheOne;
     void lock();
     void enableMainMenu(bool value);
     void disableMainMenu();
-    QMap<QAction *, int> fCustomReports;
+    QMap<QAction*, int> fCustomReports;
 
 signals:
     void updateCache(int cache, const QString &code);

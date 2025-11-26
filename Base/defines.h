@@ -37,7 +37,6 @@
 
 #define def_no_tracking_changes "No tracking changes"
 #define def_working_day "Working date"
-#define def_session_id "User session id"
 #define def_user_auto_session "User auto session"
 #define def_default_extra_bed "Default extra bed"
 #define def_room_charge_id "Room charge id"

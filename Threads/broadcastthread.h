@@ -1,31 +1,24 @@
 #ifndef BROADCASTTHREAD_H
 #define BROADCASTTHREAD_H
 
-#include "objectthread.h"
+#include <QObject>
 
 #define cmd_end_of_day 1
 #define cmd_update_cache 2
 #define cmd_global_settings 3
-#define cmd_update_program 4
 
-class QTcpSocket;
 class MainWindow;
 
-class BroadcastThread : public ObjectThread
+class BroadcastThread : public QObject
 {
 public:
-    BroadcastThread(const QString &data);
-    static void cmdRefreshCache(int cache, const QString &item);
+    explicit BroadcastThread(QObject *parent = nullptr);
+    static void cmdRefreshCache(int cache, const QString &item, const QString &additional = "");
     static void cmdCommand(int command, const QMap<QString, QString> &params);
-    static void sendData(const QString &data);
     static MainWindow *mMainWindow;
 
-public slots:
-    virtual void process() override;
-
 private:
-    QByteArray fData;
-    QTcpSocket *fSocket;
+    QString fData;
 };
 
 #endif // BROADCASTTHREAD_H

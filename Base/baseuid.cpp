@@ -124,8 +124,7 @@ DONE:
 
 QString BaseUIDX::INTID(const QString &prefix)
 {
-    DoubleDatabase db;
-    db.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass);
+    DoubleDatabase db(fAirHost, fAirDbName, fAirUser, fAirPass);
     int totaltrynum = 0;
     bool done = false;
     QString result;

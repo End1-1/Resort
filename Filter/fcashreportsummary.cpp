@@ -13,12 +13,13 @@ FCashReportSummary::FCashReportSummary(QWidget *parent) :
     ui->deEnd->setDate(WORKING_DATE.addDays(-1));
     ui->leOperator->setSelector(this, cache(cid_users), ui->leOperatorName, 0);
     fQuery = "select  p.f_en, m.f_paymentComment, "
-             "sum(m.f_amountAmd), sum(m.f_amountAmd / m.f_amountUsd) "
+             "if(m.f_source='RF', -sum(m.f_amountAmd), sum(m.f_amountAmd)), "
+             "if(m.f_source='RF', -sum(m.f_amountAmd / m.f_amountUsd), sum(m.f_amountAmd / m.f_amountUsd)) "
              "from m_register m "
              "left join users u on u.f_id=m.f_user "
              "left join f_payment_type p on p.f_id=m.f_paymentMode "
              "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
-             "and m.f_finance=1 and m.f_paymentMode in (1,2,3,4) and (((m.f_source in :source) :orbr) :orch)"
+             "and m.f_finance=1 and (m.f_SOURCE in :source :orch) and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17) "
              "group by 1, 2 "
              "order by m.f_paymentMode ";
 }
@@ -32,19 +33,17 @@ void FCashReportSummary::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
     rg->fModel->setColumn(120, "", tr("Type"))
-            .setColumn(200, "", tr("Comment"))
-            .setColumn(100, "", tr("Amount, AMD"))
-            .setColumn(100, "", tr("Amount, USD"));
+    .setColumn(200, "", tr("Comment"))
+    .setColumn(100, "", tr("Amount, AMD"))
+    .setColumn(100, "", tr("Amount, USD"));
     QString query = fQuery;
     query = query.replace(":f_wdate1", ui->deStart->dateMySql()).replace(":f_wdate2", ui->deEnd->dateMySql());
-    QString h = "'RV','AV'";
     QString r = "'PS', 'PE'";
-    QString t;
+    QString t = "";
     if (ui->chHotel->isChecked()) {
-        t += h;
+        t = "'AV', 'RV', 'RF'";
         query = query.replace(":orch",
-        " or (m.f_source='CH' and (m.f_inv='' or m.f_inv is null) and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ")"
-        "or (m.f_itemCode in ("
+                              "or (m.f_itemCode in ("
                               + fPreferences.getDb(def_noshowfee_code).toString()
                               + ", " + fPreferences.getDb(def_cancelfee_code).toString() + "))");
     } else {
@@ -55,7 +54,6 @@ void FCashReportSummary::apply(WReportGrid *rg)
             t += ",";
         }
         t += r;
-        query = query.replace(":orbr", QString(" or m.f_itemCode=%1 ").arg(fPreferences.getDb(def_auto_breakfast_id).toInt()));
     } else {
         query = query.replace(":orbr", "");
     }
@@ -101,10 +99,10 @@ QString FCashReportSummary::reportTitle()
     }
     text.remove(text.length() - 1, 1);
     return QString("%1 From %2 To %3 For %4")
-            .arg(tr("Cash report, summary"))
-            .arg(ui->deStart->text())
-            .arg(ui->deEnd->text())
-            .arg(text);
+           .arg(tr("Cash report, summary"))
+           .arg(ui->deStart->text())
+           .arg(ui->deEnd->text())
+           .arg(text);
 }
 
 void FCashReportSummary::on_btnBack_clicked()

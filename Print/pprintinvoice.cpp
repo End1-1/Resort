@@ -18,14 +18,17 @@ PPrintInvoice::PPrintInvoice(const QString &id, int side, const QStringList &ids
     fRate = rate;
     fPrintMeal = printMeal;
     bool first = true;
-    foreach (QString s, ids) {
-        if (first) {
+
+    foreach(QString s, ids) {
+        if(first) {
             first = false;
         } else {
             fSelection += ",";
         }
+
         fSelection += QString("'%1'").arg(s);
     }
+
     previewInvoice();
 }
 
@@ -35,8 +38,8 @@ void PPrintInvoice::previewInvoice()
     int numNights = 0;
     fDD[":f_invoice"] = fId;
     QString query;
-#ifdef _METROPOL_
-    if (fSide > -1) {
+
+    if(fSide > -1) {
         fDD[":f_side"] = fSide;
         query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, if (ic.f_cityledger>0, ic.f_paymentComment, ic.f_finalName), "
                 "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
@@ -51,28 +54,13 @@ void PPrintInvoice::previewInvoice()
                 "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 :sel "
                 "order by ic.f_wdate, ic.f_id ";
     }
-#else
-    if (fSide > -1) {
-        fDD[":f_side"] = fSide;
-        query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, ic.f_finalName, "
-                "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
-                "from m_register ic "
-                "where ic.f_inv=:f_invoice and ic.f_side=:f_side "
-                "and ic.f_canceled=0 and ic.f_finance=1 :sel "
-                "order by ic.f_wdate, ic.f_id ";
-    } else {
-        query = "select ic.f_sign, ic.f_wdate, ic.f_paymentMode, ic.f_finalName, "
-                "ic.f_amountAmd, ic.f_amountVat, ic.f_dc, ic.f_remarks "
-                "from m_register ic "
-                "where ic.f_inv=:f_invoice and ic.f_canceled=0 and ic.f_finance=1 :sel "
-                "order by ic.f_wdate, ic.f_id ";
-    }
-#endif
-    if (fSelection.isEmpty()) {
+
+    if(fSelection.isEmpty()) {
         query.replace(":sel", "");
     } else {
         query.replace(":sel", "and ic.f_id in (" + fSelection + ")");
     }
+
     fDD.exec(query);
     DoubleDatabase dh;
     dh[":f_invoice"] = fId;
@@ -92,10 +80,12 @@ void PPrintInvoice::previewInvoice()
             "left join f_vat_mode vm on vm.f_id=r.f_vatMode "
             "left join (select :f_invoice as f_inv, count(f_id) as ntotal from m_register where f_canceled=0 and f_source='RM' and f_inv=:f_invoice) nights on nights.f_inv=r.f_invoice "
             "where r.f_invoice=:f_invoice ");
-    if (!dh.nextRow()) {
+
+    if(!dh.nextRow()) {
         message_error(tr("Cannot print empty invoice. Contact with program developer."));
         return;
     }
+
     int vatMode = dh.getInt("f_vatMode");
     DoubleDatabase drh;
     drh[":f_invoice"] = fId;
@@ -105,20 +95,22 @@ void PPrintInvoice::previewInvoice()
     PPrintPreview *pp = new PPrintPreview(this);
     PPrintScene *ps = pp->addScene(0, Portrait);
     QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") :
-                        tr ("PROFORMA INVOICE");
+                        tr("PROFORMA INVOICE");
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, nullptr, QFont(qApp->font().family(), 50));
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
     //    f.setPointSize(30);
     //    trHeader->setFont(f);
     QString inv;
-    if (fPreferences.getDb(def_invoice_header_mode).toInt() == 0) {
+
+    if(fPreferences.getDb(def_invoice_header_mode).toInt() == 0) {
         inv = QString("%1 #%2, %3")
               .arg(tr("ROOM"), QString("%1").arg(dh.getString("f_room")), fId);
     } else {
         inv = QString("%1 #%2")
               .arg(tr("S/N"), fId);
     }
+
     PTextRect *trInvoice = new PTextRect(20, trHeader->textHeight(), 2100, 80, inv, nullptr, QFont(qApp->font().family(),
                                          30, 75));
     trInvoice->setTextAlignment(Qt::AlignHCenter);
@@ -156,22 +148,26 @@ void PPrintInvoice::previewInvoice()
                 "where rg.f_reservation in "
                 "(select f_id from f_reservation where f_invoice=:f_invoice) "
                 "order by rg.f_first desc ");
-    while (dguest.nextRow()) {
+
+    while(dguest.nextRow()) {
         th.setWrapMode(QTextOption::WordWrap);
         PTextRect *tre = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight,
                                          dguest.getString(0) + ", " + dguest.getString(1), &th, f));
         th.setWrapMode(QTextOption::NoWrap);
         top += tre->textHeight();
-        if (!r) {
+
+        if(!r) {
             r = tre;
         }
     }
-    if (!dh.getString("f_address").isEmpty()) {
+
+    if(!dh.getString("f_address").isEmpty()) {
         th.setWrapMode(QTextOption::WordWrap);
         PTextRect *tre = ps->addTextRect(20, top, 2100, rowHeight, tr("Address: ") + dh.getString("f_address"), &th);
         th.setWrapMode(QTextOption::NoWrap);
         top += tre->textHeight();
     }
+
     top += r->textHeight();
     QPen boldPen;
     boldPen.setWidth(4);
@@ -193,16 +189,19 @@ void PPrintInvoice::previewInvoice()
     top += r->textHeight();
     //row 3
     QString room = dh.getString("f_room");
-    if (dh.getInt("f_upgradeFrom") > 0) {
+
+    if(dh.getInt("f_upgradeFrom") > 0) {
         room += "           " + dh.getString("f_upgradeFrom");
     }
-    if (fPreferences.getDb(def_invoice_header_mode).toInt()) {
+
+    if(fPreferences.getDb(def_invoice_header_mode).toInt()) {
         ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Room "), &th, f));
         ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getString("f_room"), &th, f));
     } else {
         ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("S/N "), &th, f));
         ps->addTextRect(new PTextRect(400, top, 500, rowHeight, fId, &th, f));
     }
+
     ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("Number of nights"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, QString::number(numNights), &th, f));
     top += r->textHeight();
@@ -223,9 +222,11 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Operator in"), &th, f));
     CacheUsers cu;
     QString checkinUser = "-";
-    if (cu.get(dh.getString("f_checkInUser"))) {
+
+    if(cu.get(dh.getString("f_checkInUser"))) {
         checkinUser = cu.fFull();
     }
+
     ps->addTextRect(new PTextRect(400, top, 700, rowHeight, checkinUser, &th, f));
     ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut time"), &th, f));
     r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, dh.getTime("f_checkOutTime").toString(def_time_format),
@@ -235,19 +236,23 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Arrangement"), &th, f));
     r = ps->addTextRect(new PTextRect(400, top, 400, rowHeight, dh.getString("f_arrName"), &th, f));
     ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, tr("CheckOut Op."), &th, f));
-    if (cu.get(dh.getString("f_checkOutUser"))) {
+
+    if(cu.get(dh.getString("f_checkOutUser"))) {
         r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, cu.fFull(), &th, f));
     } else {
         r = ps->addTextRect(new PTextRect(1500, top, 500, rowHeight, "-", &th, f));
     }
+
     top += r->textHeight();
     //row 8
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Cardex"), &th, f));
     r = ps->addTextRect(new PTextRect(400, top, 2000, rowHeight,
                                       dh.getString("f_cardex") + " / " + dh.getString("f_cardexName"), &th, f));
-    if (fSelection.length() > 0) {
+
+    if(fSelection.length() > 0) {
         ps->addTextRect(new PTextRect(1100, top, 400, rowHeight, "MH", &th, f));
     }
+
     top += r->textHeight();
     top += r->textHeight();
     //table header
@@ -278,9 +283,11 @@ void PPrintInvoice::previewInvoice()
     double totalCash = 0;
     double totalCard = 0;
     double totalOther = 0;
-    while (fDD.nextRow()) {
+
+    while(fDD.nextRow()) {
         double debet, credit;
-        if (fDD.getInt(0) == 1) {
+
+        if(fDD.getInt(0) == 1) {
             f.setBold(false);
             th.setFont(f);
             debet =  fDD.getDouble(4);
@@ -291,28 +298,35 @@ void PPrintInvoice::previewInvoice()
             debet = 0;
             credit = fDD.getDouble(4);
         }
+
         QString finalName = fDD.getString(3);
-        if (!fPrintMeal) {
+
+        if(!fPrintMeal) {
             finalName.replace(" - B/B", "").replace(" - B/O", "");
         }
+
         ps->addTextRect(new PTextRect(20, top, 60, rowHeight, QString::number(rowNum++), &th, f));
         ps->addTextRect(new PTextRect(80, top, 200, rowHeight, fDD.getDate(1).toString(def_date_format), &th, f));
         ps->addTextRect(new PTextRect(250, top, 850, rowHeight, finalName + " " + fDD.getString(7), &th, f));
         ps->addTextRect(new PTextRect(1100, top, 100, rowHeight, "AMD", &th, f));
         int pMode = fDD.getInt(2);
-        if (fDD.getInt(0) < 0 ) {
-            switch (pMode) {
-                case PAYMENT_CARD:
-                    totalCard += credit;
-                    break;
-                case PAYMENT_CASH:
-                    totalCash += credit;
-                    break;
-                default:
-                    totalOther += credit;
-                    break;
+
+        if(fDD.getInt(0) < 0) {
+            switch(pMode) {
+            case PAYMENT_CARD:
+                totalCard += credit;
+                break;
+
+            case PAYMENT_CASH:
+                totalCash += credit;
+                break;
+
+            default:
+                totalOther += credit;
+                break;
             }
         }
+
         totalVat += fDD.getDouble(5);
         totalCredit += credit;
         totalDebet += debet;
@@ -321,11 +335,13 @@ void PPrintInvoice::previewInvoice()
         ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(credit), &th, f));
         ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
         top += rowHeight;
-        if (top > 2800) {
+
+        if(top > 2800) {
             top = 30;
             ps = pp->addScene(0, Portrait);
         }
     }
+
     top += (rowHeight / 2);
     //ps->addTextRect(new PTextRect(20, top, 60, rowHeight, tr("*"), &th, f));
     //ps->addTextRect(new PTextRect(80, top, 200, rowHeight, tr("Date"), &th, f));
@@ -338,10 +354,12 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit), &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance), &th, f));
     top += rowHeight;
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     f.setBold(false);
     th.setFont(f);
     th.setTextAlignment(Qt::AlignRight);
@@ -351,10 +369,12 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cashless"), &th, f));
     th.setTextAlignment(Qt::AlignLeft);
@@ -362,10 +382,12 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, "", &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     top += rowHeight;
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of ") + fCurrName, &th, f));
     th.setTextAlignment(Qt::AlignLeft);
@@ -373,35 +395,43 @@ void PPrintInvoice::previewInvoice()
     ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalCredit / fRate), &th, f));
     ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, float_str(lastBalance / fRate), &th, f));
     top += rowHeight;
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     th.setTextAlignment(Qt::AlignRight);
-    if (vatMode == VAT_INCLUDED) {
+
+    if(vatMode == VAT_INCLUDED) {
         ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("VAT 20%"), &th, f));
         th.setTextAlignment(Qt::AlignLeft);
         ps->addTextRect(new PTextRect(1200, top, 300, rowHeight, "", &th, f));
         ps->addTextRect(new PTextRect(1500, top, 300, rowHeight, float_str(totalVat), &th, f));
         ps->addTextRect(new PTextRect(1800, top, 300, rowHeight, "", &th, f));
     }
+
     top += rowHeight;
     top += rowHeight;
     top += rowHeight;
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     th.setBorders(false, false, false, false);
     f.setBold(true);
     th.setFont(f);
     r = ps->addTextRect(new PTextRect(20, top, 400, rowHeight, tr("Guest signature"), &th, f));
     ps->addLine(400, top + r->textHeight(), 1000, top + r->textHeight(), boldPen);
     top += r->textHeight();
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     f.setBold(false);
     th.setFont(f);
     r = ps->addTextRect(new PTextRect(20, top, 2000, rowHeight, tr("The sum of only ") + Utils::numberToWords(totalCredit),
@@ -409,10 +439,12 @@ void PPrintInvoice::previewInvoice()
     top += r->textHeight();
     top += r->textHeight();
     top += r->textHeight();
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     f.setPointSize(f.pointSize() - 6);
     th.setFont(f);
     th.setWrapMode(QTextOption::WordWrap);
@@ -420,19 +452,23 @@ void PPrintInvoice::previewInvoice()
                                   &th, f));
     top += r->textHeight();
     top += r->textHeight();
-    if (top > 2800) {
+
+    if(top > 2800) {
         top = 30;
         ps = pp->addScene(0, Portrait);
     }
+
     f.setPointSize(18);
     f.setBold(false);
     th.setFont(f);
     top += ps->addTextRect(10, top, 680, rowHeight,
                            QString("Printed %1").arg(QDateTime::currentDateTime().toString(def_date_time_format)), &th)->textHeight();
     CacheUsers u;
-    if (u.get(__preferences.getLocal(def_working_user_id).toUInt())) {
+
+    if(u.get(__preferences.getLocal(def_working_user_id).toUInt())) {
         top += ps->addTextRect(10, top, 680, rowHeight, QString("By ") + u.fFull(), &th)->textHeight();
     }
+
     TrackControl tc(0);
     tc.insert("Print invoice request", fId, "");
     pp->exec(fNoPreview);

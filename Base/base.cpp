@@ -3,14 +3,13 @@
 
 Preferences Base::fPreferences;
 QString Base::fDbName;
+int Base::WORKING_SESSION_ID;
 Base::Base()
 {
-
 }
 
 Base::~Base()
 {
-
 }
 
 void Base::selector(int selectorNumber, const QVariant &value)

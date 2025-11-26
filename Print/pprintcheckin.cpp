@@ -89,7 +89,9 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
                 "order by rg.f_first desc ");
     top += ps->addTextRect(20, top, 2000, 70, tr("Guests:"), &trGuest)->textHeight();
     while (dguest.nextRow()) {
-        top += ps->addTextRect(20, top, 2000, 70, QString("%1, Passport: %2").arg(dguest.getString(0), dguest.getString(1)),
+        // top += ps->addTextRect(20, top, 2000, 70, QString("%1, Passport: %2").arg(dguest.getString(0), dguest.getString(1)),
+        //                        &trGuest)->textHeight();
+        top += ps->addTextRect(20, top, 2000, 70, QString("%1").arg(dguest.getString(0)),
                                &trGuest)->textHeight();
     }
     //    ps->addTextRect(20, top, 230, 80, tr("LAST NAME"), &trGuest);
@@ -135,7 +137,36 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addLine(20, top, 2100, top, QPen(Qt::SolidPattern, 5));
     top += 80;
     trData.setFontBold(true);
-    top += ps->addTextRect(20, top, 2100, 80, tr("1- ALL RATES ARE SUBJECT 20% V.A.T."), &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("1- THE MANAGEMENT IS NOT RESPONSIBLE FOR ANY VALUABLES LEFT IN THE ROOM"),
+                           &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80,
+                           tr("2- SMOKING IN A NON-SMOKING GUEST ROOM, CORRIDORS, OR ANY IN DOORS AREAS "),
+                           &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(40, top, 2100, 80,
+                           tr("WILL RESULT IN A PENALTY OF 50,000 AMD"),
+                           &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += ps->addTextRect(20, top, 2100, 80, tr("3- DAMAGE TO PROPERTY IS SUBJECT TO A PENALTY"),
+                           &trData)->textHeight();
+    ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
+    top += 100;
+    ps->addTextRect(20, top, 300, 80, tr("GUEST SIGNATURE"), &trData);
+    ps->addLine(305, top + 70, 800, top + 70, QPen(Qt::SolidPattern, 3));
+    top += 200;
+    trData.setTextAlignment(Qt::AlignCenter);
+    ps->addTextRect(20, top, 2100, 80, tr("WE WISH YOU A NICE AND PLEASANT STAY!"), &trData);
+    top += 200;
+    trData.setFontSize(24);
+    top += ps->addTextRect(20, top, 2100, 80, tr("BY SIGNING BELOW, I CONFIRM THAT I HAVE READ AND AGREE TO ABIDE"),
+                           &trData)->textHeight();
+    top += ps->addTextRect(20, top, 2100, 80, tr("BY THE HOTEL RULES, INCLUDING PENALTIES FOR SMOKING AND PROPERTY DAMAGE"),
+                           &trData)->textHeight();
+    pv.exec(noPreview);
+}
+
+/*     top += ps->addTextRect(20, top, 2100, 80, tr("1- ALL RATES ARE SUBJECT 20% V.A.T."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("2- THE MANAGEMENT IS NOT RESPONSIBLE FOR ANY VALUABLE LEFT IN THE ROOM"),
                            &trData)->textHeight();
@@ -152,7 +183,6 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
     top += ps->addTextRect(20, top, 2100, 80, tr("5- OUR CHECK OUT TIME IS 12:00 (NOON)."), &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-#ifdef _METROPOL_
     top += ps->addTextRect(20, top, 2100, 80, tr("6- SMOKING IS NOT PERMITTED, EXCEPT IN THE DESIGNATED SMOKING AREAS."),
                            &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
@@ -171,16 +201,8 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
     top += ps->addTextRect(20, top, 2100, 80, tr("AT THE SUM OF 50 000 AMD TO THE OCCUPYING GUEST."),
                            &trData)->textHeight();
     ps->addLine(20, top - 20, 2100, top - 20, QPen(Qt::SolidPattern, 5));
-#endif
     top += 200;
     trData.setTextAlignment(Qt::AlignCenter);
     ps->addTextRect(20, top, 2100, 80, tr("WE WISH YOU A NICE AND PLEASANT STAY!"), &trData);
     top += 200;
-    ps->addTextRect(20, top, 300, 80, tr("GUEST SIGNATURE"), &trData);
-    ps->addLine(305, top + 70, 800, top + 70, QPen(Qt::SolidPattern, 3));
-    top += 200;
-    trData.setTextAlignment(Qt::AlignLeft);
-    top += ps->addTextRect(20, top, 2100, 80, tr("REMARKS"), &trData)->textHeight();
-    top += ps->addTextRect(20, top, 2100, 80, fDD.getString("f_remarks"), &trData)->textHeight();
-    pv.exec(noPreview);
-}
+*/

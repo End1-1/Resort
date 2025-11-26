@@ -19,6 +19,7 @@ public:
     virtual ~Base();
     static QString fDbName;
     static Preferences fPreferences;
+    static int WORKING_SESSION_ID;
 
     virtual void selector(int selectorNumber, const QVariant &value);
     virtual void callback(int sel, const QString &code);

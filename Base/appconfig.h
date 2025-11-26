@@ -11,7 +11,6 @@ public:
     AppConfig();
     static QString fServerAddress;
     static int fServerPort;
-    static QString fAppSession;
 };
 
 #endif // APPCONFIG_H

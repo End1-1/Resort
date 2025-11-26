@@ -5,6 +5,8 @@
 #include "cachereservation.h"
 #include "paymentmode.h"
 #include "cacheroomstate.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 static const int HINT_ROOM_STATE = 1;
 static const int HINT_ROOM = 2;
@@ -30,53 +32,53 @@ RoomState::~RoomState()
 void RoomState::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_ROOM_STATE: {
-        CacheRoomState c;
-        if (c.get(code)) {
-            switch (c.fCode().toInt()) {
-            case ROOM_STATE_DIRTY:
-            case ROOM_STATE_NONE:
-                break;
-            case ROOM_STATE_OUTOF:
-                ui->wdtOut->setVisible(true);
-                adjustSize();
-                break;
-            default:
-                ui->leNewState->clear();
-                ui->leNewStateName->clear();
-                message_error(tr("This state is not available now"));
-                break;
-            }
-        }
-        break;
-    }
-    case HINT_ROOM: {
-        if (fRoom.get(code)) {
-            ui->leRoomCode->setText(fRoom.fCode());
-            ui->leRoomName->setText(fRoom.fName());
-            ui->leCurrentState->setInt(fRoom.fState());
-            CacheRoomState crs;
-            crs.get(fRoom.fState());
-            ui->leCurrentStateName->setText(crs.fName());
-            ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
-            DoubleDatabase fDD;
-            fDD[":f_room"] = fRoom.fCode();
-            fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
-            if (fDD.nextRow()) {
-                if (fDD.getInt("c") == fDD.getInt("s")) {
-                    ui->lbStatus->setPixmap(QPixmap(":/images/ball-green.png"));
-                } else {
-                    ui->lbStatus->setPixmap(QPixmap(":/images/ball-red.png"));
+        case HINT_ROOM_STATE: {
+            CacheRoomState c;
+            if (c.get(code)) {
+                switch (c.fCode().toInt()) {
+                    case ROOM_STATE_DIRTY:
+                    case ROOM_STATE_NONE:
+                        break;
+                    case ROOM_STATE_OUTOF:
+                        ui->wdtOut->setVisible(true);
+                        adjustSize();
+                        break;
+                    default:
+                        ui->leNewState->clear();
+                        ui->leNewStateName->clear();
+                        message_error(tr("This state is not available now"));
+                        break;
                 }
             }
-        } else {
-            ui->leRoomCode->clear();
-            ui->leRoomName->clear();
-            ui->leCurrentState->clear();
-            ui->leCurrentStateName->clear();
+            break;
         }
-        break;
-    }
+        case HINT_ROOM: {
+            if (fRoom.get(code)) {
+                ui->leRoomCode->setText(fRoom.fCode());
+                ui->leRoomName->setText(fRoom.fName());
+                ui->leCurrentState->setInt(fRoom.fState());
+                CacheRoomState crs;
+                crs.get(fRoom.fState());
+                ui->leCurrentStateName->setText(crs.fName());
+                ui->leNewState->setEnabled(ui->leCurrentState->asInt() != ROOM_STATE_CHECKIN);
+                DoubleDatabase fDD;
+                fDD[":f_room"] = fRoom.fCode();
+                fDD.exec("select count(f_id) as c , sum(f_state) as s from f_room_inventory_journal where f_room=:f_room");
+                if (fDD.nextRow()) {
+                    if (fDD.getInt("c") == fDD.getInt("s")) {
+                        ui->lbStatus->setPixmap(QPixmap(":/images/ball-green.png"));
+                    } else {
+                        ui->lbStatus->setPixmap(QPixmap(":/images/ball-red.png"));
+                    }
+                }
+            } else {
+                ui->leRoomCode->clear();
+                ui->leRoomName->clear();
+                ui->leCurrentState->clear();
+                ui->leCurrentStateName->clear();
+            }
+            break;
+        }
     }
 }
 
@@ -133,7 +135,7 @@ void RoomState::on_btnOk_clicked()
         QString fId;
         QString invId = uuidx(VAUCHER_INVOICE_N);
         add += QString(" %1 - %2")
-                .arg(ui->deStart->text(), ui->deEnd->text());
+               .arg(ui->deStart->text(), ui->deEnd->text());
         fDD[":f_state"] = RESERVE_OUTOFROOM;
         fDD[":f_reserveState"] = CONFIRM_BLOCK;
         fDD[":f_room"] = fRoom.fCode();
@@ -152,11 +154,10 @@ void RoomState::on_btnOk_clicked()
         fDD.insertId("f_reservation", fId);
         fDD[":f_id"] = fId;
         fDD.update("f_reservation", where_id(ap(fId)));
-
         fTrackControl = new TrackControl(TRACK_RESERVATION);
         fTrackControl->insert("-=CREATED OUTOFORDER=-", QString("%1 - %2")
-                                  .arg(ui->deStart->text())
-                                  .arg(ui->deEnd->text()), "");
+                              .arg(ui->deStart->text())
+                              .arg(ui->deEnd->text()), "");
         BroadcastThread::cmdRefreshCache(cid_reservation, fId);
         if (ui->deStart->date() == WORKING_DATE) {
             fDD[":f_id"] = ui->leRoomCode->text();
@@ -174,19 +175,18 @@ void RoomState::on_btnOk_clicked()
             fDD[":f_date"] = WORKING_DATE;
             fDD[":f_state"] = RESERVE_OUTOFROOM;
             fDD.exec("select f_id from f_reservation where f_room=:f_room "
-                       "and :f_date>=f_startDate and :f_date<=f_endDate and f_state=:f_state");
+                     "and :f_date>=f_startDate and :f_date<=f_endDate and f_state=:f_state");
             if (fDD.nextRow()) {
                 fDD[":f_state"] = RESERVE_SERVICE_REMOVED;
                 fDD.update("f_reservation", where_id(ap(fDD.getString(0))));
                 BroadcastThread::cmdRefreshCache(cid_reservation, fDD.getString(0));
             }
         } else {
-
         }
         fDD[":f_id"] = ui->leRoomCode->text();
         fDD[":f_state"] = ui->leNewState->text();
         fDD.exec("update f_room set f_state=:f_state where f_id=:f_id");
-       // fRoom.fState() = ui->leNewState->asInt();
+        // fRoom.fState() = ui->leNewState->asInt();
     }
     fDD[":f_date"] = QDate::currentDate();
     fDD[":f_wdate"] = WORKING_DATE;
@@ -197,7 +197,14 @@ void RoomState::on_btnOk_clicked()
     fDD[":f_comment"] = ui->teRemarks->toPlainText();
     fDD.insert("f_room_state_change");
     fTrackControl->insert("Room state changed", ui->leCurrentStateName->text(), ui->leNewStateName->text() + add);
-    BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text());
+    QString updmsg = QJsonDocument(QJsonObject{{"comp", HOSTNAME},
+        {"user", WORKING_USERNAME},
+        {"deliver_windows", true},
+        {"modified", true},
+        {"session", WORKING_SESSION_ID}}).toJson(
+        QJsonDocument::Compact);
+    updmsg = updmsg.remove("{").remove("}");
+    BroadcastThread::cmdRefreshCache(cid_room, ui->leRoomCode->text(), "," + updmsg);
     if (fUncheckedStiky) {
         accept();
         return;

@@ -35,6 +35,9 @@ DoubleDatabase::DoubleDatabase() :
     QObject()
 {
     init();
+    if (__dd1Host.isEmpty()) {
+        return;
+    }
     configureDatabase(fDb1, __dd1Host, __dd1Database, __dd1Username, __dd1Password);
     open();
 }

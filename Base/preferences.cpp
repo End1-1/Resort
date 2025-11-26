@@ -181,8 +181,7 @@ void Preferences::removeDatabase(const QString &name)
 void Preferences::initFromDb(const QString &dbName, const QString &additionalSettings, int userId)
 {
     Db &dbConf = fDatabases[dbName];
-    DoubleDatabase db;
-    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
+    DoubleDatabase db(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
     db.open();
     db.exec("select f_key, f_value from f_global_settings where f_settings = 1 order by f_key");
     fDbPreferences.clear();
@@ -264,8 +263,7 @@ void Preferences::setUser(const QString &connName, const QString &key, const QSt
 {
     fUserPreferences[key] = value;
     Db &dbConf = fDatabases[connName];
-    DoubleDatabase db;
-    db.setDatabase(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
+    DoubleDatabase db(dbConf.dc_main_host, dbConf.dc_main_path, dbConf.dc_main_user, dbConf.dc_main_pass);
     db.open();
     db[":f_user"] = getLocal(def_working_user_id);
     db[":f_key"] = key;

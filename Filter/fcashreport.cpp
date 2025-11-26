@@ -17,16 +17,18 @@ FCashReport::FCashReport(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("Cache report / detailed"), ":/images/credit-card.png");
     fHotelQuery = " select u.f_username, m.f_rdate, m.f_room, "
                   "m.f_id, m.f_guest, m.f_finalName, p.f_en, m.f_paymentComment, "
-                  "m.f_amountAmd, m.f_amountAmd / m.f_amountUsd,  m.f_remarks, m.f_source "
+                  "if(m.f_source='RF', -m.f_amountAmd, m.f_amountamd), "
+                  "if(m.f_source='RF', -(m.f_amountAmd / m.f_amountUsd), m.f_amountAmd / m.f_amountUsd),  "
+                  "m.f_remarks, m.f_source "
                   "from m_register m "
                   "left join users u on u.f_id=m.f_user "
                   "left join f_payment_type p on p.f_id=m.f_paymentMode "
                   "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
                   "and m.f_finance=1 and "
-                  "((m.f_source in ('RV', 'AV') :payment) "
-                      "or ((m.f_source='CH' :payment "
-                      "and ((m.f_inv='' or m.f_inv is null) and m.f_itemCode<>" + fPreferences.getDb(def_auto_breakfast_id).toString() + ") "
-                      "or (m.f_itemCode in (" + fPreferences.getDb(def_noshowfee_code).toString() + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ") :payment ))))";
+                  "((m.f_source in ('RV', 'AV', 'RF') :payment) "
+                  "or (m.f_itemCode in ("
+                  + fPreferences.getDb(def_noshowfee_code).toString()
+                  + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ") :payment))";
     fRestaurantQuery = " select u.f_username, mr.f_rdate, mr.f_room, "
                        "mr.f_id, mr.f_guest, mr.f_finalName, p.f_en, mr.f_paymentComment, "
                        "mr.f_amountAmd, mr.f_amountAmd / mr.f_amountUsd,  mr.f_remarks, mr.f_source "
@@ -47,18 +49,18 @@ void FCashReport::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
     rg->fModel->setColumn(30, "", tr("Op"))
-            .setColumn(80, "", tr("Date"))
-            .setColumn(60, "", tr("Room"))
-            .setColumn(80, "", tr("JV"))
-            .setColumn(300, "", tr("Guest"))
-            .setColumn(200, "", tr("Payment"))
-            .setColumn(100, "", tr("Type"))
-            .setColumn(200, "", tr("Comment"))
-            .setColumn(100, "", tr("Amount AMD"))
-            .setColumn(100, "", tr("Amount USD"))
-            .setColumn(300, "", tr("Remarks"))
-            .setColumn(0, "", "")
-            ;
+    .setColumn(80, "", tr("Date"))
+    .setColumn(60, "", tr("Room"))
+    .setColumn(80, "", tr("JV"))
+    .setColumn(300, "", tr("Guest"))
+    .setColumn(200, "", tr("Payment"))
+    .setColumn(100, "", tr("Type"))
+    .setColumn(200, "", tr("Comment"))
+    .setColumn(100, "", tr("Amount AMD"))
+    .setColumn(100, "", tr("Amount USD"))
+    .setColumn(300, "", tr("Remarks"))
+    .setColumn(0, "", "")
+    ;
     QString query;
     if (ui->chHotel->isChecked()) {
         query = fHotelQuery;
@@ -69,24 +71,24 @@ void FCashReport::apply(WReportGrid *rg)
         }
         if (ui->lePayments->isEmpty()) {
             query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17)");
+            query.replace(":payment", " ");
         } else {
             query.replace(":payment", "and m.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }
     }
-
     if (ui->chRestaurant->isChecked()) {
         if (ui->chHotel->isChecked()) {
             query += " union all ";
         }
         query += fRestaurantQuery;
-        query = query.replace(":orbreak", QString(" or mr.f_itemCode=%1 ").arg(fPreferences.getDb(def_auto_breakfast_id).toInt()));
+        query = query.replace(":orbreak", QString(" or mr.f_itemCode=%1 ").arg(fPreferences.getDb(
+                                  def_auto_breakfast_id).toInt()));
         if (ui->lePayments->isEmpty()) {
             query.replace(":payment", " and mr.f_paymentMode in (1, 2, 3, 4, 15, 16, 17)");
         } else {
             query.replace(":payment", "and mr.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }
     }
-
     if (query.isEmpty()) {
         message_info(tr("No report type was selected"));
         return;

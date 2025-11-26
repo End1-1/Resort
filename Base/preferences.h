@@ -11,7 +11,6 @@
 #define WORKING_USERNAME fPreferences.getLocal(def_working_username).toString()
 #define WORKING_USERGROUP fPreferences.getLocal(def_working_user_group).toInt()
 #define WORKING_DATE fPreferences.getLocalDate(def_working_day)
-#define WORKING_SESSION fPreferences.getLocal(def_session_id).toInt()
 
 typedef struct {
     char dc_name[255];
@@ -26,7 +25,8 @@ typedef struct {
     char dc_broadcast[255];
 } Db;
 
-class Preferences : public QObject {
+class Preferences : public QObject
+{
 public:
     Preferences();
     void initFromConfig();
@@ -46,7 +46,9 @@ public:
     QWidget *getDefaultParentForMessage();
     void setDefaultParentForMessage(QWidget *parent);
     void clearDatabase();
-    void appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb, const QString &mainUser, const QString &mainPassword, const QString &logHost, const QString &logDb, const QString &logUser, const QString &logPassword, const QString &broadcast);
+    void appendDatabase(const QString &name, const QString &mainHost, const QString &mainDb, const QString &mainUser,
+                        const QString &mainPassword, const QString &logHost, const QString &logDb, const QString &logUser,
+                        const QString &logPassword, const QString &broadcast);
     void setDatabasesNames(QStringList &names);
     Db getDatabase(const QString &name);
     Db getFirstDatabase();

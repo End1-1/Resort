@@ -28,7 +28,6 @@
 #define cr__invoice_cancelation_previouse_date 19
 #define cr__invoice_cancelation_current_date 20
 #define cr__global_config 21
-#define cr__bookkeeper_sync 22
 #define cr__unlock_locked_reservation 23
 #define cr__re_checkin 24
 #define cr__services 25
@@ -158,7 +157,7 @@
 #define cr__fiscal_report 149
 #define cr__update_menu_from_frontdesk 150
 #define cr__travelline 151
-#define cr__1
+#define cr__rest_view_guests 152
 #define cr__1
 #define cr__1
 #define cr__1

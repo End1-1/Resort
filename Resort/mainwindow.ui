@@ -257,6 +257,7 @@
     <addaction name="actionIn_house_guest"/>
     <addaction name="actionInhouse_guest_future"/>
     <addaction name="actionList_of_checkin_guests"/>
+    <addaction name="actionArrival_Departures_for_restaurant"/>
     <addaction name="actionExpected_arrivals_simple"/>
     <addaction name="actionExpected_arivals_simple"/>
     <addaction name="actionExpected_departures_simple"/>
@@ -1640,6 +1641,15 @@
   <action name="actionIncomplete_guests_names">
    <property name="text">
     <string>Incomplete guests names</string>
+   </property>
+  </action>
+  <action name="actionArrival_Departures_for_restaurant">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/paper-plane.png</normaloff>:/images/paper-plane.png</iconset>
+   </property>
+   <property name="text">
+    <string>Arrival / Departures for restaurant</string>
    </property>
   </action>
  </widget>

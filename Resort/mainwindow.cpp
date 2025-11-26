@@ -34,6 +34,7 @@
 #include "fexportreservation.h"
 #include "wcardexlist.h"
 #include "fexpectedsimple.h"
+#include "frestguestview.h"
 #include "ftaxreport.h"
 #include "dlgpostcharge.h"
 #include "fcashreportbyitem.h"
@@ -201,7 +202,7 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
     fMainWindow = this;
     fTab = ui->tabWidget;
-    connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     logout();
     disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
     connect(AppWebSocket::instance, &AppWebSocket::messageReceived, this, &MainWindow::parseSocketCommand);
@@ -218,13 +219,15 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     ui->menuStorehouse->setVisible(false);
     ui->menuDiscount_system->setVisible(false);
     fTimeErrLableValue = false;
-    connect( &fTimeErrLabel, SIGNAL(timeout()), this, SLOT(timeout2()));
+    connect(&fTimeErrLabel, SIGNAL(timeout()), this, SLOT(timeout2()));
     fTimeErrLabel.start(1000);
     connect(this, SIGNAL(updateCache(int, QString)), &fCacheOne, SLOT(updateCache(int, QString)));
     __mainWindow = this;
-    if (fPreferences.getDb(def_debug_mode).toInt() > 0) {
+
+    if(fPreferences.getDb(def_debug_mode).toInt() > 0) {
         logEnabled = true;
     }
+
     fTouchscreen = touchscreen;
     fPreferences.setDb(def_touchscreen, fTouchscreen);
 }
@@ -256,28 +259,33 @@ void MainWindow::on_actionLock_triggered()
 
 void MainWindow::on_actionDatabases_triggered()
 {
-    if (fPreferences.getString(def_preferences_password).length() > 0) {
+    if(fPreferences.getString(def_preferences_password).length() > 0) {
         LoginSettings ls(this);
-        if (ls.exec() != QDialog::Accepted) {
+
+        if(ls.exec() != QDialog::Accepted) {
             return;
         }
     }
+
     DatabasesConnections dc(this);
     dc.exec();
 }
 
 void MainWindow::login()
 {
-    if (WORKING_USERID > 0) {
-        if (message_confirm(tr("Confirm to logout")) != QDialog::Accepted) {
+    if(WORKING_USERID > 0) {
+        if(message_confirm(tr("Confirm to logout")) != QDialog::Accepted) {
             return;
         }
     }
+
     logout();
     Login l(this);
-    if (l.exec() == QDialog::Rejected) {
+
+    if(l.exec() == QDialog::Rejected) {
         return;
     }
+
     Db db = fPreferences.getDatabase(fDbName);
     enableMainMenu(true);
     WWelcome *ww = addTab<WWelcome>();
@@ -286,10 +294,12 @@ void MainWindow::login()
     ui->tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
     fTimer.start(60000);
     ui->actionChange_password->setVisible(true);
-    if (fPreferences.getDb(def_receip_vaucher_id).toInt() == 0) {
+
+    if(fPreferences.getDb(def_receip_vaucher_id).toInt() == 0) {
         message_error(tr("Receipt voucher id not defined"));
         return;
     }
+
     QPushButton *btnMenu = new QPushButton(ui->tabWidget);
     btnMenu->setText(tr("Menu"));
     btnMenu->setIcon(QIcon(":/images/bed.png"));
@@ -297,27 +307,34 @@ void MainWindow::login()
     //btnMenu->show();
     //ui->tabWidget->setCornerWidget(btnMenu, Qt::TopLeftCorner);
 #ifndef QT_DEBUG
-    if (!logEnabled) {
+
+    if(!logEnabled) {
         logEnabled = fPreferences.getDb(def_debug_mode).toInt() > 0;
     }
+
 #endif
     TaxHelper::init();
     DoubleDatabase dd;
     dd[":f_comp"] = "SmartHotel: " + HOSTNAME;
     dd.exec("select f_default from serv_tax where f_comp=:f_comp");
-    if (dd.nextRow()) {
+
+    if(dd.nextRow()) {
         fPreferences.setDb(def_default_fiscal_machine, dd.getInt("f_default"));
     }
+
     fPreferences.setDb(def_touchscreen, fTouchscreen);
     ui->lstTravelLine->clear();
-    if (r__(cr__travelline)) {
+
+    if(r__(cr__travelline)) {
         dd.exec("select f_id from f_reservation where f_chmstatus=1 and f_state=2");
-        while (dd.nextRow()) {
+
+        while(dd.nextRow()) {
             QListWidgetItem *item = new QListWidgetItem(ui->lstTravelLine);
             item->setText(dd.getString("f_id"));
             ui->lstTravelLine->addItem(item);
         }
     }
+
     ui->grTravelLine->setVisible(ui->lstTravelLine->count() > 0);
     connect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
 }
@@ -365,10 +382,12 @@ void MainWindow::hideMenu()
 
 void MainWindow::tabCloseRequested(int index)
 {
-    BaseWidget *w = static_cast<BaseWidget *>(ui->tabWidget->widget(index));
-    if (!w->canClose()) {
+    BaseWidget *w = static_cast<BaseWidget*>(ui->tabWidget->widget(index));
+
+    if(!w->canClose()) {
         return;
     }
+
     ui->tabWidget->removeTab(index);
     delete w;
 }
@@ -377,8 +396,10 @@ void MainWindow::timeout()
 {
     fTimer.stop();
     DoubleDatabase db;
-    if (!db.open())
+
+    if(!db.open())
         return;
+
     QString query = "select r.f_id, r.f_state, s.f_" + def_lang + ", r.f_room, rm.f_short as f_room_short, "
                     "r.f_group, ug.f_" + def_lang + ", r.f_dateStart, "
                     "r.f_interval, r.f_text, r.f_guest, concat(g.f_firstName, ' ', g.f_lastName) as f_guestName, "
@@ -394,35 +415,43 @@ void MainWindow::timeout()
                     "and (r.f_dateLastComplete is null or current_timestamp() > addtime(r.f_dateLastComplete, r.f_interval)) ";
     db[":f_group"] = WORKING_USERGROUP;
     db.exec(query);
-    for (QList<QList<QVariant> >::iterator it = db.fDbRows.begin(); it != db.fDbRows.end(); it++) {
-        QDateTime l = ( *it)[13].toDateTime();
+
+    for(QList<QList<QVariant> >::iterator it = db.fDbRows.begin(); it != db.fDbRows.end(); it++) {
+        QDateTime l = (*it)[13].toDateTime();
         bool go = false;
-        if (l.isValid()) {
+
+        if(l.isValid()) {
             go = true;
         } else {
-            if (QDateTime::currentDateTime() > ( *it)[7].toDateTime()) {
+            if(QDateTime::currentDateTime() > (*it)[7].toDateTime()) {
                 go = true;
             }
         }
-        if (go) {
-            ( *it).removeAt(13);
-            DlgNotes *d = new DlgNotes( *it, this);
+
+        if(go) {
+            (*it).removeAt(13);
+            DlgNotes *d = new DlgNotes(*it, this);
             d->setValues();
             d->setScheduleVisible();
-            if (d->exec() == QDialog::Accepted) {
+
+            if(d->exec() == QDialog::Accepted) {
             }
+
             delete d;
         }
     }
-    if (!DO_NOT_CHECK_VERSION) {
+
+    if(!DO_NOT_CHECK_VERSION) {
         db[":f_app"] = _APPLICATION_;
         db.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
-        if (db.nextRow()) {
-            if (Utils::getVersionString(qApp->applicationFilePath()) != db.getString(0)) {
+
+        if(db.nextRow()) {
+            if(Utils::getVersionString(qApp->applicationFilePath()) != db.getString(0)) {
                 DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), db.getString(0));
             }
         }
     }
+
     db.close();
     fTimer.start(60000);
 }
@@ -437,12 +466,14 @@ void MainWindow::parseSocketCommand(const QString &command)
 {
     QJsonDocument jDoc = QJsonDocument::fromJson(command.toUtf8());
     QJsonObject jObj = jDoc.object();
-    if (jObj["command"].toString() == "hotel_cache_update") {
-        if (jObj.contains("cache")) {
+
+    if(jObj["command"].toString() == "hotel_cache_update") {
+        if(jObj.contains("cache")) {
             int cacheId = jObj.value("cache").toInt();
             QString item = jObj.value("item").toString();
-            if (cacheId == cache_travelline) {
-                if (r__(cr__travelline)) {
+
+            if(cacheId == cache_travelline) {
+                if(r__(cr__travelline)) {
                     QListWidgetItem *litem = new QListWidgetItem(ui->lstTravelLine);
                     litem->setText(item);
                     ui->lstTravelLine->addItem(litem);
@@ -450,24 +481,32 @@ void MainWindow::parseSocketCommand(const QString &command)
                     return;
                 }
             }
+
             emit updateCache(cacheId, item);
         } else {
             QVariantMap m = jObj.toVariantMap();
-            for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
-                BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
-                if (!b) {
+
+            for(int i = 0, count = ui->tabWidget->count(); i < count; i++) {
+                BaseWidget *b = static_cast<BaseWidget*>(ui->tabWidget->widget(i));
+
+                if(!b) {
                     return;
                 }
+
                 b->handleBroadcast(m);
             }
         }
-        if (jObj.contains("deliver_windows")) {
+
+        if(jObj.contains("deliver_windows")) {
             QVariantMap m = jObj.toVariantMap();
-            for (int i = 0, count = ui->tabWidget->count(); i < count; i++) {
-                BaseWidget *b = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
-                if (!b) {
+
+            for(int i = 0, count = ui->tabWidget->count(); i < count; i++) {
+                BaseWidget *b = static_cast<BaseWidget*>(ui->tabWidget->widget(i));
+
+                if(!b) {
                     return;
                 }
+
                 b->handleBroadcast(m);
             }
         }
@@ -480,9 +519,11 @@ void MainWindow::logout()
     disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
     fTimer.stop();
     disableMainMenu();
-    while (ui->tabWidget->count() > 0) {
+
+    while(ui->tabWidget->count() > 0) {
         tabCloseRequested(0);
     }
+
     CacheOne::clearAll();
     QJsonObject jo;
     jo["command"] = "unregister_socket";
@@ -494,10 +535,12 @@ void MainWindow::logout()
     ui->actionChange_password->setVisible(false);
     fStatusLabelLeft->setText(tr("Not connected"));
     fStatusLabelRight->clear();
-    foreach (QAction *a, fCustomReports.keys()) {
+
+    foreach(QAction *a, fCustomReports.keys()) {
         ui->menuBar->removeAction(a);
         delete a;
     }
+
     fCustomReports.clear();
     WReportGrid::fReportOptions.clear();
 }
@@ -506,18 +549,21 @@ void MainWindow::lock()
 {
     Login l(this);
     l.setLockUser(WORKING_USERID);
+
     do {
-    } while (l.exec() != QDialog::Accepted);
+    } while(l.exec() != QDialog::Accepted);
 }
 
 void MainWindow::enableMainMenu(bool value)
 {
-    if (!value) {
+    if(!value) {
         return;
     }
-    for (int i = 1; i < ui->menuBar->actions().count() - 1; i++) {
+
+    for(int i = 1; i < ui->menuBar->actions().count() - 1; i++) {
         ui->menuBar->actions()[i]->setEnabled(true);
     }
+
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
     ui->actionDisable_second_database->setVisible(r__(cr__do_no_write_second_db) && dbParams.count() == 4);
     ui->menuBar->actions().at(1)->setVisible(r__(cr__menu_reservation)); //Resevation
@@ -540,6 +586,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
     ui->actionTravelline->setVisible(r__(cr__travelline));
+    DoubleDatabase::logEvent(r__(cr__reception) ? "reception enabled" : "reception not enabled");
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
     ui->actionQuick_checkout->setVisible(r__(cr__quick_checkout));
@@ -635,6 +682,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionRoom_inventory_states->setVisible(r__(cr__directory_hotel_room_inventory_state));
     ui->actionNationality_file->setVisible(r__(cr__nationality));
     ui->actionCall_rates->setVisible(r__(cr__call_rate));
+    ui->actionArrival_Departures_for_restaurant->setVisible(r__(cr__rest_view_guests));
 #ifdef _HOTEL_
     ui->actionCostumers_cars->setVisible(false);
     ui->actionModels_of_cars->setVisible(false);
@@ -668,17 +716,21 @@ void MainWindow::enableMainMenu(bool value)
 #endif
     DoubleDatabase fDD;
     fDD.exec("select f_id, f_name, f_groupAccess, f_menu from serv_reports where f_menu>0");
-    while (fDD.nextRow()) {
-        if (fDD.getString(2) != "*") {
+
+    while(fDD.nextRow()) {
+        if(fDD.getString(2) != "*") {
             QStringList groups = fDD.getString(2).split(";", QString::SkipEmptyParts);
-            if (!groups.contains(QString::number(WORKING_USERGROUP))) {
+
+            if(!groups.contains(QString::number(WORKING_USERGROUP))) {
                 continue;
             }
         }
+
         QAction *a = ui->menuBar->actions().at(fDD.getInt(3))->menu()->
                      addAction(QIcon(":/images/report.png"), fDD.getString(1), this, SLOT(customReport()));
         fCustomReports[a] = fDD.getInt(0);
     }
+
     ui->menuBar->actions().at(8)->setVisible(ui->menuOther_Reports->actions().count() > 0);
 #ifdef _RESORT_BUILD_
     ui->menuDiscount_system->setVisible(false);
@@ -688,10 +740,11 @@ void MainWindow::enableMainMenu(bool value)
 
 void MainWindow::disableMainMenu()
 {
-    for (int i = 1; i < ui->menuBar->actions().count() - 1; i++) {
+    for(int i = 1; i < ui->menuBar->actions().count() - 1; i++) {
         ui->menuBar->actions()[i]->setEnabled(false);
         ui->menuBar->actions()[i]->setVisible(true);
     }
+
     ui->actionDisable_second_database->setVisible(false);
     ui->actionOptions->setEnabled(false);
 }
@@ -1133,15 +1186,16 @@ void MainWindow::on_actionTrack_changes_triggered()
 
 void MainWindow::on_actionRoomChart_triggered()
 {
-    if (!ui->menuReception->isEnabled()) {
+    if(!ui->menuReception->isEnabled()) {
         return;
     }
+
     addTab<WMainDesk>();
 }
 
 void MainWindow::on_actionNew_reservation_triggered()
 {
-    QList<CacheRoom *> rooms;
+    QList<CacheRoom*> rooms;
     rooms.append(nullptr);
     WReservation *w = addTab<WReservation>();
     w->setInitialParams(WORKING_DATE, WORKING_DATE, rooms);
@@ -1282,7 +1336,7 @@ void MainWindow::on_actionType_of_bed_triggered()
 
 QString MainWindow::actionTitle(QObject *a)
 {
-    return static_cast<QAction *>(a)->text();
+    return static_cast<QAction*>(a)->text();
 }
 
 void MainWindow::on_actionSynchronization_triggered()
@@ -1678,22 +1732,27 @@ void MainWindow::on_actionHistory_of_calls_triggered()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     bool canClose = true;
-    for (int i = 1; i < ui->tabWidget->count(); i++) {
-        BaseWidget *w = static_cast<BaseWidget *>(ui->tabWidget->widget(i));
-        if (!w->canClose()) {
+
+    for(int i = 1; i < ui->tabWidget->count(); i++) {
+        BaseWidget *w = static_cast<BaseWidget*>(ui->tabWidget->widget(i));
+
+        if(!w->canClose()) {
             canClose = false;
             break;
         }
     }
-    if (canClose) {
-        if (message_confirm(tr("Confirm to close application")) != QDialog::Accepted) {
+
+    if(canClose) {
+        if(message_confirm(tr("Confirm to close application")) != QDialog::Accepted) {
             canClose = false;
         }
     }
-    if (!canClose) {
+
+    if(!canClose) {
         event->ignore();
         return;
     }
+
     logout();
     QMainWindow::closeEvent(event);
 }
@@ -1714,12 +1773,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::websocketDisconnected()
 {
-    DlgExitByVersion::exit("Server connection lost, quitting");
+    //DlgExitByVersion::exit("Server connection lost, quitting");
 }
 
 void MainWindow::shortcutFullScreen()
 {
-    if (isFullScreen()) {
+    if(isFullScreen()) {
         showMaximized();
         ui->menuBar->show();
     } else {
@@ -1730,18 +1789,20 @@ void MainWindow::shortcutFullScreen()
 
 void MainWindow::shortcutSlot()
 {
-    if (ui->tabWidget->count() > 0) {
+    if(ui->tabWidget->count() > 0) {
         ui->tabWidget->setCurrentIndex(0);
     }
 }
 
 void MainWindow::customReport()
 {
-    QAction *a = static_cast<QAction *>(sender());
-    if (!fCustomReports.contains(a)) {
+    QAction *a = static_cast<QAction*>(sender());
+
+    if(!fCustomReports.contains(a)) {
         message_error(tr("Application error. Contact with developer. Message custom action == 0"));
         return;
     }
+
     int reportId = fCustomReports[a];
     FCommonFilterByDate::open(reportId);
 }
@@ -2010,12 +2071,15 @@ void MainWindow::on_actionExecute_failed_sql_triggered()
 void MainWindow::on_actionDisable_second_database_triggered()
 {
     QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
-    if (dbParams.count() != 4) {
+
+    if(dbParams.count() != 4) {
         return;
     }
-    if (!r__(cr__do_no_write_second_db)) {
+
+    if(!r__(cr__do_no_write_second_db)) {
         return;
     }
+
     setStyleSheet("background: rgb(255,150,150);");
     ui->actionDisable_second_database->setText(tr("Enable second database"));
 }
@@ -2152,13 +2216,16 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
     //    dd.exec("delete from r_dish");
     //    dd.exec("delete from r_dish_type");
     DoubleDatabase dr(__dd1Host, fPreferences.getDb(def_external_rest_db).toString(), __dd1Username, __dd1Password);
-    if (!dr.open()) {
+
+    if(!dr.open()) {
         message_error(dr.fLastError);
         return;
     }
+
     QMap<int, QString> adg;
     dr.exec("select f_id, f_name, f_adgcode from d_part2");
-    while (dr.nextRow()) {
+
+    while(dr.nextRow()) {
         dd[":f_id"] = dr.getInt(0);
         dd[":f_part"] = 1;
         dd[":f_en"] = dr.getString(1);
@@ -2182,8 +2249,10 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
         dd[":f_active"] = 1;
         dd.update("r_dish_type", where_id(dr.getInt(0)));
     }
+
     dr.exec("select f_id, f_part, f_name from d_dish");
-    while (dr.nextRow()) {
+
+    while(dr.nextRow()) {
         dd[":f_id"] = dr.getInt(0);
         dd[":f_type"] = dr.getInt(1);
         dd[":f_en"] = dr.getString(2);
@@ -2207,6 +2276,7 @@ void MainWindow::on_actionUpload_menu_from_FrontDesk_triggered()
         dd[":f_adgt"] = adg[dr.getInt(1)];
         dd.update("r_dish", where_id(dr.getInt(0)));
     }
+
     message_info(tr("Done."));
 }
 
@@ -2227,16 +2297,19 @@ void MainWindow::on_actionTravelline_triggered()
 
 void MainWindow::on_lstTravelLine_itemClicked(QListWidgetItem *item)
 {
-    if (!item) {
+    if(!item) {
         return;
     }
-    if (message_confirm(tr("Open reservation?")) != QDialog::Accepted) {
+
+    if(message_confirm(tr("Open reservation?")) != QDialog::Accepted) {
         return;
     }
+
     WReservation::openReserveWindows(item->text());
     delete item;
+
     //ui->lstTravelLine->removeItemWidget(item);
-    if (ui->lstTravelLine->count() == 0) {
+    if(ui->lstTravelLine->count() == 0) {
         ui->grTravelLine->hide();
     }
 }
@@ -2244,4 +2317,9 @@ void MainWindow::on_lstTravelLine_itemClicked(QListWidgetItem *item)
 void MainWindow::on_actionIncomplete_guests_names_triggered()
 {
     FIncompleteGuestsNames::openFilterReport<FIncompleteGuestsNames, WReportGrid>();
+}
+
+void MainWindow::on_actionArrival_Departures_for_restaurant_triggered()
+{
+    FRestGuestView::openFilterReport<FRestGuestView, WReportGrid>();
 }

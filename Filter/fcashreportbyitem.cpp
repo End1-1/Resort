@@ -22,19 +22,20 @@ void FCashReportByItem::apply(WReportGrid *rg)
 {
     rg->fModel->clearColumns();
     rg->fModel->setColumn(100, "", tr("Source"))
-            .setColumn(250, "", tr("Name"))
-            .setColumn(150, "", tr("Mode of payment"))
-            .setColumn(100, "", tr("Qty"))
-            .setColumn(100, "", tr("Amount AMD"))
-            .setColumn(100, "", tr("Amount, USD"));
+    .setColumn(250, "", tr("Name"))
+    .setColumn(150, "", tr("Mode of payment"))
+    .setColumn(100, "", tr("Qty"))
+    .setColumn(100, "", tr("Amount AMD"))
+    .setColumn(100, "", tr("Amount, USD"));
     QString query = "select m.f_source, p.f_en, pm.f_en, count(m.f_id), "
-                    "sum(m.f_amountAmd), sum(m.f_amountAmd / m.f_amountUsd) "
+                    "if(m.f_source='RF', -sum(m.f_amountAmd),sum(m.f_amountAmd)),"
+                    "if(m.f_source='RF', -sum(m.f_amountAmd / m.f_amountUsd),  sum(m.f_amountAmd / m.f_amountUsd)) "
                     "from m_register m "
                     "left join users u on u.f_id=m.f_user "
                     "left join f_invoice_item p on p.f_id=m.f_itemCode "
                     "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
                     "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 and f_finance=1 :operator "
-                    "and m.f_paymentmode in (1,2,3,4) "
+                    "and m.f_SOURCE in ('AV', 'RV', 'RF') and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17) "
                     "group by 1, 2, 3 "
                     "order by m.f_source ";
     query.replace(":f_wdate1", ui->wd->ds1());

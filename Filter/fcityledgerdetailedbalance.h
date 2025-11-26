@@ -3,7 +3,8 @@
 
 #include "wfilterbase.h"
 
-namespace Ui {
+namespace Ui
+{
 class FCityLedgerDetailedBalance;
 }
 
@@ -25,7 +26,6 @@ public:
 
 private:
     Ui::FCityLedgerDetailedBalance *ui;
-    void applyNat(WReportGrid *rg);
     void applyNorm(WReportGrid *rg);
 
 private slots:

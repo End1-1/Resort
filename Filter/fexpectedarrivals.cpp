@@ -10,10 +10,9 @@ FExpectedArrivals::FExpectedArrivals(QWidget *parent) :
     ui->setupUi(this);
     fReportGrid->setupTabTextAndIcon(tr("Expected arrivals/depatures"), ":/images/arrival.png");
     ui->leCardexCode->setSelector(this, cache(cid_cardex), ui->leCardexName);
-    connect(ui->wd, &WDate2::changed, [this](){
+    connect(ui->wd, &WDate2::changed, [this]() {
         apply(fReportGrid);
     });
-
     GOExpextedArrivals g("Expected arrivals/depatures");
     Q_UNUSED(g);
 }
@@ -47,10 +46,10 @@ QWidget *FExpectedArrivals::lastElement()
 QString FExpectedArrivals::reportTitle()
 {
     return QString("%1 %2 From %3 To %4")
-            .arg("Expected")
-            .arg(type())
-            .arg(ui->wd->ds1())
-            .arg(ui->wd->ds2());
+           .arg("Expected")
+           .arg(type())
+           .arg(ui->wd->ds1())
+           .arg(ui->wd->ds2());
 }
 
 GOWidget *FExpectedArrivals::gridOptionWidget()
@@ -75,8 +74,7 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
          << 80 // rate
          << 30 // status
          << 100 //departure
-            ;
-
+         ;
     QStringList titles ;
     titles << tr("Voucher")
            << tr("Room")
@@ -100,34 +98,33 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
     QString where;
     if (ui->rbEntry->isChecked()) {
         where = QString ("where %1 between %2 and %3 %4")
-            .arg("r.f_startDate")
-            .arg(ui->wd->ds1())
-            .arg(ui->wd->ds2())
-            .arg(" and r.f_state = 2 ");
+                .arg("r.f_startDate")
+                .arg(ui->wd->ds1())
+                .arg(ui->wd->ds2())
+                .arg(" and r.f_state = 2 ");
     }
-
     // - cdx.cardex_rate
     if (ui->leCardexCode->text().length() > 0) {
         where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
     }
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
+                    "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
     if (ui->chWithoutRates->isChecked()) {
         query += "'0',";
     } else {
         query += "r.f_pricePerNight, ";
     }
     query += "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
-            "from f_reservation r "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_guests g on g.f_id=r.f_guest "
-            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
-            "left join f_reservation_status s on s.f_id=r.f_reserveState "
-            "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
-                "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
-            + where +
-            "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
-            ;
+             "from f_reservation r "
+             "left join f_room rm on rm.f_id=r.f_room "
+             "left join f_guests g on g.f_id=r.f_guest "
+             "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+             "left join f_reservation_status s on s.f_id=r.f_reserveState "
+             "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
+             "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
+             + where +
+             "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
+    ;
     QList<int> entryRows;
     QList<int> mainRows;
     QList<int> addRows;
@@ -206,7 +203,7 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
         rg->fModel->appendRow(emptyRow);
         r++;
     }
-   // rg->fModel->setSqlQuery("");
+    // rg->fModel->setSqlQuery("");
     rg->fModel->applyFinal(rg, true);
     foreach (int i, entryRows) {
         rg->fTableView->setSpan(i, 0, 1, 14);
@@ -225,10 +222,7 @@ void FExpectedArrivals::printArrival(WReportGrid *rg)
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {
-#ifdef _METROPOL_
-#else
-            rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
-#endif
+            //            rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
         }
     }
     if (rg->fModel->rowCount() == 0) {
@@ -262,8 +256,7 @@ void FExpectedArrivals::printDeparture(WReportGrid *rg)
          << 80 // rate
          << 30 // status
          << 100 //departure
-            ;
-
+         ;
     QStringList titles ;
     titles << tr("Voucher")
            << tr("Room")
@@ -285,29 +278,29 @@ void FExpectedArrivals::printDeparture(WReportGrid *rg)
         emptyRow << QVariant();
     }
     QString where = QString ("where %1 between %2 and %3 and r.f_state=%4 ")
-            .arg("r.f_endDate")
-            .arg(ui->wd->ds1())
-            .arg(ui->wd->ds2())
-            .arg(RESERVE_CHECKIN);
+                    .arg("r.f_endDate")
+                    .arg(ui->wd->ds1())
+                    .arg(ui->wd->ds2())
+                    .arg(RESERVE_CHECKIN);
     if (ui->leCardexCode->text().length() > 0) {
         where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
     }
     // - cdx.cardex_rate
     QString query = "select r.f_startDate, r.f_id, rm.f_short, "
-            "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
-            "bl.total, "
-            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
-            "from f_reservation r "
-            "inner join f_room rm on rm.f_id=r.f_room "
-            "inner join f_guests g on g.f_id=r.f_guest "
-            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
-            "inner join f_reservation_status s on s.f_id=r.f_reserveState "
-            "left join (select a.f_res, sum(f_amountAmd) as total from m_register a where f_source='AV' and f_finance=1 and f_canceled=0 group by 1) adv on adv.f_res=r.f_id "
-            "left join (select f_inv, sum(f_amountAmd*f_sign) as total from m_register where f_canceled=0 and f_finance=1 group by 1) bl on bl.f_inv=r.f_invoice "
-            + where +
-            "order by r.f_endDate, r.f_room "
-            ;
+                    "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
+                    "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
+                    "bl.total, "
+                    "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
+                    "from f_reservation r "
+                    "inner join f_room rm on rm.f_id=r.f_room "
+                    "inner join f_guests g on g.f_id=r.f_guest "
+                    "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+                    "inner join f_reservation_status s on s.f_id=r.f_reserveState "
+                    "left join (select a.f_res, sum(f_amountAmd) as total from m_register a where f_source='AV' and f_finance=1 and f_canceled=0 group by 1) adv on adv.f_res=r.f_id "
+                    "left join (select f_inv, sum(f_amountAmd*f_sign) as total from m_register where f_canceled=0 and f_finance=1 group by 1) bl on bl.f_inv=r.f_invoice "
+                    + where +
+                    "order by r.f_endDate, r.f_room "
+                    ;
     QList<int> entryRows;
     QList<int> mainRows;
     QList<int> addRows;
@@ -423,8 +416,7 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
          << 80 // rate
          << 30 // status
          << 100 //departure
-            ;
-
+         ;
     QStringList titles ;
     titles << tr("Voucher")
            << tr("Room")
@@ -446,33 +438,32 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
         emptyRow << QVariant();
     }
     QString where = QString ("where %1 between %2 and %3 %4")
-            .arg("r.f_startDate")
-            .arg(ui->wd->ds1())
-            .arg(ui->wd->ds2())
-            .arg(" and r.f_state = 2 ");
-
+                    .arg("r.f_startDate")
+                    .arg(ui->wd->ds1())
+                    .arg(ui->wd->ds2())
+                    .arg(" and r.f_state = 2 ");
     // - cdx.cardex_rate
     if (ui->leCardexCode->text().length() > 0) {
         where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
     }
     QString query = "select r.f_startDate, r.f_id, rm.f_short, concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
+                    "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', ";
     if (ui->chWithoutRates->isChecked()) {
         query += "'0',";
     } else {
         query += "r.f_pricePerNight, ";
     }
     query += "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
-            "from f_reservation r "
-            "left join f_room rm on rm.f_id=r.f_room "
-            "left join f_guests g on g.f_id=r.f_guest "
-            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
-            "left join f_reservation_status s on s.f_id=r.f_reserveState "
-            "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
-                "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
-            + where +
-            "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
-            ;
+             "from f_reservation r "
+             "left join f_room rm on rm.f_id=r.f_room "
+             "left join f_guests g on g.f_id=r.f_guest "
+             "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+             "left join f_reservation_status s on s.f_id=r.f_reserveState "
+             "left join (select a.f_res, abs(sum(f_amountAmd*f_sign)) as total "
+             "from m_register a where f_canceled=0 and f_finance=1 group by 1) adv on adv.f_res=r.f_id "
+             + where +
+             "order by " + GOExpextedArrivals::value("sort order", "Expected arrivals/depatures").toString();
+    ;
     QList<int> entryRows;
     QList<int> mainRows;
     QList<int> addRows;
@@ -537,80 +528,79 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
     }
     // DEPARTURES
     where = QString ("where %1 between %2 and %3 and r.f_state=%4 ")
-                .arg("r.f_endDate")
-                .arg(ui->wd->ds1())
-                .arg(ui->wd->ds2())
-                .arg(RESERVE_CHECKIN);
-        if (ui->leCardexCode->text().length() > 0) {
-            where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
-        }
-        // - cdx.cardex_rate
-        query = "select r.f_startDate, r.f_id, rm.f_short, "
-                "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
-                "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
-                "bl.total, "
-                "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
-                "from f_reservation r "
-                "inner join f_room rm on rm.f_id=r.f_room "
-                "inner join f_guests g on g.f_id=r.f_guest "
-                "left join f_cardex cx on cx.f_cardex=r.f_cardex "
-                "inner join f_reservation_status s on s.f_id=r.f_reserveState "
-                "left join (select a.f_res, sum(f_amountAmd) as total from m_register a where f_source='AV' and f_finance=1 and f_canceled=0 group by 1) adv on adv.f_res=r.f_id "
-                "left join (select f_inv, sum(f_amountAmd*f_sign) as total from m_register where f_canceled=0 and f_finance=1 group by 1) bl on bl.f_inv=r.f_invoice "
-                + where +
-                "order by r.f_endDate, r.f_room "
-                ;
-        entryDate = QDate::fromString("01/01/2000", "dd/MM/yyyy");
-        fDD.exec(query);
-        while (fDD.nextRow()) {
-            if (entryDate != fDD.getDate(13)) {
-                if (count > 0) {
-                    row = emptyRow;
-                    row[0] = tr("Total");
-                    row[1] = count;
-                    row[8] = totalAdv;
-                    row[10] = totalPosted;
-                    rg->fModel->appendRow(row);
-                    totalRows << r;
-                    r++;
-                    count = 0;
-                    totalAdv = 0;
-                    totalPosted = 0;
-                    rg->fModel->appendRow(emptyRow);
-                    entryRows << r;
-                    r++;
-                }
+            .arg("r.f_endDate")
+            .arg(ui->wd->ds1())
+            .arg(ui->wd->ds2())
+            .arg(RESERVE_CHECKIN);
+    if (ui->leCardexCode->text().length() > 0) {
+        where += " and r.f_cardex='" + ui->leCardexCode->text() + "' ";
+    }
+    // - cdx.cardex_rate
+    query = "select r.f_startDate, r.f_id, rm.f_short, "
+            "concat(g.f_title, ' ', g.f_firstName, ' ', g.f_lastName), "
+            "r.f_man, r.f_woman, r.f_child, datediff(r.f_endDate, r.f_startDate), cx.f_name, adv.total, '-', "
+            "bl.total, "
+            "left(s.f_en, 1), r.f_endDate, replace(r.f_remarks, '\n', ' ') as f_remarks "
+            "from f_reservation r "
+            "inner join f_room rm on rm.f_id=r.f_room "
+            "inner join f_guests g on g.f_id=r.f_guest "
+            "left join f_cardex cx on cx.f_cardex=r.f_cardex "
+            "inner join f_reservation_status s on s.f_id=r.f_reserveState "
+            "left join (select a.f_res, sum(f_amountAmd) as total from m_register a where f_source='AV' and f_finance=1 and f_canceled=0 group by 1) adv on adv.f_res=r.f_id "
+            "left join (select f_inv, sum(f_amountAmd*f_sign) as total from m_register where f_canceled=0 and f_finance=1 group by 1) bl on bl.f_inv=r.f_invoice "
+            + where +
+            "order by r.f_endDate, r.f_room "
+            ;
+    entryDate = QDate::fromString("01/01/2000", "dd/MM/yyyy");
+    fDD.exec(query);
+    while (fDD.nextRow()) {
+        if (entryDate != fDD.getDate(13)) {
+            if (count > 0) {
                 row = emptyRow;
-                entryDate = fDD.getDate(13);
-                row[0] = tr("Departure date: ") + entryDate.toString(def_date_format);
+                row[0] = tr("Total");
+                row[1] = count;
+                row[8] = totalAdv;
+                row[10] = totalPosted;
                 rg->fModel->appendRow(row);
+                totalRows << r;
+                r++;
+                count = 0;
+                totalAdv = 0;
+                totalPosted = 0;
+                rg->fModel->appendRow(emptyRow);
                 entryRows << r;
                 r++;
             }
-            totalAdv += fDD.getDouble(9);
-            totalPosted += fDD.getDouble(11);
-            guestCount += (fDD.getInt(4) + fDD.getInt(5) + fDD.getInt(6));
             row = emptyRow;
-            for (int i = 1; i < 14; i++) {
-                row[i - 1] = fDD.getValue(i);
-            }
+            entryDate = fDD.getDate(13);
+            row[0] = tr("Departure date: ") + entryDate.toString(def_date_format);
             rg->fModel->appendRow(row);
-            mainRows << r;
-            r++;
-            if (fDD.getString(14).length() > 0) {
-                row = emptyRow;
-                row[0] = fDD.getString(14).replace("\r", " ").replace("\n", " ");
-                rg->fModel->appendRow(row);
-                addRows << r;
-                r++;
-            }
-            rg->fModel->appendRow(emptyRow);
             entryRows << r;
-            rowsHeights << r;
             r++;
-            count ++;
         }
-
+        totalAdv += fDD.getDouble(9);
+        totalPosted += fDD.getDouble(11);
+        guestCount += (fDD.getInt(4) + fDD.getInt(5) + fDD.getInt(6));
+        row = emptyRow;
+        for (int i = 1; i < 14; i++) {
+            row[i - 1] = fDD.getValue(i);
+        }
+        rg->fModel->appendRow(row);
+        mainRows << r;
+        r++;
+        if (fDD.getString(14).length() > 0) {
+            row = emptyRow;
+            row[0] = fDD.getString(14).replace("\r", " ").replace("\n", " ");
+            rg->fModel->appendRow(row);
+            addRows << r;
+            r++;
+        }
+        rg->fModel->appendRow(emptyRow);
+        entryRows << r;
+        rowsHeights << r;
+        r++;
+        count ++;
+    }
     if (count > 0) {
         row = emptyRow;
         row[0] = tr("Total");
@@ -629,7 +619,7 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
     } else {
         message_info(tr("There are no arrivals or departures"));
     }
-   // rg->fModel->setSqlQuery("");
+    // rg->fModel->setSqlQuery("");
     rg->fModel->applyFinal(rg, true);
     foreach (int i, entryRows) {
         rg->fTableView->setSpan(i, 0, 1, 14);
@@ -648,10 +638,7 @@ void FExpectedArrivals::printBoth(WReportGrid *rg)
     }
     for (int i = 0, count = rg->fModel->rowCount(); i < count; i++) {
         if (rg->fModel->data(i, 0).toString().isEmpty()) {
-#ifdef _METROPOL_
-#else
-            rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
-#endif
+            //rg->fModel->setBackgroundColor(i, COLOR_DARK_ROW);
         }
     }
 }

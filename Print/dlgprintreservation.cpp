@@ -60,7 +60,7 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     th.setFont(f);
     int top = 310;
     int rowHeight = 60;
-    ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("To") + ":", &th, f));
+    top += ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("To") + ":", &th, f))->textHeight();
     DoubleDatabase dguest;
     dguest[":f_invoice"] = fSource->invoiceId();
     dguest.exec("select concat(g.f_title, '  ', g.f_lastname, ' ', g.f_firstname, ', ', n.f_name) "
@@ -117,12 +117,12 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Room rate"), &th, f));
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Price per night"), &th,
                                          f))->textHeight();
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Buffet Breakfast"), &th, f));
+    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Breakfast"), &th, f));
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight,
                                          (fSource->valueForWidget("Meal included").toInt() == 0 ? tr("Not included") : tr("Included")), &th, f))->textHeight();
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Payment mode"), &th, f));
-    top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Payment mode"), &th,
-                                         f))->textHeight();
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Payment mode"), &th, f));
+    // top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Payment mode"), &th,
+    //                                      f))->textHeight();
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Check In Time"), &th, f));
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, "", &th, f))->textHeight();
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Check Out Time"), &th, f));
@@ -139,14 +139,14 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     f.setBold(true);
     f.setUnderline(true);
     th.setFont(f);
-    top += ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Billing instructions"), &th, f))->textHeight();
-    f.setBold(false);
-    f.setUnderline(false);
-    th.setFont(f);
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("No Show Policy"), &th, f));
-    top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, tr("5 nights will be charged"), &th, f))->textHeight();
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Cancelation Policy"), &th, f));
-    top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, tr("5 nights will be charged"), &th, f))->textHeight();
+    // top += ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Billing instructions"), &th, f))->textHeight();
+    // f.setBold(false);
+    // f.setUnderline(false);
+    // th.setFont(f);
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("No Show Policy"), &th, f));
+    // top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, tr("5 nights will be charged"), &th, f))->textHeight();
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Cancelation Policy"), &th, f));
+    // top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, tr("5 nights will be charged"), &th, f))->textHeight();
     top += rowHeight;
     ps->addLine(20, top, 2100, top, boldPen);
     top += 2;

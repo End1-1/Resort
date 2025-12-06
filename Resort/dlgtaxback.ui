@@ -41,6 +41,11 @@
        <string>Sel</string>
       </property>
      </column>
+     <column>
+      <property name="text">
+       <string>Fiscal</string>
+      </property>
+     </column>
     </widget>
    </item>
    <item>

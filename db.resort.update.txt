@@ -19,3 +19,44 @@ alter table f_reservation add column f_chmstatus integer;
 #31.12.2024
 UPDATE s_app SET f_version ='16' WHERE lower(f_app)='db';
 ALTER TABLE s_tax_map ADD COLUMN f_opcode CHAR(8), ADD column f_oppin CHAR(8),  ADD COLUMN f_extpos CHAR(8);
+
+
+#06.12.2025
+UPDATE s_app SET f_version ='17' WHERE lower(f_app)='db';
+ALTER TABLE `f_reservation`
+	CHANGE COLUMN `f_state` `f_state` INT NULL DEFAULT NULL AFTER `f_id`,
+	CHANGE COLUMN `f_reserveState` `f_reserveState` INT NULL DEFAULT NULL AFTER `f_state`,
+	CHANGE COLUMN `f_arrangement` `f_arrangement` INT NULL DEFAULT NULL AFTER `f_room`,
+	CHANGE COLUMN `f_mealIncluded` `f_mealIncluded` INT NULL DEFAULT NULL AFTER `f_arrangement`,
+	CHANGE COLUMN `f_arrivalFee` `f_arrivalFee` FLOAT NULL DEFAULT NULL AFTER `f_arrivalTime`,
+	CHANGE COLUMN `f_earlyCheckIn` `f_earlyCheckIn` INT NULL DEFAULT NULL AFTER `f_departureTime`,
+	CHANGE COLUMN `f_earlyCheckInFee` `f_earlyCheckInFee` FLOAT NULL DEFAULT NULL AFTER `f_earlyCheckInTime`,
+	CHANGE COLUMN `f_roomFee` `f_roomFee` FLOAT NULL DEFAULT NULL AFTER `f_paymentType`,
+	CHANGE COLUMN `f_mealPrice` `f_mealPrice` FLOAT NULL DEFAULT NULL AFTER `f_mealQty`,
+	CHANGE COLUMN `f_extraBed` `f_extraBed` INT NULL DEFAULT NULL AFTER `f_mealPrice`,
+	CHANGE COLUMN `f_extraBedFee` `f_extraBedFee` FLOAT NULL DEFAULT NULL AFTER `f_extraBed`,
+	CHANGE COLUMN `f_pricePerNight` `f_pricePerNight` FLOAT NULL DEFAULT NULL AFTER `f_extraBedFee`,
+	CHANGE COLUMN `f_vat` `f_vat` FLOAT NULL DEFAULT NULL AFTER `f_pricePerNight`,
+	CHANGE COLUMN `f_vatAmount` `f_vatAmount` FLOAT NULL DEFAULT NULL AFTER `f_vat`,
+	CHANGE COLUMN `f_vatMode` `f_vatMode` FLOAT NULL DEFAULT NULL AFTER `f_vatAmount`,
+	CHANGE COLUMN `f_total` `f_total` FLOAT NULL DEFAULT NULL AFTER `f_vatMode`,
+	CHANGE COLUMN `f_grandTotal` `f_grandTotal` FLOAT NULL DEFAULT NULL AFTER `f_total`,
+	CHANGE COLUMN `f_totalUSD` `f_totalUSD` FLOAT NULL DEFAULT NULL AFTER `f_grandTotal`,
+	CHANGE COLUMN `f_commission` `f_commission` FLOAT NULL DEFAULT NULL AFTER `f_remarks`,
+	CHANGE COLUMN `f_lateCheckOutFee` `f_lateCheckOutFee` INT NULL DEFAULT NULL AFTER `f_lateCheckOutTime`,
+	CHANGE COLUMN `f_pickup` `f_pickup` INT NULL DEFAULT NULL AFTER `f`;
+ALTER TABLE `f_reservation_guests`
+	CHANGE COLUMN `f_first` `f_first` INT NULL DEFAULT NULL AFTER `f_guest`;
+	ALTER TABLE `m_register`
+	CHANGE COLUMN `f_amountAmd` `f_amountAmd` FLOAT NULL DEFAULT NULL AFTER `f_finalName`,
+	CHANGE COLUMN `f_usedPrepaid` `f_usedPrepaid` FLOAT NULL DEFAULT NULL AFTER `f_amountAmd`,
+	CHANGE COLUMN `f_amountVat` `f_amountVat` FLOAT NULL DEFAULT NULL AFTER `f_usedPrepaid`,
+	CHANGE COLUMN `f_amountUsd` `f_amountUsd` FLOAT NULL DEFAULT NULL AFTER `f_amountVat`,
+	CHANGE COLUMN `f_vatmode` `f_vatmode` INT NULL DEFAULT NULL AFTER `f_amountUsd`,
+	CHANGE COLUMN `f_sign` `f_sign` INT NULL DEFAULT NULL AFTER `f_dc`,
+	CHANGE COLUMN `f_finance` `f_finance` INT NULL DEFAULT NULL AFTER `f_inv`,
+	CHANGE COLUMN `f_canceled` `f_canceled` INT NULL DEFAULT NULL AFTER `f_remarks`,
+	CHANGE COLUMN `f_side` `f_side` INT NULL DEFAULT NULL AFTER `f_cancelReason`,
+	CHANGE COLUMN `f_rb` `f_rb` INT NULL DEFAULT NULL AFTER `f_usedTaxId`,
+	CHANGE COLUMN `f_cash` `f_cash` INT NULL DEFAULT NULL AFTER `f_rb`,
+	CHANGE COLUMN `f_fiscalmachine` `f_fiscalmachine` INT NULL DEFAULT NULL AFTER `f_session`;

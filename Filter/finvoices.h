@@ -3,7 +3,8 @@
 
 #include "wfilterbase.h"
 
-namespace Ui {
+namespace Ui
+{
 class FInvoices;
 }
 
@@ -17,17 +18,19 @@ public:
     explicit FInvoices(QWidget *parent = nullptr);
     ~FInvoices();
     virtual void apply(WReportGrid *rg);
-    virtual QWidget *firstElement();
-    virtual QWidget *lastElement();
+    virtual QWidget* firstElement();
+    virtual QWidget* lastElement();
     virtual QString reportTitle();
-    QCheckBox *chFreeRooming();
+    QCheckBox* chFreeRooming();
     static void openReport(bool free);
 
 private:
-    Ui::FInvoices *ui;
+    Ui::FInvoices* ui;
 
 private slots:
     void removeInvoiceWithAllReference();
+    void exportToJson();
+    void importFromJson();
     void on_btnNext_clicked();
     void on_btnPrev_clicked();
 };

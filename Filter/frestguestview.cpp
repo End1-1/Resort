@@ -77,7 +77,7 @@ departure AS (
     FROM f_reservation r
     LEFT JOIN f_room_arrangement ra ON ra.f_id = r.f_arrangement
     LEFT JOIN f_cardex ca ON ca.f_cardex=r.f_cardex
-    WHERE f_enddate = current_date
+    WHERE f_enddate = current_date and f_state in (1,2,3)
     GROUP BY 1,2,3
 ),
 departure_total AS (

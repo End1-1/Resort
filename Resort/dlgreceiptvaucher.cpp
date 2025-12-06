@@ -32,18 +32,20 @@ DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, in
     ui->deDate->setDate(WORKING_DATE);
     ui->leCL->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->lePaymentCode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName, HINT_PAYMENT_MODE);
-    if (side == 0) {
-    ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
-                                     << QString::number(PAYMENT_CARD)
-                                     << QString::number(PAYMENT_BANK)
-                                     << QString::number(PAYMENT_BARTER)
-                                     << QString::number(PAYMENT_CL)
-                                     << QString::number(PAYMENT_PAYX)
-                                     << QString::number(PAYMENT_TERMINAL)
-                                     << QString::number(PAYMENT_CPAY);
+
+    if(side == 0) {
+        ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
+                                       << QString::number(PAYMENT_CARD)
+                                       << QString::number(PAYMENT_BANK)
+                                       << QString::number(PAYMENT_BARTER)
+                                       << QString::number(PAYMENT_CL)
+                                       << QString::number(PAYMENT_PAYX)
+                                       << QString::number(PAYMENT_TERMINAL)
+                                       << QString::number(PAYMENT_CPAY);
     } else {
         ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CL);
     }
+
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName, HINT_CARD);
     cardVisible(false);
     clVisible(false);
@@ -66,11 +68,13 @@ DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, in
     on_tabWidget_currentChanged(0);
     fDoc.fFiscalMachine = fiscalmachine;
     DoubleDatabase dd;
-    if (fDoc.fFiscalMachine > 0) {
-        if (row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
+
+    if(fDoc.fFiscalMachine > 0) {
+        if(row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
             ui->leFiscalMachine->setText(dd.getString("f_name"));
         }
     }
+
     fSuggestAmount = suggestAmount;
     ui->btnSuggestAmount->setText(float_str(suggestAmount));
     ui->lbSuggestAmount->setVisible(suggestAmount > 0.01);
@@ -88,29 +92,36 @@ void DlgReceiptVaucher::setVoucher(const QString &id)
     clearSelectors();
     DoubleDatabase dd;
     fDoc.open(dd, id);
-    switch (ui->lePaymentCode->asInt()) {
-        case PAYMENT_BANK:
-            ui->deDate->setReadOnly(!r__(cr__rv_change_date_bank));
-            break;
-        case PAYMENT_CASH:
-            ui->deDate->setReadOnly(!r__(cr__rv_change_date_cash));
-            break;
-        case PAYMENT_CL:
-            ui->deDate->setReadOnly(!r__(cr__rv_change_date_cl));
-            break;
-        case PAYMENT_CARD:
-            ui->deDate->setReadOnly(!r__(cr__rv_change_date_card));
-            cardVisible(true);
-            break;
-        default:
-            ui->deDate->setReadOnly(!r__(cr__change_rv_other_types));
-            break;
+
+    switch(ui->lePaymentCode->asInt()) {
+    case PAYMENT_BANK:
+        ui->deDate->setReadOnly(!r__(cr__rv_change_date_bank));
+        break;
+
+    case PAYMENT_CASH:
+        ui->deDate->setReadOnly(!r__(cr__rv_change_date_cash));
+        break;
+
+    case PAYMENT_CL:
+        ui->deDate->setReadOnly(!r__(cr__rv_change_date_cl));
+        break;
+
+    case PAYMENT_CARD:
+        ui->deDate->setReadOnly(!r__(cr__rv_change_date_card));
+        cardVisible(true);
+        break;
+
+    default:
+        ui->deDate->setReadOnly(!r__(cr__change_rv_other_types));
+        break;
     }
-    if (fDoc.fFiscalMachine > 0) {
-        if (row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
+
+    if(fDoc.fFiscalMachine > 0) {
+        if(row_of_id(dd, "s_tax_map", fDoc.fFiscalMachine)) {
             ui->leFiscalMachine->setText(dd.getString("f_name"));
         }
     }
+
     fixTabWidget();
     setBalance();
     ui->btnSave->setVisible(r__(cr__super_correction));
@@ -122,48 +133,54 @@ void DlgReceiptVaucher::setVoucher(const QString &id)
     adjustSize();
 }
 
-
 void DlgReceiptVaucher::callback(int sel, const QString &code)
 {
-    switch (sel) {
+    switch(sel) {
     case HINT_PAYMENT_MODE: {
         CachePaymentMode c;
-        if (c.get(code)) {
-            switch (c.fCode().toInt()) {
+
+        if(c.get(code)) {
+            switch(c.fCode().toInt()) {
             case PAYMENT_CASH:
                 cardVisible(false);
                 clVisible(false);
-
                 ui->leFinalName->setText(tr("PAYMENT CASH"));
                 break;
+
             case PAYMENT_CARD:
                 clVisible(false);
                 cardVisible(true);
                 break;
+
             case PAYMENT_BANK:
                 clVisible(false);
                 cardVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT BANK"));
                 break;
+
             case PAYMENT_PAYX:
                 cardVisible(false);
                 clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT PAYX"));
                 break;
+
             case PAYMENT_TERMINAL:
                 cardVisible(false);
                 clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT TERMINAL"));
                 break;
+
             case PAYMENT_CPAY:
                 cardVisible(false);
                 clVisible(false);
                 ui->leFinalName->setText(tr("PAYMENT CPAY"));
                 break;
+
             case PAYMENT_CL:
                 clVisible(true);
                 ui->leFinalName->setText(QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest()));
                 break;
+
             default:
                 cardVisible(false);
                 clVisible(false);
@@ -171,13 +188,17 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
                 break;
             }
         }
+
         break;
     }
+
     case HINT_CARD: {
         CacheCreditCard c;
-        if (c.get(code)) {
+
+        if(c.get(code)) {
             ui->leFinalName->setText(tr("PAYMENT") + " " + c.fName());
         }
+
         break;
     }
     }
@@ -186,12 +207,13 @@ void DlgReceiptVaucher::callback(int sel, const QString &code)
 void DlgReceiptVaucher::setSide(quint32 side)
 {
     fDoc.fSide = side;
-    if (side == 1) {
+
+    if(side == 1) {
         ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
-                                         << QString::number(PAYMENT_CARD)
-                                         << QString::number(PAYMENT_BANK)
-                                         << QString::number(PAYMENT_BARTER)
-                                         << QString::number(PAYMENT_CL);
+                                       << QString::number(PAYMENT_CARD)
+                                       << QString::number(PAYMENT_BANK)
+                                       << QString::number(PAYMENT_BARTER)
+                                       << QString::number(PAYMENT_CL);
     }
 }
 
@@ -206,7 +228,8 @@ void DlgReceiptVaucher::setInvoice(const QString &invoice)
     DoubleDatabase dd;
     dd[":f_invoice"] = invoice;
     dd.exec("select f_room from f_reservation where f_invoice=:f_invoice");
-    if (dd.nextRow()) {
+
+    if(dd.nextRow()) {
         setRoom(dd.getInt("f_room"));
     }
 }
@@ -219,7 +242,8 @@ void DlgReceiptVaucher::setRoom(int room)
 void DlgReceiptVaucher::setPaymentMode(int mode, int cl)
 {
     ui->lePaymentCode->setInitialValue(mode);
-    if (cl > 0) {
+
+    if(cl > 0) {
         ui->leCL->setInitialValue(cl);
     }
 }
@@ -232,94 +256,124 @@ void DlgReceiptVaucher::setAmount(double amount)
 void DlgReceiptVaucher::on_btnSave_clicked()
 {
     QString errors;
-    if (ui->leAmountAMD->asDouble() < 0.1) {
+
+    if(ui->leAmountAMD->asDouble() < 0.1) {
         errors += tr("Amount cannot be equal to zero.") + "<br>";
     }
+
     QString dc = "DEBIT";
     int sign = -1;
     QString finalName = tr("PAYMENT") + " ";
     QString room;
-    switch (ui->tabWidget->currentIndex()) {
+
+    switch(ui->tabWidget->currentIndex()) {
     case 0:
-        if (ui->wRoom->room() == 0) {
+        if(ui->wRoom->room() == 0) {
             errors += tr("Room is not selected") + "<br>";
         } else {
             room = QString::number(ui->wRoom->room());
         }
-        switch (ui->lePaymentCode->asInt()) {
+
+        switch(ui->lePaymentCode->asInt()) {
         case PAYMENT_CASH:
             finalName += "CASH";
             break;
+
         case PAYMENT_BANK:
             finalName += "BANK";
             break;
+
         case PAYMENT_CARD:
             finalName += ui->leCardName->text();
             break;
+
         case PAYMENT_CL:
-            if (ui->leCL->asInt() == 0) {
+            if(ui->leCL->asInt() == 0) {
                 errors += tr("City ledger is not defined");
             }
+
             finalName = QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest());
             break;
+
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wRoom->guest();
             break;
+
         case PAYMENT_PAYX:
             finalName += "PAYX";
             break;
+
+        case PAYMENT_CPAY:
+            finalName += "CPAY";
+            break;
+
         case PAYMENT_TERMINAL:
             finalName += "TERMINAL";
             break;
+
         default:
             errors += tr("Selected mode of payment is not allowed here") + "<br>";
             break;
         }
+
         break;
+
     case 1:
         dc = "CREDIT";
         sign = 1;
         ui->wRoom->setGuest(ui->wCL->cityLedgerName());
         ui->wRoom->setRoom(ui->wCL->cityLedger());
-        if (ui->wCL->cityLedger() == 0) {
+
+        if(ui->wCL->cityLedger() == 0) {
             errors += tr("Cityledger is not selected") + "<br>";
         } else {
             room = QString::number(ui->wCL->cityLedger());
         }
-        switch (ui->lePaymentCode->asInt()) {
+
+        switch(ui->lePaymentCode->asInt()) {
         case PAYMENT_CASH:
             finalName += "CASH";
             break;
+
         case PAYMENT_BANK:
             finalName += "BANK";
             break;
+
         case PAYMENT_CARD:
             finalName += ui->leCardName->text();
             break;
+
         case PAYMENT_BARTER:
             finalName += "BARTER " + ui->wCL->cityLedgerName();
             break;
+
         case PAYMENT_PAYX:
             finalName += "PAYX";
             break;
+
         case PAYMENT_TERMINAL:
             finalName += "TERMINAL";
             break;
+
         case PAYMENT_CPAY:
             finalName += "CPAY";
             break;
+
         default:
             errors += tr("Selected payment mode is not allowed here") + "<br>";
             break;
         }
     }
-    if (ui->lePaymentCode->asInt() == PAYMENT_CARD) {
-        if (ui->leCardCode->asInt() == 0) {
+
+    if(ui->lePaymentCode->asInt() == PAYMENT_CARD) {
+        if(ui->leCardCode->asInt() == 0) {
             errors += tr("Card is not selected") + "<br>";
         }
     }
+
     ui->leFinalName->setText(finalName);
-    if (!errors.isEmpty()) {
+
+    if(!errors.isEmpty()) {
         message_error(errors);
         return;
     }
@@ -327,8 +381,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
     DoubleDatabase fDD;
     fDoc.fDC = dc;
     fDoc.fSign = sign;
-    if (ui->tabWidget->currentIndex() == 0) {
-        if (ui->lePaymentCode->asInt() == PAYMENT_CL) {
+
+    if(ui->tabWidget->currentIndex() == 0) {
+        if(ui->lePaymentCode->asInt() == PAYMENT_CL) {
             fDoc.fCityLedger = ui->leCL->asUInt();
             fDoc.fPaymentComment = "CHECKOUT " + ui->leCLName->text();
         } else {
@@ -337,11 +392,14 @@ void DlgReceiptVaucher::on_btnSave_clicked()
     } else {
         fDoc.fPaymentComment = "PAYMENT " + vaucherPaymentName(ui->lePaymentCode->asInt(), ui->leCardCode->text(), QString::number(ui->wCL->cityLedger()));
     }
+
     fDoc.fRb = ui->tabWidget->currentIndex();
+
     if(!fDoc.save(fDD)) {
         message_error(fDoc.fError);
         return;
     } /*
+
     if (ui->tabWidget->currentIndex() == 0) {
         if (ui->lePaymentCode->asInt() == PAYMENT_CL) {
             DBMRegister fDoc2;
@@ -369,13 +427,14 @@ void DlgReceiptVaucher::on_btnSave_clicked()
 
 void DlgReceiptVaucher::on_btnCancel_clicked()
 {
-    if (ui->lePaymentCode->asInt() != PAYMENT_CL) {
-        if (!ui->leVaucher->text().isEmpty()) {
+    if(ui->lePaymentCode->asInt() != PAYMENT_CL) {
+        if(!ui->leVaucher->text().isEmpty()) {
             WInvoice w(this);
             w.loadInvoice(ui->wRoom->invoice());
             w.on_btnTaxPrint_clicked();
         }
     }
+
     reject();
 }
 
@@ -384,7 +443,8 @@ void DlgReceiptVaucher::cardVisible(bool v)
     ui->lbCardType->setVisible(v);
     ui->leCardCode->setVisible(v);
     ui->leCardName->setVisible(v);
-    if (!v) {
+
+    if(!v) {
         ui->leCardCode->clear();
         ui->leCardName->clear();
     }
@@ -395,7 +455,8 @@ void DlgReceiptVaucher::clVisible(bool v)
     ui->lbCL->setVisible(v);
     ui->leCL->setVisible(v);
     ui->leCLName->setVisible(v);
-    if (!v) {
+
+    if(!v) {
         ui->leCL->clear();
         ui->leCLName->clear();
     }
@@ -407,23 +468,28 @@ void DlgReceiptVaucher::clearSelectors()
     ui->wCL->clearSelector();
     ui->lePaymentCode->clearSelector();
     ui->leCardCode->clearSelector();
-    if (!r__(cr__super_correction)) {
+
+    if(!r__(cr__super_correction)) {
         ui->leOpcode->clearSelector();
     }
+
     ui->tabWidget->disconnect(this, SLOT(on_tabWidget_currentChanged(int)));
 }
 
 void DlgReceiptVaucher::fixTabWidget()
 {
-    switch (fDoc.fRb) {
+    switch(fDoc.fRb) {
     case 0: {
         ui->tabWidget->setTabEnabled(1, false);
         CacheRoom c;
-        if (c.get(ui->wRoom->room())) {
+
+        if(c.get(ui->wRoom->room())) {
             ui->wRoom->setRoomCategory(c.fName());
         }
+
         break;
     }
+
     case 1:
         ui->tabWidget->setTabEnabled(0, false);
         break;
@@ -432,10 +498,11 @@ void DlgReceiptVaucher::fixTabWidget()
 
 void DlgReceiptVaucher::setBalance()
 {
-    switch (ui->tabWidget->currentIndex()) {
+    switch(ui->tabWidget->currentIndex()) {
     case 0:
         ui->wRoom->setBalance();
         break;
+
     case 1:
         ui->wCL->setBalance();
         break;
@@ -461,25 +528,32 @@ void DlgReceiptVaucher::on_btnNew_clicked()
 void DlgReceiptVaucher::on_lePaymentCode_textChanged(const QString &arg1)
 {
     bool ro = true;
-    switch (arg1.toInt()) {
+
+    switch(arg1.toInt()) {
     case PAYMENT_BANK:
         ro = !r__(cr__rv_change_date_bank);
         break;
+
     case PAYMENT_CASH:
         ro = !r__(cr__rv_change_date_cash);
         break;
+
     case PAYMENT_CARD:
         ro = !r__(cr__rv_change_date_card);
         break;
+
     case PAYMENT_CL:
         ro = !r__(cr__rv_change_date_cl);
         break;
+
     default:
         ro = !r__(cr__change_rv_other_types);
         break;
     }
+
     ui->deDate->setReadOnly(ro);
-    if (ro) {
+
+    if(ro) {
         ui->deDate->setDate(WORKING_DATE);
     }
 }
@@ -491,17 +565,19 @@ void DlgReceiptVaucher::on_btnLog_clicked()
 
 void DlgReceiptVaucher::on_tabWidget_currentChanged(int index)
 {
-    switch (index) {
+    switch(index) {
     case 0: {
         ui->wCL->clear();
         ui->wRoom->initSelector();
         break;
     }
+
     case 1:
         ui->wRoom->clear();
         ui->wCL->initSelector();
         break;
     }
+
     adjustSize();
 }
 

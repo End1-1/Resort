@@ -70,10 +70,12 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
                 "where rg.f_reservation in "
                 "(select f_id from f_reservation where f_invoice=:f_invoice) "
                 "order by rg.f_first desc ");
-    while (dguest.nextRow()) {
+
+    while(dguest.nextRow()) {
         r = ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f));
         top += r->textHeight();
     }
+
     ps->addTextRect(new PTextRect(20, top, 300, rowHeight, tr("Date") + ":", &th, f));
     r = ps->addTextRect(new PTextRect(300, top, 2100, rowHeight, fSource->valueForWidget("Created") + ":", &th, f));
     top += r->textHeight();
@@ -103,16 +105,20 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     QString adults_childs = QString::number(fSource->valueForWidget("Male").toInt() +
                                             fSource->valueForWidget("Female").toInt());
     int childs = fSource->valueForWidget("Childs").toInt() + fSource->valueForWidget("Baby").toInt();
-    if (childs > 0) {
+
+    if(childs > 0) {
         adults_childs += "/" + QString::number(childs);
     }
+
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, adults_childs, &th, f))->textHeight();
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Accomodation Type"), &th, f));
     CacheRoom room;
-    if (!room.get(fSource->valueForWidget("Room"))) {
+
+    if(!room.get(fSource->valueForWidget("Room"))) {
         message_error("Cannot print reservation confirmation, room was not defined. Contact to application developer.");
         return;
     }
+
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, room.fCategory(), &th, f))->textHeight();
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Room rate"), &th, f));
     top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Price per night"), &th,
@@ -130,12 +136,12 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Airport pick up"), &th, f));
     top += ps->addTextRect(new PTextRect(20, top, 600, rowHeight, fSource->valueForWidget("Pickup fee"), &th,
                                          f))->textHeight();
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Exchange rate"), &th, f));
-    top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, QString::number(def_usd, 'f', 2) + " USD", &th,
-                                         f))->textHeight();
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Remarks"), &th, f));
-    top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Remarks"), &th,
-                                         f))->textHeight();
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Exchange rate"), &th, f));
+    // top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, QString::number(def_usd, 'f', 2) + " USD", &th,
+    //                                      f))->textHeight();
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Remarks"), &th, f));
+    // top += ps->addTextRect(new PTextRect(600, top, 1500, rowHeight, fSource->valueForWidget("Remarks"), &th,
+    //                                      f))->textHeight();
     f.setBold(true);
     f.setUnderline(true);
     th.setFont(f);
@@ -152,7 +158,7 @@ void DlgPrintReservation::on_btnPrintConfirmation_clicked()
     top += 2;
     ps->addLine(20, top, 2100, top, boldPen);
     top += (rowHeight * 2);
-    ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Executive Director"), &th, f));
+    // ps->addTextRect(new PTextRect(20, top, 600, rowHeight, tr("Executive Director"), &th, f));
     pp->exec();
     delete pp;
     accept();
@@ -186,9 +192,11 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
                 "(select f_id from f_reservation where f_invoice=:f_invoice) "
                 "order by rg.f_first desc ");
     top += ps->addTextRect(20, top, 2000, rowHeight, tr("Guests:"), &th)->textHeight();
-    while (dguest.nextRow()) {
+
+    while(dguest.nextRow()) {
         top += ps->addTextRect(new PTextRect(20, top, 2100, rowHeight, dguest.getString(0), &th, f))->textHeight();
     }
+
     //top += ps->addTextRect(20, top, 2000, rowHeight, tr("Guest name") + " " + fSource->mainGuest(), &th)->textHeight();
     ps->addLine(20, top, 2100, top, boldPen);
     top += 20;
@@ -210,9 +218,11 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     top += 20;
     col << 20 << 300 << 600 << 400 << 90 << 400 << 300;
     CacheRoom c;
-    if (!c.get(fSource->valueForWidget("Room"))) {
+
+    if(!c.get(fSource->valueForWidget("Room"))) {
         return;
     }
+
     val << tr("Category")
         << c.fCategory()
         << tr("Male")
@@ -276,12 +286,15 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
                            &th)->textHeight();
     top += 10;
     CacheReservation cr;
-    if (cr.get(fSource->valueForWidget("Doc number"))) {
+
+    if(cr.get(fSource->valueForWidget("Doc number"))) {
         CacheUsers cu;
-        if (cu.get(cr.fAuthor())) {
-            top += ps->addTextRect(20, top, 2000, rowHeight, tr("Operator: " ) + cu.fName(), &th)->textHeight();
+
+        if(cu.get(cr.fAuthor())) {
+            top += ps->addTextRect(20, top, 2000, rowHeight, tr("Operator: ") + cu.fName(), &th)->textHeight();
         }
     }
+
     top += ps->addTextRect(20, top, 2000, rowHeight,
                            tr("Printed: ") + QDateTime::currentDateTime().toString(def_date_time_format), &th)->textHeight();
     pp->exec();

@@ -38,14 +38,17 @@ PTextRect::PTextRect(qreal x, qreal y, qreal w, qreal h, const QString &text, PT
 {
     fRect = QRectF(QPointF(x, y), QSizeF(w, h));
     fText = text;
-    if (pr) {
+
+    if(pr) {
         fFont = pr->fFont;
     } else {
         fFont = font;
     }
+
     fTextOption.setAlignment(Qt::AlignVCenter);
     fTextOption.setWrapMode(QTextOption::NoWrap);
-    if (pr) {
+
+    if(pr) {
         fBgBrush = pr->fBgBrush;
         fRectPen = pr->fRectPen;
         fTextPen = pr->fTextPen;
@@ -62,12 +65,12 @@ PTextRect::PTextRect(qreal x, qreal y, qreal w, qreal h, const QString &text, PT
         lnRight = true;
         lnBottom = true;
     }
+
     adjustRect();
 }
 
 PTextRect::~PTextRect()
 {
-
 }
 
 void PTextRect::setRect(qreal x, qreal y, qreal w, qreal h)
@@ -139,12 +142,14 @@ void PTextRect::adjustRect()
     int h = fRect.height() + 15;
     QFontMetrics fm(fFont);
     QRect rect(fRect.left(), fRect.top(), fRect.width(), fRect.height());
-    if (fTextOption.wrapMode() != QTextOption::NoWrap) {
+
+    if(fTextOption.wrapMode() != QTextOption::NoWrap) {
         rect = fm.boundingRect(rect, Qt::TextWordWrap, fText);
         rect.setHeight(rect.height());
-        if (rect.height() > h) {
+
+        if(rect.height() > h) {
             fRect = QRectF(QPointF(fRect.x(), fRect.y()), QSizeF(fRect.width(), rect.height() + fm.descent() + fm.ascent() + 2));
-        } else if (rect.height() < h) {
+        } else if(rect.height() < h) {
 #ifdef _RESORT_
             rect.setHeight(h);
 #else
@@ -154,9 +159,10 @@ void PTextRect::adjustRect()
     } else {
         rect = fm.boundingRect(rect, Qt::TextSingleLine, fText);
         rect.setHeight(rect.height());
-        if (rect.height() > h) {
+
+        if(rect.height() > h) {
             fRect = QRectF(QPointF(fRect.x(), fRect.y()), QSizeF(fRect.width(), rect.height() + fm.descent() + fm.ascent() + 2));
-        } else if (rect.height() < h) {
+        } else if(rect.height() < h) {
 #ifdef _RESORT_
             rect.setHeight(h);
 #else
@@ -191,18 +197,23 @@ void PTextRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     Q_UNUSED(widget)
     painter->fillRect(option->rect, fBgBrush);
     painter->setPen(fRectPen);
-    if (lnLeft) {
+
+    if(lnLeft) {
         painter->drawLine(fRect.x(), fRect.y(), fRect.x(), fRect.bottom());
     }
-    if (lnTop) {
+
+    if(lnTop) {
         painter->drawLine(fRect.x(), fRect.y(), fRect.right(), fRect.y());
     }
-    if (lnRight) {
+
+    if(lnRight) {
         painter->drawLine(fRect.right(), fRect.y(), fRect.right(), fRect.bottom());
     }
-    if (lnBottom) {
+
+    if(lnBottom) {
         painter->drawLine(fRect.x(), fRect.bottom(), fRect.right(), fRect.bottom());
     }
+
     QRect textRect = option->rect;
     textRect.adjust(8, 8, -8, -8);
     painter->setPen(fTextPen);

@@ -36,16 +36,19 @@ void PPrintVaucher::printVaucher(const QString &id)
              "left join users u on u.f_id=m.f_cancelUser "
              "left join users uo on uo.f_id=m.f_user "
              "where m.f_id=:f_id");
-    if (!fDD.nextRow()) {
+
+    if(!fDD.nextRow()) {
         message_error("Application error. Contact to developer. Message: PrintVoucher row count=0");
         fDD.commit();
         return;
     }
-    QList<QList<QVariant> > &fDbRows = fDD.fDbRows;
+
+    QList<QList<QVariant> >& fDbRows = fDD.fDbRows;
     int room = fDbRows.at(0).at(2).toInt();
     DoubleDatabase reserv;
     reserv.open();
-    if (room > 0) {
+
+    if(room > 0) {
         DoubleDatabase dq;
         dq.open();
         dq[":f_id"] = id;
@@ -57,12 +60,15 @@ void PPrintVaucher::printVaucher(const QString &id)
                     "from f_reservation r "
                     "where r.f_invoice=:f_invoice");
     }
+
     CacheVaucher cv;
-    if (!cv.get(fDbRows.at(0).at(0).toString())) {
+
+    if(!cv.get(fDbRows.at(0).at(0).toString())) {
         message_error("Application error. Contact to developer. Message: PrintVoucher cv=0");
         fDD.commit();
         return;
     }
+
     int top = 10;
     PTextRect *trHeader = new PTextRect(20, top, 2000, 80, cv.fName(), 0, QFont("Arial", 50));
     top += trHeader->textHeight();
@@ -86,7 +92,8 @@ void PPrintVaucher::printVaucher(const QString &id)
     th.setBorders(false, false, false, false);
     th.setFont(f);
     th.setTextAlignment(Qt::AlignHCenter);
-    if (fDbRows.at(0).at(12).toInt() == 1) {
+
+    if(fDbRows.at(0).at(12).toInt() == 1) {
         top += ps->addTextRect(20, top, 2000, 80, QObject::tr("CORRECTION"), &th)->textHeight();
         f.setPointSize(20);
         f.setItalic(false);
@@ -99,6 +106,7 @@ void PPrintVaucher::printVaucher(const QString &id)
                         .arg(fDbRows.at(0).at(14).toString()),
                         &th);
     }
+
     top += trInfo->textHeight();
     trInfo->setTextAlignment(Qt::AlignTop | Qt::AlignRight);
     trInfo->setBorders(false, false, false, false);
@@ -135,7 +143,8 @@ void PPrintVaucher::printVaucher(const QString &id)
          << ""//(vatWidth == 0 ? "" : fDbRows.at(0).at(8).toString())
          << fDbRows.at(0).at(15).toString();
     ps->addTableRow(top, rowHeight, cols, vals, &th);
-    if (fDbRows.at(0).at(16).toInt() == 1) {
+
+    if(fDbRows.at(0).at(16).toInt() == 1) {
         top += 10;
         cols.clear();
         cols << 20 << 1080 << 1000;
@@ -143,34 +152,43 @@ void PPrintVaucher::printVaucher(const QString &id)
              << QObject::tr("Additional info");
         ps->addTableRow(top, rowHeight, cols, vals, &th);
         CachePaymentMode pm ;
-        if (!pm.get(fDbRows.at(0).at(18).toString())) {
+
+        if(!pm.get(fDbRows.at(0).at(18).toString())) {
             message_error(QObject::tr("Application error. Contact to developer. Message PrintVoucher pm=0"));
             return;
         }
+
         vals << pm.fName();
         QString pmInfo;
-        switch (pm.fCode().toInt()) {
-            case PAYMENT_CASH:
-                break;
-            case PAYMENT_CARD: {
-                CacheCreditCard ccc;
-                ccc.get(fDbRows.at(0).at(10).toString());
-                pmInfo = ccc.fName();
-                break;
-            }
-            case PAYMENT_CL: {
-                CacheCityLedger ccl;
-                if (ccl.get(fDbRows.at(0).at(11).toString())) {
-                    pmInfo = ccl.fName();
-                } else {
-                    pmInfo = "-";
-                }
-                break;
-            }
+
+        switch(pm.fCode().toInt()) {
+        case PAYMENT_CASH:
+            break;
+
+        case PAYMENT_CARD: {
+            CacheCreditCard ccc;
+            ccc.get(fDbRows.at(0).at(10).toString());
+            pmInfo = ccc.fName();
+            break;
         }
+
+        case PAYMENT_CL: {
+            CacheCityLedger ccl;
+
+            if(ccl.get(fDbRows.at(0).at(11).toString())) {
+                pmInfo = ccl.fName();
+            } else {
+                pmInfo = "-";
+            }
+
+            break;
+        }
+        }
+
         vals << pmInfo;
         ps->addTableRow(top, rowHeight, cols, vals, &th);
     }
+
     top += 10;
     cols.clear();
     cols << 20 << 380 << 700 << 400 << 600;
@@ -181,17 +199,22 @@ void PPrintVaucher::printVaucher(const QString &id)
     th.setWrapMode(QTextOption::WordWrap);
     ps->addTableRow(top, rowHeight * 1.5, cols, vals, &th);
     th.setWrapMode(QTextOption::NoWrap);
-    if (room > 0 && room < 1000 && reserv.rowCount() > 0) {
+
+    if(room > 0 && room < 1000 && reserv.rowCount() > 0) {
         QString checkInUser = "-";
         QString checkOutUser = "-";
         CacheUsers uin;
-        if (uin.get(reserv.getValue(0, "f_checkInUser").toString())) {
+
+        if(uin.get(reserv.getValue(0, "f_checkInUser").toString())) {
             checkInUser = uin.fFull();
         }
+
         CacheUsers uout;
-        if (uout.get(reserv.getValue(0, "f_checkOutUser").toString())) {
+
+        if(uout.get(reserv.getValue(0, "f_checkOutUser").toString())) {
             checkOutUser = uout.fFull();
         }
+
         cols.clear();
         cols << 20 << 380 << 700 << 400 << 600;
         vals << QObject::tr("Arrival date")
@@ -205,16 +228,20 @@ void PPrintVaucher::printVaucher(const QString &id)
              << checkOutUser;
         ps->addTableRow(top, rowHeight, cols, vals, &th);
     }
+
     top += rowHeight;
     QString remarks = fDbRows.at(0).at(19).toString();
-    if (!remarks.isEmpty()) {
+
+    if(!remarks.isEmpty()) {
         top += (rowHeight / 2);
         th.setTextAlignment(Qt::AlignLeft);
         th.setBorders(false, false, false, false);
-        top += ps->addTextRect(20, top, 2100, rowHeight, QObject::tr("Remarks: ") + remarks,
+        th.setWrapMode(QTextOption::WrapAnywhere);
+        top += ps->addTextRect(20, top, 2100, rowHeight * 3, QObject::tr("Remarks: ") + remarks,
                                &th)->textHeight() + (rowHeight / 2);
         th.setBorders(true, true, true, true);
     }
+
     th.setBorders(false, false, false, false);
     vals << QObject::tr("Guest signature")
          << ""

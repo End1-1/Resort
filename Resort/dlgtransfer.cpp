@@ -4,8 +4,8 @@
 #include "cacheactiveroom.h"
 #include "vauchers.h"
 
-#define HINT_ROOM_TO 1
-#define HINT_ROOM_FROM 2
+static const int HINT_ROOM_TO = 1;
+static const int HINT_ROOM_FROM = 2;
 
 DlgTransfer::DlgTransfer(QWidget *parent) :
     BaseExtendedDialog(parent),

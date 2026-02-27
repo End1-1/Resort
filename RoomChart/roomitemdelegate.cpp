@@ -30,7 +30,7 @@ void RoomItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         mainColor = QColor::fromRgb(__s.value("donotdisturbecolor", -5570689).toInt());
     }
     QColor alpha = mainColor;
-    alpha = alpha.light();
+    alpha = alpha.lighter();
     bgFill.setColorAt(0, mainColor);
     bgFill.setColorAt(0.5, alpha);
     bgFill.setColorAt(1, mainColor);

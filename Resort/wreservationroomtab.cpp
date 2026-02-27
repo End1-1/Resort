@@ -33,9 +33,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#define HINT_SEARCH_GUEST 1
-#define HINT_CARDEX 2
-#define HINT_CITYLEDGER 3
+static const int HINT_SEARCH_GUEST = 1;
+static const int HINT_CARDEX = 2;
+static const int HINT_CITYLEDGER = 3;
 
 WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
     BaseWidget(parent),

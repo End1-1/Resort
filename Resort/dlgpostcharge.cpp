@@ -1,25 +1,25 @@
 #include "dlgpostcharge.h"
-#include "ui_dlgpostcharge.h"
+#include "cachecityledger.h"
+#include "cachecreditcard.h"
 #include "cacheinvoiceitem.h"
 #include "cachepaymentmode.h"
+#include "cacherights.h"
+#include "cacheroom.h"
+#include "cacheroomarrangment.h"
+#include "cachevatmode.h"
+#include "dlgsingleprinttax.h"
 #include "paymentmode.h"
 #include "pprintvaucher.h"
-#include "cacheroom.h"
-#include "cachevatmode.h"
+#include "ui_dlgpostcharge.h"
 #include "utils.h"
-#include "cachecreditcard.h"
-#include "cacherights.h"
-#include "cachecityledger.h"
 #include "vauchers.h"
-#include "dlgsingleprinttax.h"
-#include "cacheroomarrangment.h"
 
-static const int hint_item = 1;
-static const int hint_payment = 2;
+#define hint_item 1
+#define hint_payment 2
 
-DlgPostCharge::DlgPostCharge(QWidget *parent) :
-    BaseDialog(parent),
-    ui(new Ui::DlgPostCharge)
+DlgPostCharge::DlgPostCharge(QWidget *parent)
+    : BaseDialog(parent)
+    , ui(new Ui::DlgPostCharge)
 {
     ui->setupUi(this);
     fDoc.setleID(ui->leVoucher);
@@ -284,7 +284,7 @@ void DlgPostCharge::on_leAmount_textChanged(const QString &arg1)
 void DlgPostCharge::on_btnNew_clicked()
 {
     reject();
-    DlgPostCharge *p = new DlgPostCharge(__mainWindow);
+    DlgPostCharge *p = new DlgPostCharge(fMainWindow);
     p->exec();
     delete p;
 }

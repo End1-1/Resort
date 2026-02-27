@@ -36,7 +36,7 @@ void PPrintStoreDoc::printDoc()
     int rowHeight = 80;
     int top = 5;
     PPrintPreview *pp = new PPrintPreview();
-    PPrintScene *ps = pp->addScene(0, Portrait);
+    PPrintScene *ps = pp->addScene(0,QPageLayout::Portrait);
     QString invHeader = tr("Store document #") + fDocId;
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, 0, QFont(qApp->font().family(), 50));
     trHeader->setBorders(false, false, false, false);
@@ -82,7 +82,7 @@ void PPrintStoreDoc::printDoc()
     for (int i = 0; i < dr2.rowCount(); i++) {
         if (top > sizePortrait.height()) {
             top = 5;
-            ps = pp->addScene(0, Portrait);
+            ps = pp->addScene(0,QPageLayout::Portrait);
         }
         QList<int> col;
         col << 10 << 800 << 250 << 250 << 250;

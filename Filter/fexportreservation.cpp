@@ -136,7 +136,7 @@ void FExportReservation::exportReservation(const QString &id)
 {
     DoubleDatabase fDD;
     QString errStr;
-    QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", QString::SkipEmptyParts);
+    QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", Qt::SkipEmptyParts);
     DoubleDatabase sDb;
     sDb.setDatabase(dbParams[0], dbParams[1], dbParams[2], dbParams[3]);
     if (!sDb.open()) {

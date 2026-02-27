@@ -114,7 +114,7 @@ void ReservationInfo::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
     QRect rect = option->rect;
     QColor alpha = mainColor;
-    alpha = alpha.light(110);
+    alpha = alpha.lighter(110);
     QLinearGradient bgFill(0, 0, 0, rect.height());
     bgFill.setColorAt(0, mainColor);
     bgFill.setColorAt(0.5, alpha);

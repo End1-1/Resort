@@ -1,43 +1,43 @@
 #include "winvoice.h"
-#include "ui_winvoice.h"
-#include "dlgpostcharge.h"
-#include "dlgpaymentsdetails.h"
-#include "cachereservation.h"
-#include "epushbutton.h"
-#include "cacheroom.h"
-#include "dlginvoicecancelation.h"
-#include "dlggposorderinfo.h"
-#include "dlgselectfiscalmachin.h"
-#include "dlgtransfer.h"
-#include "dlgtracking.h"
-#include "dlgdiscount.h"
-#include "pprintinvoice.h"
-#include "dlgreceiptvaucher.h"
-#include "printtaxd.h"
-#include "dlginvoiceprintoption.h"
-#include "dlginvoicepaymentoptions.h"
-#include "wreservation.h"
-#include "dlgtaxback2.h"
-#include "cachetaxmap.h"
-#include "dlgofferinvoiceextra.h"
-#include "cacheinvoiceitem.h"
-#include "cacheactiveroom.h"
-#include "dlgpretax.h"
-#include "dlgreserveshortinfo.h"
-#include "vauchers.h"
-#include "dlgtransferanyamount.h"
-#include "dlgadvanceentry.h"
-#include "dlgtaxback.h"
-#include "dlgwakepcalls.h"
-#include "dlgprinttaxsideoption.h"
-#include "dlgpostbreakfast.h"
-#include "dlgprintrandomtax.h"
-#include "cacheredreservation.h"
-#include "dlgtaxreference.h"
-#include <QProcess>
 #include <QDir>
+#include <QProcess>
+#include "cacheactiveroom.h"
+#include "cacheinvoiceitem.h"
+#include "cacheredreservation.h"
+#include "cachereservation.h"
+#include "cacheroom.h"
+#include "cachetaxmap.h"
+#include "dlgadvanceentry.h"
+#include "dlgdiscount.h"
+#include "dlggposorderinfo.h"
+#include "dlginvoicecancelation.h"
+#include "dlginvoicepaymentoptions.h"
+#include "dlginvoiceprintoption.h"
+#include "dlgofferinvoiceextra.h"
+#include "dlgpaymentsdetails.h"
+#include "dlgpostbreakfast.h"
+#include "dlgpostcharge.h"
+#include "dlgpretax.h"
+#include "dlgprintrandomtax.h"
+#include "dlgprinttaxsideoption.h"
+#include "dlgreceiptvaucher.h"
+#include "dlgreserveshortinfo.h"
+#include "dlgselectfiscalmachin.h"
+#include "dlgtaxback.h"
+#include "dlgtaxback2.h"
+#include "dlgtaxreference.h"
+#include "dlgtracking.h"
+#include "dlgtransfer.h"
+#include "dlgtransferanyamount.h"
+#include "dlgwakepcalls.h"
+#include "epushbutton.h"
+#include "pprintinvoice.h"
+#include "printtaxd.h"
+#include "ui_winvoice.h"
+#include "vauchers.h"
+#include "wreservation.h"
 
-#define HINT_ACTIVE_ROOM 1
+static const int HINT_ACTIVE_ROOM = 1;
 
 WInvoice::WInvoice(QWidget *parent) :
     BaseWidget(parent),
@@ -913,7 +913,7 @@ void WInvoice::on_btnTaxPrint_clicked()
     int taxnumber = 0;
 
     if(taxs.count() == 1) {
-        taxnumber = taxs.toList().at(0);
+        taxnumber = taxs.values().at(0);
     } else if(taxs.count() > 1) {
         DlgSelectFiscalMachin ds(taxs, this);
         ds.exec();
@@ -1819,7 +1819,7 @@ void WInvoice::on_btnPayment_clicked()
     int taxnumber = 0;
 
     if(taxs.count() == 1) {
-        taxnumber = taxs.toList().at(0);
+        taxnumber = taxs.values().at(0);
     } else if(taxs.count() > 1) {
         DlgSelectFiscalMachin ds(taxs, this);
         ds.exec();

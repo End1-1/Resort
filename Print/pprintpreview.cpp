@@ -1,12 +1,12 @@
 #include "pprintpreview.h"
-#include "ui_pprintpreview.h"
-#include "utils.h"
+#include <QGraphicsPixmapItem>
+#include <QPrinterInfo>
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QShowEvent>
-#include <QDesktopWidget>
-#include <QPrinterInfo>
-#include <QGraphicsPixmapItem>
+#include "pdefaults.h"
+#include "ui_pprintpreview.h"
+#include "utils.h"
 
 PPrintPreview::PPrintPreview(QWidget *parent) :
     QDialog(parent),
@@ -18,8 +18,7 @@ PPrintPreview::PPrintPreview(QWidget *parent) :
     ui->lePages->setVisible(false);
     ui->gv->horizontalScrollBar()->blockSignals(true);
     ui->gv->verticalScrollBar()->blockSignals(true);
-    resize(qApp->desktop()->screenGeometry().width() - 100, qApp->desktop()->screenGeometry().height() - 100);
-    setPrintOrientation(Portrait);
+    setPageLayout(QPageLayout::Portrait);
     ui->cbPrinters->addItems(QPrinterInfo::availablePrinterNames());
     ui->cbPrinters->setCurrentIndex(ui->cbPrinters->findText(QPrinterInfo::defaultPrinterName()));
     ui->chCloseAfterPrint->setChecked(__s.value("closeprintpreviewafterprint").toBool());
@@ -31,7 +30,7 @@ PPrintPreview::~PPrintPreview()
     delete ui;
 }
 
-PPrintScene *PPrintPreview::addScene(int tmpl, PrintOrientation po)
+PPrintScene *PPrintPreview::addScene(int tmpl, QPageLayout::Orientation po)
 {
     PPrintScene *ps = nullptr;
     switch (tmpl) {
@@ -42,7 +41,7 @@ PPrintScene *PPrintPreview::addScene(int tmpl, PrintOrientation po)
         ps = new PPrintScene(this);
         break;
     }
-    QSize s = po == Portrait ? sizePortrait : sizeLandscape;
+    QSize s = po == QPageLayout::Portrait ? sizePortrait : sizeLandscape;
     QSize wSize = s;
     wSize.setWidth(sizePortrait.width() / 3);
     wSize.setHeight(wSize.width());
@@ -92,9 +91,9 @@ void PPrintPreview::setPage()
     ui->btnNext->setEnabled(fPageNumber < fPrintScene.count());
 }
 
-void PPrintPreview::setPrintOrientation(PrintOrientation po)
+void PPrintPreview::setPageLayout(QPageLayout::Orientation po)
 {
-    QSize s(po == Portrait ? sizePortrait : sizeLandscape);
+    QSize s(po == QPageLayout::Portrait ? sizePortrait : sizeLandscape);
     s.setWidth(s.width() * 1.500);
     s.setHeight(s.height() * 1.500);
     ui->gv->setMinimumSize(s);
@@ -114,7 +113,7 @@ void PPrintPreview::on_btnPrint_clicked()
         printPages << fPageNumber - 1;
         break;
     case 2: {
-        QStringList p = ui->lePages->text().replace(" ", "").split(",", QString::SkipEmptyParts);
+        QStringList p = ui->lePages->text().replace(" ", "").split(",", Qt::SkipEmptyParts);
         foreach (QString s, p) {
             int page = s.toInt() - 1;
             if (page < 0 || page > fPrintScene.count() - 1) {
@@ -127,13 +126,14 @@ void PPrintPreview::on_btnPrint_clicked()
     }
 
     QPrinter prn;
-    prn.setPaperSize(QPrinter::A4);
+    prn.setPageSize(QPageSize(QPageSize::A4));
+
     prn.setPrinterName(ui->cbPrinters->currentText());
-    prn.setOrientation(fPrintScene.at(printPages.at(0))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
+    prn.setPageOrientation(fPrintScene.at(printPages.at(0))->fPageLayout);
     QPainter painter(&prn);
     for (int i = 0; i < printPages.count(); i++) {
         if (i > 0) {
-            prn.setOrientation(fPrintScene.at(printPages.at(i))->fPrintOrientation == Portrait ? QPrinter::Portrait : QPrinter::Landscape);
+            prn.setPageOrientation(fPrintScene.at(printPages.at(i))->fPageLayout);
             prn.newPage();
         }
         fPrintScene.at(printPages.at(i))->render(&painter);
@@ -156,7 +156,9 @@ void PPrintPreview::on_cbZoom_currentIndexChanged(int index)
     qreal prevScaleFactor = fScaleFactor;
     fScaleFactor = (index + 1) / 1.5;
     qreal deltaScaleFactor =  prevScaleFactor / fScaleFactor;
-    QSize size(fPrintScene.at(fPageNumber - 1)->fPrintOrientation == Portrait ? sizePortrait : sizeLandscape);
+    QSize size(fPrintScene.at(fPageNumber - 1)->fPageLayout == QPageLayout::Portrait
+                   ? sizePortrait
+                   : sizeLandscape);
     size.setWidth((size.width() / fScaleFactor) * 1.500);
     size.setHeight((size.height() / fScaleFactor) * 1.500);
     ui->gv->setMinimumSize(size);

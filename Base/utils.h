@@ -34,22 +34,29 @@ namespace Utils {
     QString getVersionString(QString fName);
     QString hostName();
     void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool append = false);
-    inline QString variantToString(const QVariant &v) {
-        switch (v.type()) {
-        case QVariant::Double:
+    inline QString variantToString(const QVariant &v)
+    {
+        switch (v.typeId()) {
+        case QMetaType::Double:
             return float_str(v.toDouble(), 2);
-        case QVariant::Date:
+
+        case QMetaType::QDate:
             return v.toDate().toString(def_date_format);
-        case QVariant::DateTime:
+
+        case QMetaType::QDateTime:
             return v.toDateTime().toString(def_date_time_format);
-        case QVariant::Time:
+
+        case QMetaType::QTime:
             return v.toTime().toString(def_time_format);
+
         default:
             return v.toString();
         }
     }
 
-    inline C5TableWidgetItem *tableItem(const QVariant &display, const QVariant &userData = QVariant()) {
+    inline C5TableWidgetItem *tableItem(const QVariant &display,
+                                        const QVariant &userData = QVariant())
+    {
         //QString displayStr = variantToString(display);
         C5TableWidgetItem *i = new C5TableWidgetItem();
         i->setData(Qt::EditRole, display);
@@ -62,7 +69,7 @@ namespace Utils {
         int row = 0, col = 0;
         for (typename QList<T>::const_iterator it = list.begin(); it != list.end(); it++) {
             C5TableWidgetItem *item = new C5TableWidgetItem();
-            item->setData(role, qVariantFromValue(*it));
+            item->setData(role, QVariant::fromValue(*it));
             tw->setItem(row, col++, item);
             if (col == tw->columnCount()) {
                 col = 0;

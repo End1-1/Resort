@@ -6,14 +6,17 @@
 #include "cachecityledger.h"
 #include "cachecreditcard.h"
 
-#define HINT_PAYMENT_MODE 1
+static const int HINT_PAYMENT_MODE1 = 1;
 
 DlgPaymentMode::DlgPaymentMode(QWidget *parent) :
     BaseDialog(parent),
     ui(new Ui::DlgPaymentMode)
 {
     ui->setupUi(this);
-    ui->lePaymentMode->setSelector(this, cache(cid_payment_mode), ui->lePaymentMode, HINT_PAYMENT_MODE);
+    ui->lePaymentMode->setSelector(this,
+                                   cache(cid_payment_mode),
+                                   ui->lePaymentMode,
+                                   HINT_PAYMENT_MODE1);
     ui->leCL->setSelector(this, cache(cid_city_ledger), ui->leCL);
     ui->leCardType->setSelector(this, cache(cid_credit_card), ui->leCardType);
 }
@@ -26,7 +29,7 @@ DlgPaymentMode::~DlgPaymentMode()
 void DlgPaymentMode::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case HINT_PAYMENT_MODE: {
+    case HINT_PAYMENT_MODE1: {
         paymentMode(code);
         break;
     }

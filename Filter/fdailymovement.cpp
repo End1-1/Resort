@@ -72,7 +72,7 @@ void FDailyMovement::apply(WReportGrid *rg)
             .setColumn(0, "", tr("Payment mode")) // 19
             .setColumn(0, "", tr("Canceled")) //20
             ;
-    QStringList items = fPreferences.getDb(def_daily_movement_items).toString().split(";", QString::SkipEmptyParts);
+    QStringList items = fPreferences.getDb(def_daily_movement_items).toString().split(";", Qt::SkipEmptyParts);
     if (ui->leSale->fHiddenText.length() > 0) {
         processItems(ui->leSale->fHiddenText, ui->chCanceled->isChecked());
     } else {
@@ -259,7 +259,7 @@ void FDailyMovement::processItems(QString items, bool canceled)
     trr[11] = payment[-1];
     trr[12] = payment[-2];
     trr[13] = payment[-3];
-    QStringList itemCode = items.split(",", QString::SkipEmptyParts);
+    QStringList itemCode = items.split(",", Qt::SkipEmptyParts);
     QString names = tr("SUBTOTAL FOR ");
     foreach (QString s, itemCode) {
         CacheInvoiceItem ci;

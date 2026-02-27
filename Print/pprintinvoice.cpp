@@ -93,7 +93,7 @@ void PPrintInvoice::previewInvoice()
     drh.nextRow();
     numNights = dh.getInt("ntotal");
     PPrintPreview *pp = new PPrintPreview(this);
-    PPrintScene *ps = pp->addScene(0, Portrait);
+    PPrintScene *ps = pp->addScene(0,QPageLayout::Portrait);
     QString invHeader = drh.getValue("f_state").toInt() == RESERVE_CHECKOUT ? tr("SETTLEMENT / TAX INVOICE") :
                         tr("PROFORMA INVOICE");
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, nullptr, QFont(qApp->font().family(), 50));
@@ -338,7 +338,7 @@ void PPrintInvoice::previewInvoice()
 
         if(top > 2800) {
             top = 30;
-            ps = pp->addScene(0, Portrait);
+            ps = pp->addScene(0,QPageLayout::Portrait);
         }
     }
 
@@ -357,7 +357,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     f.setBold(false);
@@ -372,7 +372,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     th.setTextAlignment(Qt::AlignRight);
@@ -385,7 +385,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     th.setTextAlignment(Qt::AlignRight);
@@ -398,7 +398,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     th.setTextAlignment(Qt::AlignRight);
@@ -417,7 +417,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     th.setBorders(false, false, false, false);
@@ -429,7 +429,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     f.setBold(false);
@@ -442,7 +442,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     f.setPointSize(f.pointSize() - 6);
@@ -455,7 +455,7 @@ void PPrintInvoice::previewInvoice()
 
     if(top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
 
     f.setPointSize(18);

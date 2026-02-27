@@ -330,7 +330,7 @@ void DlgHouseItem::on_btnCopy_clicked()
 void DlgHouseItem::on_btnPaste_clicked()
 {
     QString c = qApp->clipboard()->text();
-    QStringList s = c.split(";", QString::SkipEmptyParts);
+    QStringList s = c.split(";", Qt::SkipEmptyParts);
     if (s.count() == 0) {
         return;
     }
@@ -338,7 +338,7 @@ void DlgHouseItem::on_btnPaste_clicked()
         return;
     }
     for (int i = 1; i < s.count(); i++) {
-        QStringList p = s.at(i).split(",", QString::SkipEmptyParts);
+        QStringList p = s.at(i).split(",", Qt::SkipEmptyParts);
         if (p.count() != 2) {
             continue;
         }

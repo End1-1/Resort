@@ -465,7 +465,7 @@ void StoreDoc::on_btnRemoveMaterial_clicked()
     foreach (QModelIndex m, ml) {
         rows << m.row();
     }
-    QList<int> r = rows.toList();
+    QList<int> r = rows.values();
     DoubleDatabase fDD;
     for (int i = r.count() - 1; i > -1; i--) {
         fDD[":f_id"] = ui->tblGoods->toInt(r.at(i), 0);

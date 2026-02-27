@@ -22,7 +22,7 @@ WCustomReports::WCustomReports(QWidget *parent) :
             groups.insert(fDD.getValue(i, "f_groupName").toString());
             continue;
         }
-        QStringList access = fDD.getValue(i, "f_groupAccess").toString().split(";", QString::SkipEmptyParts);
+        QStringList access = fDD.getValue(i, "f_groupAccess").toString().split(";", Qt::SkipEmptyParts);
         if (access.contains(QString::number(WORKING_USERGROUP))) {
             groups.insert(fDD.getValue(i, "f_groupName").toString());
         }
@@ -83,13 +83,13 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
         message_error(tr("Cannot load report data."));
         return;
     }
-    QStringList filter = fDD.getValue("f_filter").toString().split(";", QString::SkipEmptyParts);
+    QStringList filter = fDD.getValue("f_filter").toString().split(";", Qt::SkipEmptyParts);
     fFilterSQL = fDD.getValue("f_sql").toString();
     fSumCols = fDD.getValue("f_sum").toString();
     fSubtotal = fDD.getValue("f_subtotal").toString();
     int i = 0;
     foreach (QString s, filter) {
-        QStringList f = s.split("^", QString::KeepEmptyParts);
+        QStringList f = s.split("^", Qt::KeepEmptyParts);
         QLabel *l = new QLabel(f.at(1));
         fFilterWidgets.append(l);
         ui->lFilter->addWidget(l);
@@ -101,11 +101,11 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
         } else if (f.at(2).toLower() == "combobox") {
             wdt = new EComboBoxCompleter();
             EComboBoxCompleter *cc = static_cast<EComboBoxCompleter*>(wdt);
-            QStringList comboParams = f.at(4).split(":", QString::SkipEmptyParts);
+            QStringList comboParams = f.at(4).split(":", Qt::SkipEmptyParts);
             if (comboParams.at(0).toLower() == "sql") {
                 cc->setSQL(comboParams.at(1));
             } else if (comboParams.at(0).toLower() == "list") {
-                QStringList list = comboParams.at(1).split(",", QString::SkipEmptyParts);
+                QStringList list = comboParams.at(1).split(",", Qt::SkipEmptyParts);
                 foreach (QString l, list) {
                     cc->addItem(l, l);
                 }
@@ -116,11 +116,11 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
         } else if (f.at(2).toLower() == "combo month") {
             wdt = new EComboMonth();
             EComboMonth *cm = static_cast<EComboMonth*>(wdt);
-            QStringList comboParams = f.at(4).split(":", QString::SkipEmptyParts);
+            QStringList comboParams = f.at(4).split(":", Qt::SkipEmptyParts);
             if (comboParams.at(0).toLower() == "sql") {
                 cm->setSQL(comboParams.at(1));
             } else if (comboParams.at(0).toLower() == "list") {
-                QStringList list = comboParams.at(1).split(",", QString::SkipEmptyParts);
+                QStringList list = comboParams.at(1).split(",", Qt::SkipEmptyParts);
                 foreach (QString l, list) {
                     cm->addItem(l, l);
                 }
@@ -154,8 +154,8 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
     fFilterWidgets.append(btnGo);
 
     fReportGrid->fModel->clearColumns();
-    QStringList widths = fDD.getValue("f_widths").toString().split(";", QString::SkipEmptyParts);
-    QStringList titles = fDD.getValue("f_titles_en").toString().split(";", QString::SkipEmptyParts);
+    QStringList widths = fDD.getValue("f_widths").toString().split(";", Qt::SkipEmptyParts);
+    QStringList titles = fDD.getValue("f_titles_en").toString().split(";", Qt::SkipEmptyParts);
     for (int i = 0; i < widths.count(); i++) {
         fReportGrid->fModel->setColumn(widths.at(i).toInt(), "", titles.at(i));
     }
@@ -180,10 +180,10 @@ void WCustomReports::executeSQL()
            }
        }
     }
-    fReportGrid->fModel->apply(query.split(";", QString::SkipEmptyParts));
+    fReportGrid->fModel->apply(query.split(";", Qt::SkipEmptyParts));
 
     fReportGrid->setTblNoTotalData();
-    QStringList sums = fSumCols.split(";", QString::SkipEmptyParts);
+    QStringList sums = fSumCols.split(";", Qt::SkipEmptyParts);
     QList<int> cols;
     QList<double> vals;
     if (sums.count() > 0) {
@@ -194,7 +194,7 @@ void WCustomReports::executeSQL()
         fReportGrid->setTblTotalData(cols, vals);
     }
 
-    QStringList subtotals = fSubtotal.split(";", QString::SkipEmptyParts);
+    QStringList subtotals = fSubtotal.split(";", Qt::SkipEmptyParts);
     cols.clear();
     if (subtotals.count() > 1) {
         foreach (QString s, subtotals) {

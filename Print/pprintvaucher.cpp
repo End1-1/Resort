@@ -22,7 +22,7 @@ void PPrintVaucher::printVaucher(const QString &id)
 {
     PPrintVaucher p;
     PPrintPreview *pv = new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage());
-    PPrintScene *ps = pv->addScene(0, Portrait);
+    PPrintScene *ps = pv->addScene(0,QPageLayout::Portrait);
     DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_id"] = id;

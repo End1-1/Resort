@@ -74,7 +74,7 @@ void FInhouseGuestFuture::apply(WReportGrid *rg)
     } while (d < ui->wDate->d2().addDays(1));
     for (int i = 1; i < rows.count(); i++) {
         rows[i][6] = rows[i][5].toInt() - rows[i - 1][5].toInt();
-        if (rows[i][6] > 0) {
+        if (rows[i][6].toInt() > 0) {
             rows[i][6] = QString("+%1").arg(rows[i][6].toInt());
         }
     }

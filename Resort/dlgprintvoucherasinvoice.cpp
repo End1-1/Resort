@@ -105,7 +105,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
         return;
     }
     PPrintPreview *pp = new PPrintPreview(this);
-    PPrintScene *ps = pp->addScene(0, Portrait);
+    PPrintScene *ps = pp->addScene(0,QPageLayout::Portrait);
     QString invHeader = tr("SETTLEMENT / TAX INVOICE");
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, invHeader, nullptr, QFont(qApp->font().family(), 50));
     trHeader->setBorders(false, false, false, false);
@@ -207,7 +207,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
         top += rowHeight;
         if (top > 2800) {
             top = 30;
-            ps = pp->addScene(0, Portrait);
+            ps = pp->addScene(0,QPageLayout::Portrait);
         }
     }
     top += (rowHeight / 2);
@@ -222,7 +222,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += rowHeight;
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     f.setBold(false);
     th.setFont(f);
@@ -235,7 +235,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += rowHeight;
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Total cashless"), &th, f));
@@ -246,7 +246,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += rowHeight;
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     th.setTextAlignment(Qt::AlignRight);
     ps->addTextRect(new PTextRect(250, top,  950, rowHeight, tr("Being the equivalent of USD"), &th, f));
@@ -257,7 +257,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += rowHeight;
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     th.setTextAlignment(Qt::AlignRight);
     if (vatMode == VAT_INCLUDED) {
@@ -272,7 +272,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += rowHeight;
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     th.setBorders(false, false, false, false);
     f.setBold(true);
@@ -284,7 +284,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += r->textHeight();
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     f.setBold(false);
     th.setFont(f);
@@ -295,7 +295,7 @@ void DlgPrintVoucherAsInvoice::on_btnPrint_clicked()
     top += r->textHeight();
     if (top > 2800) {
         top = 30;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0,QPageLayout::Portrait);
     }
     f.setPointSize(f.pointSize() - 6);
     th.setFont(f);

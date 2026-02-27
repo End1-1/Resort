@@ -1,17 +1,16 @@
 #include "pprintscene.h"
-#include "ptextrect.h"
-#include "pimage.h"
 #include <QGraphicsTextItem>
+#include "ptextrect.h"
 
-PPrintScene::PPrintScene(PrintOrientation po, QObject *parent) :
-    QGraphicsScene(parent)
+PPrintScene::PPrintScene(QPageLayout::Orientation po, QObject *parent)
+    : QGraphicsScene(parent)
 {
-    if (po == Portrait) {
+    if (po == QPageLayout::Portrait) {
         setSceneRect(0, 0, 2100, 2970);
     } else {
         setSceneRect(0, 0, 2970, 2100);
     }
-    fPrintOrientation = po;
+    fPageLayout = po;
 }
 
 PPrintScene::PPrintScene(QObject *parent) :

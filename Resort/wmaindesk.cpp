@@ -1,33 +1,27 @@
 #include "wmaindesk.h"
-#include "ui_wmaindesk.h"
-#include "wreservation.h"
-#include "winvoice.h"
-#include "dlgchartdaterange.h"
-#include "wreservations.h"
-#include "dlgendofday.h"
-#include "epushbutton.h"
-#include "dayitemdelegate.h"
-#include "monthitemdelegate.h"
-#include "utils.h"
-#include "roomitemdelegate.h"
-#include "reservewidget.h"
-#include "logging.h"
-#include "cachereservationcardex.h"
-#include "roomstate.h"
-#include "dlgpostcharge.h"
-#include "dlgtransferanyamount.h"
-#include "dlgpaymentsdetails.h"
-#include "eqtablewidget.h"
-#include "dlgreserveconfirmstatus.h"
-#include "dlgreceiptvaucher.h"
-#include "dlggroupreservationfuck.h"
-#include "dlgchartcolor.h"
-#include "wmaindeskfilterlist.h"
-#include "cacheone.h"
-#include <QScrollBar>
-#include <QDesktopWidget>
-#include <QInputDialog>
 #include <QElapsedTimer>
+#include <QInputDialog>
+#include <QScrollBar>
+#include "cacheone.h"
+#include "cachereservationcardex.h"
+#include "dayitemdelegate.h"
+#include "dlgchartcolor.h"
+#include "dlgchartdaterange.h"
+#include "dlgendofday.h"
+#include "dlggroupreservationfuck.h"
+#include "dlgpostcharge.h"
+#include "dlgreserveconfirmstatus.h"
+#include "dlgtransferanyamount.h"
+#include "eqtablewidget.h"
+#include "monthitemdelegate.h"
+#include "reservewidget.h"
+#include "roomitemdelegate.h"
+#include "roomstate.h"
+#include "ui_wmaindesk.h"
+#include "utils.h"
+#include "winvoice.h"
+#include "wmaindeskfilterlist.h"
+#include "wreservation.h"
 
 #define SEL_CARDEX 1
 
@@ -337,7 +331,7 @@ void WMainDesk::filterRoom()
     while (it != roomRows.end()) {
         room.fData = it.value();
         if (!ui->leJumpToRoom->text().isEmpty()) {
-            QStringList jumpList = ui->leJumpToRoom->text().split(",", QString::SkipEmptyParts);
+            QStringList jumpList = ui->leJumpToRoom->text().split(",", Qt::SkipEmptyParts);
             if (jumpList.contains(room.fCode())) {
                 fRoomList.append(room.fCode());
                 it++;

@@ -71,7 +71,7 @@ void DlgPreTax::on_btnOk_clicked()
                 DoubleDatabase fDD;
                 fDD[":f_fiscal"] = tc;
                 fDD.update("m_register", where_id(ap(ui->tblData->toInt(i, 0))));
-                if (fInvoice > 0) {
+                if (fInvoice.length() > 0) {
                     fDD[":f_amount"] = ui->tblData->toDouble(i, 2);
                     fDD[":f_id"] = fInvoice;
                     fDD.exec("update m_v_invoice set f_prepaid=f_prepaid+:f_amount where f_id=:f_id");

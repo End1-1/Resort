@@ -1,9 +1,10 @@
 #include "dlgmovetocl.h"
-#include "ui_dlgmovetocl.h"
-#include "message.h"
-#include "cachepaymentmode.h"
 #include "cachecityledger.h"
+#include "cachepaymentmode.h"
+#include "message.h"
+#include "stringutils.h"
 #include "trackcontrol.h"
+#include "ui_dlgmovetocl.h"
 
 DlgMoveToCL::DlgMoveToCL(const QString &voucher, QWidget *parent) :
     BaseDialog(parent),
@@ -92,8 +93,12 @@ void DlgMoveToCL::on_btnChange_clicked()
         db[":f_id"] = ui->tblPay->toString(r, 0);
         db[":f_amount"] = ui->tblPay->toDouble(r, 2) - ui->leAmount->asDouble();
         db.exec("update m_register set f_amountamd=:f_amount, f_amountusd=:f_amountamd/f_amountusd where f_id=:f_id");
-        TrackControl::insert(TRACK_INVOICE_ITEM, "CHANGE AMOUNT", ui->tblPay->toString(r, 2),
-                             float_str(ui->tblPay->toDouble(r, 2) - ui->leAmount->asDouble()), ui->tblPay->toString(r, 0), ui->leInvoice->text() );
+        TrackControl::insert(TRACK_INVOICE_ITEM,
+                             "CHANGE AMOUNT",
+                             ui->tblPay->toString(r, 2),
+                             QString::number(ui->tblPay->toDouble(r, 2) - ui->leAmount->asDouble()),
+                             ui->tblPay->toString(r, 0),
+                             ui->leInvoice->text());
         if (ui->tblPay->toDouble(r, 2) - ui->leAmount->asDouble() < 1) {
             db[":f_id"] = ui->tblPay->toString(r, 0);
             db[":f_canceluser"] = WORKING_USERID;

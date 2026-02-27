@@ -1,18 +1,18 @@
 #include "dbmregister.h"
-#include "doubledatabase.h"
-#include "baseuid.h"
-#include "preferences.h"
-#include "utils.h"
-#include "eqlineedit.h"
-#include "edateedit.h"
-#include "trackcontrol.h"
-#include "dlgtracking.h"
-#include "vauchers.h"
-#include "dlgreceiptvaucher.h"
-#include "dlgpostcharge.h"
-#include "mainwindow.h"
-#include "dlgadvanceentry.h"
 #include <QPlainTextEdit>
+#include "baseuid.h"
+#include "basewidget.h"
+#include "dlgadvanceentry.h"
+#include "dlgpostcharge.h"
+#include "dlgreceiptvaucher.h"
+#include "dlgtracking.h"
+#include "doubledatabase.h"
+#include "edateedit.h"
+#include "eqlineedit.h"
+#include "mainwindow.h"
+#include "preferences.h"
+#include "trackcontrol.h"
+#include "vauchers.h"
 
 static const QString voucher_query =
     "select m.f_id, m.f_source, m.f_res, m.f_inv, m.f_wdate, m.f_rdate, m.f_time, m.f_user, u.f_username, "
@@ -301,17 +301,17 @@ bool DBMRegister::openVoucher(const QString &id, QString &err)
     if (dd.nextRow()) {
         QString voucherType = dd.getString(0);
         if (voucherType == VAUCHER_RECEIPT_N) {
-            DlgReceiptVaucher *d = new DlgReceiptVaucher(0, 0, 0, __mainWindow);
+            DlgReceiptVaucher *d = new DlgReceiptVaucher(0, 0, 0, fMainWindow);
             d->setVoucher(id);
             d->exec();
             delete d;
         } else if (voucherType == "RM" || voucherType == "CM" || voucherType == "CH" || voucherType == "PE") {
-            DlgPostCharge *d = new DlgPostCharge(__mainWindow);
+            DlgPostCharge *d = new DlgPostCharge(fMainWindow);
             d->setVoucher(id);
             d->exec();
             delete d;
         } else if (voucherType == "AV") {
-            DlgAdvanceEntry *d = new DlgAdvanceEntry("", 0, __mainWindow);
+            DlgAdvanceEntry *d = new DlgAdvanceEntry("", 0, fMainWindow);
             d->setVoucher(id);
             d->exec();
             delete d;

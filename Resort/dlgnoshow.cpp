@@ -16,8 +16,8 @@
 #include <QProcess>
 #include <QDir>
 
-#define HINT_PAYMENT_MODE 1
-#define HINT_RED_RESERVE 2
+static const int HINT_PAYMENT_MODE = 1;
+static const int HINT_RED_RESERVE = 2;
 
 DlgNoShow::DlgNoShow(QWidget *parent) :
     BaseDialog(parent),

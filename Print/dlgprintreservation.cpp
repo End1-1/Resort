@@ -34,7 +34,7 @@ void DlgPrintReservation::on_btnClose_clicked()
 void DlgPrintReservation::on_btnPrintConfirmation_clicked()
 {
     PPrintPreview *pp = new PPrintPreview();
-    PPrintScene *ps = pp->addScene(0, Portrait);
+    PPrintScene *ps = pp->addScene(0,QPageLayout::Portrait);
     PTextRect *trHeader = new PTextRect(20, 20, 2100, 200, tr("RESERVATION CONFIRMATION"), nullptr, QFont("Arial", 50));
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
@@ -169,7 +169,7 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     QList<int> col;
     QStringList val;
     PPrintPreview *pp = new PPrintPreview(this);
-    PPrintScene *ps = pp->addScene(0, Portrait);
+    PPrintScene *ps = pp->addScene(0,QPageLayout::Portrait);
     PPrintHeader(ps, tr("RESERVATION VOUCHER"), fSource->valueForWidget("Doc number").toInt());
     int top = 310;
     QPen boldPen;

@@ -88,7 +88,7 @@ int DlgPrintTaxSM::printTaxback(int taxid, int number, const QString &vaucher, i
     DlgPrintTaxSM *d = new DlgPrintTaxSM(taxid, fPreferences.getDefaultParentForMessage());
     d->ui->teResult->setPlainText(tr("Tax back") + " " + vaucher);
     d->fOrder = vaucher;
-    d->fTaxback = number;
+    d->fTaxback = QString::number(number);
     bool result = d->execTaxback() == TAX_OK;
     taxCode = d->fTaxCode;
     delete d;

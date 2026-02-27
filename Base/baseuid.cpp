@@ -1,11 +1,12 @@
 #include "baseuid.h"
+#include <QDebug>
+#include <QFile>
+#include <QHostInfo>
+#include <QMessageBox>
+#include <QRandomGenerator>
+#include <QSqlError>
 #include "utils.h"
 #include <doubledatabase.h>
-#include <QDebug>
-#include <QHostInfo>
-#include <QSqlError>
-#include <QMessageBox>
-#include <QFile>
 //#include <QRandomGenerator>
 
 #define SRC QString("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -62,14 +63,13 @@ QString BaseUIDX::ID(const QString &vaucher)
 
     QString src2;
     QString result;
-    qsrand(QTime::currentTime().msec());
 
     for(int i = 0; i < idlen; i++) {
         QString src1 = SRC;
 
         for(int j = 0; j < idlen; j++) {
-            int i1 = qrand() % ((high + 1) - low) + low;
-            int i2 = qrand() % ((high + 1) - low) + low;
+            int i1 = QRandomGenerator::global()->generate() % ((high + 1) - low) + low;
+            int i2 = QRandomGenerator::global()->generate() % ((high + 1) - low) + low;
             QChar temp = src1.at(i1);
             src1[i1] = src1[i2];
             src1[i2] = temp;
@@ -79,7 +79,7 @@ QString BaseUIDX::ID(const QString &vaucher)
     }
 
     QString src3;
-    int shiftLeft = qrand() % 11;
+    int shiftLeft = QRandomGenerator::global()->generate() % 11;
 
     for(int i = 0; i < shiftLeft; i++) {
         src3 += src2.at(0);
@@ -94,7 +94,7 @@ QString BaseUIDX::ID(const QString &vaucher)
 
     while(result.length() < idlen && trynum < maxtries) {
         while(result.length() < idlen) {
-            result += src2.at(qrand() % h);
+            result += src2.at(QRandomGenerator::global()->generate() % h);
         }
 
         for(int i = 0; i < result.length(); i++) {

@@ -13,12 +13,12 @@
 #include "cacheactiveroom.h"
 #include "pprintcheckin.h"
 
-static const int col_room = 1;
-static const int col_pax = 2;
-static const int col_guest = 3;
-static const int col_entry = 4;
-static const int col_status = 6;
-static const int col_invoice = 7;
+#define col_room 1
+#define col_pax 2
+#define col_guest 3
+#define col_entry 4
+#define col_status 6
+#define col_invoice2 7
 
 WQuickReservationsCheckin::WQuickReservationsCheckin(QWidget *parent) :
     BaseDialog(parent),
@@ -151,7 +151,7 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
     dd.startTransaction();
     TrackControl tc(TRACK_RESERVATION);
     tc.fReservation = ui->tbl->toString(row, 0);
-    tc.fInvoice = ui->tbl->toString(row, col_invoice);
+    tc.fInvoice = ui->tbl->toString(row, col_invoice2);
     if (result) {
         dd[":f_state"] = RESERVE_CHECKIN;
         dd[":f_checkInDate"] = WORKING_DATE;
@@ -183,25 +183,25 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
     /*------------------------ BEGIN ADVANCE -------------------*/
     if (result) {
             dd[":f_source"] = VAUCHER_ADVANCE_N;
-            dd[":f_inv"] = ui->tbl->toString(row, col_invoice);
+            dd[":f_inv"] = ui->tbl->toString(row, col_invoice2);
             dd.exec("select f_id, f_fiscal, f_amountAmd, f_wdate, f_paymentmode "
                        "from m_register where f_canceled=0 and f_source=:f_source "
                        "and f_inv=:f_inv ");
             while (dd.nextRow()) {
                 int fiscal = dd.getInt(1);
-                dd[":f_inv"] = ui->tbl->toString(row, col_invoice);
+                dd[":f_inv"] = ui->tbl->toString(row, col_invoice2);
                 dd[":f_room"] = ui->tbl->toInt(row, col_room);
                 result = result && dd.update("m_register", where_id(ap(dd.getString(0))));
                 if (fiscal > 0) {
                     DoubleDatabase db;
                     db[":f_prepaid"] = dd.getDouble(2);
-                    db[":f_id"] =ui->tbl->toString(row, col_invoice);
+                    db[":f_id"] = ui->tbl->toString(row, col_invoice2);
                     db.exec("update m_v_invoice set f_prepaid=f_prepaid+:f_prepaid where f_id=:f_id");
                 }
                 DBMRegister dbmr;
                 dbmr.fSource = VOUCHER_ADVANCE_TRANSFER_N;
                 dbmr.fReserve = ui->tbl->toString(row, 0);
-                dbmr.fInvoice = ui->tbl->toString(row, col_invoice);
+                dbmr.fInvoice = ui->tbl->toString(row, col_invoice2);
                 dbmr.fRoom = ui->tbl->toInt(row, col_room);
                 dbmr.fGuest = ui->tbl->toString(row, col_guest);
                 dbmr.fItemCode = fPreferences.getDb(def_advance_transfer_voucher_id).toUInt();
@@ -246,7 +246,7 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
                 dd[":f_sign"] = 1;
                 dd[":f_doc"] = "";
                 dd[":f_rec"] = 0;
-                dd[":f_inv"] = ui->tbl->toString(row, col_invoice);
+                dd[":f_inv"] = ui->tbl->toString(row, col_invoice2);
                 dd[":f_finance"] = 1;
                 dd[":f_remarks"] = "";
                 dd[":f_canceled"] = 0;
@@ -293,7 +293,7 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
                 dd[":f_sign"] = 1;
                 dd[":f_doc"] = "";
                 dd[":f_rec"] = 0;
-                dd[":f_inv"] = ui->tbl->toString(row, col_invoice);
+                dd[":f_inv"] = ui->tbl->toString(row, col_invoice2);
                 dd[":f_finance"] = 1;
                 dd[":f_remarks"] = "";
                 dd[":f_canceled"] = 0;
@@ -338,7 +338,7 @@ void WQuickReservationsCheckin::checkIn(int row, DoubleDatabase &dd)
         dd[":f_sign"] = 0;
         dd[":f_doc"] = "";
         dd[":f_rec"] = "";
-        dd[":f_inv"] = ui->tbl->toString(row, col_invoice);
+        dd[":f_inv"] = ui->tbl->toString(row, col_invoice2);
         dd[":f_finance"] = 0;
         dd[":f_remarks"] = "";
         dd[":f_canceled"] = 0;

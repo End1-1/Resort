@@ -338,7 +338,7 @@ void RFace::setupTables(int hallId, int busy)
     int row = 0, col = 0;
     for (QList<TableStruct*>::const_iterator it = tables.begin(); it != tables.end(); it++) {
         QTableWidgetItem *item = new QTableWidgetItem();
-        item->setData(Qt::UserRole, qVariantFromValue(*it));
+        item->setData(Qt::UserRole, QVariant::fromValue(*it));
         ui->tblTables->setItem(row, col, item);
         col++;
         if (col > ui->tblTables->columnCount() - 1) {

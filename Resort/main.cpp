@@ -1,16 +1,15 @@
-#include "mainwindow.h"
-#include "appwebsocket.h"
-#include "logging.h"
-#include "utils.h"
-#include "dlgexitbyversion.h"
 #include <QApplication>
-#include <QFontDatabase>
+#include <QDir>
 #include <QFile>
+#include <QFontDatabase>
+#include <QMessageBox>
 #include <QStyleFactory>
 #include <QTranslator>
-#include <QMessageBox>
-#include <QDir>
-#include <QTextCodec>
+#include "appwebsocket.h"
+#include "dlgexitbyversion.h"
+#include "logging.h"
+#include "mainwindow.h"
+#include "utils.h"
 
 #define DEMO_
 
@@ -37,7 +36,6 @@ int main(int argc, char *argv[])
     def_station = "SmartHotel: ";
     Utils::initNumbersWords();
     QApplication a(argc, argv);
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf8") );
     Preferences p;
     p.initFromConfig();
     a.setStyle(QStyleFactory::create("fusion"));
@@ -59,16 +57,18 @@ int main(int argc, char *argv[])
     }
     QFile styleFile("./style.css");
     if (styleFile.exists()) {
-        styleFile.open(QIODevice::ReadOnly);
-        a.setStyleSheet(styleFile.readAll());
-        styleFile.close();
+        if (styleFile.open(QIODevice::ReadOnly)) {
+            a.setStyleSheet(styleFile.readAll());
+            styleFile.close();
+        }
     }
     if (params.contains("--touchscreen")) {
         QFile styleFile(a.applicationDirPath() + "/SmartHotelTouch.qss");
         if (styleFile.exists()) {
-            styleFile.open(QIODevice::ReadOnly);
-            a.setStyleSheet(styleFile.readAll());
-            styleFile.close();
+            if (styleFile.open(QIODevice::ReadOnly)) {
+                a.setStyleSheet(styleFile.readAll());
+                styleFile.close();
+            }
         }
     }
 #ifdef QT_DEBUG

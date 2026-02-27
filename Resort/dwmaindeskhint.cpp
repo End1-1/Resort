@@ -156,7 +156,7 @@ void DWMainDeskHint::tblHeaderSectionClicked(int logicalIndex)
     for (int i = 0, count = fTableModel->rowCount(); i < count; i++) {
         values << fTableModel->data(i, logicalIndex, Qt::DisplayRole).toString();
     }
-    QStringList sortedValues = values.toList();
+    QStringList sortedValues = values.values();
     std::sort(sortedValues.begin(), sortedValues.end());
     switch (logicalIndex) {
     case 2:

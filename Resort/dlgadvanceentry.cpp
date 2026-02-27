@@ -16,9 +16,9 @@
 #include "cacheusers.h"
 #include "paymentmode.h"
 
-#define HINT_PAYMENT_MODE 1
-#define HINT_RED_RESERVATION 2
-#define HINT_CITY_LEDGER 3
+static const int HINT_PAYMENT_MODE = 1;
+static const int HINT_RED_RESERVATION = 2;
+static const int HINT_CITY_LEDGER = 3;
 
 DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, double suggestAmount, QWidget *parent) :
     BaseDialog(parent),

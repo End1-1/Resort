@@ -72,7 +72,7 @@ public:
     void insertSubTotals(int colName, const QList<int> &totalCols);
     QList<int> fCheckBoxColumns;
     QList<int> fCheckBoxIsCheckable;
-    QMap<int, QMap<QVariant, QPixmap> > fBackgroundImages; //Based on values
+    QMap<int, QMap<int, QPixmap> > fBackgroundImages; //Based on values
 
 private:
     Qt::SortOrder fLastSortOrder;

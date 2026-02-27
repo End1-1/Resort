@@ -1,11 +1,11 @@
 #include "pexportinvoicetoexcel.h"
-#include "message.h"
-#include "cacheusers.h"
-#include "paymentmode.h"
-#include <QXlsx/header/xlsxdocument.h>
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include "cacheusers.h"
+#include "message.h"
+#include "paymentmode.h"
+#include <xlsxdocument.h>
 
 PExportInvoiceToExcel::PExportInvoiceToExcel() :
     QObject(),

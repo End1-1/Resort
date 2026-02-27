@@ -22,7 +22,7 @@ DlgRemotInvoices::DlgRemotInvoices(bool local, QWidget *parent) :
         Utils::fillTableWithData(ui->tblData, fSDb.fDbRows);
     } else {
         DoubleDatabase fSDb;
-        QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", QString::SkipEmptyParts);
+        QStringList dbParams = fPreferences.getDb("AHC").toString().split(";", Qt::SkipEmptyParts);
         if (dbParams.count() < 4) {
             message_error(tr("Setup second database parameters"));
             return;

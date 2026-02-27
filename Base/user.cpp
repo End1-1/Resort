@@ -10,7 +10,7 @@ User::User(const QString &password, QObject *parent) :
     Base()
 {
     QString query = "select f_id, f_group, concat(f_firstName, ' ', f_lastName) from users where f_altPassword=md5(:pass) and f_state=1 ";
-    DoubleDatabase fDD(true, doubleDatabase);
+    DoubleDatabase fDD;
     fDD[":pass"] = password;
     fDD.exec(query);
     if (!fDD.nextRow()) {

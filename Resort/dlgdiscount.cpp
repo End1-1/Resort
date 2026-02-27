@@ -7,8 +7,8 @@
 #include "pprintvaucher.h"
 #include "dlgtracking.h"
 
-#define HINT_ROOM 1
-#define HINT_CL 2
+static const int HINT_ROOM = 1;
+static const int HINT_CL = 2;
 
 DlgDiscount::DlgDiscount(QWidget *parent) :
     BaseExtendedDialog(parent),

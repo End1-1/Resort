@@ -137,7 +137,7 @@ bool FCityLedgerDetailedBalance::officialTitle()
 
 bool FCityLedgerDetailedBalance::handlePrint()
 {
-    PrintOrientation po = Portrait;
+    QPageLayout::Orientation po = QPageLayout::Portrait;
     //QSize paperSize = sizePortrait;
     int top = 10;
     int footerTop = sizePortrait.height() - 40;
@@ -216,7 +216,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                             .arg(page++), &trFooter);
             trFooter.setTextAlignment(Qt::AlignLeft);
             top = 10;
-            ps = pp->addScene(0, Portrait);
+            ps = pp->addScene(0, QPageLayout::Portrait);
         }
     }
     if (top + (rowHeight * 8) > sizePortrait.height() - 200) {
@@ -230,7 +230,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     cols.clear();
     r++;
@@ -251,7 +251,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     th.setBorders(true, true, true, true);
     cols << 1130 << 400 << 500;
@@ -270,7 +270,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     vals << tr("CREDIT") << fReportGrid->fModel->data(r + 2, 7).toString();
     ps->addTableRow(top, rowHeight, cols, vals, &th);
@@ -285,7 +285,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     vals << tr("BALANCE FOR PERIOD") << fReportGrid->fModel->data(r + 3, 7).toString();
     ps->addTableRow(top, rowHeight, cols, vals, &th);
@@ -300,7 +300,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     vals << tr("BALANCE") << fReportGrid->fModel->data(r + 4, 7).toString();
     ps->addTableRow(top, rowHeight, cols, vals, &th);
@@ -318,7 +318,7 @@ bool FCityLedgerDetailedBalance::handlePrint()
                         .arg(page++), &trFooter);
         trFooter.setTextAlignment(Qt::AlignLeft);
         top = 10;
-        ps = pp->addScene(0, Portrait);
+        ps = pp->addScene(0, QPageLayout::Portrait);
     }
     QString we = "We would be hightly grateful if you can arrange for the payment as soon as possible.\r\n"
                  "Thanking you, in advance for you understanding and support.\r\n"

@@ -1,21 +1,22 @@
 #include "login.h"
-#include "ui_login.h"
-#include "loginsettings.h"
-#include "databasesconnections.h"
-#include "cacherights.h"
-#include "cacheusersgroups.h"
-#include "appconfig.h"
-#include "cachecheckoutinvoice.h"
-#include "ecomboboxcompleter.h"
-#include "appwebsocket.h"
-#include <QRandomGenerator>
-#include <QProcess>
-#include <windows.h>
+#include <QFile>
+#include <QInputDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QProcess>
+#include <QRandomGenerator>
 #include <QShortcut>
-#include <QInputDialog>
+#include "appconfig.h"
+#include "appwebsocket.h"
+#include "cachecheckoutinvoice.h"
+#include "cacherights.h"
+#include "cacheusersgroups.h"
+#include "databasesconnections.h"
+#include "ecomboboxcompleter.h"
+#include "loginsettings.h"
+#include "ui_login.h"
+#include <windows.h>
 
 Login::Login(QWidget *parent) :
     BaseExtendedDialog(parent),
@@ -100,10 +101,19 @@ void Login::on_btnLogin_clicked()
         message_error(fDD.fLastError);
         return;
     }
-    fDD.exec("select current_timestamp");
+    fDD.exec("SELECT UTC_TIMESTAMP()");
     fDD.nextRow();
-    if (QDateTime::currentDateTime() < fDD.getValue(0).toDateTime().addSecs(-300)) {
-        message_error(tr("Server time and workstation time note same, aborting."));
+
+    // Получаем QDateTime и явно говорим, что это UTC
+    QDateTime serverTimeUtc = fDD.getValue(0).toDateTime();
+    serverTimeUtc.setTimeSpec(Qt::UTC);
+
+    // Сравниваем с текущим временем системы в формате UTC
+    int diff = std::abs(QDateTime::currentDateTimeUtc().secsTo(serverTimeUtc));
+
+    if (diff > 300) {
+        message_error(
+            tr("Server time and workstation time not the same, aborting. Diff: %1").arg(diff));
         return;
     }
     fDD[":username"] = ui->leUsername->text();
@@ -149,14 +159,14 @@ void Login::on_btnLogin_clicked()
         BaseUIDX::fAirUser = __dd1Username;
         BaseUIDX::fAirPass = __dd1Password;
     }
-    QStringList log = fPreferences.getDb(def_log_main_db).toString().split(";", QString::SkipEmptyParts);
+    QStringList log = fPreferences.getDb(def_log_main_db).toString().split(";", Qt::SkipEmptyParts);
     if (log.count() == 4) {
         TrackControl::fDbHost = log.at(0);
         TrackControl::fDbDb = log.at(1);
         TrackControl::fDbUser = log.at(2);
         TrackControl::fDbPass = log.at(3);
     }
-    log = fPreferences.getDb(def_log_reserve_db).toString().split(";", QString::SkipEmptyParts);
+    log = fPreferences.getDb(def_log_reserve_db).toString().split(";", Qt::SkipEmptyParts);
     if (log.count() == 4) {
         TrackControl::fDbHostReserve = log.at(0);
         TrackControl::fDbDbReserve = log.at(1);
@@ -332,14 +342,14 @@ void Login::on_btnLoginPin_clicked()
         BaseUIDX::fAirUser = __dd1Username;
         BaseUIDX::fAirPass = __dd1Password;
     }
-    QStringList log = fPreferences.getDb(def_log_main_db).toString().split(";", QString::SkipEmptyParts);
+    QStringList log = fPreferences.getDb(def_log_main_db).toString().split(";", Qt::SkipEmptyParts);
     if (log.count() == 4) {
         TrackControl::fDbHost = log.at(0);
         TrackControl::fDbDb = log.at(1);
         TrackControl::fDbUser = log.at(2);
         TrackControl::fDbPass = log.at(3);
     }
-    log = fPreferences.getDb(def_log_reserve_db).toString().split(";", QString::SkipEmptyParts);
+    log = fPreferences.getDb(def_log_reserve_db).toString().split(";", Qt::SkipEmptyParts);
     if (log.count() == 4) {
         TrackControl::fDbHostReserve = log.at(0);
         TrackControl::fDbDbReserve = log.at(1);

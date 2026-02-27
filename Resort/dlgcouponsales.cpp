@@ -3,8 +3,8 @@
 #include "cachestorepartners.h"
 #include "cachecouponseria.h"
 
-#define SEL_PARTNER 1
-#define HINT_COUPON 2
+static const int SEL_PARTNER = 1;
+static const int HINT_COUPON = 2;
 
 DlgCouponSales::DlgCouponSales(QWidget *parent) :
     BaseExtendedDialog(parent),

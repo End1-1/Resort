@@ -96,22 +96,19 @@ void TableModel::applyFinal(WReportGrid *rg, bool clearBefore)
 
 void TableModel::sort(int column, Qt::SortOrder order)
 {
-    Q_UNUSED(order)
-    QMap<QVariant, int> m;
-    for (int i = 0, count = fRows.count(); i < count; i++) {
-        m.insertMulti(fDD.fDbRows.at(fRows.at(i)).at(column), fRows.at(i));
-    }
+    //CHANGED
     beginResetModel();
-    fRows = m.values();
-    if (fLastSortIndex == column) {
-        fLastSortOrder = fLastSortOrder == Qt::AscendingOrder ? Qt::DescendingOrder : Qt::AscendingOrder;
-    } else {
-        fLastSortOrder = Qt::AscendingOrder;
-    }
-    fLastSortIndex = column;
-    if (fLastSortOrder == Qt::DescendingOrder) {
+
+    std::sort(fRows.begin(), fRows.end(), [&](int a, int b) {
+        const QVariant &va = fDD.fDbRows.at(a).at(column);
+        const QVariant &vb = fDD.fDbRows.at(b).at(column);
+
+        return va.toString() < vb.toString();
+    });
+
+    if (order == Qt::DescendingOrder)
         std::reverse(fRows.begin(), fRows.end());
-    }
+
     endResetModel();
     emit sortFinished();
 }
@@ -218,15 +215,8 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     }
     case Qt::EditRole:
         return fDD.fDbRows.at(fRows.at(index.row())).at(index.column());
-    case Qt::DecorationRole: {
-        if (fBackgroundImages.contains(index.column())) {
-            if (fBackgroundImages[index.column()].contains(v)) {
-                return fBackgroundImages[index.column()][v];
-            }
-        }
-        break;
-    }
-    case Qt::BackgroundColorRole:
+
+    case Qt::BackgroundRole:
         if (fBackgroundColors.contains(index.row())) {
             return fBackgroundColors[index.row()][index.column()];
         }

@@ -14,10 +14,6 @@ extern QString __dd1Database;
 extern QString __dd1Username;
 extern QString __dd1Password;
 
-#ifdef _RESORT_
-class MainWindow;
-extern MainWindow* __mainWindow;
-#endif
 
 class DoubleDatabase : public QObject
 {

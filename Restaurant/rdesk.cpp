@@ -274,7 +274,7 @@ bool RDesk::setup(TableStruct *t)
     ui->tblPart->clearContents();
     for (QList<DishPartStruct*>::const_iterator it = fDishTable.fDishPart.begin(); it != fDishTable.fDishPart.end(); it++) {
         QTableWidgetItem *item = new QTableWidgetItem();
-        item->setData(Qt::UserRole, qVariantFromValue(*it));
+        item->setData(Qt::UserRole, QVariant::fromValue(*it));
         ui->tblPart->setItem(row, col, item);
         col++;
         if (col == 2) {
@@ -609,7 +609,7 @@ void RDesk::setComplexMode()
         }
         ui->tblComplex->setRowCount(ui->tblComplex->rowCount() + 1);
         ui->tblComplex->setItem(ui->tblComplex->rowCount() - 1, 0, new QTableWidgetItem());
-        ui->tblComplex->item(ui->tblComplex->rowCount() - 1, 0)->setData(Qt::UserRole, qVariantFromValue(dc));
+        ui->tblComplex->item(ui->tblComplex->rowCount() - 1, 0)->setData(Qt::UserRole, QVariant::fromValue(dc));
         countTotal();
         TrackControl::insert(TRACK_REST_ORDER, "New complex end", dc->fName["en"], "----", "", fTable->fOrder, "");
     }
@@ -1187,7 +1187,7 @@ void RDesk::setupType(int partId)
             ui->tblType->setRowCount(row + 1);
         }
         QTableWidgetItem *item = new QTableWidgetItem();
-        item->setData(Qt::UserRole, qVariantFromValue(it.value()));
+        item->setData(Qt::UserRole, QVariant::fromValue(it.value()));
         ui->tblType->setItem(row, col++, item);
     }
     writelog("RDesk::setupType end.");
@@ -1206,7 +1206,7 @@ void RDesk::setupDish(int typeId)
     int col = 0, row = 0;
     for (QMap<int, DishStruct*>::const_iterator it = dish.begin(); it != dish.end(); it++) {
         QTableWidgetItem *item = new QTableWidgetItem();
-        item->setData(Qt::UserRole, qVariantFromValue(*it));
+        item->setData(Qt::UserRole, QVariant::fromValue(*it));
         ui->tblDish->setItem(row, col++, item);
         if (col == ui->tblDish->columnCount()) {
             row++;
@@ -1289,9 +1289,9 @@ void RDesk::addDishToTable(OrderDishStruct *od)
     for (int i = 0; i < 3; i++) {
         ui->tblOrder->setItem(row, i, new QTableWidgetItem());
     }
-    ui->tblOrder->item(row, 0)->setData(Qt::UserRole, qVariantFromValue(od));
-    ui->tblOrder->item(row, 1)->setData(Qt::UserRole, qVariantFromValue(od));
-    ui->tblOrder->item(row, 2)->setData(Qt::UserRole, qVariantFromValue(od));
+    ui->tblOrder->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(od));
+    ui->tblOrder->item(row, 1)->setData(Qt::UserRole, QVariant::fromValue(od));
+    ui->tblOrder->item(row, 2)->setData(Qt::UserRole, QVariant::fromValue(od));
     ui->tblOrder->setCurrentCell(row, 0);
     setOrderRowHidden(row, od);
     changeBtnState();
@@ -1611,7 +1611,7 @@ void RDesk::loadOrder()
         int row = ui->tblComplex->rowCount();
         ui->tblComplex->setRowCount(row + 1);
         ui->tblComplex->setItem(row, 0, new QTableWidgetItem());
-        ui->tblComplex->item(row, 0)->setData(Qt::UserRole, qVariantFromValue(dc));
+        ui->tblComplex->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(dc));
     }
 
 

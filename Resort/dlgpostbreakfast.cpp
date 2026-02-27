@@ -35,7 +35,7 @@ DlgPostBreakfast::DlgPostBreakfast(QWidget *parent) :
     ui->lePMCode->setInitialValue(PAYMENT_CREDIT);
 
     ui->leHall->setSelector(this, cache(cid_rest_hall), ui->leHallName, HINT_HALL);
-    ui->leHall->fCodeFilter = fPreferences.getDb(def_rest_hall_for_reception).toString().split(",", QString::SkipEmptyParts);
+    ui->leHall->fCodeFilter = fPreferences.getDb(def_rest_hall_for_reception).toString().split(",", Qt::SkipEmptyParts);
 
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName);
     ui->leTable->setSelector(this, cache(cid_rest_table), ui->leTableName);

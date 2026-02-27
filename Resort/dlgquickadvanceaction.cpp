@@ -9,8 +9,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-static const int hint_item = 1;
-
 DlgQuickAdvanceAction::DlgQuickAdvanceAction(QWidget *parent) :
     BaseDialog(parent),
     ui(new Ui::DlgQuickAdvanceAction)
@@ -198,7 +196,7 @@ void DlgQuickAdvanceAction::on_btnPrint_clicked()
             message_error(tr("Cannot mix fiscal machines here"));
             return;
         }
-        DlgPrintTaxSM *d = new DlgPrintTaxSM(taxs.toList().at(0), this);
+        DlgPrintTaxSM *d = new DlgPrintTaxSM(taxs.values().at(0), this);
         for (int i = 0; i < ui->tbl->rowCount(); i++) {
             d->addGoods(ui->tbl->toString(i, 3),
                         ui->tbl->toString(i, 2),

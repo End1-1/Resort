@@ -541,7 +541,7 @@ void WAccInvoice::on_btnTaxPrint_clicked()
     }
     int taxnumber = 0;
     if (taxs.count() == 1) {
-        taxnumber = taxs.toList().at(0);
+        taxnumber = taxs.values().at(0);
     } else {
         DlgSelectFiscalMachin ds(taxs, this);
         ds.exec();

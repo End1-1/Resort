@@ -1,12 +1,12 @@
 #include "dlgquickroomassignment.h"
-#include "ui_dlgquickroomassignment.h"
 #include "cacheactiveroom.h"
 #include "cachereservation.h"
 #include "cacheroom.h"
+#include "ui_dlgquickroomassignment.h"
 #include "wreservationroomtab.h"
 
-static const int HINT_ACTIVE_ROOM = 1;
-static const int HINT_ROOM = 2;
+#define HINT_ACTIVE_ROOM 1
+#define HINT_ROOM 2
 
 DlgQuickRoomAssignment::DlgQuickRoomAssignment(QWidget *parent) :
     BaseDialog(parent),

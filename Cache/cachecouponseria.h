@@ -13,7 +13,7 @@ public:
     inline QString fCode() { return getString("f_id"); }
     inline QString fName() { return getString("f_name"); }
     inline double fPrice() { return getDouble("f_price"); }
-    inline QStringList fItems() { return getString("f_items").split(",", QString::SkipEmptyParts); }
+    inline QStringList fItems() { return getString("f_items").split(",", Qt::SkipEmptyParts); }
 };
 
 #endif // CACHECOUPONSERIA_H

@@ -16,11 +16,6 @@
 
 int DoubleDatabase::fCounter = 0;
 
-#ifdef _RESORT_
-#include "mainwindow.h"
-MainWindow* __mainWindow = nullptr;
-#endif
-
 #ifdef _RESTAURANT_
 #include "rface.h"
 RFace* __rface;
@@ -138,7 +133,7 @@ void DoubleDatabase::close(bool commit)
 
 bool DoubleDatabase::exec(const QString &sqlQuery)
 {
-    QStringList l = sqlQuery.split(";", QString::SkipEmptyParts);
+    QStringList l = sqlQuery.split(";", Qt::SkipEmptyParts);
     bool a = false;
 
     for(const QString &s : l) {
@@ -488,57 +483,52 @@ void DoubleDatabase::logEvent(const QString &event)
 QString DoubleDatabase::lastQuery(QSqlQuery *q)
 {
     QString sql = q->lastQuery();
-    QMapIterator<QString, QVariant> it(q->boundValues());
+    const auto values = q->boundValues();
+    const auto keys = q->boundValueNames();
 
-    while(it.hasNext()) {
-        it.next();
-        QVariant value = it.value();
+    for (int i = 0; i < values.size(); ++i) {
+        QVariant value = values[i];
+        QString key = keys[i];
+        QString replacement;
 
-        switch(it.value().type()) {
-        case QVariant::String:
-            value = QString("'%1'").arg(value.toString().replace("'", "''"));
+        switch (value.metaType().id()) {
+        case QMetaType::QString:
+            replacement = QString("'%1'").arg(value.toString().replace("'", "''"));
             break;
 
-        case QVariant::Date:
-            if(value.toDate().isValid()) {
-                value = QString("'%1'").arg(value.toDate().toString("yyyy-MM-dd"));
-            } else {
-                value = "null";
-            }
-
+        case QMetaType::QDate:
+            replacement = value.toDate().isValid()
+                              ? QString("'%1'").arg(value.toDate().toString("yyyy-MM-dd"))
+                              : "null";
             break;
 
-        case QVariant::DateTime:
-            if(value.toDateTime().isValid()) {
-                value = QString("'%1'").arg(value.toDateTime().toString("yyyy-MM-dd HH:mm:ss"));
-            } else {
-                value = "null";
-            }
-
+        case QMetaType::QDateTime:
+            replacement = value.toDateTime().isValid()
+                              ? QString("'%1'").arg(
+                                    value.toDateTime().toString("yyyy-MM-dd HH:mm:ss"))
+                              : "null";
             break;
 
-        case QVariant::Double:
-            value = QString("%1").arg(value.toDouble());
+        case QMetaType::Double:
+            replacement = QString::number(value.toDouble());
             break;
 
-        case QVariant::Int:
-            value = QString("%1").arg(value.toInt());
+        case QMetaType::Int:
+            replacement = QString::number(value.toInt());
             break;
 
-        case QVariant::Time:
-            if(value.toTime().isValid()) {
-                value = QString("'%1'").arg(value.toTime().toString("HH:mm:ss"));
-            } else {
-                value = "null";
-            }
-
+        case QMetaType::QTime:
+            replacement = value.toTime().isValid()
+                              ? QString("'%1'").arg(value.toTime().toString("HH:mm:ss"))
+                              : "null";
             break;
 
         default:
+            replacement = value.toString();
             break;
         }
 
-        sql.replace(QRegExp(it.key() + "\\b"), value.toString());
+        sql.replace(QRegularExpression(key + "\\b"), replacement);
     }
 
     return sql;

@@ -41,7 +41,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
 
 
     QList<PPrintScene*> lps;
-    PPrintScene *ps = new PPrintScene(Portrait);
+    PPrintScene *ps = new PPrintScene(QPageLayout::Portrait);
     lps.append(ps);
     PTextRect th;
     QFont f("Arial", 30);
@@ -104,7 +104,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
         top += ps->addTextRect(new PTextRect(500, top, 200, rowHeight, float_str(drd.getValue(i, "f_total").toDouble(), 2), &th, f))->textHeight();
         if (top > sizePortrait.height()  - 200) {
             top = 10;
-            ps = new PPrintScene(Portrait);
+            ps = new PPrintScene(QPageLayout::Portrait);
             lps.append(ps);
         }
     }
@@ -124,7 +124,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
 
     if (top > sizePortrait.height()  - 200) {
         top = 10;
-        ps = new PPrintScene(Portrait);
+        ps = new PPrintScene(QPageLayout::Portrait);
         lps.append(ps);
     }
     if (!drh.getValue("f_roomComment").toString().isEmpty()) {
@@ -137,7 +137,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
 
     if (top > sizePortrait.height()  - 200) {
         top = 10;
-        ps = new PPrintScene(Portrait);
+        ps = new PPrintScene(QPageLayout::Portrait);
         lps.append(ps);
     }
     if (drh.getValue("f_paymentMode").toInt() == PAYMENT_COMPLIMENTARY) {
@@ -192,7 +192,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
             top += ps->addTextRect(new PTextRect(400, top, 200, rowHeight, float_str(drd.getValue(i, "f_total").toDouble(), 2), &th, f))->textHeight();
             if (top > sizePortrait.height()  - 200) {
                 top = 10;
-                ps = new PPrintScene(Portrait);
+                ps = new PPrintScene(QPageLayout::Portrait);
                 lps.append(ps);
             }
         }
@@ -217,7 +217,7 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
             top += ps->addTextRect(new PTextRect(400, top, 200, rowHeight, float_str(drd.getValue(i, "f_total").toDouble(), 2), &th, f))->textHeight();
             if (top > sizePortrait.height()  - 200) {
                 top = 10;
-                ps = new PPrintScene(Portrait);
+                ps = new PPrintScene(QPageLayout::Portrait);
                 lps.append(ps);
             }
         }
@@ -239,10 +239,8 @@ PPrintReceipt::PPrintReceipt(const QString &printerName, const QString &number, 
 
     QPrinter printer;
     printer.setPrinterName(printerName.toUpper());
-    QMatrix m;
-    m.scale(3, 3);
+
     QPainter painter(&printer);
-    painter.setMatrix(m);
     for (int i = 0; i < lps.count(); i++) {
         if (i > 0) {
             printer.newPage();

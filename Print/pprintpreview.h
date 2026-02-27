@@ -15,7 +15,7 @@ class PPrintPreview : public QDialog
 public:
     explicit PPrintPreview(QWidget *parent = nullptr);
     ~PPrintPreview();
-    PPrintScene *addScene(int tmpl, PrintOrientation po);
+    PPrintScene *addScene(int tmpl, QPageLayout::Orientation po);
     int exec(bool noPreview = false);
     QList<PPrintScene*> fPrintScene;
 
@@ -39,7 +39,7 @@ private:
     int fPageNumber;
     float fScaleFactor;
     void setPage();
-    void setPrintOrientation(PrintOrientation po);
+    void setPageLayout(QPageLayout::Orientation po);
 };
 
 #endif // PPRINTPREVIEW_H

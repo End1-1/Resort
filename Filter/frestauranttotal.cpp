@@ -452,7 +452,7 @@ void FRestaurantTotal::printNewPage(int &top, int &left, int &page, PPrintPrevie
                             .arg(tr("Page"))
                             .arg(page), &trFooter);
             trFooter.setTextAlignment(Qt::AlignLeft);
-            ps = pp->addScene(0, Portrait);
+            ps = pp->addScene(0,QPageLayout::Portrait);
             page++;
         }
         top = 20;
@@ -495,7 +495,7 @@ void FRestaurantTotal::printReceipt()
     prHead.setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
     PPrintPreview pp(this);
-    PPrintScene *ps = pp.addScene(0, Portrait);
+    PPrintScene *ps = pp.addScene(0,QPageLayout::Portrait);
     PTextRect th;
     QFont f("Arial", 30);
     th.setFont(f);

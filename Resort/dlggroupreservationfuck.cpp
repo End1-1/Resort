@@ -274,7 +274,7 @@ void DlgGroupReservationFuck::reservationCacheUpdated(int cacheId, const QString
     Q_UNUSED(cacheId);
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
         if (ui->tblRoom->toString(i, 0).compare(id) == 0) {
-            ui->tblRoom->item(i, 0)->setBackgroundColor(Qt::magenta);
+            ui->tblRoom->item(i, 0)->setBackground(Qt::magenta);
             ui->tblRoom->setCurrentCell(-1, -1);
             return;
         }
@@ -465,7 +465,7 @@ void DlgGroupReservationFuck::makeTrackControl(int row)
     t->addWidget(ui->tblRoom->lineEdit(row, 6), "(In group) Price");
     t->addWidget(ui->tblRoom->comboBox(row, 9), "(In group) Arrangement");
     t->addWidget(ui->tblRoom->lineEdit(row, 10), "(In group) Guest");
-    ui->tblRoom->item(row, 0)->setData(Qt::UserRole, qVariantFromValue(t));
+    ui->tblRoom->item(row, 0)->setData(Qt::UserRole, QVariant::fromValue(t));
 }
 
 void DlgGroupReservationFuck::createRooms(const QString &cat, const QString &bed, int count, double price)
@@ -701,7 +701,7 @@ void DlgGroupReservationFuck::save()
     fDD.update("f_reservation_group", where_id(ui->leGroupCode->asInt()));
     bool err = false;
     for (int i = 0; i < ui->tblRoom->rowCount(); i++) {
-        if (ui->tblRoom->item(i, 0)->backgroundColor() == Qt::magenta) {
+        if (ui->tblRoom->item(i, 0)->background() == Qt::magenta) {
             flagAnotherSaved = true;
             continue;
         }
@@ -1200,7 +1200,7 @@ void DlgGroupReservationFuck::on_btnClearFilter_clicked()
 void DlgGroupReservationFuck::on_btnPrint_clicked()
 {
     PPrintPreview *pv = new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage());
-    PPrintScene *ps = pv->addScene(0, Landscape);
+    PPrintScene *ps = pv->addScene(0, QPageLayout::Landscape);
     int top = 10;
     //PTextRect *trInfo = new PTextRect(1500, 20, 500, 400, fPreferences.getDb(def_vouchers_right_header).toString(),
     //                                  0, QFont("Arial", 25));
@@ -1294,7 +1294,7 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
         ps->addTableRow(top, rowHeight, cols, vals, &th);
         if (top > sizeLandscape.height() - 200) {
             top = 10;
-            ps = pv->addScene(0, Landscape);
+            ps = pv->addScene(0, QPageLayout::Landscape);
         }
         totMan += ui->tblRoom->lineEdit(i, 12)->text().toInt();
         totFemal += ui->tblRoom->lineEdit(i, 13)->text().toInt();
@@ -1320,7 +1320,7 @@ void DlgGroupReservationFuck::on_btnPrint_clicked()
     ps->addTableRow(top, rowHeight, cols, vals, &th);
     if (top > sizeLandscape.height() - 200) {
         top = 10;
-        ps = pv->addScene(0, Landscape);
+        ps = pv->addScene(0, QPageLayout::Landscape);
     }
     top += rowHeight;
     top += rowHeight;

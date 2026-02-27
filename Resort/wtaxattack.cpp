@@ -8,7 +8,7 @@
 #include "printtaxd.h"
 #include <QMenu>
 
-static const int col_invoice = 0;
+static const int col_invoice3 = 0;
 static const int col_voucher = 4;
 static const int col_amount = 6;
 static const int col_checkbox = 7;
@@ -112,7 +112,7 @@ void WTaxAttack::on_tbl_doubleClicked(const QModelIndex &index)
     if (!index.isValid()) {
         return;
     }
-    WAccInvoice::openInvoice(ui->tbl->toString(index.row(), col_invoice));
+    WAccInvoice::openInvoice(ui->tbl->toString(index.row(), col_invoice3));
 }
 
 void WTaxAttack::on_leSearch_textChanged(const QString &arg1)
@@ -135,7 +135,7 @@ void WTaxAttack::on_leSearch_textChanged(const QString &arg1)
 void WTaxAttack::on_leInvoice_returnPressed()
 {
     ui->leSearch->clear();
-    QStringList invoices = ui->leInvoice->text().split(",", QString::SkipEmptyParts);
+    QStringList invoices = ui->leInvoice->text().split(",", Qt::SkipEmptyParts);
     if (invoices.isEmpty()) {
         invoices.append("");
     }

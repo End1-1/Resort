@@ -1,12 +1,11 @@
 #include "wroomchartclasses.h"
-#include "defines.h"
-#include "wroomcharttime.h"
-#include "wroomchart.h"
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
-
-static QSettings  __ss("SmartHotel", "SmartHotel");
+#include "chardefaults.h"
+#include "defines.h"
+#include "wroomchart.h"
+#include "wroomcharttime.h"
 
 QFont FONT;
 QMap<int, QString> DAYS_OF_WEEK;
@@ -212,11 +211,11 @@ void Reserve::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
         fillColor = Qt::yellow;
         break;
     }
-    fillColor = option->state & QStyle::State_MouseOver ? fillColor.light() : fillColor;
+    fillColor = option->state & QStyle::State_MouseOver ? fillColor.lighter(150) : fillColor;
     fillColor = option->state & QStyle::State_Sunken ? Qt::green : fillColor;
     QLinearGradient bgFill(0, 0, 0, option->rect.height());
     bgFill.setColorAt(0, fillColor);
-    bgFill.setColorAt(0.5, fillColor.light(120));
+    bgFill.setColorAt(0.5, fillColor.lighter(120));
     bgFill.setColorAt(1, fillColor);
     QBrush brush(bgFill);
     painter->fillRect(option->rect, brush);

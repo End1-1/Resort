@@ -5,7 +5,7 @@
 #include "base.h"
 #include "dlgselector.h"
 #include <QStyle>
-#include <QRegExpValidator>
+#include <QRegularExpressionValidator>
 
 EQLineEdit::EQLineEdit(QWidget *parent) :
     QLineEdit(parent)
@@ -201,7 +201,7 @@ QString EQLineEdit::getHiddenTextValidator()
 void EQLineEdit::setHiddenTextValidator(const QString &v)
 {
     fHiddenTextValidator = v;
-    QRegExpValidator *re = new QRegExpValidator(QRegExp(v));
+    QRegularExpressionValidator *re = new QRegularExpressionValidator(QRegularExpression(v));
     setValidator(re);
 }
 
@@ -371,7 +371,7 @@ void EQLineEdit::focusOutEvent(QFocusEvent *event)
         }
         QStringList codes;
         if (fSelectorMultiCheck) {
-            codes = code.split(",", QString::SkipEmptyParts);
+            codes = code.split(",", Qt::SkipEmptyParts);
         } else {
             codes << code;
         }

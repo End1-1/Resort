@@ -14,9 +14,6 @@ static const qreal Z_VALUE_CHECKIN = 6;
 static const qreal Z_VALUE_GRID_LINE = 4;
 static const qreal Z_VALUE_TEMP_RECT = 6;
 static const qreal Z_MAX = 10;
-static const QColor LIGHT_GRAY = QColor::fromRgb(72, 72, 72);
-static const QColor VSELECTION_COLOR = QColor::fromRgb(0, 255, 0, 100);
-static const QColor HSELECTION_COLOR = QColor::fromRgb(255, 0, 0, 200);
 
 extern QFont FONT;
 extern QDate fFirstDate;

@@ -135,8 +135,7 @@ void DlgEndOfDay::on_btnOk_clicked()
     }
 
     query = QString("update f_global_settings set f_value='%1' where f_settings=1 and f_key='%2'")
-            .arg(WORKING_DATE.addDays(1).toString(def_date_format))
-            .arg(def_working_day);
+                .arg(WORKING_DATE.addDays(1).toString(def_date_format), def_working_day);
     if (result) {
         result = fDD.exec(query);
     }

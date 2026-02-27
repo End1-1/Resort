@@ -2,7 +2,7 @@
 #include "ui_dlgchangeexportvaucher.h"
 #include "cacheinvoiceitem.h"
 
-#define HINT_INVOICE_ITEM 1
+static const int HINT_INVOICE_ITEM = 1;
 
 DlgChangeExportVaucher::DlgChangeExportVaucher(DoubleDatabase &db, QWidget *parent) :
     BaseExtendedDialog(parent),

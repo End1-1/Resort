@@ -22,7 +22,7 @@ void PPrintCheckin::print(const QString &id, bool noPreview)
 {
     PPrintCheckin p;
     PPrintPreview pv(fMainWindow->fPreferences.getDefaultParentForMessage());
-    PPrintScene *ps = pv.addScene(0, Portrait);
+    PPrintScene *ps = pv.addScene(0,QPageLayout::Portrait);
     /* Data */
     DoubleDatabase fDD;
     fDD[":f_id"] = id;

@@ -14,12 +14,12 @@
 #include "cachevaucher.h"
 #include "vauchers.h"
 
-#define HINT_INVOIC_ITEM 1
-#define HINT_PAYMENT_MODE 2
-#define HINT_VAT 3
-#define HINT_CARD 4
-#define HINT_CL 5
-#define HINT_INVOICE 6
+static const int HINT_INVOIC_ITEM = 1;
+static const int HINT_PAYMENT_MODE = 2;
+static const int HINT_VAT = 3;
+static const int HINT_CARD = 4;
+static const int HINT_CL = 5;
+static const int HINT_INVOICE = 6;
 
 WVaucherEditor::WVaucherEditor(QWidget *parent) :
     BaseDialog(parent),

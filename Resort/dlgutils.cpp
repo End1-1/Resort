@@ -1,8 +1,7 @@
 #include "dlgutils.h"
-#include "ui_dlgutils.h"
-#include "base.h"
-#include "doubleutils.h"
 #include <QFile>
+#include "doubleutils.h"
+#include "ui_dlgutils.h"
 
 DlgUtils::DlgUtils(QWidget *parent) :
     BaseExtendedDialog(parent),

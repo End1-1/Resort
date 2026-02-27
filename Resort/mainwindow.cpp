@@ -182,7 +182,8 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
     hl->setSizeConstraint(QLayout::SetMinimumSize);
-    hl->setMargin(0);
+    hl->setContentsMargins(0, 0, 0, 0);
+
     fStatusLabelLeft = new QLabel();
     fStatusLabelRight = new QLabel();
     QFont f(qApp->font());
@@ -222,7 +223,7 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     connect(&fTimeErrLabel, SIGNAL(timeout()), this, SLOT(timeout2()));
     fTimeErrLabel.start(1000);
     connect(this, SIGNAL(updateCache(int, QString)), &fCacheOne, SLOT(updateCache(int, QString)));
-    __mainWindow = this;
+    fMainWindow = this;
 
     if(fPreferences.getDb(def_debug_mode).toInt() > 0) {
         logEnabled = true;
@@ -564,7 +565,7 @@ void MainWindow::enableMainMenu(bool value)
         ui->menuBar->actions()[i]->setEnabled(true);
     }
 
-    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", Qt::SkipEmptyParts);
     ui->actionDisable_second_database->setVisible(r__(cr__do_no_write_second_db) && dbParams.count() == 4);
     ui->menuBar->actions().at(1)->setVisible(r__(cr__menu_reservation)); //Resevation
     ui->actionRoomChart->setVisible(r__(cr__room_chart));
@@ -719,7 +720,7 @@ void MainWindow::enableMainMenu(bool value)
 
     while(fDD.nextRow()) {
         if(fDD.getString(2) != "*") {
-            QStringList groups = fDD.getString(2).split(";", QString::SkipEmptyParts);
+            QStringList groups = fDD.getString(2).split(";", Qt::SkipEmptyParts);
 
             if(!groups.contains(QString::number(WORKING_USERGROUP))) {
                 continue;
@@ -2070,7 +2071,7 @@ void MainWindow::on_actionExecute_failed_sql_triggered()
 
 void MainWindow::on_actionDisable_second_database_triggered()
 {
-    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", QString::SkipEmptyParts);
+    QStringList dbParams = fPreferences.getDb("dd").toString().split(";", Qt::SkipEmptyParts);
 
     if(dbParams.count() != 4) {
         return;

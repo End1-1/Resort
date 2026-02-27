@@ -5,7 +5,11 @@
 #include <QJsonArray>
 #include <QLocale>
 
-#define float_str(value, f) QLocale().toString(value, 'f', f).remove(QRegExp("(?!\\d[\\.\\,][1-9]+)0+$")).remove(QRegExp("[\\.\\,]$"))
+#define float_str(value, f) \
+    QLocale() \
+        .toString(value, 'f', f) \
+        .remove(QRegularExpression("(?!\\d[\\.\\,][1-9]+)0+$")) \
+        .remove(QRegularExpression("[\\.\\,]$"))
 
 DlgHDMViewer::DlgHDMViewer(const QString &fiscal, const QString &jsonText, QWidget *parent) :
     QDialog(parent),

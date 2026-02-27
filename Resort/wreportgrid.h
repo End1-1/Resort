@@ -178,8 +178,8 @@ private:
     float fScaleFactor;
     QList<PPrintScene*> fPrintScene;
     void setPage();
-    PPrintScene *addScene(int tmpl, PrintOrientation po);
-    void setPrintOrientation(PrintOrientation po);
+    PPrintScene *addScene(int tmpl, QPageLayout::Orientation po);
+    void setPageLayout(QPageLayout::Orientation po);
     void printOnPaper();
     bool fPrintOut;
     bool fPrintOutReady;

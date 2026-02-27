@@ -1,23 +1,23 @@
 #include "wreportgrid.h"
-#include "ui_wreportgrid.h"
-#include "dlgfiltervalues.h"
-#include "wfilterbase.h"
-#include "pprintscene.h"
-#include "pimage.h"
-#include "ptextrect.h"
-#include "dlgconfiggrid.h"
-#include "dlghelp.h"
-#include <QXlsx/header/xlsxdocument.h>
-#include <QFileDialog>
-#include <QScrollBar>
-#include <QMenu>
-#include <QShortcut>
-#include <QPrinter>
-#include <QException>
 #include <QClipboard>
-#include <QFileDialog>
-#include <QPrinterInfo>
 #include <QDesktopServices>
+#include <QException>
+#include <QFileDialog>
+#include <QLayout>
+#include <QMenu>
+#include <QPrinter>
+#include <QPrinterInfo>
+#include <QScrollBar>
+#include <QShortcut>
+#include "dlgconfiggrid.h"
+#include "dlgfiltervalues.h"
+#include "dlghelp.h"
+#include "pimage.h"
+#include "pprintscene.h"
+#include "ptextrect.h"
+#include "ui_wreportgrid.h"
+#include "wfilterbase.h"
+#include <xlsxdocument.h>
 
 QMap<QString, Report> WReportGrid::fReportOptions;
 static const int font_size_print_delta = 16;
@@ -78,7 +78,7 @@ WReportGrid::WReportGrid(QWidget *parent) :
     }
     ui->gv->horizontalScrollBar()->blockSignals(true);
     ui->gv->verticalScrollBar()->blockSignals(true);
-    setPrintOrientation(Portrait);
+    setPageLayout(QPageLayout::Portrait);
     ui->cbPrinters->addItems(QPrinterInfo::availablePrinterNames());
     ui->cbPrinters->setCurrentIndex(ui->cbPrinters->findText(QPrinterInfo::defaultPrinterName()));
     ui->wPrint->setVisible(false);
@@ -374,7 +374,7 @@ void WReportGrid::setPage()
     ui->btnNext->setEnabled(fPageNumber < fPrintScene.count());
 }
 
-PPrintScene *WReportGrid::addScene(int tmpl, PrintOrientation po)
+PPrintScene *WReportGrid::addScene(int tmpl, QPageLayout::Orientation po)
 {
     PPrintScene *ps = nullptr;
     switch (tmpl) {
@@ -385,7 +385,7 @@ PPrintScene *WReportGrid::addScene(int tmpl, PrintOrientation po)
             ps = new PPrintScene(this);
             break;
     }
-    QSize s = po == Portrait ? sizePortrait : sizeLandscape;
+    QSize s = po == QPageLayout::Portrait ? sizePortrait : sizeLandscape;
     QSize wSize = s;
     wSize.setWidth(sizePortrait.width() / 3);
     wSize.setHeight(wSize.width());
@@ -396,9 +396,9 @@ PPrintScene *WReportGrid::addScene(int tmpl, PrintOrientation po)
     return ps;
 }
 
-void WReportGrid::setPrintOrientation(PrintOrientation po)
+void WReportGrid::setPageLayout(QPageLayout::Orientation po)
 {
-    QSize s(po == Portrait ? sizePortrait : sizeLandscape);
+    QSize s(po == QPageLayout::Portrait ? sizePortrait : sizeLandscape);
     s.setWidth(s.width() * 1.5);
     s.setHeight(s.height() * 1.5);
     ui->gv->setMinimumSize(s);
@@ -430,7 +430,7 @@ void WReportGrid::printOnPaper()
             printPages << fPageNumber - 1;
             break;
         case 2: {
-            QStringList p = ui->lePages->text().replace(" ", "").split(",", QString::SkipEmptyParts);
+            QStringList p = ui->lePages->text().replace(" ", "").split(",", Qt::SkipEmptyParts);
             foreach (QString s, p) {
                 int page = s.toInt() - 1;
                 if (page < 0 || page > fPrintScene.count() - 1) {
@@ -442,15 +442,15 @@ void WReportGrid::printOnPaper()
         }
     }
     QPrinter prn;
-    prn.setPaperSize(QPrinter::A4);
+    prn.setPageSize(QPageSize::A4);
     prn.setPrinterName(ui->cbPrinters->currentText());
-    prn.setOrientation(fPrintScene.at(printPages.at(0))->fPrintOrientation == Portrait ? QPrinter::Portrait :
-                       QPrinter::Landscape);
+    prn.setPageOrientation(fPrintScene.at(printPages.at(0))->fPageLayout == QPageLayout::Portrait
+                               ? QPageLayout::Portrait
+                               : QPageLayout::Landscape);
     QPainter painter( &prn);
     for (int i = 0; i < printPages.count(); i++) {
         if (i > 0) {
-            prn.setOrientation(fPrintScene.at(printPages.at(i))->fPrintOrientation == Portrait ? QPrinter::Portrait :
-                               QPrinter::Landscape);
+            prn.setPageOrientation(fPrintScene.at(printPages.at(i))->fPageLayout);
             prn.newPage();
         }
         fPrintScene.at(printPages.at(i))->render( &painter);
@@ -486,7 +486,7 @@ void WReportGrid::addFilterWidget(WFilterBase *f)
     }
     if (f->layout() != nullptr) {
         f->layout()->setSizeConstraint(QLayout::SetMinimumSize);
-        f->layout()->setMargin(0);
+        f->layout()->setContentsMargins(0, 0, 0, 0);
     }
     fFilter = f;
     ui->hl->addWidget(f);
@@ -631,7 +631,7 @@ void WReportGrid::actionFilterColumn(bool v)
         return;
     }
     fModel->uniqueValuesForColumn(sel.at(0).column(), filterValues);
-    QStringList sortedValues = filterValues.toList();
+    QStringList sortedValues = filterValues.values();
     std::sort(sortedValues.begin(), sortedValues.end());
     DlgFilterValues *d = new DlgFilterValues(sortedValues, this);
     if (d->exec() == QDialog::Accepted) {
@@ -725,8 +725,9 @@ void WReportGrid::on_btnPrint_clicked()
     trFooter.setFont(f);
     trFooter.setBorders(false, false, false, false);
     trFooter.setTextAlignment(Qt::AlignLeft);
-    PrintOrientation po = (totalWidth > sizePortrait.width() - 50 ? Landscape : Portrait);
-    QSize paperSize = (po == Portrait ? sizePortrait : sizeLandscape);
+    QPageLayout::Orientation po = (totalWidth > sizePortrait.width() - 50 ? QPageLayout::Landscape
+                                                                          : QPageLayout::Portrait);
+    QSize paperSize = (po == QPageLayout::Portrait ? sizePortrait : sizeLandscape);
     int footerTop = paperSize.height() - 50;
     PTextRect prTempl;
     prTempl.setWrapMode(QTextOption::NoWrap);
@@ -811,7 +812,7 @@ void WReportGrid::on_btnPrint_clicked()
             }
             nf.setPointSize(nf.pointSize() + font_size_print_delta - n);
             prTempl.setFont(nf);
-            QBrush br(fModel->data(i, j, Qt::BackgroundColorRole).value<QColor>());
+            QBrush br(fModel->data(i, j, Qt::BackgroundRole).value<QColor>());
             if (br.color() == Qt::white) {
                 br.setStyle(Qt::NoBrush);
             }
@@ -1067,7 +1068,7 @@ void WReportGrid::endApply()
 {
     QString settingsName = fTableView->property("wgridclassname").toString();
     QSettings s(_ORGANIZATION_, settingsName);
-    QStringList cols = s.value("ColumnsWidths").toString().split(",", QString::SkipEmptyParts);
+    QStringList cols = s.value("ColumnsWidths").toString().split(",", Qt::SkipEmptyParts);
     if (cols.count() != fModel->columnCount()) {
         return;
     }
@@ -1160,7 +1161,9 @@ void WReportGrid::on_cbZoom_currentIndexChanged(int index)
     qreal prevScaleFactor = fScaleFactor;
     fScaleFactor = (index + 1) / 1.5;
     qreal deltaScaleFactor =  prevScaleFactor / fScaleFactor;
-    QSize size(fPrintScene.at(fPageNumber - 1)->fPrintOrientation == Portrait ? sizePortrait : sizeLandscape);
+    QSize size(fPrintScene.at(fPageNumber - 1)->fPageLayout == QPageLayout::Portrait
+                   ? sizePortrait
+                   : sizeLandscape);
     size.setWidth((size.width() / fScaleFactor) * 1.500);
     size.setHeight((size.height() / fScaleFactor) * 1.500);
     ui->gv->setMinimumSize(size);

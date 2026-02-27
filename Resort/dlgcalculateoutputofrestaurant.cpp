@@ -131,7 +131,7 @@ void DlgCalculateOutputOfRestaurant::calculateForStore(int store, const QDate &d
     fDD.update("r_docs", where_id(ap(docId)));
 
     for (int i = 0; i < fDD.rowCount(); i++) {
-        if (fDD.getValue(i, "f_qty") < 0.01) {
+        if (fDD.getValue(i, "f_qty").toDouble() < 0.01) {
             continue;
         }
         fDD[":f_id"] = 0;

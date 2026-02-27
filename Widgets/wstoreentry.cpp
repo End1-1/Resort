@@ -168,7 +168,7 @@ void WStoreEntry::on_toolButton_2_clicked()
         rows << m.row();
     }
     for (int i = rows.count() - 1; i > -1; i--) {
-        ui->tblData->removeRow(rows.toList().at(i));
+        ui->tblData->removeRow(rows.values().at(i));
     };
     countTotal();
 }

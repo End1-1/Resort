@@ -71,6 +71,7 @@ private slots:
     void on_btnExportAS_clicked();
     void on_btnExportASRetail_clicked();
     void on_btnMoveToCL_clicked();
+    void on_btnChangeRemarks_clicked();
 };
 
 #endif // WACCINVOICE_H

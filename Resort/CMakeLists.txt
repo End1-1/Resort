@@ -25,7 +25,7 @@ qt_standard_project_setup()
 # ---------- Sources ----------
 # Оставляем GLOB, раз тебе так удобнее, но Unity Build нивелирует его минусы при сборке
 file(GLOB_RECURSE PROJECT_SOURCES
-    *.cpp *.h *.ui *.qrc
+    *.cpp *.h *.ui *.qrc *.rc
     ../Base/*.cpp ../Base/*.h ../Base/*.ui
     ../Cache/*.cpp ../Cache/*.h ../Cache/*.ui
     ../Cache2/*.cpp ../Cache2/*.h ../Cache2/*.ui
@@ -101,4 +101,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 set(CPACK_GENERATOR "" CACHE STRING "Disable CPack in QXlsx" FORCE)
 add_subdirectory(C:/Development/projects/qxlsx qxlsx_build)
 target_link_libraries(${PROJECT_NAME} PRIVATE QXlsx)
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/P")

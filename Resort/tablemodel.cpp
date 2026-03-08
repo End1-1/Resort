@@ -38,6 +38,7 @@ void TableModel::apply(WReportGrid *rg)
     } else {
         //rg->getModelData(fDD.fDbRows);
     }
+
     applyFinal(rg, false);
 }
 

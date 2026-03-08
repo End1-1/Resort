@@ -15,9 +15,7 @@ DlgRefundVaucher::DlgRefundVaucher(QWidget *parent) :
     ui->setupUi(this);
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->lePaymentMode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName);
-    ui->lePaymentMode->fCodeFilter
-            << QString::number(PAYMENT_CASH)
-            << QString::number(PAYMENT_BANK);
+    ui->lePaymentMode->fCodeFilter << QString::number(PAYMENT_CASH) << QString::number(PAYMENT_CARD) << QString::number(PAYMENT_BANK);
 }
 
 DlgRefundVaucher::~DlgRefundVaucher()

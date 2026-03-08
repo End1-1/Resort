@@ -1,36 +1,37 @@
 #include "waccinvoice.h"
-#include "ui_waccinvoice.h"
-#include "dlgtracking.h"
-#include "wreportgrid.h"
-#include "pprintinvoice.h"
-#include "dlginvoiceprintoption.h"
-#include "cacheinvoiceitem.h"
-#include "vauchers.h"
-#include "cachecardex.h"
-#include "cachevatmode.h"
-#include "dlgprinttaxsideoption.h"
-#include "dlgsearchinvoice.h"
-#include "printtaxd.h"
-#include "cachetaxmap.h"
-#include "dlgtaxback.h"
-#include "dlgviewinvoicecorrections.h"
-#include "cachecheckoutinvoice.h"
-#include "pexportinvoicetoexcel.h"
-#include "frestauranttotal.h"
-#include "dlgchartdaterange.h"
-#include "dlghdmviewer.h"
-#include "dlgreservationguests.h"
-#include "dlgpostcharge.h"
-#include "dlgcl.h"
-#include "wreservation.h"
-#include "dlgremotinvoices.h"
-#include "dlgreserveshortinfo.h"
-#include "dlgselectfiscalmachin.h"
-#include "dlgmovetocl.h"
-#include "wvauchereditor.h"
-#include "dlgexportas.h"
-#include <QSqlRecord>
 #include <QInputDialog>
+#include <QSqlRecord>
+#include "cachecardex.h"
+#include "cachecheckoutinvoice.h"
+#include "cacheinvoiceitem.h"
+#include "cachetaxmap.h"
+#include "cachevatmode.h"
+#include "dlgchangeremarks.h"
+#include "dlgchartdaterange.h"
+#include "dlgcl.h"
+#include "dlgexportas.h"
+#include "dlghdmviewer.h"
+#include "dlginvoiceprintoption.h"
+#include "dlgmovetocl.h"
+#include "dlgpostcharge.h"
+#include "dlgprinttaxsideoption.h"
+#include "dlgremotinvoices.h"
+#include "dlgreservationguests.h"
+#include "dlgreserveshortinfo.h"
+#include "dlgsearchinvoice.h"
+#include "dlgselectfiscalmachin.h"
+#include "dlgtaxback.h"
+#include "dlgtracking.h"
+#include "dlgviewinvoicecorrections.h"
+#include "frestauranttotal.h"
+#include "pexportinvoicetoexcel.h"
+#include "pprintinvoice.h"
+#include "printtaxd.h"
+#include "ui_waccinvoice.h"
+#include "vauchers.h"
+#include "wreportgrid.h"
+#include "wreservation.h"
+#include "wvauchereditor.h"
 
 #define sel_invoice 1
 #define sel_cardex 2
@@ -55,6 +56,7 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->btnPostingCharges->setVisible(r__(cr__super_correction) && false);
     ui->btnMoveItem->setVisible(r__(cr__super_correction));
     ui->btnNewVaucher->setVisible(r__(cr__super_correction));
+    ui->btnChangeRemarks->setVisible(r__(cr__super_correction));
     ui->btnEditReserv->setVisible(r__(cr__super_correction));
     ui->btnEditRowVaucher->setVisible(r__(cr__super_correction));
     ui->btnMoveToCL->setVisible(r__(cr__super_correction));
@@ -1068,5 +1070,18 @@ void WAccInvoice::on_btnMoveToCL_clicked()
     //    }
     if (DlgMoveToCL(ui->tblData->toString(row, 0), this).exec() == QDialog::Accepted) {
         load(ui->leInvoice->text());
+    }
+}
+
+void WAccInvoice::on_btnChangeRemarks_clicked()
+{
+    DlgChangeRemarks dc(ui->teRemarks->toPlainText(), this);
+    if (dc.exec() == QDialog::Accepted) {
+        DoubleDatabase fDD;
+        fDD[":f_id"] = ui->leReservationId->text();
+        fDD[":f_remarks"] = dc.result;
+        if (fDD.exec("update f_reservation set f_remarks=:f_remarks  where f_id=:f_id")) {
+            ui->teRemarks->setPlainText(dc.result);
+        }
     }
 }

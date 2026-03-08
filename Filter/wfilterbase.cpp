@@ -38,65 +38,35 @@ void WFilterBase::finalPrint(PPrintScene *ps, int top)
 
 void WFilterBase::buildQuery(WReportGrid *rg, const QString &where)
 {
+    QString select = "select ";
+    QString from = "from ";
     rg->fModel->clearColumns();
 
-    QString select = "select ";
-    QString from = "from  ";
+    // 1. Ищем алиасы в WHERE (например, r в "r.f_id")
+    // Ищем: слово, после которого идет точка
+    QRegularExpression reAlias(R"([a-z0-9_]+(?=\.))", QRegularExpression::CaseInsensitiveOption);
 
-    // ищем table.field
-    QRegularExpression rw(R"([\s(,][a-zA-Z0-9]*\.)");
-
-    QRegularExpressionMatchIterator it = rw.globalMatch(where);
-    while (it.hasNext()) {
-        QRegularExpressionMatch m = it.next();
-
-        QString table = m.captured(0);
-        table.remove(table.length() - 1, 1).remove(0, 1);
-
-        checkTableName(table, from, rg);
-    }
+    QStringList whereAliases = extractTableName(reAlias, where);
+    for (const QString &a : whereAliases)
+        checkTableName(a, from, rg);
 
     bool firstSelect = true;
-    rg->fModel->clearColumns();
-
-    for (int i = 0, count = rg->fFields.count(); i < count; ++i) {
+    for (int i = 0; i < rg->fFields.count(); i++) {
         if (!rg->fIncludes[rg->fFields.at(i)])
             continue;
 
-        rg->fModel->setColumn(rg->fFieldsWidths.at(i), rg->fFields.at(i), rg->fFieldTitles.at(i));
+        QString field = rg->fFields.at(i);
+        rg->fModel->setColumn(rg->fFieldsWidths.at(i), field, rg->fFieldTitles.at(i));
 
         if (!firstSelect)
             select += ",";
-        else
-            firstSelect = false;
+        firstSelect = false;
 
-        const QString &field = rg->fFields.at(i);
-
-        if (field.contains("concat") || field.contains("count(") || field.contains("sum(")) {
-            QRegularExpression re(R"(([(,].+\b))");
-            re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
-
-            QStringList tableNames = extractTableName(re, field);
-
-            for (QString &t : tableNames)
-                checkTableName(t.remove(0, 1), from, rg);
-
-        } else if (field.contains("coalesce")) {
-            QRegularExpression re(R"(([\+\-][a-z]+\b))");
-            re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
-
-            QStringList tableNames = extractTableName(re, field);
-
-            for (QString &t : tableNames)
-                checkTableName(t.remove(0, 1), from, rg);
-        } else {
-            QRegularExpression re(R"((.+\b))");
-            re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
-
-            QStringList tableNames = extractTableName(re, field);
-
-            for (const QString &t : tableNames)
-                checkTableName(t, from, rg);
+        // 2. Ищем все алиасы в поле (будь то coalesce, concat или просто r.field)
+        // Логика та же: всё, что перед точкой — это алиас таблицы
+        QStringList fieldAliases = extractTableName(reAlias, field);
+        for (const QString &a : fieldAliases) {
+            checkTableName(a, from, rg);
         }
 
         select += field;
@@ -108,46 +78,59 @@ void WFilterBase::buildQuery(WReportGrid *rg, const QString &where)
 
 QStringList WFilterBase::extractTableName(const QRegularExpression &re, const QString &str)
 {
-    QRegularExpressionMatch m = re.match(str);
-    return m.capturedTexts();
+    QStringList result;
+    QRegularExpressionMatchIterator i = re.globalMatch(str);
+    while (i.hasNext()) {
+        QRegularExpressionMatch match = i.next();
+        // Берем только текст совпадения без захвата лишних скобок внутри регекса
+        result << match.captured(0);
+    }
+    return result;
 }
 
 void WFilterBase::checkTableName(const QString &alias, QString &from, WReportGrid *rg)
 {
-    for (int i = 0; i < rg->fTables.count(); ++i) {
-        QRegularExpression rt(R"(\s[a-zA-Z]+$)");
-        QRegularExpressionMatch match = rt.match(rg->fTables.at(i));
+    if (alias.isEmpty())
+        return;
 
-        if (!match.hasMatch())
-            continue;
+    for (int i = 0; i < rg->fTables.count(); i++) {
+        QString tableDef = rg->fTables.at(i).trimmed();
 
-        QString compareTableName = match.captured(0);
-        compareTableName.remove(0, 1); // убрать пробел
+        static QRegularExpression reLastWord(R"(\b[a-z0-9_]+$)", QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatch m = reLastWord.match(tableDef);
 
-        if (alias == compareTableName) {
-            if (!from.contains(rg->fTables.at(i))) {
-                if (i == 0) {
-                    from.insert(5, rg->fTables.at(i));
-                    from += " ";
-                } else {
-                    QString joinCond = rg->fJoinConds.at(i);
-
-                    QRegularExpression rjt(R"(=[a-z]+\b)");
-                    QStringList joinsTables = extractTableName(rjt, joinCond);
-
-                    for (QString &s : joinsTables)
-                        checkTableName(s.remove(0, 1), from, rg);
-
-                    from += rg->fJoins.at(i) + " join " + rg->fTables.at(i) + " on " + joinCond
-                            + " ";
-                }
+        if (m.hasMatch() && m.captured(0).toLower() == alias.toLower()) {
+            // КРИТИЧЕСКИ ВАЖНО: сначала проверяем, нет ли уже этого определения в запросе
+            if (from.contains(tableDef)) {
+                return;
             }
 
+            // Чтобы избежать бесконечной рекурсии, сначала "резервируем" таблицу в строке from
+            // (или используем временный список добавленных алиасов)
+
+            if (i == 0) {
+                from.insert(5, tableDef + " ");
+            } else {
+                // Вытаскиваем все зависимости из условия JOIN
+                QRegularExpression reJoinAlias(R"([a-z0-9_]+(?=\.))");
+                QStringList joinAliases = extractTableName(reJoinAlias, rg->fJoinConds.at(i));
+
+                for (const QString &ja : joinAliases) {
+                    // Чтобы не вызывать рекурсию для самой себя (например, r.f_id = r.f_parent)
+                    if (ja.toLower() != alias.toLower()) {
+                        checkTableName(ja, from, rg);
+                    }
+                }
+
+                // Проверяем еще раз перед добавлением (рекурсия могла уже добавить её)
+                if (!from.contains(tableDef)) {
+                    from += " " + rg->fJoins.at(i) + " join " + tableDef + " on " + rg->fJoinConds.at(i) + " ";
+                }
+            }
             return;
         }
     }
 }
-
 QWidget *WFilterBase::gridOptionWidget()
 {
     return nullptr;

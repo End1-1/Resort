@@ -15,7 +15,7 @@ DlgQuickAdvanceAction::DlgQuickAdvanceAction(QWidget *parent) :
 {
     ui->setupUi(this);
     Utils::tableSetColumnWidths(ui->tbl, ui->tbl->columnCount(), 50, 250, 100, 50, 80, 80, 80, 30);
-    ui->leItemCode->setSelector(this, cache(cid_invoice_item), ui->leItemName, hint_item);
+    ui->leItemCode->setSelector(this, cache(cid_invoice_item), ui->leItemName, 1);
 }
 
 DlgQuickAdvanceAction::~DlgQuickAdvanceAction()
@@ -26,7 +26,7 @@ DlgQuickAdvanceAction::~DlgQuickAdvanceAction()
 void DlgQuickAdvanceAction::callback(int sel, const QString &code)
 {
     switch (sel) {
-    case hint_item: {
+    case 1: {
         CacheInvoiceItem ci;
         if (ci.get(code)) {
             CacheTaxMap ct;

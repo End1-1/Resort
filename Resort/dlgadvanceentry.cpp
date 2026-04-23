@@ -29,12 +29,7 @@ DlgAdvanceEntry::DlgAdvanceEntry(const QString &reserveId, double suggestAmount,
     ui->leUser->setInitialValue(WORKING_USERID);
     ui->btnPrint->setEnabled(false);
     QList<int> paymentFilter;
-    paymentFilter << PAYMENT_CASH
-                  << PAYMENT_CARD
-                  << PAYMENT_BANK
-                  << PAYMENT_PAYX
-                  << PAYMENT_TERMINAL
-                  << PAYMENT_CPAY;
+    paymentFilter << PAYMENT_CASH << PAYMENT_CARD << PAYMENT_BANK << PAYMENT_PAYX << PAYMENT_TERMINAL << PAYMENT_CPAY << PAYMENT_IDRAM;
     ui->wPayment->setPaymentFilter(paymentFilter);
     ui->wPayment->hideVAT(true);
     ui->wInvoice->setDBMRegister(&fDoc);
@@ -132,6 +127,9 @@ void DlgAdvanceEntry::on_btnSave_clicked()
         break;
     case PAYMENT_CPAY:
         finalName = "CPAY";
+        break;
+    case PAYMENT_IDRAM:
+        finalName = "IDRAM";
         break;
     default:
         message_error(tr("Selected mode of payment is not allowed here"));

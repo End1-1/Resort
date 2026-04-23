@@ -1,9 +1,9 @@
 #ifndef DLGPRINTTAXSM_H
 #define DLGPRINTTAXSM_H
 
-#include "baseextendeddialog.h"
-#include "printtaxn.h"
 #include <QTimer>
+#include "baseextendeddialog.h"
+#include "printtaxno.h"
 
 #define TAX_OK 1
 #define TAX_FAIL 2
@@ -52,7 +52,7 @@ private:
     int fPrintMode;
     QTimer fTimer;
     QString fDep;
-    PrintTaxN *fPrintTax;
+    PrintTaxNO *fPrintTax;
     void load();
     void loadAdvance();
     void loadTaxback();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hy">
+<TS version="2.1" language="hy_AM">
 <context>
     <name>About</name>
     <message>
@@ -29,7 +29,7 @@
     </message>
     <message>
         <source>DEBUG VERSION</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>License:</source>

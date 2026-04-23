@@ -14172,7 +14172,7 @@ from</source>
     <message>
         <location filename="wreservationroomtab.ui" line="843"/>
         <source>City ledger</source>
-        <translation type="unfinished"></translation>
+        <translation>Կազմակերպություն</translation>
     </message>
     <message>
         <location filename="wreservationroomtab.ui" line="222"/>
@@ -14271,7 +14271,7 @@ commission</source>
     <message>
         <location filename="wreservationroomtab.ui" line="887"/>
         <source>Cardex</source>
-        <translation type="unfinished"></translation>
+        <translation>Կազմակերպություն</translation>
     </message>
     <message>
         <location filename="wreservationroomtab.ui" line="977"/>

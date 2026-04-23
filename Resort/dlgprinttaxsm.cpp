@@ -17,7 +17,7 @@ DlgPrintTaxSM::DlgPrintTaxSM(int taxid, QWidget *parent) :
     fCardAmount = 0;
     fPrepaid = 0;
     fTaxID = taxid;
-    fPrintTax = new PrintTaxN("", 1025, "", "", "1234", "1234", this);
+    fPrintTax = new PrintTaxNO("", 1025, "", "", "1234", "1234", this);
     if (debug_tax_number == 0) {
         unsigned int ms = static_cast<unsigned>(QDateTime::currentMSecsSinceEpoch());
         std::mt19937 gen(ms);

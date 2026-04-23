@@ -9,11 +9,13 @@
 #include <QPainter>
 
 DWMainDeskHint::DWMainDeskHint(QWidget *parent) :
-    QDockWidget(parent, Qt::WindowStaysOnBottomHint),
+    QDockWidget(parent),
     Base(),
     ui(new Ui::DWMainDeskHint)
 {
     ui->setupUi(this);
+    setFloating(true);
+    setWindowFlag(Qt::Tool, true);
     fTableModel = new TableModel(ui->tbl, nullptr);
     fCheckInFilter = false;
     connect(ui->tbl->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(tblHeaderSectionClicked(int)));
@@ -41,9 +43,8 @@ void DWMainDeskHint::commonFilter(const QString &filter, int col)
     if (!fLoaded) {
         load();
     }
-    if (fCheckInFilter) {
-        return;
-    }
+    fCheckInFilter = false;
+    ui->btnCheckIn->setVisible(false);
     if (col < 0) {
         fTableModel->searchInTable(filter);
     } else {
@@ -103,7 +104,7 @@ void DWMainDeskHint::hide()
 void DWMainDeskHint::show()
 {
     //fTableModel->searchInTable("", -1);
-    QWidget::show();
+    QDockWidget::show();
 }
 
 void DWMainDeskHint::reset()
@@ -179,8 +180,6 @@ void DWMainDeskHint::thisVisibilityChanged(bool v)
     if (!v) {
         fCheckInFilter = false;
         ui->btnCheckIn->setVisible(false);
-    } else {
-        setFocus();
     }
 }
 

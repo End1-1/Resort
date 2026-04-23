@@ -1,19 +1,19 @@
 #include "dlgreceiptvaucher.h"
-#include "ui_dlgreceiptvaucher.h"
-#include "pprintpreview.h"
-#include "ptextrect.h"
-#include "pprintheader.h"
-#include "cachepaymentmode.h"
-#include "vauchers.h"
-#include "pimage.h"
-#include "printtaxn.h"
-#include "dlgtracking.h"
 #include "cacheactiveroom.h"
+#include "cachepaymentmode.h"
 #include "cacheroom.h"
-#include "paymentmode.h"
-#include "pprintvaucher.h"
 #include "cacheusers.h"
 #include "databaserow.h"
+#include "dlgtracking.h"
+#include "paymentmode.h"
+#include "pimage.h"
+#include "pprintheader.h"
+#include "pprintpreview.h"
+#include "pprintvaucher.h"
+#include "printtaxno.h"
+#include "ptextrect.h"
+#include "ui_dlgreceiptvaucher.h"
+#include "vauchers.h"
 #include "winvoice.h"
 
 #define HINT_ACTIVE_ROOM 1
@@ -34,14 +34,10 @@ DlgReceiptVaucher::DlgReceiptVaucher(int fiscalmachine, double suggestAmount, in
     ui->lePaymentCode->setSelector(this, cache(cid_payment_mode), ui->lePaymentName, HINT_PAYMENT_MODE);
 
     if(side == 0) {
-        ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH)
-                                       << QString::number(PAYMENT_CARD)
-                                       << QString::number(PAYMENT_BANK)
-                                       << QString::number(PAYMENT_BARTER)
-                                       << QString::number(PAYMENT_CL)
-                                       << QString::number(PAYMENT_PAYX)
-                                       << QString::number(PAYMENT_TERMINAL)
-                                       << QString::number(PAYMENT_CPAY);
+        ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CASH) << QString::number(PAYMENT_CARD) << QString::number(PAYMENT_BANK)
+                                       << QString::number(PAYMENT_BARTER) << QString::number(PAYMENT_CL) << QString::number(PAYMENT_PAYX)
+                                       << QString::number(PAYMENT_TERMINAL) << QString::number(PAYMENT_CPAY)
+                                       << QString::number(PAYMENT_IDRAM);
     } else {
         ui->lePaymentCode->fCodeFilter << QString::number(PAYMENT_CL);
     }

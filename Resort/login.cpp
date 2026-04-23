@@ -298,14 +298,30 @@ void Login::on_btnLoginPin_clicked()
         message_error(fDD.fLastError);
         return;
     }
-    fDD.exec("select current_timestamp");
+    fDD.exec("SELECT UTC_TIMESTAMP"); // Берем гарантированный UTC с сервера
     fDD.nextRow();
-    if (QDateTime::currentDateTime() < fDD.getValue(0).toDateTime().addSecs(-300)) {
-        message_error(tr("Server time and workstation time note same, aborting."));
+
+    QDateTime serverTime = fDD.getValue(0).toDateTime();
+    serverTime.setTimeSpec(Qt::UTC); // Насильно говорим: "Это UTC!"
+
+    QDateTime localTime = QDateTime::currentDateTime().toUTC();
+
+    // Вычисляем разницу в секундах
+    // secsTo вернет положительное число, если serverTime позже, и отрицательное, если раньше
+    qint64 diff = qAbs(localTime.secsTo(serverTime));
+
+    // Проверка на расхождение более 5 минут (300 секунд) в любую сторону
+    if (diff > 300) {
+        QString errorMsg = tr("Server time and workstation time are not the same, aborting.") + "\n\n" + tr("Workstation time: ")
+                           + localTime.toString("yyyy-MM-dd HH:mm:ss") + "\n" + tr("Server time: ")
+                           + serverTime.toString("yyyy-MM-dd HH:mm:ss") + "\n" + tr("Difference: %1 seconds").arg(diff);
+
+        message_error(errorMsg);
         return;
     }
     fDD[":password"] = ui->lePin->text();
-    fDD.exec("select f_id, f_firstName, f_lastName, f_group, concat(f_firstName, ' ', f_lastName) as f_fullName from users where f_altpassword=md5(:password)");
+    fDD.exec("select f_id, f_firstName, f_lastName, f_group, concat(f_firstName, ' ', f_lastName) as f_fullName "
+             "from users where f_altpassword=md5(:password)");
     if (!fDD.nextRow()) {
         message_error(tr("Access denied"));
         return;

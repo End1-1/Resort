@@ -1,21 +1,21 @@
 #include "dlgpaymentsdetails.h"
-#include "ui_dlgpaymentsdetails.h"
-#include "cachepaymentmode.h"
-#include "pimage.h"
-#include "ptextrect.h"
-#include "pprintpreview.h"
-#include "cacheinvoiceitem.h"
+#include <QInputDialog>
 #include "cacheactiveroom.h"
-#include "pprintheader.h"
-#include "dlgrefundvaucher.h"
-#include "pprintvaucher.h"
-#include "printtaxn.h"
+#include "cacheinvoiceitem.h"
+#include "cachepaymentmode.h"
 #include "cachetaxmap.h"
-#include "paymentmode.h"
 #include "dlginvoicepaymentoptions.h"
 #include "dlgprinttaxsm.h"
+#include "dlgrefundvaucher.h"
+#include "paymentmode.h"
+#include "pimage.h"
+#include "pprintheader.h"
+#include "pprintpreview.h"
+#include "pprintvaucher.h"
+#include "printtaxno.h"
+#include "ptextrect.h"
+#include "ui_dlgpaymentsdetails.h"
 #include "vauchers.h"
-#include <QInputDialog>
 
 #define HINT_CITY_LEDGER 1
 #define HINT_CREDIT_CARD 2

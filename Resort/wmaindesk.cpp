@@ -68,7 +68,8 @@ WMainDesk::WMainDesk(QWidget *parent) :
     fStateListNames.append(tr("Checkin"));
     fStateListNames.append(tr("Dirty"));
     fStateListNames.append(tr("O/O"));
-    fDockHint = new DWMainDeskHint(this);
+    fDockHint = new DWMainDeskHint(nullptr);
+    fDockHint->setAttribute(Qt::WA_QuitOnClose, false);
     fDockHint->hide();
     connect(fDockHint, SIGNAL(visibilityChanged(bool)), this, SLOT(dockHintVisibilityChanged(bool)));
     fDD.exec("select min(f_startdate) from f_reservation where f_state in (1,2,4,7,9)");
@@ -130,6 +131,7 @@ WMainDesk::WMainDesk(QWidget *parent) :
 
 WMainDesk::~WMainDesk()
 {
+    delete fDockHint;
     delete ui;
 }
 
@@ -287,9 +289,7 @@ void WMainDesk::roomCacheUpdated(int cacheId, const QString &id)
 
 void WMainDesk::dockHintVisibilityChanged(bool v)
 {
-    if (!v) {
-        ui->leFilterGuest->clear();
-    }
+    Q_UNUSED(v)
 }
 
 void WMainDesk::changeDate()
@@ -457,6 +457,10 @@ void WMainDesk::dockHint(const QString &filter)
 {
     fDockHint->setWindowTitle(tr("Search for:") + " \"" + filter + "\"");
     fDockHint->commonFilter(filter);
+    fDockHint->adjustSize();
+    const QPoint basePos = ui->leFilterGuest->mapToGlobal(QPoint(0, ui->leFilterGuest->height()));
+    const int x = basePos.x() + ((ui->leFilterGuest->width() - fDockHint->width()) / 2);
+    fDockHint->move(x, basePos.y());
     fDockHint->show();
     fDockHint->raise();
 }

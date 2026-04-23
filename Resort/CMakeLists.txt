@@ -41,8 +41,6 @@ file(GLOB_RECURSE PROJECT_SOURCES
     ../GridOptionWidgets/*.cpp ../GridOptionWidgets/*.h ../GridOptionWidgets/*.ui
     ../Vouchers/*.cpp ../Vouchers/*.h ../Vouchers/*.ui
     ../Server2/*.cpp ../Server2/*.h ../Server2/*.ui
-    C:/Development/projects/desktop.newtax/Src/*.h
-    C:/Development/projects/desktop.newtax/Src/*.cpp
 )
 
 qt_add_executable(${PROJECT_NAME} WIN32
@@ -63,7 +61,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ../Base ../Cache ../Cache2 ../Selector ../Controls ../RowEditor
     ../RoomChart ../Filter ../Print ../Widgets ../Threads
     ../RGDoubleClick ../GridOptionWidgets ../Vouchers ../Server2
-    C:/Development/projects/desktop.newtax/Src
     C:/Development/OpenSSL-Win64/include
     C:/Development/OpenSSL-Win64/include/openssl
 )

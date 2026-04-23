@@ -10,6 +10,9 @@ DlgSimpleSelectRoom::DlgSimpleSelectRoom(QWidget *parent) :
     ui(new Ui::DlgSimpleSelectRoom)
 {
     ui->setupUi(this);
+    // BaseDialog uses Qt::Widget by default; make this a real dialog window for exec().
+    setWindowFlag(Qt::Dialog, true);
+    setWindowFlag(Qt::Window, true);
     ui->tblData->setSortingEnabled(false);
     qApp->processEvents();
 
@@ -39,6 +42,7 @@ DlgSimpleSelectRoom::DlgSimpleSelectRoom(QWidget *parent) :
         it++;
     }
     fSingleSelection = false;
+    fReloadOnShow = false;
 }
 
 DlgSimpleSelectRoom::~DlgSimpleSelectRoom()
@@ -59,9 +63,24 @@ int DlgSimpleSelectRoom::getRoom(const QString &cat, const QDate &d1, const QDat
         ui->tblCategory->setEnabled(false);
     } else {
         ui->lbCat->setText(tr("Category"));
+        ui->tblCategory->setEnabled(true);
     }
-    filter();
+    fReloadOnShow = true;
+    adjustSize();
+    if (QWidget *p = parentWidget()) {
+        const QPoint center = p->mapToGlobal(p->rect().center());
+        move(center.x() - (width() / 2), center.y() - (height() / 2));
+    }
     return exec();
+}
+
+void DlgSimpleSelectRoom::showEvent(QShowEvent *event)
+{
+    BaseExtendedDialog::showEvent(event);
+    if (fReloadOnShow) {
+        filter();
+        fReloadOnShow = false;
+    }
 }
 
 double DlgSimpleSelectRoom::price()

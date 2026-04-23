@@ -304,7 +304,7 @@ void Login::on_btnLoginPin_clicked()
     QDateTime serverTime = fDD.getValue(0).toDateTime();
     serverTime.setTimeSpec(Qt::UTC); // Насильно говорим: "Это UTC!"
 
-    QDateTime localTime = QDateTime::currentDateTime().toUTC();
+    QDateTime localTime = QDateTime::currentDateTimeUtc();
 
     // Вычисляем разницу в секундах
     // secsTo вернет положительное число, если serverTime позже, и отрицательное, если раньше

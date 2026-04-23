@@ -94,8 +94,6 @@ DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
         }
     });
     fDockRoom = new DlgSimpleSelectRoom(this);
-    fDockRoom->show();
-    fDockRoom->hide();
     ui->leCLCode->setSelector(this, cache(cid_city_ledger), ui->leCLName);
     ui->leCardCode->setSelector(this, cache(cid_credit_card), ui->leCardName);
     countReserve();

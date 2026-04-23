@@ -40,8 +40,11 @@ private:
     QDate fDate2;
     QStringList fExclude;
     Ui::DlgSimpleSelectRoom *ui;
+    bool fReloadOnShow;
     void filter();
     void filter2();
+protected:
+    virtual void showEvent(QShowEvent *event) override;
 };
 
 #endif // DLGSIMPLESELECTROOM_H

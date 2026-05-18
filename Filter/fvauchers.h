@@ -31,6 +31,8 @@ private:
 private slots:
     void clickOnRow(int row);
     void eliminateVoucher();
+    void exportVoucher();
+    void importVoucher();
     void cancelation();
     void openInvoice();
     void reviveVaucher();

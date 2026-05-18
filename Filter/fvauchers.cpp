@@ -1,16 +1,20 @@
 #include "fvauchers.h"
-#include "paymentmode.h"
-#include "ui_fvauchers.h"
-#include "wreportgrid.h"
-#include "dlgadvanceentry.h"
-#include "vauchers.h"
-#include "pprintvaucher.h"
-#include "wvauchereditor.h"
-#include "cachevaucher.h"
-#include "dlgprintvoucherasinvoice.h"
-#include "tablemodel.h"
-#include "dlghdmviewer.h"
+#include <QFile>
+#include <QFileDialog>
 #include <QInputDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include "cachevaucher.h"
+#include "dlgadvanceentry.h"
+#include "dlghdmviewer.h"
+#include "dlgprintvoucherasinvoice.h"
+#include "paymentmode.h"
+#include "pprintvaucher.h"
+#include "tablemodel.h"
+#include "ui_fvauchers.h"
+#include "vauchers.h"
+#include "wreportgrid.h"
+#include "wvauchereditor.h"
 
 #define SEL_VAUCHER 1
 
@@ -35,6 +39,8 @@ FVauchers::FVauchers(QWidget *parent) :
     btnVaucher->setFocusPolicy(Qt::ClickFocus);
     if (r__(cr__super_correction)) {
         fReportGrid->addToolBarButton(":/images/biohazard.png", tr("Eliminate"), SLOT(eliminateVoucher()), this)->setFocusPolicy(Qt::ClickFocus);
+        fReportGrid->addToolBarButton(":/images/upward.png", tr("Export"), SLOT(exportVoucher()), this)->setFocusPolicy(Qt::ClickFocus);
+        fReportGrid->addToolBarButton(":/images/upward.png", tr("Import"), SLOT(importVoucher()), this)->setFocusPolicy(Qt::ClickFocus);
     }
     fQuery = "SELECT r.f_id,\
             r.f_source,\
@@ -254,6 +260,91 @@ void FVauchers::eliminateVoucher()
 //    l.exec("delete from log where f_rec=:f_rec");
     TrackControl::insert(TRACK_RESERVATION, "ELIMINATE VOUCHER", name, "", id, invoice, reserve);
     fReportGrid->fModel->removeRow(row);
+}
+
+void FVauchers::exportVoucher()
+{
+    QList<QVariant> out;
+    int row = fReportGrid->fillRowValuesOut(out);
+    if (row < 0) {
+        message_info(tr("Nothing was selected"));
+        return;
+    }
+    DoubleDatabase fDD;
+    fDD[":f_id"] = out.at(0);
+    fDD.exec("select * from m_register where f_id=:f_id");
+    if (!fDD.nextRow()) {
+        message_error(tr("Voucher not found"));
+        return;
+    }
+    QJsonObject jregister;
+    fDD.valuesToJsonObject(jregister);
+    QJsonObject root;
+    root["export"] = "m_register_voucher";
+    root["m_register"] = jregister;
+
+    const QString defaultName = out.at(0).toString() + ".json";
+    QString filename = QFileDialog::getSaveFileName(this, tr("Export voucher"), defaultName, tr("JSON (*.json)"));
+    if (filename.isEmpty()) {
+        return;
+    }
+    if (!filename.endsWith(".json", Qt::CaseInsensitive)) {
+        filename += ".json";
+    }
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        message_error(tr("Cannot save file"));
+        return;
+    }
+    file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+    file.close();
+    message_info(tr("Voucher exported"));
+}
+
+void FVauchers::importVoucher()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Import voucher"), "", tr("JSON (*.json)"));
+    if (filename.isEmpty()) {
+        return;
+    }
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        message_error(tr("Cannot open file"));
+        return;
+    }
+    const QJsonObject jdoc = QJsonDocument::fromJson(file.readAll()).object();
+    file.close();
+
+    QJsonObject jregister = jdoc.value("m_register").toObject();
+    if (jregister.isEmpty() && jdoc.contains("f_id")) {
+        jregister = jdoc;
+    }
+    const QString id = jregister.value("f_id").toString();
+    if (id.isEmpty()) {
+        message_error(tr("Invalid voucher JSON: missing f_id"));
+        return;
+    }
+
+    DoubleDatabase fDD;
+    fDD[":f_id"] = id;
+    fDD.exec("select f_id from m_register where f_id=:f_id");
+    if (fDD.nextRow()) {
+        if (message_confirm(tr("Voucher %1 already exists. Replace it?").arg(id)) != QDialog::Accepted) {
+            return;
+        }
+        fDD[":f_id"] = id;
+        if (!fDD.exec("delete from m_register where f_id=:f_id")) {
+            message_error(fDD.fLastError);
+            return;
+        }
+    }
+    if (!fDD.insert("m_register", jregister, false)) {
+        message_error(fDD.fLastError);
+        return;
+    }
+    TrackControl::insert(TRACK_VAUCHER, "Import voucher", id, "", id);
+    apply(fReportGrid);
+    message_info(tr("Voucher imported"));
 }
 
 void FVauchers::cancelation()

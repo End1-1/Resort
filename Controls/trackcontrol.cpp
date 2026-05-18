@@ -11,6 +11,7 @@
 #include "eqdoubleedit.h"
 #include "doubledatabase.h"
 #include "eqcombobox.h"
+#include <QPlainTextEdit>
 #include <QHostInfo>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -293,8 +294,19 @@ void TrackControl::setOldValue(TrackWidget &t)
         t.fOldValue = static_cast<QCheckBox *>(t.fWidget)->isChecked() ? "1" : "0";
         static_cast<QCheckBox *>(t.fWidget)->setStyleSheet("");
     } else if (isTextEdit(t.fWidget)) {
-        t.fOldValue = static_cast<QTextEdit *>(t.fWidget)->toPlainText();
-        static_cast<EQTextEdit *>(t.fWidget)->setBgColor(Qt::white);
+        if (QTextEdit *textEdit = qobject_cast<QTextEdit *>(t.fWidget)) {
+            t.fOldValue = textEdit->toPlainText();
+            if (EQTextEdit *eqTextEdit = qobject_cast<EQTextEdit *>(t.fWidget)) {
+                eqTextEdit->setBgColor(Qt::white);
+            } else {
+                textEdit->setStyleSheet("");
+            }
+        } else if (QPlainTextEdit *plainTextEdit = qobject_cast<QPlainTextEdit *>(t.fWidget)) {
+            t.fOldValue = plainTextEdit->toPlainText();
+            plainTextEdit->setStyleSheet("");
+        } else {
+            t.fOldValue.clear();
+        }
     } else if (isComboBox(t.fWidget)) {
         t.fOldValue = static_cast<QComboBox *>(t.fWidget)->currentText();
         static_cast<QComboBox *>(t.fWidget)->setStyleSheet("");
@@ -321,7 +333,13 @@ QString TrackControl::getNewValue(TrackWidget &t)
     } else if (isCheckBox(t.fWidget)) {
         return (static_cast<QCheckBox *>(t.fWidget)->isChecked() ? "1" : "0");
     } else if (isTextEdit(t.fWidget)) {
-        return static_cast<QTextEdit *>(t.fWidget)->toPlainText();
+        if (QTextEdit *textEdit = qobject_cast<QTextEdit *>(t.fWidget)) {
+            return textEdit->toPlainText();
+        }
+        if (QPlainTextEdit *plainTextEdit = qobject_cast<QPlainTextEdit *>(t.fWidget)) {
+            return plainTextEdit->toPlainText();
+        }
+        return "";
     } else if (isComboBox(t.fWidget)) {
         return static_cast<QComboBox *>(t.fWidget)->currentText();
     } else if (isSpinBox(t.fWidget)) {
@@ -373,11 +391,34 @@ void TrackControl::dateEditChanged(const QDate &date)
 
 void TrackControl::textEditTextChanged()
 {
-    EQTextEdit *t = static_cast<EQTextEdit *>(sender());
-    if (t->toPlainText() == oldValue(t)) {
-        t->setBgColor(Qt::white);
-    } else {
-        t->setBgColor(COLOR_CHANGED);
+    QWidget *w = qobject_cast<QWidget *>(sender());
+    if (!w) {
+        return;
+    }
+    QString previousValue;
+    for (TrackWidget *tw : fTrackWidgets) {
+        if (tw->fWidget == w) {
+            previousValue = tw->fOldValue;
+            break;
+        }
+    }
+    QString currentValue;
+    if (QTextEdit *textEdit = qobject_cast<QTextEdit *>(w)) {
+        currentValue = textEdit->toPlainText();
+    } else if (QPlainTextEdit *plainTextEdit = qobject_cast<QPlainTextEdit *>(w)) {
+        currentValue = plainTextEdit->toPlainText();
+    }
+    const bool unchanged = (currentValue == previousValue);
+    if (EQTextEdit *textEdit = qobject_cast<EQTextEdit *>(w)) {
+        textEdit->setBgColor(unchanged ? Qt::white : COLOR_CHANGED);
+        return;
+    }
+    if (QTextEdit *textEdit = qobject_cast<QTextEdit *>(w)) {
+        textEdit->setStyleSheet(unchanged ? "" : "background-color:rgb(255,255,150)");
+        return;
+    }
+    if (QPlainTextEdit *plainTextEdit = qobject_cast<QPlainTextEdit *>(w)) {
+        plainTextEdit->setStyleSheet(unchanged ? "" : "background-color:rgb(255,255,150)");
     }
 }
 

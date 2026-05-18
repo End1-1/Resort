@@ -1664,7 +1664,7 @@ void WReservationRoomTab::getAdvance()
     fDD[":f_invoice"] = ui->leInvoice->text();
     fDD.exec("select sum(f_amountAmd*f_sign*-1) from m_register where f_inv=:f_invoice and f_finance=1 and f_canceled=0");
     if (fDD.nextRow()) {
-        ui->leAdvance->setText(fDD.getString(0));
+        ui->leAdvance->setText(float_str(fDD.getDouble(0), 2));
         if (ui->leAdvance->asDouble() < 0.01) {
             ui->leAdvance->setInt(0);
         }

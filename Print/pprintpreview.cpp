@@ -125,12 +125,23 @@ void PPrintPreview::on_btnPrint_clicked()
     }
     }
 
-    QPrinter prn;
-    prn.setPageSize(QPageSize(QPageSize::A4));
+    if (printPages.isEmpty()) {
+        return;
+    }
 
-    prn.setPrinterName(ui->cbPrinters->currentText());
+    QPrinter prn;
+    const QString selectedPrinter = ui->cbPrinters->currentText();
+    if (!selectedPrinter.isEmpty()) {
+        prn.setPrinterName(selectedPrinter);
+    }
+
+    prn.setPageSize(QPageSize(QPageSize::A4));
     prn.setPageOrientation(fPrintScene.at(printPages.at(0))->fPageLayout);
+
     QPainter painter(&prn);
+    if (!painter.isActive()) {
+        return;
+    }
     for (int i = 0; i < printPages.count(); i++) {
         if (i > 0) {
             prn.setPageOrientation(fPrintScene.at(printPages.at(i))->fPageLayout);

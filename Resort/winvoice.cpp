@@ -1810,10 +1810,10 @@ void WInvoice::on_btnPayment_clicked()
 
         if(!ci.get(c.fCode())) {
             message_error(tr("Tax department undefined for ") + c.fName());
-            return;
+            break;
+        } else {
+            taxs.insert(ci.fTax());
         }
-
-        taxs.insert(ci.fTax());
     }
 
     int taxnumber = 0;
@@ -1842,14 +1842,14 @@ void WInvoice::on_btnPayment_clicked()
 
         if(!ci.get(c.fCode())) {
             message_error(tr("Tax department undefined for ") + c.fName());
-            return;
-        }
+            break;
+        } else {
+            if (ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber && taxnumber != 0) {
+                continue;
+            }
 
-        if(ci.fTax() != taxnumber && t->toInt(i, 14) != taxnumber && taxnumber != 0) {
-            continue;
+            suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
         }
-
-        suggestAmount += (t->toInt(i, 1) * t->toDouble(i, 4));
     }
 
     DlgReceiptVaucher d(taxnumber, suggestAmount, result - 1, this);

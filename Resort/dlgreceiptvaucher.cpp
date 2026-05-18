@@ -307,6 +307,10 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             finalName += "TERMINAL";
             break;
 
+        case PAYMENT_IDRAM:
+            finalName += "IDRAM";
+            break;
+
         default:
             errors += tr("Selected mode of payment is not allowed here") + "<br>";
             break;
@@ -355,6 +359,9 @@ void DlgReceiptVaucher::on_btnSave_clicked()
             finalName += "CPAY";
             break;
 
+        case PAYMENT_IDRAM:
+            finalName += "IDRAM";
+            break;
         default:
             errors += tr("Selected payment mode is not allowed here") + "<br>";
             break;

@@ -35,7 +35,7 @@ void FCashReportByItem::apply(WReportGrid *rg)
                     "left join f_invoice_item p on p.f_id=m.f_itemCode "
                     "left join f_payment_type pm on pm.f_id=m.f_paymentmode "
                     "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 and f_finance=1 :operator "
-                    "and m.f_SOURCE in ('AV', 'RV', 'RF') and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17) "
+                    "and m.f_SOURCE in ('AV', 'RV', 'RF') and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17,18) "
                     "group by 1, 2, 3 "
                     "order by m.f_source ";
     query.replace(":f_wdate1", ui->wd->ds1());

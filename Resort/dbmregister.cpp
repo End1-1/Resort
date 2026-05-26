@@ -12,6 +12,7 @@
 #include "mainwindow.h"
 #include "preferences.h"
 #include "trackcontrol.h"
+#include "utils.h"
 #include "vauchers.h"
 
 static const QString voucher_query =
@@ -32,8 +33,8 @@ static const QString voucher_query =
 DBMRegister::DBMRegister()
 {
     fWDate = __preferences.getLocalDate(def_working_day);
-    fRDate = QDate::currentDate();
-    fTime = QTime::currentTime();
+    fRDate = Utils::localDate();
+    fTime = Utils::localTime();
     fUser = __preferences.getLocal(def_working_user_id).toUInt();
     fSession = 0;
     fRoom = 0;
@@ -326,12 +327,16 @@ bool DBMRegister::openVoucher(const QString &id, QString &err)
 bool DBMRegister::save(DoubleDatabase &dd)
 {
     bool isNew = true;
+    if (fId.isEmpty()) {
+        fRDate = Utils::localDate();
+        fTime = Utils::localTime();
+    }
     dd[":f_source"] = fSource;
     dd[":f_res"] = fReserve;
     dd[":f_inv"] = fInvoice;
     dd[":f_wdate"] = fWDate;
-    dd[":f_rdate"] = fRDate;
-    dd[":f_time"] = fTime;
+    dd[":f_rdate"] = fRDate.toString(QStringLiteral("yyyy-MM-dd"));
+    dd[":f_time"] = fTime.toString(QStringLiteral("HH:mm:ss"));
     dd[":f_user"] = fUser;
     dd[":f_room"] = fRoom;
     dd[":f_guest"] = fGuest;

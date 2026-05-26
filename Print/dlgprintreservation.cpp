@@ -9,6 +9,7 @@
 #include "cacheroom.h"
 #include "pprintheader.h"
 #include "pprintcheckin.h"
+#include "utils.h"
 
 DlgPrintReservation::DlgPrintReservation(WReservationRoomTab *r) :
     BaseExtendedDialog(r),
@@ -296,7 +297,7 @@ void DlgPrintReservation::on_btnPrintReservation_clicked()
     }
 
     top += ps->addTextRect(20, top, 2000, rowHeight,
-                           tr("Printed: ") + QDateTime::currentDateTime().toString(def_date_time_format), &th)->textHeight();
+                           tr("Printed: ") + Utils::localDateTime().toString(def_date_time_format), &th)->textHeight();
     pp->exec();
     delete pp;
     accept();

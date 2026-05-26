@@ -22,26 +22,8 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 qt_standard_project_setup()
 
-# ---------- Sources ----------
-# Оставляем GLOB, раз тебе так удобнее, но Unity Build нивелирует его минусы при сборке
-file(GLOB_RECURSE PROJECT_SOURCES
-    *.cpp *.h *.ui *.qrc *.rc
-    ../Base/*.cpp ../Base/*.h ../Base/*.ui
-    ../Cache/*.cpp ../Cache/*.h ../Cache/*.ui
-    ../Cache2/*.cpp ../Cache2/*.h ../Cache2/*.ui
-    ../Selector/*.cpp ../Selector/*.h ../Selector/*.ui
-    ../Controls/*.cpp ../Controls/*.h ../Controls/*.ui
-    ../RowEditor/*.cpp ../RowEditor/*.h ../RowEditor/*.ui
-    ../RoomChart/*.cpp ../RoomChart/*.h ../RoomChart/*.ui
-    ../Filter/*.cpp ../Filter/*.h ../Filter/*.ui
-    ../Print/*.cpp ../Print/*.h ../Print/*.ui
-    ../Widgets/*.cpp ../Widgets/*.h ../Widgets/*.ui
-    ../Threads/*.cpp ../Threads/*.h ../Threads/*.ui
-    ../RGDoubleClick/*.cpp ../RGDoubleClick/*.h ../RGDoubleClick/*.ui
-    ../GridOptionWidgets/*.cpp ../GridOptionWidgets/*.h ../GridOptionWidgets/*.ui
-    ../Vouchers/*.cpp ../Vouchers/*.h ../Vouchers/*.ui
-    ../Server2/*.cpp ../Server2/*.h ../Server2/*.ui
-)
+# ---------- Sources (explicit list in sources.cmake) ----------
+include(${CMAKE_CURRENT_SOURCE_DIR}/sources.cmake)
 
 qt_add_executable(${PROJECT_NAME} WIN32
     ${PROJECT_SOURCES}

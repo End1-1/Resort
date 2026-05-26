@@ -29,6 +29,7 @@
 #include "vauchers.h"
 #include "dlgreservationremarks.h"
 #include "pprintcheckin.h"
+#include "utils.h"
 #include <QKeyEvent>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -293,8 +294,8 @@ bool WReservationRoomTab::save()
             fDD[":f_inv"] = ui->leInvoice->text();
             fDD[":f_res"] = vid;
             fDD[":f_wdate"] = WORKING_DATE;
-            fDD[":f_rdate"] = QDate::currentDate();
-            fDD[":f_time"] = QTime::currentTime();
+            fDD[":f_rdate"] = Utils::localDateSql();
+            fDD[":f_time"] = Utils::localTimeSql();
             fDD[":f_user"] = WORKING_USERID;
             fDD[":f_room"] = ui->leRoomCode->text();
             fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
@@ -324,7 +325,7 @@ bool WReservationRoomTab::save()
     }
     if (createUser > 0) {
         fDD[":f_author"] = createUser;
-        fDD[":f_createTime"] = QDateTime::currentDateTime();
+        fDD[":f_createTime"] = Utils::localDateTimeSql();
         fDD[":f_created"] = ui->deCreated->date();
     }
     fDD[":f_state"] = ui->leReserveCode->asInt();
@@ -774,7 +775,7 @@ void WReservationRoomTab::reCheckin()
     fDD[":f_source"] = VAUCHER_CHECKOUT_N;
     fDD[":f_inv"] = ui->leInvoice->text();
     fDD[":f_canceluser"] = WORKING_USERID;
-    fDD[":f_canceldate"] = QDateTime::currentDateTime();
+    fDD[":f_canceldate"] = Utils::localDateTimeSql();
     fDD.exec("update m_register set f_canceled=1, f_canceluser=:f_canceluser, f_canceldate=:f_canceldate "
              "where f_source=:f_source and f_canceled=0 and f_inv=:f_inv");
     fDD[":f_source"] = VAUCHER_RECEIPT_N;
@@ -788,7 +789,7 @@ void WReservationRoomTab::reCheckin()
     for (const QString &s : mrCancel) {
         fDD[":f_canceled"] = 1;
         fDD[":f_canceluser"] = WORKING_USERID;
-        fDD[":f_canceldate"] = QDateTime::currentDateTime();
+        fDD[":f_canceldate"] = Utils::localDateTimeSql();
         fDD[":f_cancelreason"] = tr("RECHECKIN");
         fDD.update("m_register", where_id(ap(s)));
     }
@@ -949,16 +950,16 @@ bool WReservationRoomTab::checkIn(QString &errorString)
     if (result) {
         fDD[":f_state"] = RESERVE_CHECKIN;
         fDD[":f_checkInDate"] = WORKING_DATE;
-        fDD[":f_checkInTime"] = QTime::currentTime();
+        fDD[":f_checkInTime"] = Utils::localTimeSql();
         fDD[":f_checkInUser"] = WORKING_USERID;
         result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
     }
     if (result) {
         fDD[":f_state"] = ROOM_STATE_CHECKIN;
         result = result && fDD.update("f_room", where_id(ui->leRoomCode->asInt()));
-        fDD[":f_date"] = QDate::currentDate();
+        fDD[":f_date"] = Utils::localDateSql();
         fDD[":f_wdate"] = WORKING_DATE;
-        fDD[":f_time"] = QTime::currentTime();
+        fDD[":f_time"] = Utils::localTimeSql();
         fDD[":f_oldState"] = ROOM_STATE_NONE;
         fDD[":f_newState"] = ROOM_STATE_CHECKIN;
         fDD[":f_user"] = WORKING_USERID;
@@ -1013,8 +1014,8 @@ bool WReservationRoomTab::checkIn(QString &errorString)
                 fDD[":f_source"] = ii.fVaucher();
                 fDD[":f_res"] = ui->leReservId->text();
                 fDD[":f_wdate"] = WORKING_DATE;
-                fDD[":f_rdate"] = QDate::currentDate();
-                fDD[":f_time"] = QTime::currentTime();
+                fDD[":f_rdate"] = Utils::localDateSql();
+                fDD[":f_time"] = Utils::localTimeSql();
                 fDD[":f_user"] = WORKING_USERID;
                 fDD[":f_room"] = ui->leRoomCode->text();
                 fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
@@ -1059,8 +1060,8 @@ bool WReservationRoomTab::checkIn(QString &errorString)
                 fDD[":f_res"] = ui->leReservId->text();
                 fDD[":f_source"] = ia.fVaucher();
                 fDD[":f_wdate"] = WORKING_DATE;
-                fDD[":f_rdate"] = QDate::currentDate();
-                fDD[":f_time"] = QTime::currentTime();
+                fDD[":f_rdate"] = Utils::localDateSql();
+                fDD[":f_time"] = Utils::localTimeSql();
                 fDD[":f_user"] = WORKING_USERID;
                 fDD[":f_room"] = ui->leRoomCode->text();
                 fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();
@@ -1102,8 +1103,8 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         fDD[":f_source"] = VOUCHER_CHECKIN_N;
         fDD[":f_res"] = ui->leReservId->text();
         fDD[":f_wdate"] = WORKING_DATE;
-        fDD[":f_rdate"] = QDate::currentDate();
-        fDD[":f_time"] = QTime::currentTime();
+        fDD[":f_rdate"] = Utils::localDateSql();
+        fDD[":f_time"] = Utils::localTimeSql();
         fDD[":f_user"] = WORKING_USERID;
         fDD[":f_room"] = ui->leRoomCode->text();
         fDD[":f_guest"] = ui->tblGuest->item(0, 1)->text() + " " + ui->tblGuest->item(0, 2)->text();
@@ -1196,7 +1197,7 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
     fDD.startTransaction();
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD[":f_cancelUser"] = WORKING_USERID;
-    fDD[":f_cancelDate"] = QDateTime::currentDateTime();
+    fDD[":f_cancelDate"] = Utils::localDateTimeSql();
     ui->leReserveCode->setInitialValue(RESERVE_REMOVED);
     result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
     fDD[":f_id"] = ui->leReservId->text();
@@ -1624,8 +1625,8 @@ void WReservationRoomTab::saveVaucher(int createUser)
     if (createUser > 0) {
         fDD[":f_wdate"] = WORKING_DATE;
     }
-    fDD[":f_rdate"] = QDate::currentDate();
-    fDD[":f_time"] = QTime::currentTime();
+    fDD[":f_rdate"] = Utils::localDateSql();
+    fDD[":f_time"] = Utils::localTimeSql();
     fDD[":f_user"] = WORKING_USERID;
     fDD[":f_room"] = ui->leRoomCode->text();
     fDD[":f_guest"] = ui->tblGuest->item(0, 2)->text();

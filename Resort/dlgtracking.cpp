@@ -94,6 +94,7 @@ void DlgTracking::loadTrack(const QString &query, int trackId, const QString &wi
     }
     Utils::fillTableWithData(ui->tblData, db.fDbRows);
     db.close();
+    ui->tblData->resizeRowsToContents();
 }
 
 void DlgTracking::on_chOld_clicked(bool checked)

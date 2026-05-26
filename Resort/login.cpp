@@ -13,6 +13,7 @@
 #include "cacherights.h"
 #include "cacheusersgroups.h"
 #include "databasesconnections.h"
+#include "dlgexitbyversion.h"
 #include "ecomboboxcompleter.h"
 #include "loginsettings.h"
 #include "ui_login.h"
@@ -101,6 +102,19 @@ void Login::on_btnLogin_clicked()
         message_error(fDD.fLastError);
         return;
     }
+
+    if (!DO_NOT_CHECK_VERSION) {
+        fDD[":f_app"] = _APPLICATION_;
+        fDD.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
+
+        if (fDD.nextRow()) {
+            if (Utils::getVersionString(qApp->applicationFilePath()) != fDD.getString(0)) {
+                DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), fDD.getString(0));
+                return;
+            }
+        }
+    }
+
     fDD.exec("SELECT UTC_TIMESTAMP()");
     fDD.nextRow();
 

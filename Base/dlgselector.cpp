@@ -6,6 +6,7 @@ DlgSelector::DlgSelector(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DlgSelector)
 {
+    setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
     ui->setupUi(this);
     fMultiCheck = false;
 }

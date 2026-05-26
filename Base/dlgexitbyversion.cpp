@@ -53,7 +53,8 @@ void DlgExitByVersion::on_btnClose_clicked()
 
 void DlgExitByVersion::setVersions(const QString &appVersion, const QString &dbVersion)
 {
-    ui->lbMessage->setText(QString("Application version %1 <br> incompatible with database version %2")
-                           .arg(appVersion)
-                           .arg(dbVersion));
+    ui->lbMessage->setText(
+        QString("Application version %1 <br> is not compatible with database version %2 <br> <h1> Update your application </h1>")
+            .arg(appVersion)
+            .arg(dbVersion));
 }

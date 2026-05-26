@@ -97,7 +97,17 @@ void TableModel::applyFinal(WReportGrid *rg, bool clearBefore)
 
 void TableModel::sort(int column, Qt::SortOrder order)
 {
-    //CHANGED
+    if (column < 0 || column >= columnCount()) {
+        return;
+    }
+    if (column == fLastSortIndex) {
+        order = (fLastSortOrder == Qt::AscendingOrder) ? Qt::DescendingOrder : Qt::AscendingOrder;
+    } else {
+        order = Qt::AscendingOrder;
+    }
+    fLastSortIndex = column;
+    fLastSortOrder = order;
+
     beginResetModel();
 
     std::sort(fRows.begin(), fRows.end(), [&](int a, int b) {
@@ -107,8 +117,9 @@ void TableModel::sort(int column, Qt::SortOrder order)
         return va.toString() < vb.toString();
     });
 
-    if (order == Qt::DescendingOrder)
+    if (order == Qt::DescendingOrder) {
         std::reverse(fRows.begin(), fRows.end());
+    }
 
     endResetModel();
     emit sortFinished();

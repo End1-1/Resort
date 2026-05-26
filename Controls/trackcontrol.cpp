@@ -10,6 +10,7 @@
 #include "edateedit.h"
 #include "eqdoubleedit.h"
 #include "doubledatabase.h"
+#include "utils.h"
 #include "eqcombobox.h"
 #include <QPlainTextEdit>
 #include <QHostInfo>
@@ -37,6 +38,13 @@ static const QColor COLOR_CHANGED = QColor::fromRgb(255, 255, 150);
 static const QString QUERY  =
     "insert into airlog.log (f_comp, f_date, f_time, f_user, f_type, f_rec, f_invoice, f_reservation, f_action, f_value1, f_value2) "
     "values (:f_comp, :f_date, :f_time, :f_user, :f_type, :f_rec, :f_invoice, :f_reservation, :f_action, :f_value1, :f_value2)";
+
+// airlog.log f_date/f_time: bind as SQL strings (Qt MySQL driver shifts QTime/QDate to UTC).
+static void bindLogDateTime(DoubleDatabase &db)
+{
+    db[":f_date"] = Utils::localDateSql();
+    db[":f_time"] = Utils::localTimeSql();
+}
 
 QStringList TrackControl::currentDb()
 {
@@ -213,8 +221,7 @@ void TrackControl::insert(const QString &action, const QVariant &value1, const Q
         }
     }
     db[":f_comp"] = QHostInfo::localHostName().toUpper();
-    db[":f_date"] = QDate::currentDate();
-    db[":f_time"] = QTime::currentTime();
+    bindLogDateTime(db);
     db[":f_user"] = Base::fPreferences.getLocal(def_working_username).toString();
     db[":f_type"] = fTable;
     db[":f_rec"] = fRecord;

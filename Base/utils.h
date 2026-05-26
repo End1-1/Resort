@@ -8,6 +8,9 @@
 #include <QTableWidget>
 #include <QList>
 #include <QDate>
+#include <QDateTime>
+#include <QTime>
+#include <QTimeZone>
 #include <QSettings>
 #include <QHostInfo>
 
@@ -15,6 +18,32 @@
 #define float_greaterOrEqual(value1, value2) (value1 - value2 >= 0.01 ? true : false)
 
 namespace Utils {
+    inline QDateTime localDateTime()
+    {
+        return QDateTime::currentDateTime(QTimeZone::systemTimeZone());
+    }
+    inline QDate localDate()
+    {
+        return localDateTime().date();
+    }
+    inline QTime localTime()
+    {
+        return localDateTime().time();
+    }
+    // MySQL Qt driver may convert QTime/QDate to UTC; bind these as SQL literals.
+    inline QString localDateSql()
+    {
+        return localDate().toString(QStringLiteral("yyyy-MM-dd"));
+    }
+    inline QString localTimeSql()
+    {
+        return localTime().toString(QStringLiteral("HH:mm:ss"));
+    }
+    inline QString localDateTimeSql()
+    {
+        return localDateTime().toString(QStringLiteral("yyyy-MM-dd HH:mm:ss"));
+    }
+
     void initNumbersWords();
     QString numberToWords(int num);
     QString separateForQuote(const QString &text);

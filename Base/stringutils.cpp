@@ -1,11 +1,15 @@
 #include "stringutils.h"
-#include <QLocale>
 #include <QRegularExpression>
 
-static const QLocale locale = QLocale();
-static const QString DecimalPoint = QLocale().decimalPoint();
+static const QLocale locale = QLocale(QLocale::English, QLocale::UnitedStates);
+static const QString DecimalPoint = locale.decimalPoint();
 static const QRegularExpression reZero = QRegularExpression("(?!\\d[\\" + DecimalPoint +"][1-9]+)0+$");
 static const QRegularExpression rDP("[\\" + DecimalPoint + "]$");
+
+const QLocale &appNumberLocale()
+{
+    return locale;
+}
 
 QString float_str(double value, int f)
 {

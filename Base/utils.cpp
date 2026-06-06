@@ -98,9 +98,10 @@ void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool app
         tw->setRowCount(data.count());
     }
     for (int i = start, rowCount = tw->rowCount(); i < rowCount; i++) {
+        const QList<QVariant> &rowData = data.at(i - start);
         for (int j = 0, colCount = tw->columnCount(); j < colCount; j++) {
             C5TableWidgetItem *item = new C5TableWidgetItem();
-            item->setData(Qt::EditRole, data.at(i - start).at(j));
+            item->setData(Qt::EditRole, j < rowData.size() ? rowData.at(j) : QVariant());
             tw->setItem(i, j, item);
         }
     }
@@ -391,4 +392,40 @@ bool isDoubleNotEqual(double v1, double v2, int prec)
     v1 *= prec;
     v2 *= prec;
     return static_cast<int>(v1) != static_cast<int>(v2);
+}
+
+#include "doubledatabase.h"
+
+int reservationVersion(DoubleDatabase &dd, const QString &id)
+{
+    if (id.isEmpty()) {
+        return 0;
+    }
+    dd[":f_id"] = id;
+    dd.exec("select coalesce(f_version, 0) from f_reservation where f_id=:f_id");
+    if (dd.nextRow()) {
+        return dd.getInt(0);
+    }
+    return -1;
+}
+
+bool reservationVersionMatches(DoubleDatabase &dd, const QString &id, int loadedVersion)
+{
+    if (id.isEmpty()) {
+        return true;
+    }
+    return reservationVersion(dd, id) == loadedVersion;
+}
+
+bool updateReservation(DoubleDatabase &dd, const QString &id, int &loadedVersion)
+{
+    dd[":f_version"] = loadedVersion + 1;
+    if (!dd.update("f_reservation", where_id(ap(id)) + QString(" and coalesce(f_version, 0)=%1").arg(loadedVersion))) {
+        return false;
+    }
+    if (dd.affectedRows() == 0) {
+        return false;
+    }
+    loadedVersion++;
+    return true;
 }

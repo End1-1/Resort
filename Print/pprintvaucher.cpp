@@ -9,9 +9,8 @@
 #include "cachepaymentmode.h"
 #include "cachecityledger.h"
 #include "cachecreditcard.h"
-#include "cacheinvoiceitem.h"
-#include "paymentmode.h"
 #include "defines.h"
+#include <QScopedPointer>
 
 PPrintVaucher::PPrintVaucher() :
     Base()
@@ -21,8 +20,8 @@ PPrintVaucher::PPrintVaucher() :
 void PPrintVaucher::printVaucher(const QString &id)
 {
     PPrintVaucher p;
-    PPrintPreview *pv = new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage());
-    PPrintScene *ps = pv->addScene(0,QPageLayout::Portrait);
+    QScopedPointer<PPrintPreview> pv(new PPrintPreview(fMainWindow->fPreferences.getDefaultParentForMessage()));
+    PPrintScene *ps = pv->addScene(0, QPageLayout::Portrait);
     DoubleDatabase fDD;
     fDD.startTransaction();
     fDD[":f_id"] = id;
@@ -62,15 +61,19 @@ void PPrintVaucher::printVaucher(const QString &id)
     }
 
     CacheVaucher cv;
-
-    if(!cv.get(fDbRows.at(0).at(0).toString())) {
-        message_error("Application error. Contact to developer. Message: PrintVoucher cv=0");
-        fDD.commit();
-        return;
+    const QString vaucherSource = fDbRows.at(0).at(0).toString();
+    QString vaucherTitle;
+    if (cv.get(vaucherSource)) {
+        vaucherTitle = cv.fName();
+    } else {
+        vaucherTitle = fDbRows.at(0).at(15).toString();
+        if (vaucherTitle.isEmpty()) {
+            vaucherTitle = vaucherSource;
+        }
     }
 
     int top = 10;
-    PTextRect *trHeader = new PTextRect(20, top, 2000, 80, cv.fName(), 0, QFont("Arial", 50));
+    PTextRect *trHeader = new PTextRect(20, top, 2000, 80, vaucherTitle, 0, QFont("Arial", 50));
     top += trHeader->textHeight();
     trHeader->setBorders(false, false, false, false);
     trHeader->setTextAlignment(Qt::AlignHCenter);
@@ -151,41 +154,32 @@ void PPrintVaucher::printVaucher(const QString &id)
         vals << QObject::tr("Mode of Payment")
              << QObject::tr("Additional info");
         ps->addTableRow(top, rowHeight, cols, vals, &th);
-        CachePaymentMode pm ;
-
-        if(!pm.get(fDbRows.at(0).at(18).toString())) {
-            message_error(QObject::tr("Application error. Contact to developer. Message PrintVoucher pm=0"));
-            return;
-        }
-
-        vals << pm.fName();
+        const QString paymentModeId = fDbRows.at(0).at(6).toString();
+        const QString creditCardId = fDbRows.at(0).at(10).toString();
+        const QString cityLedgerId = fDbRows.at(0).at(11).toString();
+        QString paymentName = paymentModeId;
         QString pmInfo;
 
-        switch(pm.fCode().toInt()) {
-        case PAYMENT_CASH:
-            break;
-
-        case PAYMENT_CARD: {
-            CacheCreditCard ccc;
-            ccc.get(fDbRows.at(0).at(10).toString());
-            pmInfo = ccc.fName();
-            break;
+        CachePaymentMode pm;
+        if (pm.get(paymentModeId)) {
+            paymentName = pm.fName();
         }
 
-        case PAYMENT_CL: {
+        if (creditCardId.toInt() > 0) {
+            CacheCreditCard ccc;
+            if (ccc.get(creditCardId)) {
+                pmInfo = ccc.fName();
+            }
+        } else if (cityLedgerId.toInt() > 0) {
             CacheCityLedger ccl;
-
-            if(ccl.get(fDbRows.at(0).at(11).toString())) {
+            if (ccl.get(cityLedgerId)) {
                 pmInfo = ccl.fName();
             } else {
                 pmInfo = "-";
             }
-
-            break;
-        }
         }
 
-        vals << pmInfo;
+        vals << paymentName << pmInfo;
         ps->addTableRow(top, rowHeight, cols, vals, &th);
     }
 
@@ -264,5 +258,4 @@ void PPrintVaucher::printVaucher(const QString &id)
     ps->addTextRect(20, top, 2100, rowHeight, footer, &th);
     fDD.commit();
     pv->exec();
-    delete pv;
 }

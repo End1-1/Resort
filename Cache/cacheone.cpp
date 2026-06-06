@@ -77,11 +77,6 @@ CacheOne::CacheOne()
 
 void CacheOne::clearAll()
 {
-    QMapIterator<int, CacheInstance*> it(fCacheOne);
-    while (it.hasNext()) {
-        it.next();
-        it.value()->clear();
-    }
     qDeleteAll(fCacheOne);
     fCacheOne.clear();
 }

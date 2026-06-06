@@ -1,6 +1,7 @@
 #include "eqlineedit.h"
 #include "utils.h"
 #include "cacheinstance.h"
+#include "cacheone.h"
 #include "cachebasestruct.h"
 #include "base.h"
 #include "dlgselector.h"
@@ -24,7 +25,7 @@ EQLineEdit::EQLineEdit(QWidget *parent) :
     fAlwaysUpper = true;
     fClickBool = false;
     fBase = nullptr;
-    fCacheInstance = nullptr;
+    fCacheId = -1;
     fNameEdit = nullptr;
     fSelectorMultiCheck = false;
 }
@@ -40,14 +41,13 @@ void EQLineEdit::setText(const QString &text)
     const QValidator *v = validator();
     if (v) {
         if (!strcmp(v->metaObject()->className(), "QDoubleValidator")) {
-            QLocale l;
+            const QLocale &l = appNumberLocale();
             t.replace(".", l.decimalPoint());
-            t.replace(",", l.decimalPoint());
             t.replace("․", l.decimalPoint());
         }
     }
     if (fMax > 0.1) {
-        if (t.toDouble() > fMax) {
+        if (str_float(t) > fMax) {
             setDouble(fMax);
             return;
         }
@@ -68,7 +68,7 @@ QString EQLineEdit::text()
     if (v) {
         if (!strcmp(v->metaObject()->className(), "QDoubleValidator")) {
             const QDoubleValidator *dv = static_cast<const QDoubleValidator*>(v);
-            return float_str(QLineEdit::text().toDouble(), dv->decimals());
+            return float_str(str_float(QLineEdit::text()), dv->decimals());
         } else if (!strcmp(v->metaObject()->className(), "QIntValidator")) {
             return QString::number(QLineEdit::text().toInt());
         }
@@ -217,23 +217,28 @@ quint32 EQLineEdit::asUInt()
 
 double EQLineEdit::asDouble()
 {
-    return QLocale().toDouble(text());
+    return str_float(QLineEdit::text());
 }
 
 void EQLineEdit::clearSelector()
 {
     fBase = nullptr;
-    fCacheInstance = nullptr;
+    fCacheId = -1;
     fNameEdit = nullptr;
     fHint = 0;
     setReadOnly(true);
+}
+
+CacheInstance *EQLineEdit::cacheInstance() const
+{
+    return fCacheId >= 0 ? cache(fCacheId) : nullptr;
 }
 
 void EQLineEdit::setSelector(Base *base, CacheInstance *cacheInstance, QLineEdit *nameEdit, int hint)
 {
     setReadOnly(false);
     fBase = base;
-    fCacheInstance = cacheInstance;
+    fCacheId = (cacheInstance && cacheInstance->fStruct) ? cacheInstance->fStruct->fCacheId : -1;
     fNameEdit = nameEdit;
     fHint = hint;
     fShowButtonOnFocus = true;
@@ -244,17 +249,18 @@ void EQLineEdit::setSelector(Base *base, CacheInstance *cacheInstance, QLineEdit
 
 void EQLineEdit::setInitialValue(const QString &value)
 {
-    if (!fCacheInstance) {
+    CacheInstance *ci = cacheInstance();
+    if (!ci || !ci->fStruct) {
         return;
     }
-    if (fCacheInstance->fStruct->get(value)) {
+    if (ci->fStruct->get(value)) {
         if (fNameEdit && (fNameEdit != this)) {
             setText(value);
-            fNameEdit->setText(fCacheInstance->fStruct->getString(1));
+            fNameEdit->setText(ci->fStruct->getString(1));
         } else {
             fHiddenText = value;
-            fShowText = fCacheInstance->fStruct->getString(1);
-            setText(fCacheInstance->fStruct->getString(1));
+            fShowText = ci->fStruct->getString(1);
+            setText(ci->fStruct->getString(1));
         }
     } else {
         clear();
@@ -271,12 +277,12 @@ void EQLineEdit::setInitialValue(const QString &value)
     } else {
         code = text();
     }
-    if (fCacheInstance->fStruct->get(code)) {
+    if (ci->fStruct->get(code)) {
         if (fEnableHiddenText) {
-            setText(fCacheInstance->fStruct->getString(1));
+            setText(ci->fStruct->getString(1));
         } else {
             if (fNameEdit) {
-                fNameEdit->setText(fCacheInstance->fStruct->getString(1));
+                fNameEdit->setText(ci->fStruct->getString(1));
             }
         }
     } else {
@@ -304,14 +310,15 @@ void EQLineEdit::setInitialValue(int value)
 
 void EQLineEdit::doubleClickEvent()
 {
-    if (fBase) {
+    CacheInstance *ci = cacheInstance();
+    if (fBase && ci && ci->fStruct) {
         QStringList codes, names;
-        fCacheInstance->fStruct->fSelector->fCodeFilter = fCodeFilter;
-        fCacheInstance->fStruct->fSelector->fExcludeCodeFilter = fCodeExcludeFilter;
+        ci->fStruct->fSelector->fCodeFilter = fCodeFilter;
+        ci->fStruct->fSelector->fExcludeCodeFilter = fCodeExcludeFilter;
         for (QMap<QString, QStringList>::const_iterator it = fFieldFilter.constBegin(); it != fFieldFilter.constEnd(); it++) {
-            fCacheInstance->fStruct->fSelector->fFieldFilter[fCacheInstance->fColumnNameMap[it.key().toLower()]] = it.value();
+            ci->fStruct->fSelector->fFieldFilter[ci->fColumnNameMap[it.key().toLower()]] = it.value();
         }
-        if (!fCacheInstance->selector(codes, names, fSelectorMultiCheck)) {
+        if (!ci->selector(codes, names, fSelectorMultiCheck)) {
             return;
         }
         QString code = codes.join(',');
@@ -363,7 +370,8 @@ void EQLineEdit::focusOutEvent(QFocusEvent *event)
         }
     }
     QString code;
-    if (fCacheInstance) {
+    CacheInstance *ci = cacheInstance();
+    if (ci && ci->fStruct) {
         if (fEnableHiddenText) {
             code = fHiddenText;
         } else {
@@ -378,13 +386,13 @@ void EQLineEdit::focusOutEvent(QFocusEvent *event)
         QString names;
         bool first = true;
         foreach (QString s, codes) {
-            if (fCacheInstance->fStruct->get(s)) {
+            if (ci->fStruct->get(s)) {
                 if (first) {
                     first = false;
                 } else {
                     names += ",";
                 }
-                names += fCacheInstance->fStruct->getString(1);
+                names += ci->fStruct->getString(1);
             }
         }
         if (fEnableHiddenText) {

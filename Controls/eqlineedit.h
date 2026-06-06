@@ -65,7 +65,7 @@ public:
 
     Base *fBase;
     bool fSelectorMultiCheck;
-    CacheInstance *fCacheInstance;
+    int fCacheId;
     QLineEdit *fNameEdit;
     int fHint;
     QStringList fCodeFilter;
@@ -91,6 +91,7 @@ protected:
     virtual void leaveEvent(QEvent *event);
     virtual bool eventFilter(QObject *watched, QEvent *event);
 private:
+    CacheInstance *cacheInstance() const;
     QToolButton *fButton;
     bool fShowButtonOnFocus;
     bool fAlwaysUpper;

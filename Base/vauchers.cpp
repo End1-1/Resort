@@ -138,6 +138,8 @@ void openVaucher(const QString &vaucher, const QString &id)
         if (dd.nextRow()) {
             openVaucherInvoice(dd.getString(0));
         }
+    } else {
+        message_error("Umsupported voucher");
     }
 }
 

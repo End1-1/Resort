@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFontDatabase>
+#include <QLocale>
 #include <QMessageBox>
 #include <QStyleFactory>
 #include <QTranslator>
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     def_station = "SmartHotel: ";
     Utils::initNumbersWords();
     QApplication a(argc, argv);
+    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedStates));
     Preferences p;
     p.initFromConfig();
     a.setStyle(QStyleFactory::create("fusion"));

@@ -712,6 +712,9 @@ set(SOURCES_RESORT
     ../Resort/dlgreportbuildergroups.cpp
     ../Resort/dlgreportbuildergroups.h
     ../Resort/dlgreportbuildergroups.ui
+    ../Resort/dlgreservationdateprices.cpp
+    ../Resort/dlgreservationdateprices.h
+    ../Resort/dlgreservationdateprices.ui
     ../Resort/dlgreservationguests.cpp
     ../Resort/dlgreservationguests.h
     ../Resort/dlgreservationguests.ui

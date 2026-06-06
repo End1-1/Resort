@@ -397,6 +397,7 @@ SOURCES += main.cpp\
     ../Filter/guestcheckin.cpp \
     ../Filter/flengthofstay.cpp \
     ../Filter/fexportreservation.cpp \
+    dlgreservationdateprices.cpp \
     dlgreservationguests.cpp \
     ../Base/doubledatabase.cpp \
     ../Cache2/cache2.cpp \
@@ -822,6 +823,7 @@ HEADERS  += mainwindow.h \
     ../Filter/guestcheckin.h \
     ../Filter/flengthofstay.h \
     ../Filter/fexportreservation.h \
+    dlgreservationdateprices.h \
     dlgreservationguests.h \
     ../Base/doubledatabase.h \
     ../Cache2/cache2.h \
@@ -1093,6 +1095,7 @@ FORMS    += mainwindow.ui \
     ../Filter/guestcheckin.ui \
     ../Filter/flengthofstay.ui \
     ../Filter/fexportreservation.ui \
+    dlgreservationdateprices.ui \
     dlgreservationguests.ui \
     dlgcreategroupreservation.ui \
     dlgexecfailedsqls.ui \

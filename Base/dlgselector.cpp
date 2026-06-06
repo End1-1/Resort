@@ -1,6 +1,7 @@
 #include "dlgselector.h"
 #include "ui_dlgselector.h"
 #include "cacheinstance.h"
+#include "cacheone.h"
 
 DlgSelector::DlgSelector(QWidget *parent) :
     QDialog(parent),
@@ -9,6 +10,8 @@ DlgSelector::DlgSelector(QWidget *parent) :
     setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
     ui->setupUi(this);
     fMultiCheck = false;
+    fCacheId = -1;
+    fCacheInstance = nullptr;
 }
 
 DlgSelector::~DlgSelector()
@@ -185,9 +188,10 @@ void DlgSelector::on_lineEdit_textEdited(const QString &arg1)
 
 void DlgSelector::on_btnRefresh_clicked()
 {
-    if (fCacheInstance) {
-        fCacheInstance->load();
-        setData(fCacheInstance->fRows);
+    CacheInstance *ci = fCacheId >= 0 ? cache(fCacheId) : fCacheInstance;
+    if (ci) {
+        ci->load();
+        setData(ci->fRows);
         filter(ui->lineEdit->text());
     }
 }

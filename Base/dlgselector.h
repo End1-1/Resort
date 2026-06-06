@@ -25,6 +25,7 @@ public:
     QMap<int, QStringList> fFieldFilter;
     virtual int exec(QStringList &codes, QStringList &names);
     bool fMultiCheck;
+    int fCacheId;
     void filter(const QString &arg1);
     CacheInstance *fCacheInstance;
 

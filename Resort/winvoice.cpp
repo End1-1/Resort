@@ -36,6 +36,7 @@
 #include "ui_winvoice.h"
 #include "vauchers.h"
 #include "wreservation.h"
+#include "utils.h"
 
 static const int HINT_ACTIVE_ROOM = 1;
 
@@ -44,6 +45,7 @@ WInvoice::WInvoice(QWidget *parent) :
     ui(new Ui::WInvoice)
 {
     ui->setupUi(this);
+    fVersion = 0;
     ui->btnTaxPrint->setEnabled(false);
     QListIterator<QObject*> it(ui->wBtn->children());
 
@@ -146,8 +148,14 @@ void WInvoice::loadInvoice(const QString &id)
             fTrackControl->saveChanges();
 
             if(ui->leInvoice->notEmpty()) {
-                fDD[":f_remarks"] = ui->teRemark->toPlainText();
-                fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
+                if(!reservationVersionMatches(fDD, ui->leReserveID->text(), fVersion)) {
+                    message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+                } else {
+                    fDD[":f_remarks"] = ui->teRemark->toPlainText();
+                    if(!updateReservation(fDD, ui->leReserveID->text(), fVersion)) {
+                        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+                    }
+                }
             }
         }
     }
@@ -159,7 +167,7 @@ void WInvoice::loadInvoice(const QString &id)
                     "g.f_passport, rs.f_cardex, c.f_name, rs.f_pricePerNight, rs.f_remarks, rs.f_startDate, rs.f_endDate,"
                     "rs.f_man+rs.f_woman+rs.f_child, gs.total, rs.f_vatMode, v.f_" + def_lang + ", "
                     "rs.f_checkInTime, 0 as i_f_prepaid, ucheckin.f_username, rs.f_cityLedger, cl.f_name, "
-                    "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking, r.f_donotdisturbe "
+                    "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking, r.f_donotdisturbe, rs.f_version "
                     "from  f_reservation rs "
                     "left join f_room r on rs.f_room=r.f_id "
                     "left join f_guests g on rs.f_guest=g.f_id "
@@ -192,7 +200,7 @@ void WInvoice::loadInvoice(const QString &id)
     ui->lePassport->setText(row.at(c++).toString());
     ui->leCardex->setText(row.at(c++).toString());
     ui->leCardexName->setText(row.at(c++).toString());
-    ui->leRoomRate->setText(row.at(c++).toString());
+    ui->leRoomRate->setText(float_str(row.at(c++).toDouble(), 0));
     ui->teRemark->setPlainText(row.at(c++).toString());
     ui->deCheckin->setDate(row.at(c++).toDate());
     ui->deDeparture->setDate(row.at(c++).toDate());
@@ -211,6 +219,7 @@ void WInvoice::loadInvoice(const QString &id)
                               ui->deDeparture->date())));
     ui->leBookingNo->setText(row.at(c++).toString());
     ui->btnDoNotDisturbe->setChecked(row.at(c++).toInt() > 0);
+    fVersion = row.at(c++).toInt();
     /* -------------------------- BEGIN CONTENT --------------------------*/
     ui->tblInvLeft->clearContents();
     ui->tblInvRight->clearContents();
@@ -394,8 +403,11 @@ bool WInvoice::canClose()
 
         switch(result) {
         case RESULT_YES:
-            save();
-            canClose = true;
+            if(!save()) {
+                canClose = false;
+            } else {
+                canClose = true;
+            }
             break;
 
         case RESULT_NO:
@@ -590,7 +602,13 @@ void WInvoice::on_btnPostingCharges_clicked()
 void WInvoice::on_btnCheckout_clicked()
 {
     DoubleDatabase fDD;
-    save();
+    if(ui->leReserveID->notEmpty() && !reservationVersionMatches(fDD, ui->leReserveID->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return;
+    }
+    if(!save()) {
+        return;
+    }
     DlgOfferInvoiceExtra *o = new DlgOfferInvoiceExtra(this);
     o->setRoom(ui->leRoomCode->asInt());
     o->fDayUseRate = ui->leRoomRate->asDouble();
@@ -657,6 +675,11 @@ void WInvoice::on_btnCheckout_clicked()
         return;
     }
 
+    if(!reservationVersionMatches(fDD, ui->leReserveID->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return;
+    }
+
     bool result = true;
     fDD.startTransaction();
 
@@ -665,7 +688,10 @@ void WInvoice::on_btnCheckout_clicked()
         fDD[":f_state"] = RESERVE_CHECKOUT;
         fDD[":f_checkOutTime"] = QTime::currentTime();
         fDD[":f_checkOutUser"] = WORKING_USERID;
-        result = result && fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
+        result = result && updateReservation(fDD, ui->leReserveID->text(), fVersion);
+        if(!result) {
+            message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        }
         fTrackControl->insert("Checkout", "", "");
     }
 
@@ -785,7 +811,10 @@ void WInvoice::on_btnCheckout_clicked()
                                   WORKING_DATE.toString(def_date_format));
             fTrackControl->insert("Checkout", "", "");
             fDD[":f_endDate"] = WORKING_DATE;
-            result = result && fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
+            result = result && updateReservation(fDD, ui->leReserveID->text(), fVersion);
+            if(!result) {
+                message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+            }
         }
     }
 
@@ -796,8 +825,10 @@ void WInvoice::on_btnCheckout_clicked()
         fDD.nextRow();
         QVariant finalAmount = fDD.getDouble(0);
         fDD[":f_grandTotal"] = finalAmount;
-        fDD[":f_id"] = ui->leReserveID->text();
-        fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
+        result = result && updateReservation(fDD, ui->leReserveID->text(), fVersion);
+        if(!result) {
+            message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        }
         fDD[":f_amountAmd"] = finalAmount;
         fDD[":f_id"] = ui->leReserveID->text();
         fDD.update("m_register", where_id(ap(ui->leReserveID->text())));
@@ -1141,6 +1172,7 @@ void WInvoice::on_btnCancel_clicked()
 void WInvoice::clearInvoice()
 {
     enableButtons(false);
+    fVersion = 0;
     ui->leArrangement->clear();
     ui->leRoomCode->clear();
     ui->leRoom->clear();
@@ -1223,13 +1255,24 @@ void WInvoice::on_btnTrack_clicked()
     DlgTracking::showTracking(TRACK_RESERVATION, ui->leInvoice->text());
 }
 
-void WInvoice::save()
+bool WInvoice::save()
 {
+    if(ui->leReserveID->isEmpty()) {
+        return true;
+    }
     DoubleDatabase fDD;
+    if(!reservationVersionMatches(fDD, ui->leReserveID->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return false;
+    }
     fDD[":f_remarks"] = ui->teRemark->toPlainText();
-    fDD.update("f_reservation", where_id(ap(ui->leReserveID->text())));
+    if(!updateReservation(fDD, ui->leReserveID->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return false;
+    }
     fTrackControl->saveChanges();
     ui->teRemark->setReadOnly(true);
+    return true;
 }
 
 void WInvoice::on_btnDiscount_clicked()
@@ -1445,7 +1488,8 @@ void WInvoice::on_btnTaxBack_clicked()
     QList<QList<QVariant> > rows;
 
     for(int i = 0; i < ui->tblInvLeft->rowCount(); i++) {
-        if(ui->tblInvLeft->item(i, 6)->checkState() == Qt::Checked && ui->tblInvLeft->toInt(i, 6) > 0) {
+        C5TableWidgetItem *taxItem = ui->tblInvLeft->item(i, 6);
+        if(taxItem && taxItem->checkState() == Qt::Checked && ui->tblInvLeft->toInt(i, 6) > 0) {
             QList<QVariant> row;
             row << ui->tblInvLeft->toString(i, 0)
                 << ui->tblInvLeft->toString(i, 3)
@@ -1458,7 +1502,8 @@ void WInvoice::on_btnTaxBack_clicked()
     }
 
     for(int i = 0; i < ui->tblInvRight->rowCount(); i++) {
-        if(ui->tblInvRight->item(i, 6)->checkState() == Qt::Checked && ui->tblInvRight->toInt(i, 6) > 0) {
+        C5TableWidgetItem *taxItem = ui->tblInvRight->item(i, 6);
+        if(taxItem && taxItem->checkState() == Qt::Checked && ui->tblInvRight->toInt(i, 6) > 0) {
             QList<QVariant> row;
             row << ui->tblInvRight->toString(i, 0)
                 << ui->tblInvRight->toString(i, 3)

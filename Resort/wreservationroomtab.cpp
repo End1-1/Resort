@@ -28,6 +28,7 @@
 #include "cacheinvoiceitem.h"
 #include "vauchers.h"
 #include "dlgreservationremarks.h"
+#include "dlgreservationdateprices.h"
 #include "pprintcheckin.h"
 #include "utils.h"
 #include <QKeyEvent>
@@ -61,6 +62,7 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
         ui->tblGuest->setColumnWidth(i, fWidths.at(i));
     }
     fReservRoomId = 0;
+    fVersion = 0;
     ui->deEntry->setDate(QDate::currentDate());
     ui->deDeparture->setDate(QDate::currentDate());
     ui->lbVAT->setText(QString("%1 %2%")
@@ -79,6 +81,8 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
     fEndDateOk = true;
     fCardexOk = true;
     fCityLedgerOk = true;
+    fHasDailyRoomPrices = false;
+    fDailyRoomTotal = 0;
     fAuthor = WORKING_USERNAME;
     fLastModify = WORKING_USERNAME;
     ui->chMealIncluded->setChecked(true);
@@ -221,6 +225,10 @@ bool WReservationRoomTab::save()
         return false;
     }
     DoubleDatabase fDD;
+    if (ui->leReservId->notEmpty() && !reservationVersionMatches(fDD, ui->leReservId->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return false;
+    }
     if (ui->leRoomCode->asInt() == 0) {
         if (ui->leReserveCode->asInt() == ROOM_STATE_CHECKIN) {
             message_error(tr("Cannot save reservation. Room code for checkin reservation must be specified"));
@@ -262,7 +270,10 @@ bool WReservationRoomTab::save()
             }
             /*------------- BEGIN CHANGE ROOM ------------------*/
             fDD[":f_upgradeFrom"] = fTrackControl->oldValue(ui->leRoomCode).toInt();
-            result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+            result = result && updateReservation(fDD, ui->leReservId->text(), fVersion);
+            if (!result) {
+                message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+            }
             if (result) {
                 if (ui->leReserveCode->asInt() == RESERVE_CHECKIN) {
                     fDD[":f_state"] = ROOM_STATE_DIRTY;
@@ -393,7 +404,10 @@ bool WReservationRoomTab::save()
         fDD[":f_lastEdit"] = WORKING_USERID;
     }
     if (result) {
-        result = fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+        result = updateReservation(fDD, ui->leReservId->text(), fVersion);
+        if (!result) {
+            message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        }
     }
     if (createUser > 0) {
         fDD.exec("select * from f_reservation_last");
@@ -435,7 +449,15 @@ bool WReservationRoomTab::save()
         if (fDD.getInt("f_chmstatus") == 1) {
             fDD[":f_id"] = ui->leReservId->text();
             fDD[":f_chmstatus"] = 2;
-            fDD.exec("update f_reservation set f_chmstatus=:f_chmstatus where f_id=:f_id");
+            fDD[":f_version"] = fVersion + 1;
+            result = result && fDD.exec(QString("update f_reservation set f_chmstatus=:f_chmstatus, f_version=:f_version "
+                                                "where f_id=:f_id and coalesce(f_version, 0)=%1").arg(fVersion));
+            if (result && fDD.affectedRows() > 0) {
+                fVersion++;
+            } else if (result) {
+                result = false;
+                message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+            }
         }
     }
     if (result) {
@@ -552,7 +574,8 @@ void WReservationRoomTab::loadReservation(const QString &id)
                     "f_lastEdit, "
                     "f_group, "
                     "f_booking, "
-                    "f_pickup "
+                    "f_pickup, "
+                    "f_version "
                     "from f_reservation "
                     "where f_id=" + ap(ui->leReservId->text());
     DoubleDatabase fDD;
@@ -637,6 +660,7 @@ void WReservationRoomTab::loadReservation(const QString &id)
     c++; // skip group id
     ui->leBooking->setText(row.at(c++).toString());
     ui->chPickup->setChecked(row.at(c++).toInt());
+    fVersion = row.at(c++).toInt();
     /// END OF ROW
     ui->leRoomName->clear();
     if (ui->leRoomCode->asInt() == 0) {
@@ -698,6 +722,40 @@ void WReservationRoomTab::loadReservation(const QString &id)
     }
     fTrackControl->resetChanges();
     fInitCardex = ui->leCardexCode->text();
+    loadDailyRoomPrices();
+    countTotal();
+}
+
+void WReservationRoomTab::loadDailyRoomPrices()
+{
+    fHasDailyRoomPrices = false;
+    fDailyRoomTotal = 0;
+    if (ui->leReservId->isEmpty()) {
+        return;
+    }
+    QList<QDate> dates = DlgReservationDatePrices::stayDates(ui->deEntry->date(), ui->deDeparture->date());
+    if (dates.isEmpty()) {
+        return;
+    }
+    DoubleDatabase fDD;
+    fDD[":f_reservation"] = ui->leReservId->text();
+    fDD.exec("select f_date, f_price from f_reservation_prices where f_reservation=:f_reservation");
+    QMap<QDate, double> prices;
+    while (fDD.nextRow()) {
+        prices[fDD.getDate(0)] = fDD.getDouble(1);
+    }
+    double sum = 0;
+    int matched = 0;
+    foreach (const QDate &d, dates) {
+        if (prices.contains(d)) {
+            sum += prices.value(d);
+            matched++;
+        }
+    }
+    if (matched == dates.count()) {
+        fHasDailyRoomPrices = true;
+        fDailyRoomTotal = sum;
+    }
 }
 
 void WReservationRoomTab::setGuest(int id, bool removeFirst)
@@ -769,7 +827,10 @@ void WReservationRoomTab::reCheckin()
     }
     ui->leReserveCode->setInitialValue(RESERVE_CHECKIN);
     fDD[":f_state"] = RESERVE_CHECKIN;
-    fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+    if (!updateReservation(fDD, ui->leReservId->text(), fVersion)) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        return;
+    }
     fDD[":f_state"] = ROOM_STATE_CHECKIN;
     fDD.update("f_room", where_id(ui->leRoomCode->asInt()));
     fDD[":f_source"] = VAUCHER_CHECKOUT_N;
@@ -946,13 +1007,20 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         return false;
     }
     DoubleDatabase fDD;
+    if (!reservationVersionMatches(fDD, ui->leReservId->text(), fVersion)) {
+        errorString = tr("Reservation was modified elsewhere. Close and reopen the document to see the changes.");
+        return false;
+    }
     fDD.startTransaction();
     if (result) {
         fDD[":f_state"] = RESERVE_CHECKIN;
         fDD[":f_checkInDate"] = WORKING_DATE;
         fDD[":f_checkInTime"] = Utils::localTimeSql();
         fDD[":f_checkInUser"] = WORKING_USERID;
-        result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+        result = result && updateReservation(fDD, ui->leReservId->text(), fVersion);
+        if (!result) {
+            errorString = tr("Reservation was modified elsewhere. Close and reopen the document to see the changes.");
+        }
     }
     if (result) {
         fDD[":f_state"] = ROOM_STATE_CHECKIN;
@@ -1194,12 +1262,21 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
     int prevreserve = ui->leReserveCode->asInt();
     bool result = true;
     DoubleDatabase fDD;
+    if (!reservationVersionMatches(fDD, ui->leReservId->text(), fVersion)) {
+        if (confirm) {
+            message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        }
+        return false;
+    }
     fDD.startTransaction();
     fDD[":f_state"] = RESERVE_REMOVED;
     fDD[":f_cancelUser"] = WORKING_USERID;
     fDD[":f_cancelDate"] = Utils::localDateTimeSql();
     ui->leReserveCode->setInitialValue(RESERVE_REMOVED);
-    result = result && fDD.update("f_reservation", where_id(ap(ui->leReservId->text())));
+    result = result && updateReservation(fDD, ui->leReservId->text(), fVersion);
+    if (!result && confirm) {
+        message_error(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+    }
     fDD[":f_id"] = ui->leReservId->text();
     fDD.exec("delete from f_reservation_chart where f_id=:f_id");
     fDD[":f_reservation"] = ui->leReservId->text();
@@ -1295,6 +1372,7 @@ void WReservationRoomTab::copyLast(const QString &lastId)
     QString price = ui->leRooming->text();
     ui->leReservId->clear();
     ui->leInvoice->clear();
+    fVersion = 0;
     ui->leReserveCode->setInt(RESERVE_RESERVE);
     ui->deEntry->setEnabled(true);
     ui->deDeparture->setEnabled(true);
@@ -1497,11 +1575,26 @@ void WReservationRoomTab::setModifiedByOther(const QMap<QString, QVariant> &d)
 
 void WReservationRoomTab::countTotal()
 {
-    double total = ui->leRooming->asDouble();
-    total += ui->leExtraBedAmount->asDouble();
-    total += (ui->sbMealQty->value() * ui->leMealPrice->asDouble());
-    ui->lePricePerNight->setDouble(total);
-    total *= ui->sbNights->value();
+    int nights = ui->sbNights->value();
+    if (nights == 0) {
+        nights = 1;
+    }
+    double perNightExtras = ui->leExtraBedAmount->asDouble()
+                            + (ui->sbMealQty->value() * ui->leMealPrice->asDouble());
+    double roomPerNight;
+    double roomTotal;
+    if (fHasDailyRoomPrices) {
+        roomTotal = fDailyRoomTotal;
+        roomPerNight = roomTotal / nights;
+    } else {
+        roomPerNight = ui->leRooming->asDouble();
+        roomTotal = roomPerNight * ui->sbNights->value();
+        if (ui->sbNights->value() == 0) {
+            roomTotal = roomPerNight;
+        }
+    }
+    ui->lePricePerNight->setDouble(roomPerNight + perNightExtras);
+    double total = roomTotal + perNightExtras * (ui->sbNights->value() > 0 ? ui->sbNights->value() : 1);
     ui->leTotal->setDouble(total);
     switch (ui->cbVAT->asInt()) {
         case VAT_INCLUDED: {
@@ -1697,6 +1790,15 @@ bool WReservationRoomTab::checkDoc(QStringList &errors)
     }
     if (ui->tblGuest->rowCount() == 0) {
         temp.append(tr("Guest count must be greater than 0"));
+    }
+    if (ui->leReserveCode->asInt() == 0) {
+        temp.append(tr("Reservation state is empty"));
+    }
+    if (ui->leReservId->notEmpty()) {
+        DoubleDatabase fDD;
+        if (!reservationVersionMatches(fDD, ui->leReservId->text(), fVersion)) {
+            temp.append(tr("Reservation was modified elsewhere. Close and reopen the document to see the changes."));
+        }
     }
     ui->lbEntryDate->setStyleSheet("color:black");
     if (!fStartDateOk) {
@@ -2072,6 +2174,7 @@ void WReservationRoomTab::on_sbNights_valueChanged(int arg1)
     disconnectSignals();
     ui->deDeparture->setDate(ui->deEntry->date().addDays(arg1));
     connectSignals();
+    loadDailyRoomPrices();
     countTotal();
     checkDatesCross();
 }
@@ -2081,6 +2184,7 @@ void WReservationRoomTab::on_deDeparture_dateChanged(const QDate &date)
     disconnectSignals();
     ui->sbNights->setValue(ui->deEntry->date().daysTo(date));
     connectSignals();
+    loadDailyRoomPrices();
     countTotal();
     checkDatesCross();
     if (date == ui->deEntry->date()) {
@@ -2095,6 +2199,7 @@ void WReservationRoomTab::on_deEntry_dateChanged(const QDate &date)
     disconnectSignals();
     ui->sbNights->setValue(date.daysTo(ui->deDeparture->date()));
     connectSignals();
+    loadDailyRoomPrices();
     countTotal();
     checkDatesCross();
 }
@@ -2378,4 +2483,24 @@ void WReservationRoomTab::on_btnReadFromDevice_clicked()
         addGuest(guest, true);
     }
     delete g;
+}
+
+void WReservationRoomTab::on_btnDatePrices_clicked()
+{
+    if (ui->leReservId->isEmpty()) {
+        message_error(tr("Save reservation before editing daily prices"));
+        return;
+    }
+    double roomTotal = 0;
+    if (!DlgReservationDatePrices::edit(ui->leReservId->text(),
+                                        ui->deEntry->date(),
+                                        ui->deDeparture->date(),
+                                        ui->leRooming->asDouble(),
+                                        roomTotal,
+                                        this)) {
+        return;
+    }
+    Q_UNUSED(roomTotal)
+    loadDailyRoomPrices();
+    countTotal();
 }

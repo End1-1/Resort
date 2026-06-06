@@ -12,6 +12,7 @@ class CacheInstance : public QObject
     Q_OBJECT
 public:
     CacheInstance(CacheBaseStruct *b);
+    ~CacheInstance();
     QMap<QString, QList<QVariant> > fRows;
     QMap<QString, int> fColumnNameMap;
     bool selector(QStringList &codes, QStringList &values, bool multicheck);

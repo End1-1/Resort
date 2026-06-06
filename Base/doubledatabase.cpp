@@ -336,6 +336,11 @@ bool DoubleDatabase::update(const QString &tableName, const QString &whereClause
     return exec(sql);
 }
 
+int DoubleDatabase::affectedRows() const
+{
+    return fAffectedRows;
+}
+
 int DoubleDatabase::insert(const QString &tableName, bool returnId)
 {
     QString sql = "insert into " + tableName;
@@ -437,6 +442,7 @@ void DoubleDatabase::setNoSqlErrorLogMode(bool v)
 void DoubleDatabase::init()
 {
     fNoSqlErrorLog = false;
+    fAffectedRows = 0;
 
     if(QSqlDatabase::drivers().count() == 0) {
         return;
@@ -564,6 +570,8 @@ bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
 
         return false;
     }
+
+    fAffectedRows = q->numRowsAffected();
 
     if(logEnabled) {
         logEvent("? [" + QString::number(e.elapsed()) + "] " + lastQuery(q));

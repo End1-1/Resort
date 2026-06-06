@@ -74,11 +74,12 @@ private slots:
 
 private:
     Ui::WInvoice *ui;
-    void save();
+    bool save();
     void clearInvoice();
     void countTotals();
     double countTotal(QTableWidget *t);
     void enableButtons(bool v);
+    int fVersion;
 };
 
 #endif // WINVOICE_H

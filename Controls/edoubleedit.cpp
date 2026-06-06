@@ -17,8 +17,8 @@ EDoubleEdit::EDoubleEdit(QWidget *parent, double min, double max, int prec) :
 
 void EDoubleEdit::setText(const QString &text)
 {
-    bool ok;
-    fValue = QLocale().toDouble(text, &ok);
+    bool ok = false;
+    fValue = appNumberLocale().toDouble(text, &ok);
     if (ok) {
         QLineEdit::setText(text);
     }

@@ -12,10 +12,16 @@ CacheBaseStruct::CacheBaseStruct()
     fValid = true;
     fInstance = nullptr;
     fFlagUpdated = false;
+    fSelector = nullptr;
 }
 
 CacheBaseStruct::~CacheBaseStruct()
 {
+    if (fSelector) {
+        fSelector->setParent(nullptr);
+        delete fSelector;
+        fSelector = nullptr;
+    }
 }
 
 void CacheBaseStruct::reInit()
@@ -28,8 +34,10 @@ void CacheBaseStruct::reInit()
 
 bool CacheBaseStruct::get(const QString &code)
 {
+    fInstance = cache(fCacheId);
     if (!fInstance) {
-        fInstance = cache(fCacheId);
+        fValid = false;
+        return false;
     }
     if (!fInstance->fRows.contains(code)) {
         fValid = false;
@@ -69,9 +77,7 @@ void CacheBaseStruct::initSelector()
 {
     fSelector = new DlgSelector(__preferences.getDefaultParentForMessage());
     fSelector->configure(fSelectorTitle, fSelectorColumnsWidths, fSelectorColumnNames);
-    if (!fInstance) {
-        
-    }
+    fSelector->fCacheId = fCacheId;
     fSelector->fCacheInstance = fInstance;
     fSelector->setData(fInstance->fRows);
 }

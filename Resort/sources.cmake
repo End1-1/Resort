@@ -227,6 +227,9 @@ set(SOURCES_RESORT
     dlgreportbuildergroups.cpp
     dlgreportbuildergroups.h
     dlgreportbuildergroups.ui
+    dlgreservationdateprices.cpp
+    dlgreservationdateprices.h
+    dlgreservationdateprices.ui
     dlgreservationguests.cpp
     dlgreservationguests.h
     dlgreservationguests.ui

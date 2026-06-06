@@ -17,6 +17,17 @@ CacheInstance::CacheInstance(CacheBaseStruct *b) :
     fStruct->initSelector();
 }
 
+CacheInstance::~CacheInstance()
+{
+    if (fStruct) {
+        if (fStruct->fInstance == this) {
+            fStruct->fInstance = nullptr;
+        }
+        delete fStruct;
+        fStruct = nullptr;
+    }
+}
+
 bool CacheInstance::selector(QStringList &codes, QStringList &values, bool multicheck)
 {
     return fStruct->selector(codes, values, multicheck);

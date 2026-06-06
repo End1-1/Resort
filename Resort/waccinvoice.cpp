@@ -659,12 +659,14 @@ void WAccInvoice::on_btnTaxBack_clicked()
 {
     QList<QList<QVariant> > rows;
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
-        if (ui->tblData->item(i, 8)->checkState() == Qt::Checked) {
+        C5TableWidgetItem *taxItem = ui->tblData->item(i, 8);
+        if (taxItem && taxItem->checkState() == Qt::Checked) {
             QList<QVariant> row;
             row << ui->tblData->toString(i, 0)
                 << ui->tblData->toString(i, 4)
                 << (ui->tblData->toInt(i, 9) == 0 ? ui->tblData->toDouble(i, 5) : ui->tblData->toDouble(i, 6))
                 << ui->tblData->toString(i, 10)
+                << ""
                 << "";
             rows << row;
         }

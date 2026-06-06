@@ -375,15 +375,17 @@ void DlgEndOfDay::loadData()
     ui->tblCharges->setRowCount(0);
     ui->lbSemaphore->setPixmap(QPixmap(":/images/ball-green.png"));
     DoubleDatabase fDD;
+    fDD[":f_date"] = WORKING_DATE;
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, "
                "concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "r.f_pricePerNight, "
+               "coalesce(rp.f_price, r.f_pricePerNight), "
                " '', '', ra.f_en, r.f_cityledger "
                "from f_reservation r  "
                "inner join f_guests g on g.f_id=r.f_guest "
                "inner join f_room_arrangement ra on ra.f_id=r.f_arrangement "
+               "left join f_reservation_prices rp on rp.f_reservation=r.f_id and rp.f_date=:f_date "
                "where r.f_state=:f_state");
     ui->tblCharges->setRowCount(fDD.rowCount());
     Utils::fillTableWithData(ui->tblCharges, fDD.fDbRows);
@@ -395,10 +397,11 @@ void DlgEndOfDay::loadData()
     fDD[":f_state"] = RESERVE_RESERVE;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id,  r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "r.f_pricePerNight, "
+               "coalesce(rp.f_price, r.f_pricePerNight), "
                " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
+               "left join f_reservation_prices rp on rp.f_reservation=r.f_id and rp.f_date=:f_date "
                "where r.f_startDate=:f_date and r.f_state=:f_state");
     if (fDD.rowCount() > 0) {
         fCanCharge = false;
@@ -419,10 +422,11 @@ void DlgEndOfDay::loadData()
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "r.f_pricePerNight, "
+               "coalesce(rp.f_price, r.f_pricePerNight), "
                " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
+               "left join f_reservation_prices rp on rp.f_reservation=r.f_id and rp.f_date=:f_date "
                "where r.f_endDate=:f_date and r.f_state=:f_state");
     if (fDD.rowCount() > 0) {
         fCanCharge = false;

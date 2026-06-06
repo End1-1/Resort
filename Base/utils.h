@@ -110,6 +110,11 @@ namespace Utils {
     double countVATAmount(double amount, int mode);
 }
 
+class DoubleDatabase;
+int reservationVersion(DoubleDatabase &dd, const QString &id);
+bool reservationVersionMatches(DoubleDatabase &dd, const QString &id, int loadedVersion);
+bool updateReservation(DoubleDatabase &dd, const QString &id, int &loadedVersion);
+
 bool isDoubleEqual(double v1, double v2, int prec);
 bool isDoubleNotEqual(double v1, double v2, int prec);
 bool isDoubleLess(double v1, double v2, int prec);

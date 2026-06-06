@@ -44,6 +44,7 @@ public:
     bool nextRow();
     bool valuesToJsonObject(QJsonObject &jo);
     bool update(const QString &tableName, const QString &whereClause);
+    int affectedRows() const;
     int insert(const QString &tableName, bool returnId = true);
     int insert(const QString &tableName, const QJsonObject &rec, bool returnId = true);
     bool insertId(const QString &tableName, const QVariant &id);
@@ -151,6 +152,7 @@ public:
     QMap<int, QString> fColumnNameMap;
 private:
     bool fNoSqlErrorLog;
+    int fAffectedRows;
     int fCursorPos;
     static int fCounter;
     QString fDbName1;

@@ -122,6 +122,8 @@ private slots:
 
     void on_btnReadFromDevice_clicked();
 
+    void on_btnDatePrices_clicked();
+
 private:
     Ui::WReservationRoomTab *ui;
     QString fInitCardex;
@@ -132,10 +134,14 @@ private:
     bool fCityLedgerOk;
     QString fAuthor;
     QString fLastModify;
+    bool fHasDailyRoomPrices;
+    double fDailyRoomTotal;
+    int fVersion;
     void addGuest(CacheGuest &g, bool log);
     void countTotal();
     void setEarlyCheckIn(bool v);
     void checkDatesCross();
+    void loadDailyRoomPrices();
     void setGroupBoxesEnabled(bool v);
     void saveVaucher(int createUser);
     void getAdvance();

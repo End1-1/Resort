@@ -7,3 +7,6 @@ Server/bin
 ATS/bin
 Updater/bin
 Tester/bin
+setup/**/*.dll
+setup/setup_resort_*.exe
+setup/staging/

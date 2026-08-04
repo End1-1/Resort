@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "message.h"
 #include "eqlineedit.h"
+#include "preferences.h"
 
 #include <QDoubleValidator>
 
@@ -132,6 +133,10 @@ void DlgReservationDatePrices::buildTable()
         dv->setLocale(appNumberLocale());
         le->setValidator(dv);
         le->setDouble(price);
+        // Already stayed nights cannot be changed
+        if (!fReadOnly && d < WORKING_DATE) {
+            le->setReadOnly(true);
+        }
         connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateTotal()));
     }
 
@@ -150,9 +155,10 @@ void DlgReservationDatePrices::on_btnFillDefault_clicked()
     }
     for (int i = 0; i < ui->tblData->rowCount(); i++) {
         EQLineEdit *le = ui->tblData->lineEdit(i, 1);
-        if (le) {
-            le->setDouble(fDefaultPrice);
+        if (!le || le->isReadOnly()) {
+            continue;
         }
+        le->setDouble(fDefaultPrice);
     }
     updateTotal();
 }

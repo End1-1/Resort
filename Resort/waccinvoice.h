@@ -72,6 +72,8 @@ private slots:
     void on_btnExportASRetail_clicked();
     void on_btnMoveToCL_clicked();
     void on_btnChangeRemarks_clicked();
+    void on_btnNewRefuyndVoucher_clicked();
+    void on_btnCL_clicked();
 };
 
 #endif // WACCINVOICE_H

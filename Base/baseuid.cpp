@@ -7,13 +7,14 @@
 #include <QSqlError>
 #include "utils.h"
 #include <doubledatabase.h>
-//#include <QRandomGenerator>
 
-#define SRC QString("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-#define len 8
-#define low 0
-#define high 35
-#define maxtries 200
+namespace {
+const QString kUidSrc = QStringLiteral("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+constexpr int kUidLen = 8;
+constexpr int kUidLow = 0;
+constexpr int kUidHigh = 35;
+constexpr int kUidMaxTries = 200;
+}
 
 QString BaseUIDX::fAirDbName;
 QString BaseUIDX::fAirHost;
@@ -37,7 +38,7 @@ QString BaseUIDX::ID(const QString &vaucher)
     DoubleDatabase d;
     d.setDatabase(fAirHost, fAirDbName, fAirUser, fAirPass);
     d.setNoSqlErrorLogMode(true);
-    int idlen = 8;
+    int idlen = kUidLen;
 
     if(vaucher == "DR") {
         idlen = 10;
@@ -65,11 +66,11 @@ QString BaseUIDX::ID(const QString &vaucher)
     QString result;
 
     for(int i = 0; i < idlen; i++) {
-        QString src1 = SRC;
+        QString src1 = kUidSrc;
 
         for(int j = 0; j < idlen; j++) {
-            int i1 = QRandomGenerator::global()->generate() % ((high + 1) - low) + low;
-            int i2 = QRandomGenerator::global()->generate() % ((high + 1) - low) + low;
+            int i1 = QRandomGenerator::global()->generate() % ((kUidHigh + 1) - kUidLow) + kUidLow;
+            int i2 = QRandomGenerator::global()->generate() % ((kUidHigh + 1) - kUidLow) + kUidLow;
             QChar temp = src1.at(i1);
             src1[i1] = src1[i2];
             src1[i2] = temp;
@@ -92,7 +93,7 @@ QString BaseUIDX::ID(const QString &vaucher)
     int h = src2.length() ;
     bool find = false;
 
-    while(result.length() < idlen && trynum < maxtries) {
+    while(result.length() < idlen && trynum < kUidMaxTries) {
         while(result.length() < idlen) {
             result += src2.at(QRandomGenerator::global()->generate() % h);
         }

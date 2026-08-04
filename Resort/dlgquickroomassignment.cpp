@@ -94,3 +94,6 @@ void DlgQuickRoomAssignment::on_btnSave_clicked()
     tc.insert("Quick room assignment", ui->lefrRoom->text(), ui->letoRoom->text());
     message_info(tr("Room moved"));
 }
+
+#undef HINT_ACTIVE_ROOM
+#undef HINT_ROOM

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>907</width>
-    <height>51</height>
+    <height>54</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,7 +50,7 @@
      <item row="0" column="10">
       <spacer name="horizontalSpacer">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -84,10 +84,20 @@
          <hour>0</hour>
          <minute>0</minute>
          <second>1</second>
-         <year>2000</year>
-         <month>1</month>
-         <day>1</day>
+         <year>1999</year>
+         <month>12</month>
+         <day>31</day>
         </datetime>
+       </property>
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+       <property name="time">
+        <time>
+         <hour>0</hour>
+         <minute>0</minute>
+         <second>1</second>
+        </time>
        </property>
       </widget>
      </item>
@@ -95,13 +105,23 @@
       <widget class="EQTimeEdit" name="teEnd">
        <property name="dateTime">
         <datetime>
-         <hour>23</hour>
+         <hour>12</hour>
          <minute>59</minute>
          <second>59</second>
          <year>2000</year>
          <month>1</month>
          <day>1</day>
         </datetime>
+       </property>
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+       <property name="time">
+        <time>
+         <hour>12</hour>
+         <minute>59</minute>
+         <second>59</second>
+        </time>
        </property>
       </widget>
      </item>

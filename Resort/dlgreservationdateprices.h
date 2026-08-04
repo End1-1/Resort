@@ -18,6 +18,7 @@ public:
                                       const QDate &entry,
                                       const QDate &departure,
                                       double defaultPrice,
+                                      bool readOnly = false,
                                       QWidget *parent = nullptr);
     ~DlgReservationDatePrices();
 
@@ -27,6 +28,11 @@ public:
                      const QDate &departure,
                      double defaultPrice,
                      double &roomTotal,
+                     QWidget *parent = nullptr);
+    static void view(const QString &reservationId,
+                     const QDate &entry,
+                     const QDate &departure,
+                     double defaultPrice,
                      QWidget *parent = nullptr);
 
     double roomTotal() const;
@@ -39,6 +45,7 @@ private slots:
 
 private:
     void buildTable();
+    void applyReadOnly();
     bool save();
 
     Ui::DlgReservationDatePrices *ui;
@@ -46,6 +53,7 @@ private:
     QDate fEntry;
     QDate fDeparture;
     double fDefaultPrice;
+    bool fReadOnly;
     QList<QDate> fDates;
 };
 

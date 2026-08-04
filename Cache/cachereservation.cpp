@@ -29,7 +29,7 @@ CacheReservation::CacheReservation() :
 
 bool CacheReservation::hasNext(CacheReservation &c, bool fill)
 {
-    if (!fValid) {
+    if (!fValid || !fInstance || !fInstance->fStruct) {
         return false;
     }
     CacheReservation *ci = static_cast<CacheReservation*>(fInstance->fStruct);
@@ -48,6 +48,9 @@ bool CacheReservation::hasNext(CacheReservation &c, bool fill)
     QStringList &ids = ci->fRooms[room];
     foreach (QString s, ids) {
         if (id == s) {
+            continue;
+        }
+        if (!fInstance->fRows.contains(s)) {
             continue;
         }
         if (endDate == fInstance->fRows[s].at(pos_datestart).toDate()) {
@@ -69,6 +72,9 @@ bool CacheReservation::hasNext()
 
 bool CacheReservation::hasPrev(CacheReservation &c, bool fill)
 {
+    if (!fValid || !fInstance || !fInstance->fStruct) {
+        return false;
+    }
     CacheReservation *ci = static_cast<CacheReservation*>(fInstance->fStruct);
     QString id = fData.at(pos_id).toString();
     int room = fData.at(pos_room).toInt();
@@ -85,6 +91,9 @@ bool CacheReservation::hasPrev(CacheReservation &c, bool fill)
     QStringList &ids = ci->fRooms[room];
     foreach (QString s, ids) {
         if (id == s) {
+            continue;
+        }
+        if (!fInstance->fRows.contains(s)) {
             continue;
         }
         if (startDate == fInstance->fRows[s].at(pos_dateend).toDate()) {
@@ -126,7 +135,7 @@ void CacheReservation::check(const QDate &start, const QDate &end, int room,
             it++;
             continue;
         }
-        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM || cr.fState() == RESERVE_SERVICE) {
+        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM) {
             if (start == cr.fDateEnd() || end == cr.fDateStart()) {
                 out.insert(cr.fId(), cr);
                 startOk = false;
@@ -190,7 +199,7 @@ void CacheReservation::exludeList(const QDate &start, const QDate &end, QSet<int
         int room = cr.fRoom().toInt();
         QDate s = cr.fDateStart();
         QDate e = cr.fDateEnd();
-        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM || cr.fState() == RESERVE_SERVICE) {
+        if (cr.fState() == RESERVE_OUTOFINVENTORY || cr.fState() == RESERVE_OUTOFROOM) {
             if (start == e || end == s) {
                 excludeRooms.insert(room);
                 it++;

@@ -217,17 +217,13 @@ void DlgReceiptVaucher::setCL(int cl)
 {
     ui->lePaymentCode->setInitialValue(PAYMENT_CL);
     ui->leCL->setInitialValue(cl);
+    clVisible(true);
+    ui->leFinalName->setText(QString("CHECKOUT %1, %2").arg(ui->wRoom->room()).arg(ui->wRoom->guest()));
 }
 
 void DlgReceiptVaucher::setInvoice(const QString &invoice)
 {
-    DoubleDatabase dd;
-    dd[":f_invoice"] = invoice;
-    dd.exec("select f_room from f_reservation where f_invoice=:f_invoice");
-
-    if(dd.nextRow()) {
-        setRoom(dd.getInt("f_room"));
-    }
+    ui->wRoom->setInvoice(invoice);
 }
 
 void DlgReceiptVaucher::setRoom(int room)
@@ -589,3 +585,8 @@ void DlgReceiptVaucher::on_btnSuggestAmount_clicked()
     ui->leAmountAMD->setDouble(fSuggestAmount);
     on_leAmountAMD_textEdited(ui->leAmountAMD->text());
 }
+
+#undef HINT_ACTIVE_ROOM
+#undef HINT_CITY_LEDGER
+#undef HINT_PAYMENT_MODE
+#undef HINT_CARD

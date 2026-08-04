@@ -10,9 +10,11 @@
 #include <QHostInfo>
 #include <QFile>
 #include <QDate>
+#include <QTime>
 #include <QDebug>
 #include <QSqlDriver>
 #include <QSqlField>
+#include <cmath>
 
 int DoubleDatabase::fCounter = 0;
 
@@ -285,6 +287,85 @@ bool DoubleDatabase::nextRow()
     return false;
 }
 
+static QVariant normalizeDbVariantForJson(QVariant v)
+{
+    // MySQL TINYINT/BIT often arrives as QByteArray; put a real number into JSON.
+    if(v.typeId() == QMetaType::QByteArray) {
+        const QByteArray ba = v.toByteArray();
+
+        if(ba.isEmpty()) {
+            return 0;
+        }
+
+        if(ba.size() == 1) {
+            return static_cast<int>(static_cast<unsigned char>(ba.at(0)));
+        }
+
+        bool ok = false;
+        const int n = ba.toInt(&ok);
+
+        if(ok) {
+            return n;
+        }
+
+        return QString::fromUtf8(ba);
+    }
+
+    if(v.typeId() == QMetaType::Bool) {
+        return v.toBool() ? 1 : 0;
+    }
+
+    return v;
+}
+
+static QVariant jsonValueToBindVariant(const QJsonValue &val)
+{
+    if(val.isNull() || val.isUndefined()) {
+        return QVariant();
+    }
+
+    if(val.isBool()) {
+        return val.toBool() ? 1 : 0;
+    }
+
+    if(val.isDouble()) {
+        const double d = val.toDouble();
+
+        if(qFuzzyIsNull(d - std::floor(d))) {
+            return static_cast<qint64>(d);
+        }
+
+        return d;
+    }
+
+    if(val.isString()) {
+        const QString s = val.toString();
+        bool onlyNul = !s.isEmpty();
+
+        for(const QChar &c : s) {
+            if(c.unicode() != 0) {
+                onlyNul = false;
+                break;
+            }
+        }
+
+        // Broken tinyint export: string of NUL chars (MySQL error: '\0000')
+        if(onlyNul) {
+            return 0;
+        }
+
+        return s;
+    }
+
+    QVariant var = val.toVariant();
+
+    if(var.typeId() == QMetaType::QByteArray) {
+        return normalizeDbVariantForJson(var);
+    }
+
+    return var;
+}
+
 bool DoubleDatabase::valuesToJsonObject(QJsonObject &jo)
 {
     const QList<QVariant>& row = fDbRows.at(fCursorPos);
@@ -302,15 +383,22 @@ bool DoubleDatabase::valuesToJsonObject(QJsonObject &jo)
             v = QTime::fromString(v.toString());
         }
 
-        // if(v.type() == QVariant::String) {
-        //     if(v.toString().isEmpty()) {
-        //         v = QVariant::Invalid;
-        //     }
-        // }b
+        v = normalizeDbVariantForJson(v);
         jo[fieldName] = QJsonValue::fromVariant(v);
     }
 
     return true;
+}
+
+void DoubleDatabase::bindFromJsonObject(const QJsonObject &rec, const QStringList &excludeKeys)
+{
+    for(auto it = rec.constBegin(); it != rec.constEnd(); ++it) {
+        if(excludeKeys.contains(it.key())) {
+            continue;
+        }
+
+        fBindValues[":" + it.key()] = jsonValueToBindVariant(it.value());
+    }
 }
 
 bool DoubleDatabase::update(const QString &tableName, const QString &whereClause)
@@ -375,14 +463,7 @@ int DoubleDatabase::insert(const QString &tableName, bool returnId)
 
 int DoubleDatabase::insert(const QString &tableName, const QJsonObject &rec, bool returnId)
 {
-    for(auto it = rec.constBegin(); it != rec.constEnd(); ++it) {
-        const QString &key = it.key();          // ключ
-        const QJsonValue &val = it.value();     // значение как QJsonValue
-        QString str = val.toString();
-        QVariant var = val.toVariant();
-        fBindValues[":" + key ] = var;
-    }
-
+    bindFromJsonObject(rec);
     return insert(tableName, returnId);
 }
 
@@ -461,6 +542,8 @@ void DoubleDatabase::configureDatabase(QSqlDatabase &cn, const QString &host, co
     cn.setDatabaseName(db);
     cn.setUserName(user);
     cn.setPassword(password);
+    // MariaDB Connector/C 3.4+: do not require TLS when the server has no SSL
+    cn.setConnectOptions(QStringLiteral("MYSQL_OPT_SSL_VERIFY_SERVER_CERT=0"));
     open();
 }
 
@@ -545,30 +628,46 @@ bool DoubleDatabase::exec(QSqlQuery *q, const QString &sqlQuery, bool &isSelect)
     QElapsedTimer e;
     e.start();
 
-    if(!q->prepare(sqlQuery)) {
-        fLastError = q->lastError().databaseText();
+    // Qt6 + MariaDB/MySQL: prepared SELECT returns invalid QDate/QDateTime for DATE columns.
+    // Use plain exec when there are no bind values so dates come through as valid values.
+    const bool usePrepare = !fBindValues.isEmpty();
+    if (usePrepare) {
+        if (!q->prepare(sqlQuery)) {
+            fLastError = q->lastError().databaseText();
 
-        if(!fNoSqlErrorLog) {
-            logEvent(fLastError);
-            logEvent(sqlQuery);
+            if (!fNoSqlErrorLog) {
+                logEvent(fLastError);
+                logEvent(sqlQuery);
+            }
+
+            return false;
         }
 
-        return false;
-    }
-
-    for(QMap<QString, QVariant>::const_iterator it = fBindValues.constBegin(); it != fBindValues.constEnd(); it++) {
-        q->bindValue(it.key(), it.value());
-    }
-
-    if(!q->exec()) {
-        fLastError = q->lastError().databaseText();
-
-        if(!fNoSqlErrorLog) {
-            logEvent(fLastError);
-            logEvent(lastQuery(q));
+        for (QMap<QString, QVariant>::const_iterator it = fBindValues.constBegin(); it != fBindValues.constEnd(); it++) {
+            q->bindValue(it.key(), it.value());
         }
 
-        return false;
+        if (!q->exec()) {
+            fLastError = q->lastError().databaseText();
+
+            if (!fNoSqlErrorLog) {
+                logEvent(fLastError);
+                logEvent(lastQuery(q));
+            }
+
+            return false;
+        }
+    } else {
+        if (!q->exec(sqlQuery)) {
+            fLastError = q->lastError().databaseText();
+
+            if (!fNoSqlErrorLog) {
+                logEvent(fLastError);
+                logEvent(sqlQuery);
+            }
+
+            return false;
+        }
     }
 
     fAffectedRows = q->numRowsAffected();

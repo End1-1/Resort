@@ -201,7 +201,12 @@ ReserveWidget *RoomScene::addReserveWidget(const QString &code)
     connect(rw, SIGNAL(editReserv(QString)), this, SLOT(editReserveRoom(QString)));
     QGraphicsWidget *pw = addWidget(rw);
     QPointF p;
-    p.setX(xFromDate(r.fDateStart()));
+    int offcetX = 0;
+    if (r.fState() == RESERVE_SERVICE) {
+        // Always start at midday so morning of the first day stays free
+        offcetX = COLUMN_WIDTH / 2;
+    }
+    p.setX(xFromDate(r.fDateStart()) + offcetX);
     p.setY(yFromRoomCode(r.fRoom()) );
     pw->setPos(p);
     fReserveGroup.addToGroup(pw);

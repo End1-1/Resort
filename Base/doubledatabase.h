@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QDate>
 #include <QJsonObject>
+#include <QStringList>
 
 class QSqlQuery;
 
@@ -43,6 +44,7 @@ public:
     bool nextRow(QList<QVariant>& row);
     bool nextRow();
     bool valuesToJsonObject(QJsonObject &jo);
+    void bindFromJsonObject(const QJsonObject &rec, const QStringList &excludeKeys = QStringList());
     bool update(const QString &tableName, const QString &whereClause);
     int affectedRows() const;
     int insert(const QString &tableName, bool returnId = true);

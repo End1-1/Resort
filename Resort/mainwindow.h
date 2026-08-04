@@ -183,7 +183,6 @@ private slots:
     void on_actionHelp_triggered();
     void on_actionOptions_triggered();
     void on_actionInhouse_guest_future_triggered();
-    void on_actionForecast_occupancy_by_category_triggered();
     void on_actionExpected_arivals_simple_triggered();
     void on_actionArmSoft_triggered();
     void on_actionFiscal_report_triggered();
@@ -197,6 +196,9 @@ private slots:
     void on_actionIncomplete_guests_names_triggered();
 
     void on_actionArrival_Departures_for_restaurant_triggered();
+
+    void on_actionFiscal_machines_triggered();
+    void on_actionImages_triggered();
 
 private:
     Listener fServer2Listener;

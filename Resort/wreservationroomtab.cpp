@@ -95,7 +95,7 @@ WReservationRoomTab::WReservationRoomTab(QWidget *parent) :
         }
     });
     connect(ui->leRoomCode, &EQLineEdit::focusOut, [this]() {
-        checkDatesCross();
+        applyRoomCode();
     });
     ui->cbArrangment->setIndexForData(fPreferences.getDb(def_room_arrangement).toInt());
     ui->wmodified->setVisible(false);
@@ -126,13 +126,15 @@ bool WReservationRoomTab::check(int room, const QDate &start, const QDate &end, 
         return true;
     }
     fDD[":f_room"] = room;
-    fDD[":f_s1"] = 1;
-    fDD[":f_s2"] = 2;
-    fDD[":f_s3"] = 9;
-    fDD[":f_s4"] = 4;
+    fDD[":f_s1"] = RESERVE_CHECKIN;
+    fDD[":f_s2"] = RESERVE_RESERVE;
+    fDD[":f_s3"] = RESERVE_OUTOFINVENTORY;
+    fDD[":f_s4"] = RESERVE_OUTOFROOM;
+    fDD[":f_s5"] = RESERVE_SERVICE;
     fDD[":date"] = WORKING_DATE;
     fDD.exec("select f_id, f_startdate, f_enddate, f_state "
-             "from f_reservation where ((f_state=:f_s1 or f_state=:f_s2) or ((f_state=:f_s3 or f_state=:f_s4) and f_enddate>=:date)) "
+             "from f_reservation where ((f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s5) "
+             "or ((f_state=:f_s3 or f_state=:f_s4) and f_enddate>=:date)) "
              " and f_room=:f_room order by f_startdate ");
     if (fDD.rowCount() == 0) {
         return true;
@@ -232,6 +234,13 @@ bool WReservationRoomTab::save()
     if (ui->leRoomCode->asInt() == 0) {
         if (ui->leReserveCode->asInt() == ROOM_STATE_CHECKIN) {
             message_error(tr("Cannot save reservation. Room code for checkin reservation must be specified"));
+            return false;
+        }
+    }
+    if (ui->leRoomCode->notEmpty() && ui->leRoomCode->asInt() != 0) {
+        CacheRoom room;
+        if (!room.get(ui->leRoomCode->text())) {
+            message_error(tr("Room is not defined"));
             return false;
         }
     }
@@ -998,8 +1007,10 @@ bool WReservationRoomTab::checkIn(QString &errorString)
         error = true;
     }
     CacheRoom cri;
-    cri.get(ui->leRoomCode->text());
-    if (cri.fState() != ROOM_STATE_NONE) {
+    if (!cri.get(ui->leRoomCode->text())) {
+        errorString += tr("Room is not defined");
+        error = true;
+    } else if (cri.fState() != ROOM_STATE_NONE) {
         errorString += tr("Room is not vacant ready");
         error = true;
     }
@@ -1580,7 +1591,7 @@ void WReservationRoomTab::countTotal()
         nights = 1;
     }
     double perNightExtras = ui->leExtraBedAmount->asDouble()
-                            + (ui->sbMealQty->value() * ui->leMealPrice->asDouble());
+                            + ui->leMealPrice->asDouble();
     double roomPerNight;
     double roomTotal;
     if (fHasDailyRoomPrices) {
@@ -1593,7 +1604,7 @@ void WReservationRoomTab::countTotal()
             roomTotal = roomPerNight;
         }
     }
-    ui->lePricePerNight->setDouble(roomPerNight + perNightExtras);
+    ui->lePricePerNight->setDouble(ui->leRooming->asDouble() + perNightExtras);
     double total = roomTotal + perNightExtras * (ui->sbNights->value() > 0 ? ui->sbNights->value() : 1);
     ui->leTotal->setDouble(total);
     switch (ui->cbVAT->asInt()) {
@@ -1817,8 +1828,7 @@ bool WReservationRoomTab::checkDoc(QStringList &errors)
     }
     if (fCardexOk && !ui->leCardexCode->text().isEmpty()) {
         CacheCardex cardex;
-        cardex.get(ui->leCardexCode->text());
-        if (cardex.fBookingRequired() && ui->leBooking->text().isEmpty()) {
+        if (cardex.get(ui->leCardexCode->text()) && cardex.fBookingRequired() && ui->leBooking->text().isEmpty()) {
             temp.append(tr("Booking field is required"));
         }
     }
@@ -1848,26 +1858,20 @@ bool WReservationRoomTab::checkDoc(QStringList &errors)
         temp.append(tr("City ledger is not selected"));
         ui->lbCityLedger->setStyleSheet("color:red");
     }
+    if (ui->leRoomCode->notEmpty() && ui->leRoomCode->asInt() != 0) {
+        CacheRoom room;
+        if (!room.get(ui->leRoomCode->text())) {
+            temp.append(tr("Room is not defined"));
+        }
+    }
     errors.append(temp);
     return temp.count() == 0;
 }
 
 void WReservationRoomTab::setRoom(const QString &code)
 {
-    CacheRoom r;
-    if (!r.get(code)) {
-        return;
-    }
-    ui->leRoomCode->setText(r.fCode());
-    ui->leRoomName->setText(r.fName());
-    if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-        if (fTrackControl->oldValue(ui->leRooming) == ui->leRooming->text()) {
-            ui->leRooming->setText(r.fPrice());
-        }
-    }
-    ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
-    checkDatesCross();
-    emit roomChanged(r.fName(), fTabIndex);
+    ui->leRoomCode->setText(code);
+    applyRoomCode();
 }
 
 void WReservationRoomTab::disconnectSignals()
@@ -2054,31 +2058,11 @@ void WReservationRoomTab::tblGuestChangeInfo(int tag)
 
 void WReservationRoomTab::room(const QString &code)
 {
-    CacheRoom c;
-    if (!c.get(code)) {
-        ui->lbRoom->setPixmap(QPixmap(":/images/question.png"));
-        ui->leRoomName->clear();
-        if (ui->leRoomCode->asInt() > 0) {
-            if (!c.get(ui->leRoomCode->text())) {
-                ui->leRoomCode->clear();
-                ui->lbRoom->setPixmap(QPixmap(":/images/warning.png"));
-            }
-        }
-    }
-    if (c.get(code)) {
-        ui->leRoomCode->setText(c.fCode());
-        ui->leRoomName->setText(c.fName());
-        if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-            if (fTrackControl->oldValue(ui->leRooming) == ui->leRooming->text()) {
-                ui->leRooming->setText(c.fPrice());
-            }
-        }
-        ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
-        checkDatesCross();
-    }
+    ui->leRoomCode->setText(code);
+    applyRoomCode();
 }
 
-void WReservationRoomTab::on_leRoomCode_returnPressed()
+void WReservationRoomTab::applyRoomCode()
 {
     ui->leRoomName->clear();
     if (ui->leRoomCode->asInt() == 0) {
@@ -2088,9 +2072,11 @@ void WReservationRoomTab::on_leRoomCode_returnPressed()
     }
     CacheRoom r;
     if (!r.get(ui->leRoomCode->text())) {
+        ui->leRoomCode->clear();
         ui->lbRoom->setPixmap(QPixmap(":/images/warning.png"));
         return;
     }
+    ui->leRoomCode->setText(r.fCode());
     ui->lbRoom->setPixmap(QPixmap(":/images/ok.png"));
     ui->leRoomName->setText(r.fName());
     if (ui->leReserveCode->asInt() == RESERVE_SERVICE || ui->leReservId->isEmpty()) {
@@ -2100,6 +2086,11 @@ void WReservationRoomTab::on_leRoomCode_returnPressed()
     }
     emit roomChanged(r.fName(), fTabIndex);
     checkDatesCross();
+}
+
+void WReservationRoomTab::on_leRoomCode_returnPressed()
+{
+    applyRoomCode();
 }
 
 void WReservationRoomTab::addGuest(CacheGuest &g, bool log)
@@ -2449,7 +2440,9 @@ void WReservationRoomTab::on_btnAllNation_clicked()
     for (int i = 0; i < ui->tblGuest->rowCount(); i++) {
         if (i == 0) {
             CacheGuest g;
-            g.get(ui->tblGuest->toString(i, 0));
+            if (!g.get(ui->tblGuest->toString(i, 0))) {
+                continue;
+            }
             nation = g.fNatShort();
             continue;
         }

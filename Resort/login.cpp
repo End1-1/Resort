@@ -8,6 +8,7 @@
 #include <QRandomGenerator>
 #include <QShortcut>
 #include "appconfig.h"
+#include "appimages.h"
 #include "appwebsocket.h"
 #include "cachecheckoutinvoice.h"
 #include "cacherights.h"
@@ -108,8 +109,10 @@ void Login::on_btnLogin_clicked()
         fDD.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
 
         if (fDD.nextRow()) {
-            if (Utils::getVersionString(qApp->applicationFilePath()) != fDD.getString(0)) {
-                DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), fDD.getString(0));
+            const QString appVersion = Utils::getVersionString(qApp->applicationFilePath());
+            const QString dbVersion = fDD.getString(0);
+            if (!Utils::versionEqualFirst3(appVersion, dbVersion)) {
+                DlgExitByVersion::exit(appVersion, dbVersion);
                 return;
             }
         }
@@ -271,6 +274,7 @@ void Login::on_btnLogin_clicked()
             fDD.insert("serv_years");
         }
     }
+    AppImages::syncFromDb(fDD);
     AppWebSocket::instance->setServerAddress(conn.dc_broadcast, conn.dc_main_host);
 }
 
@@ -470,6 +474,7 @@ void Login::on_btnLoginPin_clicked()
             fDD.insert("serv_years");
         }
     }
+    AppImages::syncFromDb(fDD);
     accept();
 }
 

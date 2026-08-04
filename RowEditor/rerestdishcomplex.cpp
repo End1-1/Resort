@@ -164,3 +164,5 @@ void RERestDishComplex::countTotal()
     }
     ui->leDishesTotal->setDouble(total);
 }
+
+#undef HINT_MENU

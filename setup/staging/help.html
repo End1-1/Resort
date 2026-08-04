@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>SmartHotel</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<style>
+.re {
+font-size: 12pt;
+font-weight:bold;
+}
+
+.chapter {
+font-size:18pt;
+}
+
+.chapter2{
+font-size:17pt;
+}
+
+.m {
+font-size: 14px;
+font-weight: bold;
+font-style: oblique;
+color: magenta;
+}
+
+.tbl1 {
+border-collapse: collapse;
+}
+
+.tbl1 td  {
+padding: 3px;
+border: 1px solid gray;
+}
+</style>
+</head>
+<body>
+
+<p class="chapter">Reservation</p>
+<ul><li><a href="help.html#ForecastOccupancy">Forecast occupancy / category</a></li></ul>
+<p class="chapter">Analytics</p>
+<ul><li><a href="help.html#AnalyticsStatistics">Statistics</a></li></ul>
+<p class="chapter">Other</p>
+<ul>
+<li><a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a></li>
+<li><a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a></li>
+</ul>
+
+<p class="chapter2">Reservation</p>
+<p class="m" id="ForecastOccupancy">Forecast occupancy / category</p>
+Այս հաշվետվությունը արտացոլում է հյուրանոցի ազատ և ապրող համարների քանակը ըստ կատեգորիաների օրական կտրվացքով։
+<table class="tbl1">
+<tr><td>Date</td><td>Ամսաթիվ</td><tr>
+<tr><td>Tot</td><td>Ընդհանուր համարների քանակ</td><tr>
+<tr><td>CAT1,CAT2...CATn</td><td>Տվյալ օրում զբաղված համարների քանակը ըստ կատեգորիաների, որի մեչ ընդգրկված են ապրող համարները և ամրագրումները։ Այդ թվում ներարված չէ այն ապրող սենյակները, որոնք ազատելու են համարը այդ օրը։ </td><tr>
+<tr><td>Tot/օcc</td><td>Ընդհանուր զբաղբած համարների քանակ</td><tr>
+<tr><td>CAT1,CAT2...CATn</td><td>Տվյալ օրում ազատ համարների քանակը ըստ կատեգորիաների</td><tr>
+<tr><td>Tot/vac</td><td>Ընդհանուր ազատ համարների քանակ</td><tr>
+<tr><td>O/O</td><td>Տվյալ օրում OUT OF ORDER համարների քանակը</td><tr>
+<tr><td>Amount</td><td>Տվյալ օրում զբաղված համարների գների գումար</td><tr>
+<tr><td>O/O</td><td>Տվյալ օրում OUT OF ORDER համարների քանակը</td><tr>
+<tr><td>Avg. rate</td><td>Տվյալ օրում զբաղված համարների միջին գին (Avg. rate = Amount / Tot/occ)։  /</td><tr>
+<tr><td>Per. %</td><td>Տվյալ օրում զբաղվածության տոկոսը։ (Per % = (Tot/Occ + O/O) / Tot * 100)</td><tr>
+</table>
+<p class="chapter2">Analytics</p><hr>
+<p id="AnalyticsStatistics" class="m">Statistics</p>
+<p>Այստեղ գտնվում են մի շարք հաշվետվություններ, որոնք կարելի է ստանալ նշված ամիսների համար։ Պարամետրերում հնարավոր է նշել նաև ցանկացած ժամանակաշրջան, բայց միայն այն անվանումների համար, որոնք վերջանում են '*' նշանով։ Ստորև բացատրվում է, թե ինչպես է տեղի ունենում հաշվարկը։</p>
+<p class="re">Category*</p>
+<table class="tbl1">
+<tr><td>GUEST</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</td><tr></td>
+<tr><td>NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>FREE PAX</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքըզրո է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</tr></td>
+<tr><td>FREE NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրո է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>ROOMING</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների գումարը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>PENALTY</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների գումարը:</tr></td>
+<tr><td>LENGTH OF STAY</td><td> LENGTH OF STAY = (GUEST + FREE PAX) / (NIGHTS + FREE NIGHTS)</tr></td>
+<tr><td>AVG ROOM</td> <td>AVG ROOM = ROOMING / NIGHTS</tr></td>
+</table>
+<br>
+<p class="re" id="CategoryYearly">Category Yearly</p>
+<p>Այս հաշվետվությունը արտացոլում է տարեկան <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների և <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների ընդհանուր գումարը ըստ ամիսների և կատոգորիաների։<p>
+<br>
+<p class="re" id="CategoryOccupancy">Category Occupancy</p>
+<p>Այս հաշվետվությունը արտացոլում է տարեկան համարների զբաղբածությունը ըստ ամիսների և կատոգորիաների։ Յուրաքանչուր սյունը բաժանած է երեք մասի։ Արաջին թիվը - դա ամսվա կտրվացքով համարների քանակն է, երկրորդ թիվը - ամսվա մեջ վաճառված սենյակների քանակն է, հիմնված բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների վրա։ Երորդ թիվը =  վաճառված սենյակների քանակ / համարների քանակ * 100<p>
+<br>
+<p class="re" id="Nationality">Nationality*</p>
+<table class="tbl1">
+<tr><td>GUEST</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</td><tr></td>
+<tr><td>NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>FREE PAX</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքըզրո է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</tr></td>
+<tr><td>FREE NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրո է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>ROOMING</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների գումարը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>PENALTY</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների գումարը:</tr></td>
+<tr><td>LENGTH OF STAY</td><td> LENGTH OF STAY = (GUEST + FREE PAX) / (NIGHTS + FREE NIGHTS)</tr></td>
+<tr><td>AVG ROOM</td> <td>AVG ROOM = ROOMING / NIGHTS</tr></td>
+</table>
+<br>
+<p class="re" id="NationalityYearly">Nationality Yearly</p>
+<p>Այս հաշվետվությունը արտացոլում է տարեկան <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների և <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների ընդհանուր գումարը ըստ ամիսների և կատոգորիաների։<p>
+<br>
+<p class="re" id="Cardex">Cardex*</p>
+<table class="tbl1">
+<tr><td>GUEST</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</td><tr></td>
+<tr><td>NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>FREE PAX</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքըզրո է և վճարման եղանակը COMPLIMENTARY չի, բազմապատկում ենք ամրագրումի մեջ հյուրերի քանակով (Male + Female + Child).</tr></td>
+<tr><td>FREE NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, որոնց արժեքը զրո է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>ROOMING</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների գումարը, որոնց արժեքը զրոից բարձր է և վճարման եղանակը COMPLIMENTARY չի.</tr></td>
+<tr><td>PENALTY</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների գումարը:</tr></td>
+<tr><td>LENGTH OF STAY</td><td> LENGTH OF STAY = (GUEST + FREE PAX) / (NIGHTS + FREE NIGHTS)</tr></td>
+<tr><td>AVG ROOM</td> <td>AVG ROOM = ROOMING / NIGHTS</tr></td>
+</table>
+
+<br>
+<p class="re" id="CardexGroupCategory">Cardex Group / Category**</p>
+<table class="tbl1">
+<tr><td>CATEGORY</td><td>Սենյակների կատեգորիաները</td><tr></td>
+<tr><td>TOTAL</td><td>Նշված ժամանակաշրջանում սենյակների քանակը, որը հնարավոր էր վաճարել</tr></td>
+<tr><td>CO,EM,TA,ID</td><td>Նշված ժամանակաշրջանում  վաճառված գիշերների քանակը, ներառյալ COMPLIMENTARY.</tr></td>
+<tr><td>GUESTS</td><td>Նշված ժամանակաշրջանում հյուրերի քանակը (Male + Female + Child), ներառյալ COMPLIMENTARY.</tr></td>
+<tr><td>NIGHTS</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների քանակը, ներառյալ  COMPLIMENTARY.</tr></td>
+<tr><td>OCC %</td><td>Նշված ժամանակաշրջանում զվաղվածության տոկոսը (NIGHTS / TOTAL * 100)</tr></td>
+<tr><td>ROOMING</td><td>Նշված ժամանակաշրջանում բոլոր <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների գումարը, ներառյալ COMPLIMENTARY.</tr></td>
+<tr><td>AVG ROOMING</td> <td>AVG ROOM = ROOMING / NIGHTS</tr></td>
+</table>
+
+
+<br>
+<p class="re" id="CardexYearly">Cardex Yearly</p>
+<p>Այս հաշվետվությունը արտացոլում է տարեկան <a href="help.html#ROOMINGVOUCHER">ROOMING VOUCHER</a>-ների և <a href="help.html#CANCELATIONVOUCHER">CANCELATION VOUCHER</a>-ների ընդհանուր գումարը ըստ ամիսների և կատոգորիաների։<p>
+<br>
+
+<p class="m">Other</p>
+<p class="re" id="ROOMINGVOUCHER">ROOMING VOUCHER</p>
+<p>ROOMING VOUCHER-ի տակ հասկանում ենք բոլոր վաուչերները, որոնկ կապված են ապրելավարճի հետ․ Նրանց ցանկը կարելի է տեսնել ծրագրում, անցնելով About -> Options</p> 
+<p class="re" id="CANCELATIONVOUCHER">CANCELATION VOUCHER</p>
+<p>CANCELATION VOUCHER-ի տակ հասկանում ենք բոլոր վաուչերները, որոնկ կապված են ամրագրումից հրաժարվելու հետ․ Նրանց ցանկը կարելի է տեսնել ծրագրում, անցնելով About -> Options</p> 
+
+<br>&copy; 2017-2020 v 1.1
+</body>
+</html>

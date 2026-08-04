@@ -77,6 +77,7 @@ int DlgSelector::exec(QStringList &codes, QStringList &names)
     fCodeFilter.clear();
     fFieldFilter.clear();
     fExcludeCodeFilter.clear();
+    fCommonFilter.clear();
     return result;
 }
 

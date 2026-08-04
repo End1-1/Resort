@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>236</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,6 +37,19 @@
      </property>
      <property name="text">
       <string>Post charge</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnRefundVoucher">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Refund</string>
      </property>
     </widget>
    </item>

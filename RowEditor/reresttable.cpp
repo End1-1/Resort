@@ -47,3 +47,5 @@ void RERestTable::on_btnOk_clicked()
     }
     save();
 }
+
+#undef HINT_HALL

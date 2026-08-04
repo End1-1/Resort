@@ -1,176 +1,177 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "logging.h"
-#include "dlghouseitem.h"
-#include "preferences.h"
-#include "login.h"
-#include "appconfig.h"
-#include "loginsettings.h"
-#include "databasesconnections.h"
-#include "fcitytrayledger2.h"
-#include "message.h"
-#include "wmaindesk.h"
-#include "wreportgrid.h"
-#include "fforecastoccupancycategoryreal.h"
-#include "wtaxattack.h"
-#include "fcallrates.h"
-#include "fcanceledreservations.h"
-#include "dlgconfigtaxserver.h"
-#include "freportbypayment.h"
-#include "appwebsocket.h"
-#include "cachetraveline.h"
-#include "fexpectedarrivals2.h"
-#include "wquickroomassignment.h"
-#include "froomcatsale.h"
-#include "fhotelhierarchy.h"
-#include "guestcheckin.h"
-#include "fexpecteddeparturesimple.h"
-#include "dlgquickroomassignment.h"
-#include "dlgexportas.h"
-#include "travelline.h"
-#include "fincompleteguestsnames.h"
-#include "froomstates.h"
-#include "wreportroom.h"
-#include "fexportreservation.h"
-#include "wcardexlist.h"
-#include "fexpectedsimple.h"
-#include "frestguestview.h"
-#include "ftaxreport.h"
-#include "dlgpostcharge.h"
-#include "fcashreportbyitem.h"
-#include "taxhelper.h"
-#include "wquickreservations.h"
-#include "wwelcome.h"
-#include "fhouseitems.h"
-#include "dlgoptions.h"
-#include "fwakeupcall.h"
-#include "wquickcheckout.h"
-#include "dlgtransferanyamount.h"
-#include "favailablerooms.h"
-#include "fbreakfast.h"
-#include "fmonthlyoccperc.h"
-#include "reroominventory.h"
-#include "reroominventorystate.h"
-#include "wroomchart.h"
-#include "froomarrangement.h"
-#include "dlgquickadvance.h"
-#include "fdailytransaction.h"
-#include "dlgexecfailedsqls.h"
-#include "renationalityfile.h"
-#include "fdishes.h"
-#include "dlgexport.h"
-#include "froomstate.h"
-#include "fcladvance.h"
-#include "dlgnotes.h"
-#include "dlgexitbyversion.h"
-#include "fpartnersdebt.h"
-#include "flengthofstay.h"
-#include "wstoreentry.h"
-#include "finhousedetailbalance.h"
-#include "dlgnoshow.h"
-#include "dlgrefundvaucher.h"
-#include "about.h"
-#include "fcitytrayledger.h"
-#include "baseuid.h"
-#include "remodelofcars.h"
-#include "frestsalebystore.h"
-#include "wweb.h"
-#include "dlgcalculateoutputofrestaurant.h"
-#include "wguests.h"
-#include "fcouponstatistics.h"
-#include "ecomboboxcompleter.h"
-#include "fonlinebreakfast.h"
-#include "recarclient.h"
-#include "finhouseguestfuture.h"
-#include "fnoshowcancelationfee.h"
-#include "fnatbyperiod.h"
-#include "wreservations.h"
-#include "dlgutils.h"
-#include "freservebycreate.h"
-#include "wnotes.h"
-#include "reguesttitle.h"
-#include "dlggroupreservationfuck.h"
-#include "wcustomreports.h"
-#include "wcontacts.h"
-#include "wusers.h"
-#include "recardexgroup.h"
-#include "wusersgroups.h"
-#include "rebanquetcomment.h"
-#include "freservegroups.h"
-#include "freservaionremarks.h"
-#include "whotelstatus.h"
-#include "fyearlyfinancialreport.h"
-#include "storedoc.h"
-#include "wroomview.h"
-#include "wremarks.h"
-#include "wreservation.h"
-#include "flistsourcereserve.h"
-#include "vauchers.h"
-#include "wcardex.h"
-#include "cachebasestruct.h"
-#include "fonlinerest.h"
-#include "reresthall.h"
-#include "reresttable.h"
-#include "dlgwelcomebuttonconfig.h"
-#include "rerestmenunames.h"
-#include "wreportssetold.h"
-#include "rerestmenupart.h"
-#include "rerestdishtype.h"
-#include "rerestdish.h"
-#include "recityledger.h"
-#include "rerestdishmod.h"
-#include "rereststore.h"
-#include "rerestprinter.h"
-#include "recreditcard.h"
-#include "fcardexsales.h"
-#include "fdailymovementcommon.h"
-#include "ftrackchanges.h"
-#include "restorepartner.h"
-#include "cacherights.h"
-#include "fcallhistory.h"
-#include "fcityledgerbalance.h"
-#include "dlgadvanceentry.h"
-#include "dlguserpasswords.h"
-#include "reroomcategory.h"
-#include "wglobaldbconfig.h"
-#include "rerestdishcomplex.h"
-#include "reroombed.h"
-#include "reroomcategoryrate.h"
-#include "finvoices.h"
-#include "waccinvoice.h"
-#include "frestauranttotal.h"
-#include "freservationscommon.h"
-#include "fcategorytosell.h"
-#include "recurrency.h"
-#include "fforecastoccupancycategory.h"
-#include "faccmonthlyreport.h"
-#include "dlgtaxprintsetup.h"
-#include "reinvoiceitem.h"
-#include "fcityledgerbalanceextended.h"
-#include "fevents.h"
-#include "fexpectedarrivalsimple.h"
-#include "finhouseguest.h"
-#include "fexpectedarrivals.h"
-#include "dlgdiscount.h"
-#include "wrecheckin.h"
-#include "fcashreportsummary.h"
-#include "dlgreceiptvaucher.h"
-#include "fdailymovement.h"
-#include "fcityledgerdetailedbalance.h"
-#include "fcommonfilterbydate.h"
-#include "fcashreport.h"
-#include "fnousedadvance.h"
-#include "fvauchers.h"
-#include "recomplimentarycomment.h"
-#include "wreportbuilder.h"
-#include "fallguestindaterange.h"
+#include <QDesktopServices>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
-#include <QDir>
-#include <QShortcut>
 #include <QNetworkProxy>
-#include <QDesktopServices>
+#include <QShortcut>
+#include "about.h"
+#include "appconfig.h"
+#include "appwebsocket.h"
+#include "baseuid.h"
+#include "cachebasestruct.h"
+#include "cacherights.h"
+#include "cachetraveline.h"
+#include "databasesconnections.h"
+#include "dlgadvanceentry.h"
+#include "dlgcalculateoutputofrestaurant.h"
+#include "dlgconfigtaxserver.h"
+#include "dlgdiscount.h"
+#include "dlgexecfailedsqls.h"
+#include "dlgexitbyversion.h"
+#include "dlgexport.h"
+#include "dlgexportas.h"
+#include "dlggroupreservationfuck.h"
+#include "dlghouseitem.h"
+#include "dlgnoshow.h"
+#include "dlgnotes.h"
+#include "dlgoptions.h"
+#include "dlgpostcharge.h"
+#include "dlgquickadvance.h"
+#include "dlgquickroomassignment.h"
+#include "dlgreceiptvaucher.h"
+#include "dlgrefundvaucher.h"
+#include "dlgtaxprintsetup.h"
+#include "dlgtransferanyamount.h"
+#include "dlguserpasswords.h"
+#include "dlgutils.h"
+#include "dlgwelcomebuttonconfig.h"
+#include "ecomboboxcompleter.h"
+#include "faccmonthlyreport.h"
+#include "fallguestindaterange.h"
+#include "favailablerooms.h"
+#include "fbreakfast.h"
+#include "fcallhistory.h"
+#include "fcallrates.h"
+#include "fcanceledreservations.h"
+#include "fcardexsales.h"
+#include "fcashreport.h"
+#include "fcashreportbyitem.h"
+#include "fcashreportsummary.h"
+#include "fcategorytosell.h"
+#include "fcityledgerbalance.h"
+#include "fcityledgerbalanceextended.h"
+#include "fcityledgerdetailedbalance.h"
+#include "fcitytrayledger.h"
+#include "fcitytrayledger2.h"
+#include "fcladvance.h"
+#include "fcommonfilterbydate.h"
+#include "fcouponstatistics.h"
+#include "fdailymovement.h"
+#include "fdailymovementcommon.h"
+#include "fdailytransaction.h"
+#include "fdishes.h"
+#include "fevents.h"
+#include "fexpectedarrivals.h"
+#include "fexpectedarrivals2.h"
+#include "fexpectedarrivalsimple.h"
+#include "fexpecteddeparturesimple.h"
+#include "fexpectedsimple.h"
+#include "fexportreservation.h"
+#include "fforecastoccupancycategory.h"
+#include "fhotelhierarchy.h"
+#include "fhouseitems.h"
+#include "fincompleteguestsnames.h"
+#include "finhousedetailbalance.h"
+#include "finhouseguest.h"
+#include "finhouseguestfuture.h"
+#include "finvoices.h"
+#include "flengthofstay.h"
+#include "flistsourcereserve.h"
+#include "fmonthlyoccperc.h"
+#include "fnatbyperiod.h"
+#include "fnoshowcancelationfee.h"
+#include "fnousedadvance.h"
+#include "fonlinebreakfast.h"
+#include "fonlinerest.h"
+#include "fpartnersdebt.h"
+#include "freportbypayment.h"
+#include "freservaionremarks.h"
+#include "freservationscommon.h"
+#include "freservebycreate.h"
+#include "freservegroups.h"
+#include "frestauranttotal.h"
+#include "frestguestview.h"
+#include "frestsalebystore.h"
+#include "froomarrangement.h"
+#include "froomcatsale.h"
+#include "froomstate.h"
+#include "froomstates.h"
+#include "ftaxreport.h"
+#include "ftrackchanges.h"
+#include "fvauchers.h"
+#include "fwakeupcall.h"
+#include "fyearlyfinancialreport.h"
+#include "guestcheckin.h"
+#include "logging.h"
+#include "login.h"
+#include "loginsettings.h"
+#include "message.h"
+#include "preferences.h"
+#include "rebanquetcomment.h"
+#include "recarclient.h"
+#include "recardexgroup.h"
+#include "recomplimentarycomment.h"
+#include "recreditcard.h"
+#include "recurrency.h"
+#include "refiscalmachine.h"
+#include "reimage.h"
+#include "reguesttitle.h"
+#include "reinvoiceitem.h"
+#include "remodelofcars.h"
+#include "renationalityfile.h"
+#include "rerestdish.h"
+#include "rerestdishcomplex.h"
+#include "rerestdishmod.h"
+#include "rerestdishtype.h"
+#include "reresthall.h"
+#include "rerestmenunames.h"
+#include "rerestmenupart.h"
+#include "rerestprinter.h"
+#include "rereststore.h"
+#include "reresttable.h"
+#include "reroombed.h"
+#include "reroomcategory.h"
+#include "reroomcategoryrate.h"
+#include "reroominventory.h"
+#include "reroominventorystate.h"
+#include "restorepartner.h"
+#include "storedoc.h"
+#include "taxhelper.h"
+#include "travelline.h"
+#include "ui_mainwindow.h"
+#include "vauchers.h"
+#include "waccinvoice.h"
+#include "wcardex.h"
+#include "wcardexlist.h"
+#include "wcityledgerlist.h"
+#include "wcontacts.h"
+#include "wcustomreports.h"
+#include "wglobaldbconfig.h"
+#include "wguests.h"
+#include "whotelstatus.h"
+#include "wmaindesk.h"
+#include "wnotes.h"
+#include "wquickcheckout.h"
+#include "wquickreservations.h"
+#include "wquickroomassignment.h"
+#include "wrecheckin.h"
+#include "wremarks.h"
+#include "wreportbuilder.h"
+#include "wreportgrid.h"
+#include "wreportroom.h"
+#include "wreportssetold.h"
+#include "wreservation.h"
+#include "wreservations.h"
+#include "wroomchart.h"
+#include "wroomview.h"
+#include "wstoreentry.h"
+#include "wtaxattack.h"
+#include "wusers.h"
+#include "wusersgroups.h"
+#include "wweb.h"
+#include "wwelcome.h"
 
 MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     QMainWindow(parent),
@@ -447,8 +448,10 @@ void MainWindow::timeout()
         db.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
 
         if(db.nextRow()) {
-            if(Utils::getVersionString(qApp->applicationFilePath()) != db.getString(0)) {
-                DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), db.getString(0));
+            const QString appVersion = Utils::getVersionString(qApp->applicationFilePath());
+            const QString dbVersion = db.getString(0);
+            if(!Utils::versionEqualFirst3(appVersion, dbVersion)) {
+                DlgExitByVersion::exit(appVersion, dbVersion);
             }
         }
     }
@@ -582,7 +585,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionList_of_source_reservation->setVisible(r__(cr__reservatoin_list_of_source));
     ui->actionCategory_to_sell->setVisible(r__(cr__reservation_category_to_sell));
     ui->actionForecast_Occupancy_Category->setVisible(r__(cr__reservation_forecast_occupation));
-    ui->actionForecast_occupancy_by_category->setVisible(r__(cr__reservation_forecast_occupation));
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
@@ -681,6 +683,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionSetup_Tax_Printer->setVisible(r__(cr__setup_tax));
     ui->actionRoom_inventory->setVisible(r__(cr__directory_hotel_room_inventory));
     ui->actionRoom_inventory_states->setVisible(r__(cr__directory_hotel_room_inventory_state));
+    ui->actionImages->setVisible(WORKING_USERGROUP == 1);
     ui->actionNationality_file->setVisible(r__(cr__nationality));
     ui->actionCall_rates->setVisible(r__(cr__call_rate));
     ui->actionArrival_Departures_for_restaurant->setVisible(r__(cr__rest_view_guests));
@@ -1469,42 +1472,7 @@ void MainWindow::on_actionCategory_to_sell_triggered()
 
 void MainWindow::on_actionCity_Ledger_triggered()
 {
-    QList<int> widths;
-    widths << 80
-           << 300
-           << 300
-           << 200
-           << 200
-           << 100
-           << 100
-           << 80
-           ;
-    QStringList fields;
-    fields << "f_id"
-           << "f_name"
-           << "f_address"
-           << "f_phone"
-           << "f_email"
-           << "f_extra1"
-           << "f_extra2"
-           << "f_alwaysinvoice"
-           ;
-    QStringList titles;
-    titles << tr("Code")
-           << tr("Name")
-           << tr("Address")
-           << tr("Phone")
-           << tr("Email")
-           << tr("Extra1")
-           << tr("Extra2")
-           << tr("Always invoice")
-           ;
-    QString title = actionTitle(sender());
-    QString icon = ":/images/currency.png";
-    QString query =
-        "select f_id, f_name, f_address, f_phone, f_email, f_extra1, f_extra2, f_alwaysinvoice from f_city_ledger";
-    WReportGrid *r = addTab<WReportGrid>();
-    r->fullSetup<RECityLedger>(widths, fields, titles, title, icon, query);
+    addTab<WCityLedgerList>();
 }
 
 void MainWindow::on_actionCurrencies_triggered()
@@ -2181,11 +2149,6 @@ void MainWindow::on_actionInhouse_guest_future_triggered()
     FInhouseGuestFuture::openFilterReport<FInhouseGuestFuture, WReportGrid>();
 }
 
-void MainWindow::on_actionForecast_occupancy_by_category_triggered()
-{
-    FForecastOccupancyCategoryReal::openFilterReport<FForecastOccupancyCategoryReal, WReportGrid>();
-}
-
 void MainWindow::on_actionState_of_the_room_triggered()
 {
     FRoomStates::openFilterReport<FRoomStates, WReportGrid>();
@@ -2323,4 +2286,71 @@ void MainWindow::on_actionIncomplete_guests_names_triggered()
 void MainWindow::on_actionArrival_Departures_for_restaurant_triggered()
 {
     FRestGuestView::openFilterReport<FRestGuestView, WReportGrid>();
+}
+
+void MainWindow::on_actionFiscal_machines_triggered()
+{
+    QList<int> widths;
+    widths << 80
+           << 220
+           << 160
+           << 80
+           << 140
+           << 100
+           << 100
+           << 100;
+    QStringList fields;
+    fields << "f_id"
+           << "f_name"
+           << "f_ip"
+           << "f_port"
+           << "f_password"
+           << "f_opcode"
+           << "f_oppin"
+           << "f_extpos";
+    QStringList titles;
+    titles << tr("Code")
+           << tr("Name")
+           << tr("IP address")
+           << tr("Port")
+           << tr("Password")
+           << tr("Operator code")
+           << tr("Operator pin")
+           << tr("Ext pos");
+    QString title = actionTitle(sender());
+    QString icon = ":/images/tax.png";
+    QString query = "select f_id, f_name, f_ip, f_port, f_password, f_opcode, f_oppin, f_extpos from s_tax_map";
+    WReportGrid *r = addTab<WReportGrid>();
+    r->fullSetup<REFiscalMachine>(widths, fields, titles, title, icon, query);
+}
+
+void MainWindow::on_actionImages_triggered()
+{
+    if (WORKING_USERGROUP != 1) {
+        message_error(tr("Access denied"));
+        return;
+    }
+    QList<int> widths;
+    widths << 80
+           << 0
+           << 220
+           << 100;
+    QStringList fields;
+    fields << "f_id"
+           << "f_purpose"
+           << "f_purpose_name"
+           << "f_version";
+    QStringList titles;
+    titles << tr("Code")
+           << tr("Purpose code")
+           << tr("Purpose")
+           << tr("Version");
+    QString title = actionTitle(sender());
+    QString icon = ":/images/window.png";
+    QString query = "select f_id, f_purpose, "
+                    "case f_purpose when 1 then 'Report logo' when 2 then 'Welcome logo' "
+                    "else cast(f_purpose as char) end as f_purpose_name, f_version "
+                    "from f_images order by f_purpose";
+    WReportGrid *r = addTab<WReportGrid>();
+    r->fullSetup<REImage>(widths, fields, titles, title, icon, query);
 }

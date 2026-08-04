@@ -340,7 +340,10 @@ void DlgPaymentsDetails::newPaidRow(int mode)
         amount = 0;
     }
     CachePaymentMode ci;
-    ci.get(mode);
+    if (!ci.get(mode)) {
+        message_error(tr("Payment mode is not defined"));
+        return;
+    }
     QTableWidget *t = side == 0 ? ui->tblGuest : ui->tblCompany;
     int row = t->rowCount();
     t->setRowCount(row + 1);
@@ -749,3 +752,9 @@ void DlgPaymentsDetails::on_btnCPay_clicked()
 {
     newPaidRow(PAYMENT_CPAY);
 }
+
+#undef HINT_CITY_LEDGER
+#undef HINT_CREDIT_CARD
+#undef HINT_REFUND
+#undef HINT_ROOM
+#undef HINT_ACTIVE_ROOM

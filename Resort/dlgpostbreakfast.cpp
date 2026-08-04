@@ -389,3 +389,9 @@ void DlgPostBreakfast::on_leAmount_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
 }
+
+#undef SEL_TABLE
+#undef SEL_DISH
+#undef HINT_PAYMENT
+#undef HINT_DISH
+#undef HINT_HALL

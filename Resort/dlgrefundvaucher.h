@@ -15,6 +15,8 @@ public:
     explicit DlgRefundVaucher(QWidget *parent = nullptr);
     ~DlgRefundVaucher();
     static void refundVaucher(const QString &vaucher, const QString &reserv);
+    static void refundByInvoice(const QString &invoice);
+    virtual void callback(int sel, const QString &code);
 
 private slots:
     void on_btnSave_clicked();
@@ -22,10 +24,12 @@ private slots:
     void on_btnCancel_clicked();
     void on_rgGuest_clicked(bool checked);
     void on_rgCL_clicked(bool checked);
+    void on_leInvoice_returnPressed();
 
 private:
     Ui::DlgRefundVaucher *ui;
     void setReservation(const QString &reserv);
+    bool setInvoice(const QString &invoice);
     void getBalance();
 };
 

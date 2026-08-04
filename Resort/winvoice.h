@@ -30,7 +30,7 @@ protected:
     virtual bool canClose();
 
 private slots:
-    void cacheUpdated(int cache, const QString &id);
+    void cacheUpdated(int cacheId, const QString &id);
     void viewGPOSOrder(const QString &id);
     void on_btnShowLeft_clicked();
     void on_btnShowRight_clicked();

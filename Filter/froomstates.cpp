@@ -66,8 +66,10 @@ void FRoomStates::apply(WReportGrid *rg)
                 .setColumn(450, "", tr("Remarks"))
                 .setColumn(0, "", tr("Dont disturbe"));
     }
-    QString query = "select r.f_state, r.f_id, r.f_short, rs.f_en, "
-            "rn.f_startdate, rn.f_enddate, rn.f_man+rn.f_woman, rn.f_child, "
+    QString query = QStringLiteral(
+            "select r.f_state, r.f_id, r.f_short, rs.f_en, "
+            "date_format(rn.f_startdate, '%1'), date_format(rn.f_enddate, '%1'), "
+            "rn.f_man+rn.f_woman, rn.f_child, "
             "na.f_name, CONCAT(g.f_title, ' ',g.f_firstName, ' ',g.f_lastName) as guest, ca.f_name, "
             "rn.f_remarks, r.f_donotdisturbe "
             "from f_room r "
@@ -76,7 +78,12 @@ void FRoomStates::apply(WReportGrid *rg)
             "left join f_room_state rs on rs.f_id=r.f_state "
             "left join f_nationality na on na.f_short=g.f_nation "
             "left join f_cardex ca on ca.f_cardex=rn.f_cardex "
-            "order by r.f_building, r.f_id ";
+            "order by r.f_building, r.f_id ")
+            .arg(QString(def_date_format)
+                     .replace(QStringLiteral("yyyy"), QStringLiteral("%Y"))
+                     .replace(QStringLiteral("yy"), QStringLiteral("%y"))
+                     .replace(QStringLiteral("MM"), QStringLiteral("%m"))
+                     .replace(QStringLiteral("dd"), QStringLiteral("%d")));
     rg->fModel->setSqlQuery(query);
     rg->fModel->apply(rg);
     for (int i = 0; i < rg->fModel->rowCount(); i++) {

@@ -1,6 +1,10 @@
 #include "tablemodel.h"
 #include "wreportgrid.h"
+#include "defines.h"
 #include <QHeaderView>
+#include <QMetaType>
+#include <QDateTime>
+#include <QTime>
 
 TableModel::TableModel(QTableView *tableView, QTableWidget *tableTotal) :
     QAbstractTableModel(tableView)
@@ -212,17 +216,48 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
     const QVariant &v = fDD.fDbRows.at(fRows.at(index.row())).at(index.column());
     switch (role) {
     case Qt::DisplayRole: {
-        switch (v.type()) {
-        case QVariant::Date:
-            return v.toDate().toString(def_date_format);
-        case QVariant::DateTime:
-            return v.toDateTime().toString(def_date_time_format);
-        case QVariant::Time:
-            return v.toTime().toString("HH:mm:ss");
-        case QVariant::Double:
+        // Always return a string for display — raw QDate from Qt6/MySQL often paints blank.
+        switch (v.typeId()) {
+        case QMetaType::QDate: {
+            const QDate d = v.toDate();
+            return d.isValid() ? d.toString(def_date_format) : QString();
+        }
+        case QMetaType::QDateTime: {
+            const QDateTime dt = v.toDateTime();
+            return dt.isValid() ? dt.toString(def_date_time_format) : QString();
+        }
+        case QMetaType::QTime: {
+            const QTime t = v.toTime();
+            return t.isValid() ? t.toString(def_time_format) : QString();
+        }
+        case QMetaType::Double:
             return float_str(v.toDouble(), 2);
-        default:
-            return v;
+        case QMetaType::QString: {
+            const QString s = v.toString();
+            // Re-format ISO dates coming from DATE_FORMAT/CAST or driver string path
+            if (s.size() >= 10 && s.at(4) == QLatin1Char('-') && s.at(7) == QLatin1Char('-')) {
+                const QDate d = QDate::fromString(s.left(10), Qt::ISODate);
+                if (d.isValid()) {
+                    return d.toString(def_date_format);
+                }
+            }
+            return s;
+        }
+        default: {
+            if (v.canConvert(QMetaType(QMetaType::QDate))) {
+                const QDate d = v.toDate();
+                if (d.isValid()) {
+                    return d.toString(def_date_format);
+                }
+            }
+            if (v.canConvert(QMetaType(QMetaType::QDateTime))) {
+                const QDateTime dt = v.toDateTime();
+                if (dt.isValid()) {
+                    return dt.toString(def_date_time_format);
+                }
+            }
+            return v.toString();
+        }
         }
     }
     case Qt::EditRole:
@@ -409,15 +444,18 @@ void TableModel::searchInTable(const QString &text)
             for (QStringList::const_iterator si = searchList.begin(); si != searchList.end(); si++) {
                 const QVariant &v = row.at(columns.at(j));
                 QString cmp;
-                switch (v.type()) {
-                case QVariant::Double:
+                switch (v.typeId()) {
+                case QMetaType::Double:
                     cmp = QString::number(v.toDouble(), 'f', 2);
                     break;
-                case QVariant::Date:
+                case QMetaType::QDate:
                     cmp = v.toDate().toString(def_date_format);
                     break;
-                case QVariant::DateTime:
+                case QMetaType::QDateTime:
                     cmp = v.toDateTime().toString(def_date_time_format);
+                    break;
+                case QMetaType::QTime:
+                    cmp = v.toTime().toString(def_time_format);
                     break;
                 default:
                     cmp = v.toString();
@@ -472,15 +510,18 @@ void TableModel::searchInTable(const QString &text, int col)
         QList<QVariant> &row = fDD.fDbRows[i];
         const QVariant &v = row.at(col);
         QString cmp;
-        switch (v.type()) {
-        case QVariant::Double:
+        switch (v.typeId()) {
+        case QMetaType::Double:
             cmp = float_str(v.toDouble(), 2);
             break;
-        case QVariant::Date:
+        case QMetaType::QDate:
             cmp = v.toDate().toString(def_date_format);
             break;
-        case QVariant::DateTime:
+        case QMetaType::QDateTime:
             cmp = v.toDateTime().toString(def_date_time_format);
+            break;
+        case QMetaType::QTime:
+            cmp = v.toTime().toString(def_time_format);
             break;
         default:
             cmp = v.toString();
@@ -510,15 +551,18 @@ void TableModel::searchInTableEqual(const QString &text, int col)
         QList<QVariant> &row = fDD.fDbRows[i];
         const QVariant &v = row.at(col);
         QString cmp;
-        switch (v.type()) {
-        case QVariant::Double:
+        switch (v.typeId()) {
+        case QMetaType::Double:
             cmp = float_str(v.toDouble(), 2);
             break;
-        case QVariant::Date:
+        case QMetaType::QDate:
             cmp = v.toDate().toString(def_date_format);
             break;
-        case QVariant::DateTime:
+        case QMetaType::QDateTime:
             cmp = v.toDateTime().toString(def_date_time_format);
+            break;
+        case QMetaType::QTime:
+            cmp = v.toTime().toString(def_time_format);
             break;
         default:
             cmp = v.toString();

@@ -9,6 +9,10 @@ class WCardexList : public WReportGrid
 public:
     WCardexList(QWidget *parent = 0);
     virtual void setupTab();
+
+private slots:
+    void exportToJson();
+    void importFromJson();
 };
 
 #endif // WCARDEX_H

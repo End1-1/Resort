@@ -363,20 +363,19 @@ void FCityLedgerDetailedBalance::open()
 void FCityLedgerDetailedBalance::applyNorm(WReportGrid *rg)
 {
     //Multiple by -1 need for backward compatibity previouse report
-    QString query =
-        "select '', :d1, 'BROUGHT FORWARD',  "
-        "sum(f_amountamd*f_sign)*-1, '0' as dd, '0' as cc, '-', '-', '-', '00:00:00' "
-        "from m_register  "
-        "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
-        "and f_wdate < :d1 "
-        "union "
-        "select m.f_id, m.f_wdate, concat(f_finalname, ' ', coalesce(rr.f_remarks, '')), f_amountamd*f_sign*-1,"
-        " '0' as dd, '0' as cc, m.f_room, m.f_id, f_inv, f_time "
-        "from m_register m "
-        "left join f_reservation rr on rr.f_invoice=m.f_inv "
-        "where f_finance=1 and m.f_cityledger=:cl and f_canceled=0 "
-        "and f_wdate between :d1 and :d2 :group "
-        "order by 2, 10 ";
+    QString query = "select '', :d1, 'BROUGHT FORWARD',  "
+                    "sum(f_amountamd*f_sign)*-1, '0' as dd, '0' as cc, '-', '-', '-', '00:00:00' "
+                    "from m_register  "
+                    "where f_finance=1 and f_cityledger=:cl and f_canceled=0 "
+                    "and f_wdate < :d1 "
+                    "union "
+                    "select m.f_id, m.f_wdate, f_finalname, f_amountamd*f_sign*-1,"
+                    " '0' as dd, '0' as cc, m.f_room, m.f_id, f_inv, f_time "
+                    "from m_register m "
+                    "left join f_reservation rr on rr.f_invoice=m.f_inv "
+                    "where f_finance=1 and m.f_cityledger=:cl and f_canceled=0 "
+                    "and f_wdate between :d1 and :d2 :group "
+                    "order by 2, 10 ";
     query.replace(":d1", ui->deFrom->dateMySql())
          .replace(":d2", ui->deTo->dateMySql())
          .replace(":cl", QString::number(ui->leCLCode->text().toInt()));

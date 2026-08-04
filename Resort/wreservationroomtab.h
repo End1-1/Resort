@@ -141,6 +141,7 @@ private:
     void countTotal();
     void setEarlyCheckIn(bool v);
     void checkDatesCross();
+    void applyRoomCode();
     void loadDailyRoomPrices();
     void setGroupBoxesEnabled(bool v);
     void saveVaucher(int createUser);

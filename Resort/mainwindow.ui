@@ -36,19 +36,19 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::FocusPolicy::NoFocus</enum>
       </property>
       <property name="tabPosition">
-       <enum>QTabWidget::North</enum>
+       <enum>QTabWidget::TabPosition::North</enum>
       </property>
       <property name="tabShape">
-       <enum>QTabWidget::Rounded</enum>
+       <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
        <number>-1</number>
       </property>
       <property name="elideMode">
-       <enum>Qt::ElideNone</enum>
+       <enum>Qt::TextElideMode::ElideNone</enum>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -105,7 +105,7 @@
      <x>0</x>
      <y>0</y>
      <width>1375</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuWorking">
@@ -140,7 +140,6 @@
     <addaction name="actionReservation_groups"/>
     <addaction name="actionCategory_to_sell"/>
     <addaction name="actionForecast_Occupancy_Category"/>
-    <addaction name="actionForecast_occupancy_by_category"/>
     <addaction name="actionList_of_source_reservation"/>
     <addaction name="actionChanges_of_states_of_room"/>
     <addaction name="actionCancelation_No_show_fees"/>
@@ -196,6 +195,8 @@
     <addaction name="actionAccounts_2"/>
     <addaction name="actionRoom_inventory"/>
     <addaction name="actionRoom_inventory_states"/>
+    <addaction name="actionFiscal_machines"/>
+    <addaction name="actionImages"/>
    </widget>
    <widget class="QMenu" name="menuApplication">
     <property name="title">
@@ -1560,11 +1561,6 @@
     <string>Inhouse guest, future</string>
    </property>
   </action>
-  <action name="actionForecast_occupancy_by_category">
-   <property name="text">
-    <string>Forecast occupancy by category</string>
-   </property>
-  </action>
   <action name="actionState_of_the_room">
    <property name="icon">
     <iconset resource="res.qrc">
@@ -1650,6 +1646,24 @@
    </property>
    <property name="text">
     <string>Arrival / Departures for restaurant</string>
+   </property>
+  </action>
+  <action name="actionFiscal_machines">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/refund.png</normaloff>:/images/refund.png</iconset>
+   </property>
+   <property name="text">
+    <string>Fiscal machines</string>
+   </property>
+  </action>
+  <action name="actionImages">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/window.png</normaloff>:/images/window.png</iconset>
+   </property>
+   <property name="text">
+    <string>Images</string>
    </property>
   </action>
  </widget>

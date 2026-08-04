@@ -16,6 +16,10 @@
 
 int main(int argc, char *argv[])
 {
+    // MariaDB Connector/C 3.4+ enables TLS peer verification by default.
+    // Without this, open() fails against servers that do not support SSL.
+    qputenv("MARIADB_TLS_DISABLE_PEER_VERIFICATION", "1");
+
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling); // Включить масштабирование DPI
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 #ifndef QT_DEBUG

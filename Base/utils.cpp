@@ -10,6 +10,23 @@ QSettings __s("SmartHotel", "SmartHotel");
 
 namespace Utils {
 
+static bool parseVersionFirst3(const QString &v, int &a, int &b, int &c)
+{
+    // Accept both "1.8.24.946" and "1,8,24,946" (and minor whitespace noise)
+    QString s = v;
+    s = s.trimmed();
+    s.replace(',', '.');
+    const QStringList parts = s.split('.', Qt::SkipEmptyParts);
+    if (parts.size() < 3) {
+        return false;
+    }
+    bool ok1 = false, ok2 = false, ok3 = false;
+    a = parts.at(0).trimmed().toInt(&ok1);
+    b = parts.at(1).trimmed().toInt(&ok2);
+    c = parts.at(2).trimmed().toInt(&ok3);
+    return ok1 && ok2 && ok3;
+}
+
 void tableAppendRowData(QTableWidget *tw, const QList<QVariant> &data, int role)
 {
     int rowCount = tw->rowCount();
@@ -54,6 +71,19 @@ QString getVersionString(QString fName)
             QString::number((lpBuffer->dwFileVersionLS) & 0xffff );
     }
     return "";
+}
+
+bool versionEqualFirst3(const QString &v1, const QString &v2)
+{
+    int a1 = 0, b1 = 0, c1 = 0;
+    int a2 = 0, b2 = 0, c2 = 0;
+    const bool p1 = parseVersionFirst3(v1, a1, b1, c1);
+    const bool p2 = parseVersionFirst3(v2, a2, b2, c2);
+    if (!p1 || !p2) {
+        // Keep legacy behavior if version format is unexpected
+        return v1 == v2;
+    }
+    return a1 == a2 && b1 == b2 && c1 == c2;
 }
 
 void setupTableFullColumnWidth(QTableWidget *tw, int colWidth, int elements)

@@ -5,13 +5,12 @@
 #include "cacheinstance.h"
 #include <QMap>
 
-#define cache(x) CacheOne::getCache(x)
-
 class CacheOne : public QObject
 {
     Q_OBJECT
 public:
     CacheOne();
+    static void reloadAll();
     static void clearAll();
     static CacheInstance *getCache(int id);
 
@@ -21,5 +20,10 @@ protected:
 public slots:
     void updateCache(int cacheId, const QString &id);
 };
+
+inline CacheInstance *cache(int id)
+{
+    return CacheOne::getCache(id);
+}
 
 #endif // CACHEONE_H

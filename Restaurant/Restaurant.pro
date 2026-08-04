@@ -152,6 +152,7 @@ SOURCES += main.cpp\
     ../Cache/cachecardexgroup.cpp \
     ../Cache/cachecashdesk.cpp \
     ../Cache/cachecheckoutinvoice.cpp \
+    ../Cache/cacherefundinvoice.cpp \
     ../Cache/cachedebtcostumer.cpp \
     ../Cache/cachedishstate.cpp \
     ../Cache/cachegroupreservations.cpp \
@@ -286,6 +287,7 @@ HEADERS  += rface.h \
     ../Base/doubledatabase.h \
     ../Cache/cacheinstance.h \
     ../Cache/cachecheckoutinvoice.h \
+    ../Cache/cacherefundinvoice.h \
     ../Cache/cachedebtcostumer.h \
     ../Cache/cachedishstate.h \
     ../Cache/cachegroupreservations.h \
@@ -349,4 +351,5 @@ RESOURCES += \
 
 DISTFILES += \
     stylesheet.qss
+
 

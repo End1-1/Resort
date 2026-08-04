@@ -61,6 +61,7 @@ namespace Utils {
     QString stringListToString(const QStringList &lst);
     QString intListToString(const QList<int> &lst);
     QString getVersionString(QString fName);
+    bool versionEqualFirst3(const QString &v1, const QString &v2);
     QString hostName();
     void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool append = false);
     inline QString variantToString(const QVariant &v)

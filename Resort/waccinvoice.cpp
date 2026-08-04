@@ -15,6 +15,9 @@
 #include "dlgmovetocl.h"
 #include "dlgpostcharge.h"
 #include "dlgprinttaxsideoption.h"
+#include "dlgrefundvaucher.h"
+#include "dlginvoicetocl.h"
+#include "message.h"
 #include "dlgremotinvoices.h"
 #include "dlgreservationguests.h"
 #include "dlgreserveshortinfo.h"
@@ -56,6 +59,7 @@ WAccInvoice::WAccInvoice(QWidget *parent) :
     ui->btnPostingCharges->setVisible(r__(cr__super_correction) && false);
     ui->btnMoveItem->setVisible(r__(cr__super_correction));
     ui->btnNewVaucher->setVisible(r__(cr__super_correction));
+    ui->btnNewRefuyndVoucher->setVisible(r__(cr__cashier_refund));
     ui->btnChangeRemarks->setVisible(r__(cr__super_correction));
     ui->btnEditReserv->setVisible(r__(cr__super_correction));
     ui->btnEditRowVaucher->setVisible(r__(cr__super_correction));
@@ -315,17 +319,13 @@ void WAccInvoice::viewEntries()
         ui->tblData->setItem(row, 3, Utils::tableItem(rowData.at(3)));
         //item - 4
         ui->tblData->setItem(row, 4, Utils::tableItem(rowData.at(4)));
-        //debit, depended on second field - 5
+        //debit/credit: charges (sign=1) in col 5, payments and credits (sign!=1) in col 6
         if (rowData.at(1).toInt() == 1) {
             ui->tblData->setItem(row, 5, Utils::tableItem(rowData.at(5)));
+            ui->tblData->setItem(row, 6, Utils::tableItem(0));
         } else {
             ui->tblData->setItem(row, 5, Utils::tableItem(0));
-        }
-        //credit, depended on second field - 6
-        if (rowData.at(1).toInt() == -1) {
             ui->tblData->setItem(row, 6, Utils::tableItem(rowData.at(5)));
-        } else {
-            ui->tblData->setItem(row, 6, Utils::tableItem(0));
         }
         //vat - 7
         ui->tblData->setItem(row, 7, Utils::tableItem(rowData.at(6)));
@@ -404,7 +404,10 @@ void WAccInvoice::correctCOCL()
             fDD[":f_creditCard"] = 0;
             fDD[":f_cityLedger"] = cl;
             CacheCityLedger cc;
-            cc.get(cl);
+            if (!cc.get(cl)) {
+                message_error(tr("Wrong cityledger code. Contact with application developer."));
+                return;
+            }
             fDD[":f_paymentComment"] = cc.fName();
             fDD[":f_dc"] = "DEBIT";
             fDD[":f_sign"] = 1;
@@ -580,7 +583,11 @@ void WAccInvoice::on_btnTaxPrint_clicked()
                 continue;
             }
             QString qty = "1";
-            QString price = QString::number(ui->tblData->toDouble(i, 5), 'f', 2);
+            double amount = ui->tblData->toDouble(i, 5) + ui->tblData->toDouble(i, 6);
+            if (amount < 0.001) {
+                continue;
+            }
+            QString price = QString::number(amount, 'f', 2);
             if (c.fCode() == fPreferences.getDb(def_auto_breakfast_id).toString()) {
                 DoubleDatabase drb;
                 drb[":f_id"] = ui->tblData->toString(i, 0);
@@ -664,7 +671,7 @@ void WAccInvoice::on_btnTaxBack_clicked()
             QList<QVariant> row;
             row << ui->tblData->toString(i, 0)
                 << ui->tblData->toString(i, 4)
-                << (ui->tblData->toInt(i, 9) == 0 ? ui->tblData->toDouble(i, 5) : ui->tblData->toDouble(i, 6))
+                << (ui->tblData->toDouble(i, 5) + ui->tblData->toDouble(i, 6))
                 << ui->tblData->toString(i, 10)
                 << ""
                 << "";
@@ -1087,3 +1094,29 @@ void WAccInvoice::on_btnChangeRemarks_clicked()
         }
     }
 }
+
+void WAccInvoice::on_btnNewRefuyndVoucher_clicked()
+{
+    if (ui->leInvoice->isEmpty()) {
+        message_error(tr("Invoice is not selected"));
+        return;
+    }
+    DlgRefundVaucher::refundByInvoice(ui->leInvoice->text());
+    load(ui->leInvoice->text());
+}
+
+void WAccInvoice::on_btnCL_clicked()
+{
+    if (ui->leInvoice->isEmpty()) {
+        message_error(tr("Invoice is not selected"));
+        return;
+    }
+    if (DlgInvoiceToCL::transferDebt(ui->leInvoice->text(), this)) {
+        correctCOCL();
+        load(ui->leInvoice->text());
+    }
+}
+
+#undef sel_invoice
+#undef sel_cardex
+#undef sel_vat_mode

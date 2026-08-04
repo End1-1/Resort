@@ -28,13 +28,13 @@ public:
     CacheInstance *fInstance;
     static QDate fWorkingDate;
     void reInit();
-    inline QVariant getVariant(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]]; }
-    inline QString getString(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toString(); }
-    inline QString getString(int column) { return fData[column].toString(); }
-    inline int getInt(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toInt(); }
-    inline QDate getDate(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toDate(); }
-    inline QDate getDate(int column) { return fData[column].toDate(); }
-    inline double getDouble(const QString &field) { return fData[fInstance->fColumnNameMap[field.toLower()]].toDouble(); }
+    QVariant getVariant(const QString &field) const;
+    QString getString(const QString &field) const;
+    QString getString(int column) const;
+    int getInt(const QString &field) const;
+    QDate getDate(const QString &field) const;
+    QDate getDate(int column) const;
+    double getDouble(const QString &field) const;
     virtual bool get(const QString &code);
     bool get(int code);
     void getSelectorWidths(int count, ...);
@@ -46,6 +46,9 @@ public:
     void setValue(const QString &field, const QVariant &value);
     virtual void postProcess(CacheInstance *ci);
     virtual void postUpdate(CacheInstance *ci, const QString &id);
+
+protected:
+    int columnIndex(const QString &field) const;
 };
 
 #endif // CACHEBASESTRUCT_H

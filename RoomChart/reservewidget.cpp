@@ -227,11 +227,21 @@ void ReserveWidget::on_btnCancel_clicked()
 
 void ReserveWidget::setSize()
 {
-    int div = 1;
-    if (fReservation.hasNext()) {
-        div = 2;
+    int width;
+    if (fReservation.fState() == RESERVE_SERVICE) {
+        // Half-day on both ends: start afternoon, end morning (like a normal stay handoff)
+        if (fDateEnd > fDateStart) {
+            width = COLUMN_WIDTH * fDateStart.daysTo(fDateEnd);
+        } else {
+            width = COLUMN_WIDTH / 2;
+        }
+    } else {
+        int div = 1;
+        if (fReservation.hasNext()) {
+            div = 2;
+        }
+        width = ((fDateStart.daysTo(fDateEnd)) * COLUMN_WIDTH) + (COLUMN_WIDTH / div);
     }
-    int width = ((fDateStart.daysTo(fDateEnd)) * COLUMN_WIDTH) + (COLUMN_WIDTH / div);
     setMinimumSize(width, ROW_HEIGHT);
     setMaximumSize(width, ROW_HEIGHT);
 }

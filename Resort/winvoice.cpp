@@ -21,6 +21,7 @@
 #include "dlgprintrandomtax.h"
 #include "dlgprinttaxsideoption.h"
 #include "dlgreceiptvaucher.h"
+#include "dlgreservationdateprices.h"
 #include "dlgreserveshortinfo.h"
 #include "dlgselectfiscalmachin.h"
 #include "dlgtaxback.h"
@@ -85,6 +86,17 @@ WInvoice::WInvoice(QWidget *parent) :
 
         DlgReserveShortInfo::loadShortInfo(ui->leReserveID->text());
         loadInvoice(ui->leInvoice->text());
+    });
+    connect(ui->leRoomRate, &EQLineEdit::customButtonClicked, [this](bool v) {
+        Q_UNUSED(v);
+        if (ui->leReserveID->isEmpty()) {
+            return;
+        }
+        DlgReservationDatePrices::view(ui->leReserveID->text(),
+                                       ui->deCheckin->date(),
+                                       ui->deDeparture->date(),
+                                       ui->leRoomRate->asDouble(),
+                                       this);
     });
     QFont font(qApp->font());
     font.setPointSize(font.pointSize() + 2);
@@ -164,7 +176,7 @@ void WInvoice::loadInvoice(const QString &id)
     ui->leInvoice->setText(id);
     QString query = "select rs.f_invoice, rs.f_id, 'invoice date', rs.f_room, "
                     "r.f_short as f_room_short, concat(g.f_firstName, ' ', g.f_lastName) as f_guest_name, "
-                    "g.f_passport, rs.f_cardex, c.f_name, rs.f_pricePerNight, rs.f_remarks, rs.f_startDate, rs.f_endDate,"
+                    "g.f_passport, rs.f_cardex, c.f_name, coalesce(rp.f_price, rs.f_pricePerNight), rs.f_remarks, rs.f_startDate, rs.f_endDate,"
                     "rs.f_man+rs.f_woman+rs.f_child, gs.total, rs.f_vatMode, v.f_" + def_lang + ", "
                     "rs.f_checkInTime, 0 as i_f_prepaid, ucheckin.f_username, rs.f_cityLedger, cl.f_name, "
                     "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking, r.f_donotdisturbe, rs.f_version "
@@ -177,6 +189,7 @@ void WInvoice::loadInvoice(const QString &id)
                     "left join (select rg.f_reservation, count(f_id) as total from f_reservation_guests rg group by 1) gs on gs.f_reservation=rs.f_id "
                     "left join f_city_ledger cl on cl.f_id=rs.f_cityLedger "
                     "left join f_room_arrangement ra on ra.f_id=rs.f_arrangement "
+                    "left join f_reservation_prices rp on rp.f_reservation=rs.f_id and rp.f_date=" + ap(WORKING_DATE.toString(def_mysql_date_format)) + " "
                     "left join (select f_inv, count(f_id) as ntotal from m_register where f_canceled=0 and f_source='RM' and f_inv=" + ap(
                         ui->leInvoice->text()) + ") nights on nights.f_inv=rs.f_invoice "
                              "where rs.f_invoice=" + ap(id);
@@ -423,9 +436,9 @@ bool WInvoice::canClose()
     return canClose;
 }
 
-void WInvoice::cacheUpdated(int cache, const QString &id)
+void WInvoice::cacheUpdated(int cacheId, const QString &id)
 {
-    switch(cache) {
+    switch(cacheId) {
     case cid_active_room: {
         if(id == ui->leRoomCode->text()) {
             if(!cache(cid_active_room)->fStruct->get(id)) {
@@ -779,7 +792,10 @@ void WInvoice::on_btnCheckout_clicked()
         fDD[":f_creditCard"] = 0;
         fDD[":f_cityLedger"] = cityCode;
         CacheCityLedger cc;
-        cc.get(cityCode);
+        if (!cc.get(cityCode)) {
+            message_error(tr("Wrong cityledger code. Contact with application developer."));
+            return;
+        }
         fDD[":f_paymentComment"] = cc.fName();
         fDD[":f_dc"] = "DEBIT";
         fDD[":f_sign"] = 1;
@@ -1791,7 +1807,7 @@ void WInvoice::on_btnDoNotDisturbe_clicked(bool checked)
 
 void WInvoice::on_btnResetAdvanceAmount_clicked()
 {
-    if(ui->lePrepaid->asDouble() < 0.01) {
+    if(qAbs(ui->lePrepaid->asDouble()) < 0.01) {
         return;
     }
 

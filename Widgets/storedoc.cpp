@@ -495,3 +495,7 @@ void StoreDoc::on_btnPrintDoc_clicked()
 {
     PPrintStoreDoc::print(ui->leDocNumber->text());
 }
+
+#undef HINT_DOC_TYPE
+#undef HINT_PARTNER
+#undef HINT_DISH

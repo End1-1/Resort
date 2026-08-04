@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
 
     def_station = "Restaurant: ";
     logEnabled = true;
+    qputenv("MARIADB_TLS_DISABLE_PEER_VERIFICATION", "1");
     QApplication a(argc, argv);
 
     QFile styleSheet(":/files/stylesheet.qss");

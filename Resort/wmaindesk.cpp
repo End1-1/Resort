@@ -712,9 +712,7 @@ void WMainDesk::on_btnColors_clicked()
 
 void WMainDesk::on_btnRefreshChart_clicked()
 {
-    CacheOne::clearAll();
-    connect(cache(cid_reservation), SIGNAL(updated(int, QString)), this, SLOT(reservationCacheUpdated(int, QString)));
-    connect(cache(cid_room), SIGNAL(updated(int, QString)), this, SLOT(roomCacheUpdated(int, QString)));
+    CacheOne::reloadAll();
     on_btnClearFilter_clicked();
 }
 

@@ -1,11 +1,12 @@
 #include "pimage.h"
+#include "appimages.h"
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
 PImage::PImage(const QString &fileName, QGraphicsItem *parent) :
     QGraphicsItem(parent)
 {
-    fImage = new QImage(fileName);
+    fImage = new QImage(AppImages::resolveLogoPath(fileName));
 }
 
 PImage::~PImage()

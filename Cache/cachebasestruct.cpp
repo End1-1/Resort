@@ -37,14 +37,74 @@ bool CacheBaseStruct::get(const QString &code)
     fInstance = cache(fCacheId);
     if (!fInstance) {
         fValid = false;
+        fData.clear();
         return false;
     }
     if (!fInstance->fRows.contains(code)) {
         fValid = false;
+        fData.clear();
         return false;
     }
     fData = fInstance->fRows[code];
-    return fData.count() > 0;
+    fValid = fData.count() > 0;
+    return fValid;
+}
+
+int CacheBaseStruct::columnIndex(const QString &field) const
+{
+    if (!fValid || !fInstance) {
+        return -1;
+    }
+    const auto it = fInstance->fColumnNameMap.constFind(field.toLower());
+    if (it == fInstance->fColumnNameMap.constEnd()) {
+        return -1;
+    }
+    return it.value();
+}
+
+QVariant CacheBaseStruct::getVariant(const QString &field) const
+{
+    int col = columnIndex(field);
+    if (col < 0 || col >= fData.size()) {
+        return QVariant();
+    }
+    return fData.at(col);
+}
+
+QString CacheBaseStruct::getString(const QString &field) const
+{
+    return getVariant(field).toString();
+}
+
+QString CacheBaseStruct::getString(int column) const
+{
+    if (column < 0 || column >= fData.size()) {
+        return QString();
+    }
+    return fData.at(column).toString();
+}
+
+int CacheBaseStruct::getInt(const QString &field) const
+{
+    return getVariant(field).toInt();
+}
+
+QDate CacheBaseStruct::getDate(const QString &field) const
+{
+    return getVariant(field).toDate();
+}
+
+QDate CacheBaseStruct::getDate(int column) const
+{
+    if (column < 0 || column >= fData.size()) {
+        return QDate();
+    }
+    return fData.at(column).toDate();
+}
+
+double CacheBaseStruct::getDouble(const QString &field) const
+{
+    return getVariant(field).toDouble();
 }
 
 bool CacheBaseStruct::get(int code)
@@ -85,19 +145,21 @@ void CacheBaseStruct::initSelector()
 bool CacheBaseStruct::selector(QStringList &codes, QStringList &names, bool multicheck)
 {
     fSelector->fMultiCheck = multicheck;
-    if (fFlagUpdated) {
-        fFlagUpdated = false;
-        fSelector->setData(fInstance->fRows);
-    }
+    fSelector->setData(fInstance->fRows);
+    fFlagUpdated = false;
     return fSelector->exec(codes, names) == QDialog::Accepted;
 }
 
 void CacheBaseStruct::setValue(const QString &field, const QVariant &value)
 {
-    if (fData.count() == 0) {
+    if (!fValid || !fInstance || fData.isEmpty()) {
         return;
     }
-    fData[fInstance->fColumnNameMap[field]] = value;
+    int col = columnIndex(field);
+    if (col < 0) {
+        return;
+    }
+    fData[col] = value;
 }
 
 void CacheBaseStruct::postProcess(CacheInstance *ci)

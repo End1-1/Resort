@@ -9,6 +9,8 @@ DlgExitByVersion::DlgExitByVersion(QWidget *parent) :
     ui(new Ui::DlgExitByVersion)
 {
     ui->setupUi(this);
+    ui->lbMessage->setTextFormat(Qt::RichText);
+    ui->lbMessage->setOpenExternalLinks(true);
     fCounter = 15;
     connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     fTimer.start(1000);
@@ -53,8 +55,19 @@ void DlgExitByVersion::on_btnClose_clicked()
 
 void DlgExitByVersion::setVersions(const QString &appVersion, const QString &dbVersion)
 {
+    QString verFile = dbVersion.trimmed();
+    verFile.replace(',', '_');
+    verFile.replace('.', '_');
+    verFile.replace(' ', QString());
+    const QString downloadUrl =
+        QStringLiteral("https://www.picasso.am/files/resort/setup_resort_%1.exe").arg(verFile);
     ui->lbMessage->setText(
-        QString("Application version %1 <br> is not compatible with database version %2 <br> <h1> Update your application </h1>")
+        QString("Application version %1 <br>"
+                "is not compatible with database version %2 <br>"
+                "<h1>Update your application</h1>"
+                "<br>"
+                "<a href=\"%3\">Download new version</a>")
             .arg(appVersion)
-            .arg(dbVersion));
+            .arg(dbVersion)
+            .arg(downloadUrl));
 }

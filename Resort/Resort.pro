@@ -52,6 +52,7 @@ SOURCES += main.cpp\
     dlghdmviewer.cpp \
     dlghouseitemonoffwidget.cpp \
     dlginvoicepaymentoptions.cpp \
+    dlginvoicetocl.cpp \
     dlgmovetocl.cpp \
     dlgofferinvoiceextra.cpp \
     dlgoptions.cpp \
@@ -111,6 +112,7 @@ SOURCES += main.cpp\
     ../Base/base.cpp \
     ../Base/basedialog.cpp \
     ../Base/defines.cpp \
+    ../Base/appimages.cpp \
     ../Base/preferences.cpp \
     ../Base/utils.cpp \
     wusers.cpp \
@@ -185,6 +187,8 @@ SOURCES += main.cpp\
     ../Cache/cachecreditcard.cpp \
     ../RowEditor/recreditcard.cpp \
     ../Filter/fcityledgerbalance.cpp \
+    ../RowEditor/refiscalmachine.cpp \
+    ../RowEditor/reimage.cpp \
     dlguserpasswords.cpp \
     dlgadvanceentry.cpp \
     ../Cache/cacheredreservation.cpp \
@@ -294,6 +298,7 @@ SOURCES += main.cpp\
     dlgutils.cpp \
     dlgdishhistory.cpp \
     ../Cache/cachecheckoutinvoice.cpp \
+    ../Cache/cacherefundinvoice.cpp \
     dlgremotinvoices.cpp \
     dlgopengrouporsingle.cpp \
     dlgreserveconfirmstatus.cpp \
@@ -434,8 +439,8 @@ SOURCES += main.cpp\
     ../Controls/radiogroupwidget.cpp \
     ../Filter/fexpectedarrivals2.cpp \
     ../Filter/fcitytrayledger2.cpp \
-    ../Filter/fcitytrayledger2.cpp \
-    ../Filter/wcardexlist.cpp
+    ../Filter/wcardexlist.cpp \
+    ../Filter/wcityledgerlist.cpp
 
 HEADERS  += mainwindow.h \
     ../Base/dlgexitbyversion.h \
@@ -474,6 +479,7 @@ HEADERS  += mainwindow.h \
     dlghdmviewer.h \
     dlghouseitemonoffwidget.h \
     dlginvoicepaymentoptions.h \
+    dlginvoicetocl.h \
     dlgmovetocl.h \
     dlgofferinvoiceextra.h \
     dlgoptions.h \
@@ -533,6 +539,7 @@ HEADERS  += mainwindow.h \
     ../Base/base.h \
     ../Base/basedialog.h \
     ../Base/defines.h \
+    ../Base/appimages.h \
     ../Base/preferences.h \
     ../Base/utils.h \
     wusers.h \
@@ -608,6 +615,8 @@ HEADERS  += mainwindow.h \
     ../Cache/cachecreditcard.h \
     ../RowEditor/recreditcard.h \
     ../Filter/fcityledgerbalance.h \
+    ../RowEditor/refiscalmachine.h \
+    ../RowEditor/reimage.h \
     dlguserpasswords.h \
     dlgadvanceentry.h \
     ../Cache/cacheredreservation.h \
@@ -718,6 +727,7 @@ HEADERS  += mainwindow.h \
     dlgutils.h \
     dlgdishhistory.h \
     ../Cache/cachecheckoutinvoice.h \
+    ../Cache/cacherefundinvoice.h \
     dlgremotinvoices.h \
     dlgopengrouporsingle.h \
     dlgreserveconfirmstatus.h \
@@ -859,8 +869,8 @@ HEADERS  += mainwindow.h \
     ../Controls/radiogroupwidget.h \
     ../Filter/fexpectedarrivals2.h \
     ../Filter/fcitytrayledger2.h \
-    ../Filter/fcitytrayledger2.h \
-    ../Filter/wcardexlist.h
+    ../Filter/wcardexlist.h \
+    ../Filter/wcityledgerlist.h
 
 FORMS    += mainwindow.ui \
     ../Base/dlgexitbyversion.ui \
@@ -880,6 +890,7 @@ FORMS    += mainwindow.ui \
     dlghdmviewer.ui \
     dlghouseitemonoffwidget.ui \
     dlginvoicepaymentoptions.ui \
+    dlginvoicetocl.ui \
     dlgmovetocl.ui \
     dlgofferinvoiceextra.ui \
     dlgoptions.ui \
@@ -947,6 +958,8 @@ FORMS    += mainwindow.ui \
     ../Print/pprintpreview.ui \
     ../RowEditor/recreditcard.ui \
     ../Filter/fcityledgerbalance.ui \
+    ../RowEditor/refiscalmachine.ui \
+    ../RowEditor/reimage.ui \
     dlguserpasswords.ui \
     dlgadvanceentry.ui \
     ../RoomChart/roomstate.ui \
@@ -1160,3 +1173,4 @@ DEFINES += _ORGANIZATION_=\\\"SmartHotel\\\"
 DEFINES += _APPLICATION_=\\\"SmartHotel\\\"
 DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
 #DEFINES += _DBDRIVER_=\\\"QMARIADB\\\"
+

@@ -7,6 +7,7 @@
 #include "cachecashdesk.h"
 #include "cachecashdoc.h"
 #include "cachecheckoutinvoice.h"
+#include "cacherefundinvoice.h"
 #include "cachecityledger.h"
 #include "cachecladvance.h"
 #include "cachecouponseria.h"
@@ -75,6 +76,20 @@ CacheOne::CacheOne()
 
 }
 
+void CacheOne::reloadAll()
+{
+    for (auto it = fCacheOne.constBegin(); it != fCacheOne.constEnd(); ++it) {
+        CacheInstance *ci = it.value();
+        if (!ci) {
+            continue;
+        }
+        ci->load();
+        if (ci->fStruct) {
+            ci->fStruct->fFlagUpdated = true;
+        }
+    }
+}
+
 void CacheOne::clearAll()
 {
     qDeleteAll(fCacheOne);
@@ -122,6 +137,9 @@ CacheInstance *CacheOne::getCache(int id)
         break;
     case cid_checkout_invoice:
         cbs = new CacheCheckoutInvoice();
+        break;
+    case cid_refund_invoice:
+        cbs = new CacheRefundInvoice();
         break;
     case cid_city_ledger:
         cbs = new CacheCityLedger();

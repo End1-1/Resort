@@ -7,12 +7,28 @@
 
 static QMutex __mutex;
 
+static void loadInstanceRows(CacheInstance *ci)
+{
+    DoubleDatabase fDD;
+    ci->fRows.clear();
+    ci->fColumnNameMap.clear();
+    QString sql;
+    if (ci->fStruct->fReplaceUpdateQuery.isEmpty()) {
+        sql = ci->fStruct->fLoadQuery;
+    } else {
+        sql = ci->fStruct->fLoadQuery;
+        sql = sql.replace(ci->fStruct->fReplaceUpdateQuery, "");
+    }
+    fDD.exec(sql, ci->fRows, ci->fColumnNameMap);
+    ci->fStruct->postProcess(ci);
+}
+
 CacheInstance::CacheInstance(CacheBaseStruct *b) :
     QObject()
 {
     QMutexLocker m( &__mutex);
     fStruct = b;
-    load();
+    loadInstanceRows(this);
     fStruct->fInstance = this;
     fStruct->initSelector();
 }
@@ -40,18 +56,11 @@ int CacheInstance::count()
 
 void CacheInstance::load()
 {
-    DoubleDatabase fDD;
-    fRows.clear();
-    fColumnNameMap.clear();
-    QString sql;
-    if (fStruct->fReplaceUpdateQuery.isEmpty()) {
-        sql = fStruct->fLoadQuery;
-    } else {
-        sql = fStruct->fLoadQuery;
-        sql = sql.replace(fStruct->fReplaceUpdateQuery, "");
+    QMutexLocker m( &__mutex);
+    loadInstanceRows(this);
+    if (fStruct) {
+        fStruct->fFlagUpdated = true;
     }
-    fDD.exec(sql, fRows, fColumnNameMap);
-    fStruct->postProcess(this);
 }
 
 void CacheInstance::clear()
@@ -65,38 +74,42 @@ void CacheInstance::update(const QString &code)
     if (code == "0" || code.isEmpty()) {
         return;
     }
-    QMutexLocker m( &__mutex);
-    DoubleDatabase fDD;
-    fDD[":f_id"] = code;
-    if (fStruct->fReplaceUpdateQuery.isEmpty()) {
-        if (fStruct->fUpdateQuery.isEmpty()) {
-            fDD.exec(fStruct->fLoadQuery + " where f_id=:f_id");
+    {
+        QMutexLocker m( &__mutex);
+        DoubleDatabase fDD;
+        fDD[":f_id"] = code;
+        if (fStruct->fReplaceUpdateQuery.isEmpty()) {
+            if (fStruct->fUpdateQuery.isEmpty()) {
+                fDD.exec(fStruct->fLoadQuery + " where f_id=:f_id");
+            } else {
+                fDD.exec(fStruct->fLoadQuery + " where " + fStruct->fUpdateQuery);
+            }
         } else {
-            fDD.exec(fStruct->fLoadQuery + " where " + fStruct->fUpdateQuery);
+            QString sql = fStruct->fLoadQuery;
+            sql.replace(fStruct->fReplaceUpdateQuery, fStruct->fUpdateQuery);
+            fDD.exec(sql);
         }
-    } else {
-        QString sql = fStruct->fLoadQuery;
-        sql.replace(fStruct->fReplaceUpdateQuery, fStruct->fUpdateQuery);
-        fDD.exec(sql);
-    }
-    if (fRows.contains(code)) {
-        if (fDD.nextRow()) {
-            fRows[code] = fDD.fDbRows.at(0);
+        if (fRows.contains(code)) {
+            if (fDD.nextRow()) {
+                fRows[code] = fDD.fDbRows.at(0);
+            } else {
+                fRows.remove(code);
+            }
         } else {
-            fRows.remove(code);
-        }
-    } else {
-        if (fDD.nextRow()) {
-            fRows[code] = fDD.fDbRows.at(0);
+            if (fDD.nextRow()) {
+                fRows[code] = fDD.fDbRows.at(0);
+            }
         }
     }
-    m.unlock();
     fStruct->postUpdate(this, code);
     emit updated(fStruct->fCacheId, code);
 }
 
 QString CacheInstance::get(const QString &commonFilter)
 {
+    if (!fStruct || !fStruct->fSelector) {
+        return "";
+    }
     if (commonFilter.length() > 0) {
         fStruct->fSelector->fCommonFilter << commonFilter;
     }

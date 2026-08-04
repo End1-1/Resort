@@ -1,5 +1,6 @@
 #include "wwelcome.h"
 #include "ui_wwelcome.h"
+#include "appimages.h"
 #include "wmaindesk.h"
 #include "wcontacts.h"
 #include "wnotes.h"
@@ -55,9 +56,9 @@ WWelcome::WWelcome(QWidget *parent) :
     ui(new Ui::WWelcome)
 {
     ui->setupUi(this);
-    QFile f("logo.png");
-    if (f.exists()) {
-        ui->lbLogo->setPixmap(QPixmap("logo.png"));
+    const QString logoPath = AppImages::resolveLogoPath("logo.png");
+    if (QFile::exists(logoPath)) {
+        ui->lbLogo->setPixmap(QPixmap(logoPath));
     }
     configureLabels();
     ui->btnRoomChart->setVisible(r__(cr__room_chart));

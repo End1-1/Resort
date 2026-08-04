@@ -40,3 +40,8 @@ void DlgNewVaucherOption::on_btnManual_clicked()
 {
     done(VO_MANUAL);
 }
+
+void DlgNewVaucherOption::on_btnRefundVoucher_clicked()
+{
+    done(VO_RF);
+}

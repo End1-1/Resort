@@ -1,10 +1,15 @@
 #include "fvauchers.h"
+#include <QDate>
+#include <QDateTime>
 #include <QFile>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTime>
 #include "cachevaucher.h"
+#include "stringutils.h"
 #include "dlgadvanceentry.h"
 #include "dlghdmviewer.h"
 #include "dlgprintvoucherasinvoice.h"
@@ -17,6 +22,130 @@
 #include "wvauchereditor.h"
 
 #define SEL_VAUCHER 1
+
+namespace {
+
+QJsonArray queryToJsonArray(DoubleDatabase &db)
+{
+    QJsonArray arr;
+    while (db.nextRow()) {
+        QJsonObject jo;
+        db.valuesToJsonObject(jo);
+        arr.append(jo);
+    }
+    return arr;
+}
+
+QString jsonId(const QJsonValue &v)
+{
+    if (v.isString()) {
+        return v.toString().trimmed();
+    }
+    if (v.isDouble()) {
+        const qint64 id = static_cast<qint64>(v.toDouble());
+        return id > 0 ? QString::number(id) : QString();
+    }
+    return v.toVariant().toString().trimmed();
+}
+
+QVariant jsonToDbVariant(const QString &fieldName, const QJsonValue &val)
+{
+    if (val.isNull() || val.isUndefined()) {
+        return QVariant();
+    }
+    const QString fn = fieldName.toLower();
+    if (val.isDouble()) {
+        const qint64 n = static_cast<qint64>(val.toDouble());
+        if (n == 0 && fn.contains("date")) {
+            return QVariant();
+        }
+        return val.toVariant();
+    }
+    if (!val.isString()) {
+        return val.toVariant();
+    }
+
+    const QString s = val.toString().trimmed();
+    if (s.isEmpty()) {
+        return QVariant();
+    }
+    if (fn == "f_time" || (fn.endsWith("time") && !fn.contains("date"))) {
+        QTime t = QTime::fromString(s, Qt::ISODate);
+        if (!t.isValid()) {
+            t = QTime::fromString(s, "HH:mm:ss");
+        }
+        return t.isValid() ? QVariant(t) : QVariant(s);
+    }
+    if (fn.contains("date")) {
+        if (s == "0000-00-00" || s.startsWith("0000-00-00")) {
+            return QVariant();
+        }
+        if (s.contains('T') || (s.contains(' ') && s.contains(':'))) {
+            QString parseDt = s;
+            if (parseDt.endsWith('Z', Qt::CaseInsensitive)) {
+                parseDt.chop(1);
+            }
+            const int dotPos = parseDt.indexOf('.');
+            if (dotPos > 10) {
+                parseDt = parseDt.left(dotPos);
+            }
+            QDateTime dt = QDateTime::fromString(parseDt, "yyyy-MM-ddTHH:mm:ss");
+            if (!dt.isValid()) {
+                dt = QDateTime::fromString(s, Qt::ISODate);
+            }
+            if (!dt.isValid()) {
+                dt = QDateTime::fromString(s, "yyyy-MM-dd HH:mm:ss");
+            }
+            if (dt.isValid()) {
+                return QVariant(dt);
+            }
+        }
+        const QDate d = QDate::fromString(s.left(10), "yyyy-MM-dd");
+        if (d.isValid()) {
+            return QVariant(d);
+        }
+    }
+    return val.toVariant();
+}
+
+bool upsertFromJson(DoubleDatabase &db, const QString &table, const QJsonObject &rec)
+{
+    const QString id = jsonId(rec.value("f_id"));
+    if (id.isEmpty()) {
+        db.fLastError = QString("missing f_id in %1").arg(table);
+        return false;
+    }
+    DoubleDatabase check;
+    check[":f_id"] = id;
+    if (!check.exec(QString("select f_id from %1 where f_id=:f_id").arg(table))) {
+        db.fLastError = check.fLastError;
+        return false;
+    }
+    const bool exists = check.nextRow();
+    db.fBindValues.clear();
+    for (auto it = rec.constBegin(); it != rec.constEnd(); ++it) {
+        db.fBindValues[":" + it.key()] = jsonToDbVariant(it.key(), it.value());
+    }
+    if (exists) {
+        return db.update(table, where_id(ap(id)));
+    }
+    return db.insert(table, false) != 0;
+}
+
+QJsonArray jsonToArray(const QJsonValue &val)
+{
+    if (val.isArray()) {
+        return val.toArray();
+    }
+    if (val.isObject()) {
+        QJsonArray arr;
+        arr.append(val.toObject());
+        return arr;
+    }
+    return QJsonArray();
+}
+
+} // namespace
 
 FVauchers::FVauchers(QWidget *parent) :
     WFilterBase(parent),
@@ -277,11 +406,58 @@ void FVauchers::exportVoucher()
         message_error(tr("Voucher not found"));
         return;
     }
-    QJsonObject jregister;
-    fDD.valuesToJsonObject(jregister);
+    const QString fInv = fDD.getString("f_inv");
+    const QString fRes = fDD.getString("f_res");
+
+    QJsonArray jregisters;
+    if (!fInv.isEmpty()) {
+        fDD[":f_inv"] = fInv;
+        fDD.exec("select * from m_register where f_inv=:f_inv");
+        jregisters = queryToJsonArray(fDD);
+    } else {
+        QJsonObject jregister;
+        fDD.valuesToJsonObject(jregister);
+        jregisters.append(jregister);
+    }
+
+    QJsonObject jreservation;
+    QJsonArray jreservationguests;
+    QJsonArray jguests;
+    QString reservationId;
+    if (!fRes.isEmpty()) {
+        fDD[":f_id"] = fRes;
+        fDD.exec("select * from f_reservation where f_id=:f_id");
+        if (fDD.nextRow()) {
+            fDD.valuesToJsonObject(jreservation);
+            reservationId = jreservation.value("f_id").toString();
+        }
+    } else if (!fInv.isEmpty()) {
+        fDD[":f_invoice"] = fInv;
+        fDD.exec("select * from f_reservation where f_invoice=:f_invoice");
+        if (fDD.nextRow()) {
+            fDD.valuesToJsonObject(jreservation);
+            reservationId = jreservation.value("f_id").toString();
+        }
+    }
+    if (!reservationId.isEmpty()) {
+        fDD[":f_reservation"] = reservationId;
+        fDD.exec("select * from f_reservation_guests where f_reservation=:f_reservation");
+        jreservationguests = queryToJsonArray(fDD);
+        fDD[":f_reservation"] = reservationId;
+        fDD.exec("select * from f_guests where f_id in ("
+                 "select f_guest from f_reservation where f_id=:f_reservation and f_guest>0 "
+                 "union select f_guest from f_reservation_guests where f_reservation=:f_reservation and f_guest>0)");
+        jguests = queryToJsonArray(fDD);
+    }
+
     QJsonObject root;
     root["export"] = "m_register_voucher";
-    root["m_register"] = jregister;
+    root["m_register"] = jregisters;
+    if (!jreservation.isEmpty()) {
+        root["f_reservation"] = jreservation;
+    }
+    root["f_reservation_guests"] = jreservationguests;
+    root["f_guests"] = jguests;
 
     const QString defaultName = out.at(0).toString() + ".json";
     QString filename = QFileDialog::getSaveFileName(this, tr("Export voucher"), defaultName, tr("JSON (*.json)"));
@@ -315,34 +491,70 @@ void FVauchers::importVoucher()
     const QJsonObject jdoc = QJsonDocument::fromJson(file.readAll()).object();
     file.close();
 
-    QJsonObject jregister = jdoc.value("m_register").toObject();
-    if (jregister.isEmpty() && jdoc.contains("f_id")) {
-        jregister = jdoc;
+    QJsonArray jregisters = jsonToArray(jdoc.value("m_register"));
+    if (jregisters.isEmpty() && jdoc.contains("f_id")) {
+        jregisters.append(jdoc);
     }
-    const QString id = jregister.value("f_id").toString();
-    if (id.isEmpty()) {
-        message_error(tr("Invalid voucher JSON: missing f_id"));
+    if (jregisters.isEmpty()) {
+        message_error(tr("Invalid voucher JSON: missing m_register"));
         return;
     }
 
     DoubleDatabase fDD;
-    fDD[":f_id"] = id;
-    fDD.exec("select f_id from m_register where f_id=:f_id");
-    if (fDD.nextRow()) {
-        if (message_confirm(tr("Voucher %1 already exists. Replace it?").arg(id)) != QDialog::Accepted) {
-            return;
+    if (!fDD.startTransaction()) {
+        message_error(fDD.fLastError);
+        return;
+    }
+
+    const QJsonArray jguests = jdoc.value("f_guests").toArray();
+    for (const QJsonValue &v : jguests) {
+        const QJsonObject jguest = v.toObject();
+        if (jguest.isEmpty() || jsonId(jguest.value("f_id")).isEmpty()) {
+            continue;
         }
-        fDD[":f_id"] = id;
-        if (!fDD.exec("delete from m_register where f_id=:f_id")) {
+        if (!upsertFromJson(fDD, "f_guests", jguest)) {
+            fDD.rollback();
             message_error(fDD.fLastError);
             return;
         }
     }
-    if (!fDD.insert("m_register", jregister, false)) {
+
+    const QJsonObject jreservation = jdoc.value("f_reservation").toObject();
+    if (!jreservation.isEmpty()) {
+        if (!upsertFromJson(fDD, "f_reservation", jreservation)) {
+            fDD.rollback();
+            message_error(fDD.fLastError);
+            return;
+        }
+    }
+
+    const QJsonArray jreservationguests = jdoc.value("f_reservation_guests").toArray();
+    for (const QJsonValue &v : jreservationguests) {
+        if (!upsertFromJson(fDD, "f_reservation_guests", v.toObject())) {
+            fDD.rollback();
+            message_error(fDD.fLastError);
+            return;
+        }
+    }
+
+    QString primaryId;
+    for (const QJsonValue &v : jregisters) {
+        const QJsonObject jregister = v.toObject();
+        if (primaryId.isEmpty()) {
+            primaryId = jsonId(jregister.value("f_id"));
+        }
+        if (!upsertFromJson(fDD, "m_register", jregister)) {
+            fDD.rollback();
+            message_error(fDD.fLastError);
+            return;
+        }
+    }
+
+    if (!fDD.commit()) {
         message_error(fDD.fLastError);
         return;
     }
-    TrackControl::insert(TRACK_VAUCHER, "Import voucher", id, "", id);
+    TrackControl::insert(TRACK_VAUCHER, "Import voucher", primaryId, "", primaryId);
     apply(fReportGrid);
     message_info(tr("Voucher imported"));
 }

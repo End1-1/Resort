@@ -533,3 +533,5 @@ void RERestDish::on_leReadScancode_returnPressed()
     ui->lstScancodes->addItem(item);
     ui->leReadScancode->clear();
 }
+
+#undef HINT_DISH

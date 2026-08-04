@@ -173,6 +173,12 @@ void DlgNoShow::on_btnSave_clicked()
             return;
         }
     }
+    if (ui->lePaymentMode->asInt() == PAYMENT_CL) {
+        if (ui->leCLCode->asInt() == 0) {
+            message_error(tr("City ledger was not selected"));
+            return;
+        }
+    }
     if (ui->lePaymentMode->asInt() == PAYMENT_ROOM) {
         if (ui->wGuest->invoice().isEmpty()) {
             message_error(tr("Destination room was not selected"));
@@ -193,7 +199,7 @@ void DlgNoShow::on_btnSave_clicked()
     }
     DoubleDatabase fDD;
     if (ui->leCode->isEmpty()) {
-        ui->leCode->setText(uuidx("CH"));
+        ui->leCode->setText(uuidx(VAUCHER_POSTCHARGE_N));
         DoubleDatabase did;
         did.open();
         did.insertId("m_register", ui->leCode->text());
@@ -202,6 +208,7 @@ void DlgNoShow::on_btnSave_clicked()
         fDD[":f_time"] = QTime::currentTime();
         fDD[":f_user"] = WORKING_USERID;
     }
+    const bool toCL = ui->lePaymentMode->asInt() == PAYMENT_CL;
     fDD[":f_wdate"] = ui->deDate->date();
     fDD[":f_res"] = res;
     fDD[":f_room"] = ui->leRoom->text();
@@ -216,8 +223,9 @@ void DlgNoShow::on_btnSave_clicked()
     fDD[":f_fiscal"] = 0;
     fDD[":f_paymentMode"] = ui->lePaymentMode->asInt();
     fDD[":f_creditCard"] = ui->leCardCode->asInt();
-    fDD[":f_cityLedger"] = ui->leCLCode->asInt();
-    fDD[":f_paymentComment"] = ui->lePaymentMode->asInt() == PAYMENT_CL ? ui->leCLName->text() : "";
+    // Fee stays on guest folio as charge; CL debt goes via paired RV
+    fDD[":f_cityLedger"] = 0;
+    fDD[":f_paymentComment"] = toCL ? ui->leCLName->text() : "";
     fDD[":f_dc"] = "DEBIT";
     fDD[":f_sign"] = 1;
     fDD[":f_doc"] = "";
@@ -229,8 +237,65 @@ void DlgNoShow::on_btnSave_clicked()
     fDD[":f_cancelReason"] = "";
     fDD[":f_side"] = 0;
     fDD[":f_rb"] = 0;
-    fDD[":f_cash"] = ui->lePaymentMode->asInt() == PAYMENT_CL ? 0 : 1;
+    fDD[":f_cash"] = toCL ? 0 : 1;
     fDD.update("m_register", where_id(ap(ui->leCode->text())));
+
+    if (toCL) {
+        fDD[":f_doc"] = ui->leCode->text();
+        fDD[":f_source"] = VAUCHER_RECEIPT_N;
+        fDD.exec("select f_id from m_register where f_doc=:f_doc and f_source=:f_source and f_canceled=0");
+        QString rvId;
+        const bool rvExists = fDD.nextRow();
+        if (rvExists) {
+            rvId = fDD.getString(0);
+        } else {
+            rvId = uuidx(VAUCHER_RECEIPT_N);
+            DoubleDatabase did;
+            did.open();
+            did.insertId("m_register", rvId);
+            fDD[":f_source"] = VAUCHER_RECEIPT_N;
+            fDD[":f_rdate"] = QDate::currentDate();
+            fDD[":f_time"] = QTime::currentTime();
+            fDD[":f_user"] = WORKING_USERID;
+        }
+        const QString modeName = QString("%1 %2")
+                .arg(ui->rbCancelation->isChecked() ? tr("Cancelation fee") : tr("No show fee"))
+                .arg(ui->leCLName->text());
+        fDD[":f_wdate"] = ui->deDate->date();
+        fDD[":f_res"] = res;
+        fDD[":f_room"] = ui->leRoom->text();
+        fDD[":f_guest"] = guest;
+        fDD[":f_itemCode"] = fPreferences.getDb(def_receip_vaucher_id).toInt();
+        fDD[":f_finalName"] = modeName;
+        fDD[":f_amountAmd"] = ui->leAmount->asDouble();
+        fDD[":f_amountVat"] = 0;
+        fDD[":f_amountUsd"] = def_usd;
+        fDD[":f_fiscal"] = 0;
+        fDD[":f_paymentMode"] = PAYMENT_CL;
+        fDD[":f_creditCard"] = 0;
+        fDD[":f_cityLedger"] = ui->leCLCode->asInt();
+        fDD[":f_paymentComment"] = modeName;
+        fDD[":f_dc"] = "CREDIT";
+        fDD[":f_sign"] = -1;
+        fDD[":f_doc"] = ui->leCode->text();
+        fDD[":f_rec"] = "";
+        fDD[":f_inv"] = inv;
+        fDD[":f_finance"] = 1;
+        fDD[":f_remarks"] = "";
+        fDD[":f_canceled"] = 0;
+        fDD[":f_cancelReason"] = "";
+        fDD[":f_side"] = 0;
+        fDD[":f_cash"] = 0;
+        fDD[":f_session"] = 0;
+        fDD.update("m_register", where_id(ap(rvId)));
+    } else {
+        fDD[":f_doc"] = ui->leCode->text();
+        fDD[":f_source"] = VAUCHER_RECEIPT_N;
+        fDD[":f_cancelReason"] = tr("Payment mode changed");
+        fDD.exec("update m_register set f_canceled=1, f_cancelReason=:f_cancelReason "
+                 "where f_doc=:f_doc and f_source=:f_source and f_canceled=0");
+    }
+
     TrackControl tc(TRACK_INVOICE_ITEM);
     tc.fInvoice = ui->leInvoice->text();
     tc.fReservation = ui->leReserve->text();

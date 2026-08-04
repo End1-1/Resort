@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1453</width>
+    <width>1513</width>
     <height>555</height>
    </rect>
   </property>
@@ -28,7 +28,7 @@
        <height>0</height>
       </size>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QGridLayout" name="gridLayout_4">
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -41,94 +41,13 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item>
-       <widget class="QToolButton" name="btnPostingCharges">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>21212</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Posting
-Charges</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/charge.png</normaloff>:/images/charge.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="btnNewVaucher">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>21212</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>New
-voucher</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
+      <property name="spacing">
+       <number>1</number>
+      </property>
+      <item row="0" column="4" rowspan="2">
        <widget class="QToolButton" name="btnEditRowVaucher">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -136,13 +55,13 @@ voucher</string>
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>21212</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -167,10 +86,10 @@ voucher</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QToolButton" name="btnViewReserv">
+      <item row="0" column="9" rowspan="2">
+       <widget class="QPushButton" name="btnExcel">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -178,13 +97,48 @@ voucher</string>
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>21212</height>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>Print fiscal</string>
+        </property>
+        <property name="text">
+         <string>Excel</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/excel.png</normaloff>:/images/excel.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" rowspan="2">
+       <widget class="QToolButton" name="btnViewReserv">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -209,10 +163,10 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="6" rowspan="2">
        <widget class="QToolButton" name="btnEditReserv">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -220,13 +174,13 @@ Reserve</string>
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>40</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>21212</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -251,35 +205,146 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnPrint">
+      <item row="2" column="2">
+       <widget class="QPushButton" name="btnExportASRetail">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>1212</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
-        <property name="toolTip">
-         <string>Print invoice</string>
-        </property>
         <property name="text">
-         <string>Print invoice</string>
+         <string>To AS retail</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/printer.png</normaloff>:/images/printer.png</iconset>
+          <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnTaxPrint">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="btnEliminate">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Eliminate Entry</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/biohazard.png</normaloff>:/images/biohazard.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="15" rowspan="2">
+       <spacer name="horizontalSpacer_3">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>200</width>
+          <height>21</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0" rowspan="2">
+       <widget class="QToolButton" name="btnPostingCharges">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Posting
+Charges</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/charge.png</normaloff>:/images/charge.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8" rowspan="2">
+       <widget class="QPushButton" name="btnTaxPrint">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -297,35 +362,168 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnExcel">
+      <item row="2" column="1">
+       <widget class="QPushButton" name="btnExportAS">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>To AS invoice</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="16" rowspan="2">
+       <widget class="QPushButton" name="btnTracking">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="toolTip">
-         <string>Print fiscal</string>
+         <string>Show history</string>
         </property>
         <property name="text">
-         <string>Excel</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/excel.png</normaloff>:/images/excel.png</iconset>
+          <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnTaxBack">
+      <item row="0" column="7" rowspan="2">
+       <widget class="QPushButton" name="btnPrint">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="toolTip">
+         <string>Print invoice</string>
+        </property>
+        <property name="text">
+         <string>Print invoice</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/printer.png</normaloff>:/images/printer.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" rowspan="2">
+       <widget class="QToolButton" name="btnNewVaucher">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>New
+voucher</string>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/invoice.png</normaloff>:/images/invoice.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="10" rowspan="2">
+       <widget class="QPushButton" name="btnTaxBack">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -343,72 +541,108 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnViewCorrections">
+      <item row="0" column="2">
+       <widget class="QToolButton" name="btnNewRefuyndVoucher">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>Corrections</string>
+         <string>Refund
+voucher</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
+          <normaloff>:/images/refund.png</normaloff>:/images/refund.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnMoveItem">
+      <item row="0" column="3">
+       <widget class="QToolButton" name="btnCL">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>222</width>
-          <height>222</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>Move entry</string>
+         <string>City
+Ledger</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
+          <normaloff>:/images/refund.png</normaloff>:/images/refund.png</iconset>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnEliminate">
-        <property name="maximumSize">
+        <property name="iconSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Eliminate Entry</string>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/biohazard.png</normaloff>:/images/biohazard.png</iconset>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonStyle::ToolButtonTextBesideIcon</enum>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="2" column="3">
        <widget class="QPushButton" name="btnChangeCL">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -423,12 +657,24 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="2" column="4">
        <widget class="QPushButton" name="btnMoveToCL">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
@@ -443,76 +689,67 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnExportAS">
+      <item row="2" column="5">
+       <widget class="QPushButton" name="btnViewCorrections">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>To AS invoice</string>
+         <string>Corrections</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
+          <normaloff>:/images/garbage.png</normaloff>:/images/garbage.png</iconset>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="btnExportASRetail">
+      <item row="2" column="6">
+       <widget class="QPushButton" name="btnMoveItem">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>21545</width>
-          <height>21212</height>
+          <width>16777215</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>To AS retail</string>
+         <string>Move entry</string>
         </property>
         <property name="icon">
          <iconset resource="res.qrc">
-          <normaloff>:/images/AS.png</normaloff>:/images/AS.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>200</width>
-          <height>21</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnTracking">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="toolTip">
-         <string>Show history</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/tracking.png</normaloff>:/images/tracking.png</iconset>
+          <normaloff>:/images/goto.png</normaloff>:/images/goto.png</iconset>
         </property>
        </widget>
       </item>
@@ -684,32 +921,6 @@ Reserve</string>
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="1" column="12">
-       <widget class="EQLineEdit" name="leVatCode">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="8">
-       <widget class="QLabel" name="label_17">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Guest qty</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="8">
        <widget class="QLabel" name="label_16">
         <property name="focusPolicy">
@@ -720,40 +931,23 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="13">
-       <widget class="QLabel" name="label_5">
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_4">
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string>Nationality</string>
+         <string>Guest</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Entry</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="11">
-       <widget class="QLabel" name="label_18">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>VAT</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="7">
-       <widget class="EQTimeEdit" name="teCheckOutTime">
-        <property name="enabled">
-         <bool>false</bool>
+      <item row="0" column="6" colspan="7">
+       <widget class="EQLineEdit" name="leGuest">
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
@@ -776,45 +970,14 @@ Reserve</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="btnGuestInfo">
-        <property name="minimumSize">
-         <size>
-          <width>25</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>25</width>
-          <height>25</height>
-         </size>
-        </property>
+      <item row="1" column="6">
+       <widget class="QLabel" name="label_9">
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
         <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="res.qrc">
-          <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6" colspan="7">
-       <widget class="EQLineEdit" name="leGuest">
-        <property name="minimumSize">
-         <size>
-          <width>250</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+         <string>CheckIn
+time</string>
         </property>
        </widget>
       </item>
@@ -826,6 +989,29 @@ Reserve</string>
         <property name="text">
          <string>CheckOut
 time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Category</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="EQDateEdit" name="deDeparture">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -950,19 +1136,23 @@ time</string>
         </layout>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="EQLineEdit" name="leCategory">
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
-        </property>
+      <item row="1" column="8">
+       <widget class="QLabel" name="label_17">
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="text">
+         <string>Guest qty</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Entry</string>
         </property>
        </widget>
       </item>
@@ -974,49 +1164,6 @@ time</string>
         <property name="text">
          <string>CheckIn
 date</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="EQDateEdit" name="deEntry">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Departure</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="13" colspan="2">
-       <widget class="EQLineEdit" name="leVATMode">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="label_4">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Guest</string>
         </property>
        </widget>
       </item>
@@ -1036,8 +1183,138 @@ date</string>
         </property>
        </spacer>
       </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="EQDateEdit" name="deDeparture">
+      <item row="0" column="14">
+       <widget class="EQLineEdit" name="leNationality">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="13" colspan="2">
+       <widget class="EQLineEdit" name="leVATMode">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="13">
+       <widget class="QLabel" name="label_5">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Nationality</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="10" colspan="5">
+       <widget class="EQLineEdit" name="leCardex">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="EQLineEdit" name="leCardexCode">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="btnGuestInfo">
+        <property name="minimumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="res.qrc">
+          <normaloff>:/images/question.png</normaloff>:/images/question.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="12">
+       <widget class="EQLineEdit" name="leVatCode">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="text">
+         <string>Departure</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="EQLineEdit" name="leRoom">
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="EQTimeEdit" name="teCheckOutTime">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -1049,11 +1326,53 @@ date</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="14">
-       <widget class="EQLineEdit" name="leNationality">
+      <item row="1" column="4">
+       <widget class="EQDateEdit" name="deCheckIn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="EQDateEdit" name="deEntry">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10">
+       <widget class="EQLineEdit" name="leGuestCount">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::ClickFocus</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="EQLineEdit" name="leCategory">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
           <height>16777215</height>
          </size>
         </property>
@@ -1081,48 +1400,13 @@ date</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="EQLineEdit" name="leRoom">
-        <property name="maximumSize">
-         <size>
-          <width>50</width>
-          <height>16777215</height>
-         </size>
-        </property>
+      <item row="1" column="11">
+       <widget class="QLabel" name="label_18">
         <property name="focusPolicy">
          <enum>Qt::FocusPolicy::ClickFocus</enum>
         </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="10">
-       <widget class="EQLineEdit" name="leGuestCount">
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="EQDateEdit" name="deCheckIn">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
+        <property name="text">
+         <string>VAT</string>
         </property>
        </widget>
       </item>
@@ -1143,53 +1427,6 @@ date</string>
         </property>
         <property name="text">
          <string>Room</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="6">
-       <widget class="QLabel" name="label_9">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="text">
-         <string>CheckIn
-time</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="10" colspan="5">
-       <widget class="EQLineEdit" name="leCardex">
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9">
-       <widget class="EQLineEdit" name="leCardexCode">
-        <property name="maximumSize">
-         <size>
-          <width>50</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
         </property>
        </widget>
       </item>

@@ -10,6 +10,7 @@ class DlgNewVaucherOption;
 #define VO_RV 1
 #define VO_PS 2
 #define VO_MANUAL 3
+#define VO_RF 4
 
 class DlgNewVaucherOption : public BaseDialog
 {
@@ -27,6 +28,8 @@ private slots:
     void on_btnPostCharge_clicked();
 
     void on_btnManual_clicked();
+
+    void on_btnRefundVoucher_clicked();
 
 private:
     Ui::DlgNewVaucherOption *ui;

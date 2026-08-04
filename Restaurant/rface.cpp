@@ -229,8 +229,10 @@ void RFace::timeout()
         fDD[":f_app"] = _APPLICATION_;
         fDD.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
         if (fDD.nextRow()) {
-            if (Utils::getVersionString(qApp->applicationFilePath()) != fDD.getString(0)) {
-                DlgExitByVersion::exit(Utils::getVersionString(qApp->applicationFilePath()), fDD.getString(0));
+            const QString appVersion = Utils::getVersionString(qApp->applicationFilePath());
+            const QString dbVersion = fDD.getString(0);
+            if (!Utils::versionEqualFirst3(appVersion, dbVersion)) {
+                DlgExitByVersion::exit(appVersion, dbVersion);
                 return;
             }
         }

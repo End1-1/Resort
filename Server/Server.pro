@@ -31,6 +31,7 @@ SOURCES += main.cpp\
     ../Cache/cachecashdesk.cpp \
     ../Cache/cachecashdoc.cpp \
     ../Cache/cachecheckoutinvoice.cpp \
+    ../Cache/cacherefundinvoice.cpp \
     ../Cache/cachecityledger.cpp \
     ../Cache/cachecladvance.cpp \
     ../Cache/cachecouponseria.cpp \
@@ -149,6 +150,7 @@ HEADERS  += dlgmain.h \
     ../Cache/cachecashdesk.h \
     ../Cache/cachecashdoc.h \
     ../Cache/cachecheckoutinvoice.h \
+    ../Cache/cacherefundinvoice.h \
     ../Cache/cachecityledger.h \
     ../Cache/cachecladvance.h \
     ../Cache/cachecouponseria.h \
@@ -256,3 +258,4 @@ DEFINES += _DBDRIVER_=\\\"QMYSQL\\\"
 DEFINES += RESORT_SERVER
 
 LIBS += -lVersion
+

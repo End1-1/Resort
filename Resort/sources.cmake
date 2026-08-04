@@ -145,6 +145,9 @@ set(SOURCES_RESORT
     dlginvoiceprintoption.cpp
     dlginvoiceprintoption.h
     dlginvoiceprintoption.ui
+    dlginvoicetocl.cpp
+    dlginvoicetocl.h
+    dlginvoicetocl.ui
     dlgmovetocl.cpp
     dlgmovetocl.h
     dlgmovetocl.ui
@@ -482,6 +485,8 @@ set(SOURCES_BASE
     ../Base/baseuid.h
     ../Base/defines.cpp
     ../Base/defines.h
+    ../Base/appimages.cpp
+    ../Base/appimages.h
     ../Base/defrest.cpp
     ../Base/defrest.h
     ../Base/defstore.h
@@ -536,6 +541,8 @@ set(SOURCES_CACHE
     ../Cache/cachecashdoc.h
     ../Cache/cachecheckoutinvoice.cpp
     ../Cache/cachecheckoutinvoice.h
+    ../Cache/cacherefundinvoice.cpp
+    ../Cache/cacherefundinvoice.h
     ../Cache/cachecityledger.cpp
     ../Cache/cachecityledger.h
     ../Cache/cachecladvance.cpp
@@ -741,6 +748,12 @@ set(SOURCES_ROWEDITOR
     ../RowEditor/recurrency.ui
     ../RowEditor/recustomaction.cpp
     ../RowEditor/recustomaction.h
+    ../RowEditor/refiscalmachine.cpp
+    ../RowEditor/refiscalmachine.h
+    ../RowEditor/refiscalmachine.ui
+    ../RowEditor/reimage.cpp
+    ../RowEditor/reimage.h
+    ../RowEditor/reimage.ui
     ../RowEditor/reguesttitle.cpp
     ../RowEditor/reguesttitle.h
     ../RowEditor/reguesttitle.ui
@@ -939,9 +952,6 @@ set(SOURCES_FILTER
     ../Filter/fforecastoccupancycategory.cpp
     ../Filter/fforecastoccupancycategory.h
     ../Filter/fforecastoccupancycategory.ui
-    ../Filter/fforecastoccupancycategoryreal.cpp
-    ../Filter/fforecastoccupancycategoryreal.h
-    ../Filter/fforecastoccupancycategoryreal.ui
     ../Filter/fhotelhierarchy.cpp
     ../Filter/fhotelhierarchy.h
     ../Filter/fhotelhierarchy.ui
@@ -1036,6 +1046,8 @@ set(SOURCES_FILTER
     ../Filter/guestcheckin.ui
     ../Filter/wcardexlist.cpp
     ../Filter/wcardexlist.h
+    ../Filter/wcityledgerlist.cpp
+    ../Filter/wcityledgerlist.h
     ../Filter/wfilterbase.cpp
     ../Filter/wfilterbase.h
 )

@@ -226,7 +226,8 @@ void DlgNoShow::on_btnSave_clicked()
     // Fee stays on guest folio as charge; CL debt goes via paired RV
     fDD[":f_cityLedger"] = 0;
     fDD[":f_paymentComment"] = toCL ? ui->leCLName->text() : "";
-    fDD[":f_dc"] = "DEBIT";
+    // Same polarity as room / post charge (DlgPostCharge)
+    fDD[":f_dc"] = "CREDIT";
     fDD[":f_sign"] = 1;
     fDD[":f_doc"] = "";
     fDD[":f_rec"] = "";
@@ -237,7 +238,7 @@ void DlgNoShow::on_btnSave_clicked()
     fDD[":f_cancelReason"] = "";
     fDD[":f_side"] = 0;
     fDD[":f_rb"] = 0;
-    fDD[":f_cash"] = toCL ? 0 : 1;
+    fDD[":f_cash"] = 0;
     fDD.update("m_register", where_id(ap(ui->leCode->text())));
 
     if (toCL) {

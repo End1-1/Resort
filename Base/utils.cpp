@@ -1,6 +1,11 @@
 #include "utils.h"
 #include <windows.h>
 #include <QHeaderView>
+#include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QMessageBox>
+#include <QProcess>
 #include <cstdarg>
 
 QMap<int, QString> l1;
@@ -84,6 +89,68 @@ bool versionEqualFirst3(const QString &v1, const QString &v2)
         return v1 == v2;
     }
     return a1 == a2 && b1 == b2 && c1 == c2;
+}
+
+QString setupVersionTag(const QString &version)
+{
+    QString v = version.trimmed();
+    v.replace(QLatin1Char(','), QLatin1Char('_'));
+    v.replace(QLatin1Char('.'), QLatin1Char('_'));
+    v.remove(QLatin1Char(' '));
+    return v;
+}
+
+QString setupDownloadUrl(const QString &version)
+{
+    const QString tag = setupVersionTag(version);
+    if(tag.isEmpty()) {
+        return QString();
+    }
+    return QStringLiteral("https://www.picasso.am/files/resort/setup_resort_%1.exe").arg(tag);
+}
+
+bool startProgramUpdater(const QString &targetVersion, QWidget *parent, bool askConfirm)
+{
+    const QString verTag = setupVersionTag(targetVersion);
+    const QString downloadUrl = setupDownloadUrl(targetVersion);
+    if(verTag.isEmpty() || downloadUrl.isEmpty()) {
+        return false;
+    }
+
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QString updaterPath = QDir(appDir).filePath(QStringLiteral("Updater.exe"));
+    if(!QFile::exists(updaterPath)) {
+        QMessageBox::critical(parent, QObject::tr("Update"),
+                              QObject::tr("Updater.exe not found:\n%1").arg(updaterPath));
+        return false;
+    }
+
+    if(askConfirm) {
+        const auto answer = QMessageBox::question(
+                                parent,
+                                QObject::tr("Update"),
+                                QObject::tr(
+                                    "To install the update, SmartHotel must be closed.\n\n"
+                                    "Close the program and start the updater now?"),
+                                QMessageBox::Yes | QMessageBox::No,
+                                QMessageBox::Yes);
+        if(answer != QMessageBox::Yes) {
+            return false;
+        }
+    }
+
+    // Pass the exact same URL as the manual download link — do not rebuild it in Updater.
+    const QStringList args = {
+        QStringLiteral("--app=resort"),
+        QStringLiteral("--version=%1").arg(verTag),
+        QStringLiteral("--url=%1").arg(downloadUrl),
+    };
+    if(!QProcess::startDetached(updaterPath, args, appDir)) {
+        QMessageBox::critical(parent, QObject::tr("Update"),
+                              QObject::tr("Cannot start Updater.exe"));
+        return false;
+    }
+    return true;
 }
 
 void setupTableFullColumnWidth(QTableWidget *tw, int colWidth, int elements)

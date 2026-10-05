@@ -149,7 +149,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private slots:
+    void websocketConnecting();
+    void websocketConnected();
     void websocketDisconnected();
+    void websocketErrorOccurred(const QString &error);
+    void refreshSocketStatus();
     void shortcutFullScreen();
     void shortcutSlot();
     void customReport();
@@ -189,9 +193,7 @@ private slots:
     void on_actionUpload_menu_from_FrontDesk_triggered();
     void on_actionCategory_statistics_triggered();
 
-    void on_actionTravelline_triggered();
 
-    void on_lstTravelLine_itemClicked(QListWidgetItem *item);
 
     void on_actionIncomplete_guests_names_triggered();
 
@@ -199,6 +201,7 @@ private slots:
 
     void on_actionFiscal_machines_triggered();
     void on_actionImages_triggered();
+    void on_actionUpdate_program_triggered();
 
 private:
     Listener fServer2Listener;
@@ -211,10 +214,16 @@ private:
     QLabel* fStatusLabelLeft;
     QLabel* fStatusLabelRight;
     QLabel* fStateOfSecondDb;
+    QLabel* fSocketStatusDot;
+    QLabel* fSocketStatusText;
+    bool fNeedCacheReloadAfterReconnect;
+    QTimer fSocketStatusTimer;
     CacheOne fCacheOne;
     void lock();
     void enableMainMenu(bool value);
     void disableMainMenu();
+    void setSocketStatus(const QString &color, const QString &errorText = QString());
+    void registerSocketAndReloadCaches();
     QMap<QAction*, int> fCustomReports;
 
 signals:

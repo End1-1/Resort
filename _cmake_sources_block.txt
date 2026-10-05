@@ -33,8 +33,6 @@ set(SOURCES_BASE
     ../Base/preferences.h
     ../Base/stringutils.cpp
     ../Base/stringutils.h
-    ../Base/travellineconfig.cpp
-    ../Base/travellineconfig.h
     ../Base/user.cpp
     ../Base/user.h
     ../Base/utils.cpp
@@ -174,7 +172,6 @@ set(SOURCES_CACHE
     ../Cache/cachetrackingtables.h
     ../Cache/cachetransferfromcl.cpp
     ../Cache/cachetransferfromcl.h
-    ../Cache/cachetraveline.h
     ../Cache/cacheusers.cpp
     ../Cache/cacheusers.h
     ../Cache/cacheusersgroups.cpp
@@ -842,9 +839,6 @@ set(SOURCES_RESORT
     ../Resort/taxhelper.h
     ../Resort/timerblya.cpp
     ../Resort/timerblya.h
-    ../Resort/travelline.cpp
-    ../Resort/travelline.h
-    ../Resort/travelline.ui
     ../Resort/waccinvoice.cpp
     ../Resort/waccinvoice.h
     ../Resort/waccinvoice.ui

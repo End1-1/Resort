@@ -24,11 +24,7 @@ FCashReport::FCashReport(QWidget *parent) :
                   "left join users u on u.f_id=m.f_user "
                   "left join f_payment_type p on p.f_id=m.f_paymentMode "
                   "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
-                  "and m.f_finance=1 and "
-                  "((m.f_source in ('RV', 'AV', 'RF') :payment) "
-                  "or (m.f_itemCode in ("
-                  + fPreferences.getDb(def_noshowfee_code).toString()
-                  + ", " + fPreferences.getDb(def_cancelfee_code).toString() + ") :payment))";
+                  "and m.f_finance=1 and m.f_source in ('RV', 'AV', 'RF') :payment ";
     fRestaurantQuery = " select u.f_username, mr.f_rdate, mr.f_room, "
                        "mr.f_id, mr.f_guest, mr.f_finalName, p.f_en, mr.f_paymentComment, "
                        "mr.f_amountAmd, mr.f_amountAmd / mr.f_amountUsd,  mr.f_remarks, mr.f_source "
@@ -71,7 +67,6 @@ void FCashReport::apply(WReportGrid *rg)
         }
         if (ui->lePayments->isEmpty()) {
             query.replace(":payment", " and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17, 18)");
-            query.replace(":payment", " ");
         } else {
             query.replace(":payment", "and m.f_paymentMode in (" + ui->lePayments->fHiddenText + ")");
         }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWebSocket>
 #include <QJsonObject>
+#include <QStringList>
 
 class AppWebSocket : public QObject
 {
@@ -13,6 +14,8 @@ public:
     explicit AppWebSocket(QObject *parent = nullptr);
 
     QAbstractSocket::SocketState connectionState() const;
+
+    QString lastError() const;
 
     static AppWebSocket *instance;
 
@@ -24,6 +27,8 @@ public:
 
     void sendMessage(const QJsonObject &json);
 
+    int pendingCount() const;
+
 public slots:
     void connectToServer();
 
@@ -34,7 +39,19 @@ private:
 
     QString mServerAddress;
 
+    QString mLastError;
+
     bool mReconnect;
+
+    bool mUserDisconnect;
+
+    bool mOpenAfterDisconnect;
+
+    QStringList mPendingMessages;
+
+    void flushPendingMessages();
+
+    void scheduleReconnect();
 
 private slots:
 
@@ -54,6 +71,8 @@ signals:
     void socketConnected();
 
     void socketDisconnected();
+
+    void socketErrorOccurred(const QString &error);
 
     void messageReceived(const QString &message);
 };

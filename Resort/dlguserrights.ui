@@ -253,16 +253,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="EQCheckBox" name="chTravelLine">
-             <property name="text">
-              <string>TravelLine</string>
-             </property>
-             <property name="Tag" stdset="0">
-              <number>151</number>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </widget>

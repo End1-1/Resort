@@ -11,8 +11,9 @@
 Preferences ReservationInfo::fPref;
 
 static QColor chmStatus[][2] = {
-    {QColor(255, 100,255), QColor::fromRgb(255,50,255)},
-    {QColor(255, 100,255), QColor(255, 50,255)}
+    // f_chmstatus=1 new channel import (lilac); =2 after operator opens reserve
+    {QColor(210, 175, 255), QColor(200, 162, 255)},
+    {QColor(190, 155, 240), QColor(180, 140, 230)}
 };
 
 static QColor rc[][2] = {

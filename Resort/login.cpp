@@ -7,6 +7,7 @@
 #include <QProcess>
 #include <QRandomGenerator>
 #include <QShortcut>
+#include <QTimer>
 #include "appconfig.h"
 #include "appimages.h"
 #include "appwebsocket.h"
@@ -22,7 +23,8 @@
 
 Login::Login(QWidget *parent) :
     BaseExtendedDialog(parent),
-    ui(new Ui::Login)
+    ui(new Ui::Login),
+    fWaitingSocketRegister(false)
 {
     ui->setupUi(this);
     connect(ui->cbDatabase, static_cast<void (QComboBox::*)(int)>( &QComboBox::currentIndexChanged), [](int index) {
@@ -43,6 +45,8 @@ Login::Login(QWidget *parent) :
     ui->wUsernamePassword->setVisible(!fPreferences.getDb(def_touchscreen).toBool());
     adjustSize();
     connect(AppWebSocket::instance, &AppWebSocket::socketConnected, this, &Login::socketConnected);
+    connect(AppWebSocket::instance, &AppWebSocket::messageReceived, this, &Login::socketMessage);
+    connect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &Login::socketDisconnectedWhileRegistering);
 }
 
 Login::~Login()
@@ -475,7 +479,7 @@ void Login::on_btnLoginPin_clicked()
         }
     }
     AppImages::syncFromDb(fDD);
-    accept();
+    AppWebSocket::instance->setServerAddress(conn.dc_broadcast, conn.dc_main_host);
 }
 
 void Login::on_btn1_clicked()
@@ -535,11 +539,52 @@ void Login::on_btnClearPin_clicked()
 
 void Login::socketConnected()
 {
+    sendSocketRegister();
+}
+
+void Login::sendSocketRegister()
+{
+    fWaitingSocketRegister = true;
     QJsonObject jo;
     jo["command"] = "register_socket";
     jo["socket_type"] = 1;
     jo["database"] = __dd1Database;
     jo["userid"] = WORKING_USERID;
     AppWebSocket::instance->sendMessage(QJsonDocument(jo).toJson(QJsonDocument::Compact));
-    accept();
+}
+
+void Login::socketMessage(const QString &message)
+{
+    if(!fWaitingSocketRegister) {
+        return;
+    }
+
+    const QJsonObject o = QJsonDocument::fromJson(message.toUtf8()).object();
+
+    if(o.value("status").toInt() == 1) {
+        fWaitingSocketRegister = false;
+        accept();
+        return;
+    }
+
+    if(o.contains("errorMessage") || o.contains("errorCode")) {
+        fWaitingSocketRegister = false;
+        const QString err = o.value("errorMessage").toString().isEmpty()
+                            ? tr("WebSocket register failed")
+                            : o.value("errorMessage").toString();
+        // Defer: server also closes socket → disconnect handler must not nest another dialog
+        QTimer::singleShot(0, this, [this, err]() {
+            message_error(err + QString("\n(database=%1)").arg(__dd1Database));
+        });
+    }
+}
+
+void Login::socketDisconnectedWhileRegistering()
+{
+    if(!fWaitingSocketRegister) {
+        return;
+    }
+
+    // Error already shown from register reply; ignore follow-up disconnect
+    fWaitingSocketRegister = false;
 }

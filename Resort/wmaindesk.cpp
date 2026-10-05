@@ -1,4 +1,5 @@
 #include "wmaindesk.h"
+#include <QApplication>
 #include <QElapsedTimer>
 #include <QInputDialog>
 #include <QScrollBar>
@@ -13,6 +14,10 @@
 #include "dlgreserveconfirmstatus.h"
 #include "dlgtransferanyamount.h"
 #include "eqtablewidget.h"
+#include "excely/pms/exelybookingsource.h"
+#include "excelyappconfig.h"
+#include "excelyresortsink.h"
+#include "message.h"
 #include "monthitemdelegate.h"
 #include "reservewidget.h"
 #include "roomitemdelegate.h"
@@ -770,5 +775,114 @@ void WMainDesk::on_btnBuilding_clicked()
                                  fBuildingFilter));
         qApp->processEvents();
         filterRoom();
+    }
+}
+
+void WMainDesk::on_btnExcely_clicked()
+{
+    const ExcelyAppConfig cfg = ExcelyAppConfig::load();
+    QString credHint;
+    if (!cfg.hasCredentials(&credHint)) {
+        message_error(credHint);
+        return;
+    }
+
+    ui->btnExcely->setEnabled(false);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    int created = 0;
+    int updated = 0;
+    int canceled = 0;
+    int errors = 0;
+    QStringList warnings;
+    QStringList errorLines;
+
+    Excely::Pms::ExelyBookingSource source(cfg.pms);
+    ExcelyResortSink sink(cfg.roomTypeMap);
+
+    QVector<Excely::Channel::Booking> list;
+    QVector<Excely::Channel::PmsError> pullErrors;
+    const bool pullOk = source.pullUndelivered(&list, &pullErrors);
+    for (const Excely::Channel::PmsError &e : pullErrors) {
+        errorLines.append(QStringLiteral("CM %1: %2").arg(e.code).arg(e.text));
+    }
+
+    if (!pullOk) {
+        QApplication::restoreOverrideCursor();
+        ui->btnExcely->setEnabled(true);
+        message_error(errorLines.isEmpty()
+                          ? tr("Excely pull failed")
+                          : errorLines.join(QStringLiteral("\n")));
+        return;
+    }
+
+    for (const Excely::Channel::Booking &b : list) {
+        QString pmsId;
+        QString err;
+        if (!sink.accept(b, &pmsId, &err)) {
+            ++errors;
+            errorLines.append(QStringLiteral("%1: %2")
+                                  .arg(b.channelReservationId,
+                                       err.isEmpty() ? tr("import failed") : err));
+            QString e2;
+            source.rejectDelivery(b, err.isEmpty() ? QStringLiteral("Sink rejected") : err, &e2);
+            if (!e2.isEmpty()) {
+                errorLines.append(QStringLiteral("%1 reject: %2").arg(b.channelReservationId, e2));
+            }
+            warnings.append(sink.takeWarnings());
+            continue;
+        }
+
+        switch (sink.lastOutcome()) {
+        case ExcelyResortSink::Outcome::Created:
+            ++created;
+            break;
+        case ExcelyResortSink::Outcome::Updated:
+            ++updated;
+            break;
+        case ExcelyResortSink::Outcome::Canceled:
+            ++canceled;
+            break;
+        default:
+            break;
+        }
+        warnings.append(sink.takeWarnings());
+
+        QString e2;
+        if (!source.confirmDelivered(b, pmsId, &e2)) {
+            ++errors;
+            errorLines.append(QStringLiteral("%1 confirm: %2")
+                                  .arg(b.channelReservationId,
+                                       e2.isEmpty() ? tr("confirm failed") : e2));
+        }
+    }
+
+    QApplication::restoreOverrideCursor();
+    ui->btnExcely->setEnabled(true);
+
+    on_btnRefreshChart_clicked();
+
+    QStringList summary;
+    summary << tr("Excely import finished");
+    summary << tr("Pulled: %1").arg(list.size());
+    summary << tr("Created: %1").arg(created);
+    summary << tr("Updated: %1").arg(updated);
+    summary << tr("Canceled: %1").arg(canceled);
+    summary << tr("Errors: %1").arg(errors);
+    if (!warnings.isEmpty()) {
+        summary << QString();
+        summary << tr("Warnings:");
+        summary << warnings;
+    }
+    if (!errorLines.isEmpty()) {
+        summary << QString();
+        summary << tr("Details:");
+        summary << errorLines;
+    }
+
+    if (errors > 0) {
+        message_error(summary.join(QLatin1Char('\n')));
+    } else {
+        message_info(summary.join(QLatin1Char('\n')));
     }
 }

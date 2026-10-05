@@ -3,6 +3,12 @@
 #
 # NOTE: Do not put "\0" literally in CMake strings — it becomes a NUL and
 # corrupts the file (CMake uses C strings internally).
+# Set SKIP_RESORT_VERSION_BUMP=1 to no-op (used by setup/build.ps1).
+
+if(DEFINED ENV{SKIP_RESORT_VERSION_BUMP} AND "$ENV{SKIP_RESORT_VERSION_BUMP}" STREQUAL "1")
+    message(STATUS "Skipping version bump (SKIP_RESORT_VERSION_BUMP=1)")
+    return()
+endif()
 
 if(NOT RC_FILE)
     message(FATAL_ERROR "RC_FILE is not set")

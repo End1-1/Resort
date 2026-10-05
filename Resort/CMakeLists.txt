@@ -105,18 +105,24 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMENT "Copy SmartHotelTouch.qss to output directory"
 )
 
-# Auto-increment build number in rc.h before every build
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+# Bump build number BEFORE compile/link.
+# (PRE_BUILD is PRE_LINK on Ninja/Make — too late for res.rc.)
+# Touch res.rc after bump: OBJECT_DEPENDS is ignored by Ninja, so without
+# touching the .rc the VERSIONINFO stays at the previous build number.
+# SKIP_RESORT_VERSION_BUMP=1 is checked at build time inside bump_build.cmake
+# (setup/build.ps1 bumps once before packaging).
+add_custom_target(bump_resort_version
     COMMAND ${CMAKE_COMMAND}
         -DRC_FILE=${CMAKE_CURRENT_SOURCE_DIR}/rc.h
         -P ${CMAKE_CURRENT_SOURCE_DIR}/bump_build.cmake
+    COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_SOURCE_DIR}/res.rc
     COMMENT "Increment build number in rc.h"
 )
-# Ensure VERSIONINFO resource is rebuilt when rc.h changes
-set_source_files_properties(
-    ${CMAKE_CURRENT_SOURCE_DIR}/res.rc
-    PROPERTIES OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rc.h"
-)
+add_dependencies(${PROJECT_NAME} bump_resort_version)
+
+# ---------- Excely PMSConnect ----------
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../excely excely_build)
+target_link_libraries(${PROJECT_NAME} PRIVATE ExcelyPmsConnect)
 
 # ---------- QXlsx ----------
 set(CPACK_GENERATOR "" CACHE STRING "Disable CPack in QXlsx" FORCE)

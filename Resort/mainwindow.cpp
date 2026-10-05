@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QJsonDocument>
@@ -12,7 +13,6 @@
 #include "baseuid.h"
 #include "cachebasestruct.h"
 #include "cacherights.h"
-#include "cachetraveline.h"
 #include "databasesconnections.h"
 #include "dlgadvanceentry.h"
 #include "dlgcalculateoutputofrestaurant.h"
@@ -139,7 +139,6 @@
 #include "restorepartner.h"
 #include "storedoc.h"
 #include "taxhelper.h"
-#include "travelline.h"
 #include "ui_mainwindow.h"
 #include "vauchers.h"
 #include "waccinvoice.h"
@@ -178,7 +177,6 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->grTravelLine->hide();
     BroadcastThread::mMainWindow = this;
     QWidget *statusWidget = new QWidget();
     QHBoxLayout *hl = new QHBoxLayout();
@@ -200,14 +198,28 @@ MainWindow::MainWindow(bool touchscreen, QWidget *parent) :
     hl->addWidget(fStateOfSecondDb);
     statusWidget->setLayout(hl);
     ui->statusBar->addWidget(statusWidget);
+    fSocketStatusText = new QLabel();
+    fSocketStatusText->setStyleSheet("color: #c0392b;");
+    fSocketStatusDot = new QLabel();
+    fSocketStatusDot->setFixedSize(14, 14);
+    ui->statusBar->addPermanentWidget(fSocketStatusText);
+    ui->statusBar->addPermanentWidget(fSocketStatusDot);
+    fNeedCacheReloadAfterReconnect = false;
+    fSocketStatusDot->setAttribute(Qt::WA_StyledBackground, true);
+    setSocketStatus("#f1c40f");
     ui->actionChange_password->setVisible(false);
     connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
     fMainWindow = this;
     fTab = ui->tabWidget;
     connect(&fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     logout();
-    disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
+    connect(AppWebSocket::instance, &AppWebSocket::socketConnecting, this, &MainWindow::websocketConnecting);
+    connect(AppWebSocket::instance, &AppWebSocket::socketConnected, this, &MainWindow::websocketConnected);
+    connect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
+    connect(AppWebSocket::instance, &AppWebSocket::socketErrorOccurred, this, &MainWindow::websocketErrorOccurred);
     connect(AppWebSocket::instance, &AppWebSocket::messageReceived, this, &MainWindow::parseSocketCommand);
+    connect(&fSocketStatusTimer, &QTimer::timeout, this, &MainWindow::refreshSocketStatus);
+    fSocketStatusTimer.start(1000);
     QShortcut *shortcut = new QShortcut(QKeySequence("F2"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(shortcutSlot()));
     QShortcut *shortcut12 = new QShortcut(QKeySequence("F12"), this);
@@ -325,20 +337,7 @@ void MainWindow::login()
     }
 
     fPreferences.setDb(def_touchscreen, fTouchscreen);
-    ui->lstTravelLine->clear();
-
-    if(r__(cr__travelline)) {
-        dd.exec("select f_id from f_reservation where f_chmstatus=1 and f_state=2");
-
-        while(dd.nextRow()) {
-            QListWidgetItem *item = new QListWidgetItem(ui->lstTravelLine);
-            item->setText(dd.getString("f_id"));
-            ui->lstTravelLine->addItem(item);
-        }
-    }
-
-    ui->grTravelLine->setVisible(ui->lstTravelLine->count() > 0);
-    connect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
+    refreshSocketStatus();
 }
 
 void MainWindow::addTabWidget(BaseWidget *widget)
@@ -476,16 +475,6 @@ void MainWindow::parseSocketCommand(const QString &command)
             int cacheId = jObj.value("cache").toInt();
             QString item = jObj.value("item").toString();
 
-            if(cacheId == cache_travelline) {
-                if(r__(cr__travelline)) {
-                    QListWidgetItem *litem = new QListWidgetItem(ui->lstTravelLine);
-                    litem->setText(item);
-                    ui->lstTravelLine->addItem(litem);
-                    ui->grTravelLine->show();
-                    return;
-                }
-            }
-
             emit updateCache(cacheId, item);
         } else {
             QVariantMap m = jObj.toVariantMap();
@@ -519,8 +508,9 @@ void MainWindow::parseSocketCommand(const QString &command)
 
 void MainWindow::logout()
 {
+    const int userId = WORKING_USERID;
     fPreferences.set(def_working_user_id, 0);
-    disconnect(AppWebSocket::instance, &AppWebSocket::socketDisconnected, this, &MainWindow::websocketDisconnected);
+    fNeedCacheReloadAfterReconnect = false;
     fTimer.stop();
     disableMainMenu();
 
@@ -533,12 +523,13 @@ void MainWindow::logout()
     jo["command"] = "unregister_socket";
     jo["socket_type"] = 1;
     jo["database"] = __dd1Database;
-    jo["userid"] = WORKING_USERID;
+    jo["userid"] = userId;
     AppWebSocket::instance->sendMessage(QJsonDocument(jo).toJson(QJsonDocument::Compact));
     AppWebSocket::instance->disconnectFromServer();
     ui->actionChange_password->setVisible(false);
     fStatusLabelLeft->setText(tr("Not connected"));
     fStatusLabelRight->clear();
+    setSocketStatus("#f1c40f");
 
     foreach(QAction *a, fCustomReports.keys()) {
         ui->menuBar->removeAction(a);
@@ -588,7 +579,6 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionAvaiable_rooms->setVisible(r__(cr__reservation_avaiable_room));
     ui->actionNew_room_chart->setVisible(false);
     ui->actionNew_room_chart->setVisible(r__(cr__room_chart));
-    ui->actionTravelline->setVisible(r__(cr__travelline));
     DoubleDatabase::logEvent(r__(cr__reception) ? "reception enabled" : "reception not enabled");
     ui->menuBar->actions().at(2)->setVisible(r__(cr__reception)); // Reception
     ui->actionQuick_reservations->setVisible(r__(cr__quick_reservations));
@@ -1740,9 +1730,96 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     QMainWindow::mouseMoveEvent(event);
 }
 
+void MainWindow::setSocketStatus(const QString &color, const QString &errorText)
+{
+    fSocketStatusDot->setStyleSheet(QString(
+                                        "background-color: %1; border-radius: 7px; border: 1px solid #666;")
+                                    .arg(color));
+    fSocketStatusText->setText(errorText);
+    fSocketStatusText->setVisible(!errorText.isEmpty());
+}
+
+void MainWindow::refreshSocketStatus()
+{
+    const auto state = AppWebSocket::instance->connectionState();
+    fSocketStatusDot->setToolTip(QString("WebSocket: %1").arg(
+                                     state == QAbstractSocket::ConnectedState ? "connected" :
+                                     state == QAbstractSocket::ConnectingState ? "connecting" :
+                                     AppWebSocket::instance->lastError().isEmpty() ? "disconnected" :
+                                     AppWebSocket::instance->lastError()));
+
+    if(state == QAbstractSocket::ConnectedState) {
+        setSocketStatus("#27ae60");
+        return;
+    }
+
+    if(state == QAbstractSocket::ConnectingState) {
+        setSocketStatus("#f1c40f");
+        return;
+    }
+
+    const QString err = AppWebSocket::instance->lastError();
+    setSocketStatus(err.isEmpty() ? QString("#f1c40f") : QString("#e74c3c"), err);
+}
+
+void MainWindow::registerSocketAndReloadCaches()
+{
+    if(WORKING_USERID <= 0 || !fNeedCacheReloadAfterReconnect) {
+        return;
+    }
+
+    // First register belongs to Login dialog; a second register_socket makes Service5 close (Code 112)
+    for(QWidget *w : QApplication::topLevelWidgets()) {
+        if(qobject_cast<Login*>(w) && w->isVisible()) {
+            fNeedCacheReloadAfterReconnect = false;
+            return;
+        }
+    }
+
+    fNeedCacheReloadAfterReconnect = false;
+
+    QJsonObject jo;
+    jo["command"] = "register_socket";
+    jo["socket_type"] = 1;
+    jo["database"] = __dd1Database;
+    jo["userid"] = WORKING_USERID;
+    AppWebSocket::instance->sendMessage(QJsonDocument(jo).toJson(QJsonDocument::Compact));
+
+    CacheOne::reloadAll();
+
+    for(int i = 0, count = ui->tabWidget->count(); i < count; ++i) {
+        if(auto *desk = qobject_cast<WMainDesk*>(ui->tabWidget->widget(i))) {
+            desk->filterRoom();
+        }
+    }
+}
+
+void MainWindow::websocketConnecting()
+{
+    refreshSocketStatus();
+}
+
+void MainWindow::websocketConnected()
+{
+    refreshSocketStatus();
+    registerSocketAndReloadCaches();
+}
+
 void MainWindow::websocketDisconnected()
 {
-    //DlgExitByVersion::exit("Server connection lost, quitting");
+    if(WORKING_USERID > 0
+            && AppWebSocket::instance->connectionState() != QAbstractSocket::ConnectedState
+            && AppWebSocket::instance->connectionState() != QAbstractSocket::ConnectingState) {
+        fNeedCacheReloadAfterReconnect = true;
+    }
+
+    refreshSocketStatus();
+}
+
+void MainWindow::websocketErrorOccurred(const QString &error)
+{
+    Q_UNUSED(error);
+    refreshSocketStatus();
 }
 
 void MainWindow::shortcutFullScreen()
@@ -2254,30 +2331,6 @@ void MainWindow::on_actionCategory_statistics_triggered()
     FRoomCatSale::openFilterReport<FRoomCatSale, WReportGrid>();
 }
 
-void MainWindow::on_actionTravelline_triggered()
-{
-    addTab<TravelLine>();
-}
-
-void MainWindow::on_lstTravelLine_itemClicked(QListWidgetItem *item)
-{
-    if(!item) {
-        return;
-    }
-
-    if(message_confirm(tr("Open reservation?")) != QDialog::Accepted) {
-        return;
-    }
-
-    WReservation::openReserveWindows(item->text());
-    delete item;
-
-    //ui->lstTravelLine->removeItemWidget(item);
-    if(ui->lstTravelLine->count() == 0) {
-        ui->grTravelLine->hide();
-    }
-}
-
 void MainWindow::on_actionIncomplete_guests_names_triggered()
 {
     FIncompleteGuestsNames::openFilterReport<FIncompleteGuestsNames, WReportGrid>();
@@ -2353,4 +2406,26 @@ void MainWindow::on_actionImages_triggered()
                     "from f_images order by f_purpose";
     WReportGrid *r = addTab<WReportGrid>();
     r->fullSetup<REImage>(widths, fields, titles, title, icon, query);
+}
+
+void MainWindow::on_actionUpdate_program_triggered()
+{
+    DoubleDatabase dd;
+    dd[":f_app"] = _APPLICATION_;
+    dd.exec("select f_version from s_app where lower(f_app)=lower(:f_app)");
+    if(!dd.nextRow()) {
+        message_error(tr("Target version is not defined in s_app"));
+        return;
+    }
+
+    const QString dbVersion = dd.getString(0);
+    const QString appVersion = Utils::getVersionString(qApp->applicationFilePath());
+    if(Utils::versionEqualFirst3(appVersion, dbVersion)) {
+        message_info(tr("Application is up to date (%1)").arg(appVersion));
+        return;
+    }
+
+    if(Utils::startProgramUpdater(dbVersion, this)) {
+        qApp->quit();
+    }
 }

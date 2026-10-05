@@ -1,11 +1,23 @@
 #include "whotelstatus.h"
 #include "ui_whotelstatus.h"
+#include "pprintpreview.h"
+#include "pprintscene.h"
+#include "ptextrect.h"
+#include "pdefaults.h"
+
+#include <QPushButton>
+#include <QTableWidget>
 
 WHotelStatus::WHotelStatus(QWidget *parent) :
     BaseWidget(parent),
     ui(new Ui::WHotelStatus)
 {
     ui->setupUi(this);
+    auto *btnPrint = new QPushButton(tr("Print"), this);
+    btnPrint->setMinimumHeight(28);
+    ui->verticalLayout->insertWidget(0, btnPrint);
+    connect(btnPrint, &QPushButton::clicked, this, &WHotelStatus::on_btnPrint_clicked);
+
     DoubleDatabase fDD;
     QStringList row1, row2, row3, row4;
     row1 << "Working date" << "" << "Arrivals" << "" << "Empty room" << "" << "Paid occ." << "" << "Male" << "" << "F/B" << "0";
@@ -208,4 +220,105 @@ WHotelStatus::~WHotelStatus()
 void WHotelStatus::setup()
 {
     setupTabTextAndIcon(tr("Hotel Status"), ":/images/info.png");
+}
+
+void WHotelStatus::printTable(PPrintPreview *pp, PPrintScene *&ps, int &top, int &page,
+                              QTableWidget *table, const QString &title, bool withHeader,
+                              PTextRect &th, PTextRect &thHead, int rowHeight)
+{
+    if (!table) {
+        return;
+    }
+    const int pageBottom = sizePortrait.height() - 120;
+    auto ensureSpace = [&](int need) {
+        if (top + need > pageBottom) {
+            top = 40;
+            ps = pp->addScene(0, QPageLayout::Portrait);
+            page++;
+        }
+    };
+
+    ensureSpace(rowHeight * 3);
+    if (!title.isEmpty()) {
+        top += 20;
+        thHead.setBorders(false, false, false, false);
+        ps->addTextRect(20, top, 2060, rowHeight, title, &thHead);
+        top += rowHeight + 5;
+        thHead.setBorders(true, true, true, true);
+    }
+
+    QList<int> cols;
+    cols << 20;
+    int totalW = 0;
+    for (int c = 0; c < table->columnCount(); c++) {
+        const int w = table->columnWidth(c);
+        totalW += (w > 0 ? w : 80);
+    }
+    if (totalW <= 0) {
+        totalW = 1;
+    }
+    for (int c = 0; c < table->columnCount(); c++) {
+        const int w = table->columnWidth(c);
+        cols << qMax(50, (w > 0 ? w : 80) * 2060 / totalW);
+    }
+
+    QStringList vals;
+    if (withHeader) {
+        ensureSpace(rowHeight);
+        for (int c = 0; c < table->columnCount(); c++) {
+            QTableWidgetItem *hi = table->horizontalHeaderItem(c);
+            vals << (hi ? hi->text() : QString());
+        }
+        ps->addTableRow(top, rowHeight, cols, vals, &thHead);
+    }
+
+    th.setBorders(true, true, true, true);
+    for (int r = 0; r < table->rowCount(); r++) {
+        ensureSpace(rowHeight);
+        for (int c = 0; c < table->columnCount(); c++) {
+            QTableWidgetItem *it = table->item(r, c);
+            vals << (it ? it->text() : QString());
+        }
+        ps->addTableRow(top, rowHeight, cols, vals, &th);
+    }
+}
+
+void WHotelStatus::on_btnPrint_clicked()
+{
+    PPrintPreview *pp = new PPrintPreview(this);
+    PPrintScene *ps = pp->addScene(0, QPageLayout::Portrait);
+    int top = 40;
+    int page = 1;
+    const int rowHeight = 45;
+
+    PTextRect th;
+    th.setFont(QFont("Arial", 18));
+    th.setBorders(true, true, true, true);
+    th.setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+
+    PTextRect thHead;
+    thHead.setFont(QFont("Arial", 18, QFont::Bold));
+    thHead.setBorders(true, true, true, true);
+    thHead.setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    thHead.setBrush(QBrush(QColor::fromRgb(215, 215, 215), Qt::SolidPattern));
+
+    PTextRect thTitle;
+    thTitle.setFont(QFont("Arial", 28, QFont::Bold));
+    thTitle.setBorders(false, false, false, false);
+    thTitle.setTextAlignment(Qt::AlignCenter);
+    ps->addTextRect(20, top, 2060, 60, tr("Hotel Status") + " / " + WORKING_DATE.toString(def_date_format), &thTitle);
+    top += 80;
+
+    printTable(pp, ps, top, page, ui->tblMain, tr("Summary"), false, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblCategory, tr("Category"), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblRoomStatus, tr("Room status"), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblNationality, tr("Nationality"), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblArrivals, ui->lbArrivals->text(), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblAlreadyArrived, ui->lbAlreadyAriived->text(), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblDepartures, ui->lbDepartures->text(), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblAlreadyCheckout, ui->lbAlreadyCheckout->text(), true, th, thHead, rowHeight);
+    printTable(pp, ps, top, page, ui->tblGuestInHouse, ui->lbGuestInHouse->text(), true, th, thHead, rowHeight);
+
+    pp->exec();
+    delete pp;
 }

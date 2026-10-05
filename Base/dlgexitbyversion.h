@@ -17,14 +17,17 @@ public:
     ~DlgExitByVersion();
     static void exit(const QString &appVersion, const QString &dbVersion);
     static void exit(const QString &msg);
+
 private slots:
     void timeout();
     void on_btnClose_clicked();
+    void on_btnUpdate_clicked();
 
 private:
     Ui::DlgExitByVersion *ui;
     int fCounter;
     QTimer fTimer;
+    QString fDbVersion;
     void setVersions(const QString &appVersion, const QString &dbVersion);
 };
 

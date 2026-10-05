@@ -190,7 +190,6 @@ void DlgUserRights::setup(QList<QVariant>& values)
     .addWidget(ui->chEditASConString, QString::number(fGroupId) + ": " + "AS connection string")
     .addWidget(ui->chExportDataToAS, QString::number(fGroupId) + ": " + "Export data to AS")
     .addWidget(ui->chTaxReport, QString::number(fGroupId) + ": " + "Fiscal report")
-    .addWidget(ui->chTravelLine, QString::number(fGroupId) + ": " + "TravelLine")
     .addWidget(ui->chInitRestaurantFromOffice, QString::number(fGroupId) + ": " + "Init restaurant dishes from external db")
     .addWidget(ui->chGuestArrivalDeparture, QString::number(fGroupId) + ": " + "Arrival departure very simple")
     ;

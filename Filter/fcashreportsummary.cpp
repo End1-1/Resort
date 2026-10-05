@@ -19,7 +19,7 @@ FCashReportSummary::FCashReportSummary(QWidget *parent) :
              "left join users u on u.f_id=m.f_user "
              "left join f_payment_type p on p.f_id=m.f_paymentMode "
              "where m.f_wdate between :f_wdate1 and :f_wdate2 and m.f_canceled=0 :operator "
-             "and m.f_finance=1 and (m.f_SOURCE in :source :orch) and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17, 18) "
+             "and m.f_finance=1 and m.f_SOURCE in :source and m.f_paymentMode in (1, 2, 3, 4, 15, 16, 17, 18) "
              "group by 1, 2 "
              "order by m.f_paymentMode ";
 }
@@ -42,20 +42,12 @@ void FCashReportSummary::apply(WReportGrid *rg)
     QString t = "";
     if (ui->chHotel->isChecked()) {
         t = "'AV', 'RV', 'RF'";
-        query = query.replace(":orch",
-                              "or (m.f_itemCode in ("
-                              + fPreferences.getDb(def_noshowfee_code).toString()
-                              + ", " + fPreferences.getDb(def_cancelfee_code).toString() + "))");
-    } else {
-        query = query.replace(":orch", "");
     }
     if (ui->chRestaurant->isChecked()) {
         if (!t.isEmpty()) {
             t += ",";
         }
         t += r;
-    } else {
-        query = query.replace(":orbr", "");
     }
     if (ui->leOperator->asInt() == 0) {
         query.replace(":operator", "");

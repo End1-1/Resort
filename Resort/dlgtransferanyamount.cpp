@@ -8,14 +8,21 @@
 #include "paymentmode.h"
 #include "message.h"
 
+#include <QButtonGroup>
+
 static const int dc_debit = 1;
 static const int dc_credit = 2;
 
 DlgTransferAnyAmount::DlgTransferAnyAmount(QWidget *parent) :
     BaseDialog (parent),
-    ui(new Ui::DlgTransferAnyAmount)
+    ui(new Ui::DlgTransferAnyAmount),
+    fDCGroup(nullptr)
 {
     ui->setupUi(this);
+    fDCGroup = new QButtonGroup(this);
+    fDCGroup->addButton(ui->rbfromDebit, dc_debit);
+    fDCGroup->addButton(ui->rbfromCredit, dc_credit);
+    fDCGroup->setExclusive(true);
     QDoubleValidator *dv = new QDoubleValidator(0,999999999, 2);
     dv->setNotation(QDoubleValidator::StandardNotation);
     ui->letoAmount->setValidator(dv);
@@ -48,6 +55,17 @@ DlgTransferAnyAmount::DlgTransferAnyAmount(QWidget *parent) :
 DlgTransferAnyAmount::~DlgTransferAnyAmount()
 {
     delete ui;
+}
+
+void DlgTransferAnyAmount::selectDCByBalance(double balance)
+{
+    if (balance < 0) {
+        ui->rbfromDebit->setChecked(true);
+        ui->rbfromCredit->setChecked(false);
+    } else {
+        ui->rbfromCredit->setChecked(true);
+        ui->rbfromDebit->setChecked(false);
+    }
 }
 
 void DlgTransferAnyAmount::setHint(int hint)
@@ -92,11 +110,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
             ui->lefromBalance->setDouble(dd.getDouble(0));
-            if (ui->lefromBalance->asDouble() < 0) {
-                ui->rbfromDebit->setChecked(true);
-            } else {
-                ui->rbfromCredit->setChecked(true);
-            }
+            selectDCByBalance(ui->lefromBalance->asDouble());
         } else {
             ui->lefromRoomName->clear();
             ui->lefromReserve->clear();
@@ -128,11 +142,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
             dd.exec("select sum(f_amountAmd*f_sign) from m_register where f_inv=:f_inv and f_finance=1 and f_canceled=0");
             dd.nextRow();
             ui->lefromBalance->setDouble(dd.getDouble(0));
-            if (ui->lefromBalance->asDouble() < 0) {
-                ui->rbfromDebit->setChecked(true);
-            } else {
-                ui->rbfromCredit->setChecked(true);
-            }
+            selectDCByBalance(ui->lefromBalance->asDouble());
         } else {
             ui->lefromRoomName->clear();
             ui->lefromReserve->clear();
@@ -155,11 +165,7 @@ void DlgTransferAnyAmount::callback(int sel, const QString &code)
         } else {
             ui->lefromBalance->clear();
         }
-        if (ui->lefromBalance->asDouble() < 0) {
-            ui->rbfromDebit->setChecked(true);
-        } else {
-            ui->rbfromCredit->setChecked(true);
-        }
+        selectDCByBalance(ui->lefromBalance->asDouble());
         break;
     }
     case hint_to_room: {
@@ -431,14 +437,31 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
 
     QString dcn1, dcn2;
     int dcc1 = 0, dcc2 = 0;
+    const int fromTag = ui->wfromAction->radioTag();
+    const int toTag = ui->wtoAction->radioTag();
+    const bool fromRoomOrReserve = (fromTag == hint_from_room || fromTag == hint_from_reserve);
+    if (fromRoomOrReserve && toTag == hint_to_cl) {
+        // Guest debt -> CL must reduce guest balance and increase CL debt (same as Invoice->CL)
+        if (ui->lefromBalance->asDouble() < 0) {
+            dcn1 = PAY_CREDIT;
+            dcc1 = 1;
+            dcn2 = PAY_CREDIT;
+            dcc2 = 1;
+        } else {
+            dcn1 = PAY_DEBIT;
+            dcc1 = -1;
+            dcn2 = PAY_DEBIT;
+            dcc2 = -1;
+        }
+    } else {
     switch (ui->wDC->radioTag()) {
     case dc_debit:
-        switch (ui->wfromAction->radioTag()) {
+        switch (fromTag) {
         case hint_from_reserve:
         case hint_from_room:
             dcn1 = PAY_CREDIT;
             dcc1 = 1;
-            switch (ui->wtoAction->radioTag()) {
+            switch (toTag) {
             case hint_to_reserve:
             case hint_to_room:
                 dcn2 = PAY_DEBIT;
@@ -453,7 +476,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         case hint_from_cl:
             dcn1 = PAY_CREDIT;
             dcc1 = 1;
-            switch (ui->wtoAction->radioTag()) {
+            switch (toTag) {
             case hint_to_reserve:
             case hint_to_room:
                 dcn2 = PAY_CREDIT;
@@ -468,12 +491,12 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         }
         break;
     case dc_credit:
-        switch (ui->wfromAction->radioTag()) {
+        switch (fromTag) {
         case hint_from_reserve:
         case hint_from_room:
             dcn1 = PAY_DEBIT;
             dcc1 = -1;
-            switch (ui->wtoAction->radioTag()) {
+            switch (toTag) {
             case hint_to_reserve:
             case hint_to_room:
                 dcn2 = PAY_CREDIT;
@@ -488,7 +511,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
         case hint_from_cl:
             dcn1 = PAY_DEBIT;
             dcc1 = -1;
-            switch (ui->wtoAction->radioTag()) {
+            switch (toTag) {
             case hint_to_reserve:
             case hint_to_room:
                 dcn2 = PAY_DEBIT;
@@ -502,6 +525,7 @@ void DlgTransferAnyAmount::on_btnSave_clicked()
             break;
         }
         break;
+    }
     }
 
     finalName.replace(":from", replaceFrom);

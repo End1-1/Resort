@@ -311,6 +311,10 @@ set(SOURCES_RESORT
     dwmaindeskhint.cpp
     dwmaindeskhint.h
     dwmaindeskhint.ui
+    excelyappconfig.cpp
+    excelyappconfig.h
+    excelyresortsink.cpp
+    excelyresortsink.h
     fnatbyperiod.cpp
     fnatbyperiod.h
     fnatbyperiod.ui
@@ -360,9 +364,6 @@ set(SOURCES_RESORT
     taxhelper.h
     timerblya.cpp
     timerblya.h
-    travelline.cpp
-    travelline.h
-    travelline.ui
     waccinvoice.cpp
     waccinvoice.h
     waccinvoice.ui
@@ -510,8 +511,6 @@ set(SOURCES_BASE
     ../Base/preferences.h
     ../Base/stringutils.cpp
     ../Base/stringutils.h
-    ../Base/travellineconfig.cpp
-    ../Base/travellineconfig.h
     ../Base/user.cpp
     ../Base/user.h
     ../Base/utils.cpp
@@ -653,7 +652,6 @@ set(SOURCES_CACHE
     ../Cache/cachetrackingtables.h
     ../Cache/cachetransferfromcl.cpp
     ../Cache/cachetransferfromcl.h
-    ../Cache/cachetraveline.h
     ../Cache/cacheusers.cpp
     ../Cache/cacheusers.h
     ../Cache/cacheusersgroups.cpp

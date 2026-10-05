@@ -19,7 +19,6 @@ SOURCES += main.cpp\
     ../Base/broadcast1.cpp \
     ../Base/dlgselector.cpp \
     ../Base/stringutils.cpp \
-    ../Base/travellineconfig.cpp \
     ../Base/utils.cpp \
     ../Cache/cacheactivegroup.cpp \
     ../Cache/cacheactiveroom.cpp \
@@ -125,7 +124,6 @@ SOURCES += main.cpp\
     ../Base/baseuid.cpp \
     qtcppushbutton.cpp \
     ../Base/logging.cpp \
-    traveline.cpp
 
 HEADERS  += dlgmain.h \
     ../Base/appconfig.h \
@@ -138,7 +136,6 @@ HEADERS  += dlgmain.h \
     ../Base/doubledatabase.h \
     ../Base/baseuid.h \
     ../Base/stringutils.h \
-    ../Base/travellineconfig.h \
     ../Base/utils.h \
     ../Cache/cacheactivegroup.h \
     ../Cache/cacheactiveroom.h \
@@ -238,7 +235,6 @@ HEADERS  += dlgmain.h \
     ../Threads/objectthread.h \
     qtcppushbutton.h \
     ../Base/logging.h \
-    traveline.h
 
 FORMS    += dlgmain.ui \
     ../Base/dlgselector.ui \

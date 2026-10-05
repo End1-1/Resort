@@ -77,6 +77,8 @@ private slots:
     void on_btnRoomStateFilter_clicked();
     void on_btnBuilding_clicked();
 
+    void on_btnExcely_clicked();
+
 private:
     Ui::WMainDesk *ui;
     QTimer fTimer;

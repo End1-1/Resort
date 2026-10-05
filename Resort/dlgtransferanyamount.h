@@ -4,6 +4,8 @@
 #include "basedialog.h"
 #include "dbmregister.h"
 
+class QButtonGroup;
+
 static const int hint_from_room = 1;
 static const int hint_from_reserve = 2;
 static const int hint_from_cl = 3;
@@ -43,7 +45,9 @@ private:
     Ui::DlgTransferAnyAmount *ui;
     DBMRegister fDoc1;
     DBMRegister fDoc2;
+    QButtonGroup *fDCGroup;
     void disableControls();
+    void selectDCByBalance(double balance);
 };
 
 #endif // DLGTRANSFERANYAMOUNT_H

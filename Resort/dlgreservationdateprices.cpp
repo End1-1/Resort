@@ -134,7 +134,7 @@ void DlgReservationDatePrices::buildTable()
         le->setValidator(dv);
         le->setDouble(price);
         // Already stayed nights cannot be changed
-        if (!fReadOnly && d < WORKING_DATE) {
+        if (!fReadOnly && d < __preferences.getLocalDate(def_working_day)) {
             le->setReadOnly(true);
         }
         connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateTotal()));

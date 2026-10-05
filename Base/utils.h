@@ -14,6 +14,8 @@
 #include <QSettings>
 #include <QHostInfo>
 
+class QWidget;
+
 #define float_equal(value1, value2) (abs(value1 - value2) < 0.01 ? true : false)
 #define float_greaterOrEqual(value1, value2) (value1 - value2 >= 0.01 ? true : false)
 
@@ -62,6 +64,15 @@ namespace Utils {
     QString intListToString(const QList<int> &lst);
     QString getVersionString(QString fName);
     bool versionEqualFirst3(const QString &v1, const QString &v2);
+    /** Convert 1.8.25.928 / 1,8,25,928 → 1_8_25_928 for setup file names. */
+    QString setupVersionTag(const QString &version);
+    /** Full installer URL for a version (same for manual link and Updater). */
+    QString setupDownloadUrl(const QString &version);
+    /**
+     * Optionally warn that SmartHotel must be closed, start Updater.exe.
+     * Returns true if updater launched (caller should quit the app).
+     */
+    bool startProgramUpdater(const QString &targetVersion, QWidget *parent = nullptr, bool askConfirm = true);
     QString hostName();
     void fillTableWithData(QTableWidget *tw, QList<QList<QVariant> > &data, bool append = false);
     inline QString variantToString(const QVariant &v)

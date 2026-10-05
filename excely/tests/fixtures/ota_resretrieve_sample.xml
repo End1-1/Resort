@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OTA_ResRetrieveRS xmlns="http://www.opentravel.org/OTA/2003/05" Version="1.18" TimeStamp="2012-01-01T12:11:01+03:00">
+  <Success/>
+  <ReservationsList>
+    <HotelReservation CreateDateTime="2012-01-01T12:11:01+03:00" LastModifyDateTime="2012-01-01T12:12:01+03:00" ResStatus="Confirmed">
+      <UniqueID Type="14" ID="100345"/>
+      <UniqueID Type="14" ID_Context="External" ID="BGC-998877"/>
+      <POS>
+        <Source>
+          <RequestorID Type="22" ID="PMSConnect"/>
+          <BookingChannel Type="2" Primary="true">
+            <CompanyName Code="BGC" CodeContext="PMSConnect" CompanyShortName="Booking.com">Booking.com</CompanyName>
+          </BookingChannel>
+        </Source>
+      </POS>
+      <RoomStays>
+        <RoomStay IndexNumber="1">
+          <RoomTypes>
+            <RoomType RoomTypeCode="289777" InvBlockCode="1" Quantity="1"/>
+          </RoomTypes>
+          <RoomRates>
+            <RoomRate EffectiveDate="2019-02-10" ExpireDate="2019-02-10" RatePlanCode="329">
+              <Total AmountAfterTax="80.00" CurrencyCode="EUR"/>
+            </RoomRate>
+            <RoomRate EffectiveDate="2019-02-11" ExpireDate="2019-02-11" RatePlanCode="329">
+              <Total AmountAfterTax="80.00" CurrencyCode="EUR"/>
+            </RoomRate>
+          </RoomRates>
+          <GuestCounts>
+            <GuestCount AgeQualifyingCode="AdultBed" Count="2" ResGuestRPH="1"/>
+          </GuestCounts>
+          <TimeSpan Start="2019-02-10T14:00:00" End="2019-02-12T12:00:00"/>
+          <Total AmountAfterTax="160.00" CurrencyCode="EUR"/>
+          <BasicPropertyInfo HotelCode="3184"/>
+        </RoomStay>
+      </RoomStays>
+      <ResGuests>
+        <ResGuest ResGuestRPH="1">
+          <Profiles>
+            <ProfileInfo>
+              <UniqueID Type="21" ID_Context="PMSConnect" ID="4323222"/>
+              <Profile>
+                <Customer>
+                  <PersonName>
+                    <GivenName>John</GivenName>
+                    <Surname>Smith</Surname>
+                  </PersonName>
+                  <Telephone PhoneNumber="8765435678"/>
+                  <Email>smith@example.com</Email>
+                  <CitizenCountryName Code="AUS"/>
+                </Customer>
+              </Profile>
+            </ProfileInfo>
+          </Profiles>
+        </ResGuest>
+      </ResGuests>
+      <ResGlobalInfo>
+        <Guarantee GuaranteeCode="PrePay">
+          <Comments>
+            <Comment Name="PaymentMethodName"><Text>Electronic</Text></Comment>
+            <Comment Name="PaymentSystemName"><Text>CM_CREDITCARD</Text></Comment>
+            <Comment Name="PaymentSystemTitle"><Text>Bank card</Text></Comment>
+          </Comments>
+        </Guarantee>
+        <Total AmountAfterTax="160.00" CurrencyCode="EUR"/>
+        <Comments>
+          <Comment>
+            <Text>Reservation number in sales channel: BGC-998877</Text>
+          </Comment>
+        </Comments>
+      </ResGlobalInfo>
+    </HotelReservation>
+  </ReservationsList>
+</OTA_ResRetrieveRS>

@@ -38,12 +38,16 @@ private slots:
     void on_btn0_clicked();
     void on_btnClearPin_clicked();
     void socketConnected();
+    void socketMessage(const QString &message);
+    void socketDisconnectedWhileRegistering();
 
 private:
     Ui::Login *ui;
     int fLockUser;
+    bool fWaitingSocketRegister;
     QMap<QString, QMap<QString, QString> > fDatabaseList;
     void getDatabases();
+    void sendSocketRegister();
 };
 
 #endif // LOGIN_H

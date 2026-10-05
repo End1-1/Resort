@@ -55,45 +55,6 @@
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QGroupBox" name="grTravelLine">
-      <property name="minimumSize">
-       <size>
-        <width>120</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>120</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>TravelLine</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>2</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QListWidget" name="lstTravelLine"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -145,7 +106,6 @@
     <addaction name="actionCancelation_No_show_fees"/>
     <addaction name="actionAvaiable_rooms"/>
     <addaction name="actionLenght_of_stay"/>
-    <addaction name="actionTravelline"/>
     <addaction name="actionIncomplete_guests_names"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -1623,15 +1583,6 @@
    </property>
    <property name="text">
     <string>Category statistics</string>
-   </property>
-  </action>
-  <action name="actionTravelline">
-   <property name="icon">
-    <iconset resource="res.qrc">
-     <normaloff>:/images/TravelLine.png</normaloff>:/images/TravelLine.png</iconset>
-   </property>
-   <property name="text">
-    <string>Travelline</string>
    </property>
   </action>
   <action name="actionIncomplete_guests_names">

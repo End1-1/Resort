@@ -1,56 +1,113 @@
 $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $PSScriptRoot
-$RcFile = Join-Path $Root "Resort\rc.h"
-$BuildDir = "D:\build.6.10.2\resort\release"
-$ExePath = Join-Path $BuildDir "Resort.exe"
 $Staging = Join-Path $PSScriptRoot "staging"
 $QtBin = "C:\Development\Qt\6.10.2\msvc2022_64\bin"
 $WinDeployQt = Join-Path $QtBin "windeployqt.exe"
 $OpenSslBin = "C:\Development\OpenSSL-Win64\bin"
 $Iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+$SqlDriver = "C:\Development\Qt\6.10.2\msvc2022_64\plugins\sqldrivers\qsqlmysql.dll"
 
-if (-not (Test-Path $RcFile)) {
-    throw "Version file not found: $RcFile"
+function Get-QtCreatorReleaseBuildDir {
+    param(
+        [Parameter(Mandatory = $true)][string]$ProjectDir,
+        [Parameter(Mandatory = $true)][string]$ExeName
+    )
+
+    $userFile = Join-Path $ProjectDir ".qtcreator\CMakeLists.txt.user"
+    if (-not (Test-Path $userFile)) {
+        return $null
+    }
+
+    [xml]$xml = Get-Content $userFile -Raw
+    $ns = @{ ns = "http://www.qtproject.org/qtcreator" }
+    # Qt Creator stores keys without a default xmlns in practice; match both.
+    $nodes = Select-Xml -Xml $xml -XPath "//value[@key='ProjectExplorer.BuildConfiguration.BuildDirectory']"
+    if (-not $nodes) {
+        $nodes = Select-Xml -Xml $xml -XPath "//*[local-name()='value' and @key='ProjectExplorer.BuildConfiguration.BuildDirectory']"
+    }
+
+    $candidates = @()
+    foreach ($n in $nodes) {
+        $dir = [string]$n.Node.'#text'
+        if ([string]::IsNullOrWhiteSpace($dir)) { continue }
+        $exe = Join-Path $dir $ExeName
+        if (Test-Path $exe) {
+            $item = Get-Item $exe
+            $candidates += [pscustomobject]@{
+                Dir     = $dir
+                Exe     = $item.FullName
+                Written = $item.LastWriteTimeUtc
+                Version = $item.VersionInfo.FileVersion
+            }
+        }
+    }
+
+    if ($candidates.Count -eq 0) {
+        return $null
+    }
+
+    # Prefer a path that looks like Release; otherwise take the newest exe.
+    $release = $candidates |
+        Where-Object { $_.Dir -match '(?i)[\\/]release$' } |
+        Sort-Object Written -Descending |
+        Select-Object -First 1
+    if ($release) {
+        return $release
+    }
+
+    return $candidates | Sort-Object Written -Descending | Select-Object -First 1
 }
 
-$rcContent = Get-Content $RcFile -Raw
-$m = [regex]::Match($rcContent, '#define\s+_PRODUCT_VERSION\s+(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)')
-if (-not $m.Success) {
-    throw "Cannot parse _PRODUCT_VERSION from $RcFile"
+function Resolve-ReleaseExe {
+    param(
+        [Parameter(Mandatory = $true)][string]$ProjectDir,
+        [Parameter(Mandatory = $true)][string]$ExeName,
+        [Parameter(Mandatory = $true)][string]$FallbackDir
+    )
+
+    $found = Get-QtCreatorReleaseBuildDir -ProjectDir $ProjectDir -ExeName $ExeName
+    if ($found) {
+        return $found
+    }
+
+    $fallbackExe = Join-Path $FallbackDir $ExeName
+    if (Test-Path $fallbackExe) {
+        $item = Get-Item $fallbackExe
+        return [pscustomobject]@{
+            Dir     = $FallbackDir
+            Exe     = $item.FullName
+            Written = $item.LastWriteTimeUtc
+            Version = $item.VersionInfo.FileVersion
+        }
+    }
+
+    throw "$ExeName not found. Build Release first. Checked Qt Creator build dirs in $ProjectDir and fallback $FallbackDir"
 }
 
-$VersionMajor = [int]$m.Groups[1].Value
-$VersionMinor = [int]$m.Groups[2].Value
-$VersionPatch = [int]$m.Groups[3].Value
-$VersionBuild = [int]$m.Groups[4].Value
+$Resort = Resolve-ReleaseExe `
+    -ProjectDir (Join-Path $Root "Resort") `
+    -ExeName "Resort.exe" `
+    -FallbackDir "D:\build.6.10.2\resort\release"
 
-$VersionDot = "$VersionMajor.$VersionMinor.$VersionPatch.$VersionBuild"
-$VersionUs = "${VersionMajor}_${VersionMinor}_${VersionPatch}_${VersionBuild}"
+$Updater = Resolve-ReleaseExe `
+    -ProjectDir (Join-Path $Root "Updater") `
+    -ExeName "Updater.exe" `
+    -FallbackDir "D:\build.6.10.2\updater\release"
+
+$ExePath = $Resort.Exe
+$UpdaterExe = $Updater.Exe
+
+$VersionDot = $Resort.Version
+if ([string]::IsNullOrWhiteSpace($VersionDot)) {
+    throw "Cannot read FileVersion from $ExePath"
+}
+$VersionUs = $VersionDot.Replace(".", "_")
 $OutputBaseFilename = "setup_resort_$VersionUs"
 
-Write-Host "Version from rc.h: $VersionDot"
-
-if (-not (Test-Path $BuildDir)) {
-    throw "Build directory not found: $BuildDir"
-}
-
-Write-Host "Building Resort (Release)..."
-$VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-$VsInstall = & $VsWhere -latest -property installationPath
-$VcVars = Join-Path $VsInstall "VC\Auxiliary\Build\vcvars64.bat"
-if (-not (Test-Path $VcVars)) {
-    throw "vcvars64.bat not found: $VcVars"
-}
-$buildCmd = "call `"$VcVars`" >nul && cmake --build `"$BuildDir`""
-cmd /c $buildCmd
-if ($LASTEXITCODE -ne 0) {
-    throw "cmake build failed with exit code $LASTEXITCODE"
-}
-
-if (-not (Test-Path $ExePath)) {
-    throw "Executable not found: $ExePath"
-}
+Write-Host "Packaging installer from latest release builds:"
+Write-Host ("  Resort:  {0}  (v{1}, {2:yyyy-MM-dd HH:mm})" -f $ExePath, $VersionDot, $Resort.Written.ToLocalTime())
+Write-Host ("  Updater: {0}  (v{1}, {2:yyyy-MM-dd HH:mm})" -f $UpdaterExe, $Updater.Version, $Updater.Written.ToLocalTime())
 
 Write-Host "Preparing staging directory: $Staging"
 if (Test-Path $Staging) {
@@ -59,6 +116,8 @@ if (Test-Path $Staging) {
 New-Item -ItemType Directory -Path $Staging | Out-Null
 
 Copy-Item $ExePath $Staging
+Write-Host "Copying Updater: $UpdaterExe"
+Copy-Item $UpdaterExe (Join-Path $Staging "Updater.exe") -Force
 
 Write-Host "Running windeployqt..."
 & $WinDeployQt --release --compiler-runtime --force --dir $Staging $Staging\Resort.exe
@@ -66,7 +125,6 @@ if ($LASTEXITCODE -ne 0) {
     throw "windeployqt failed with exit code $LASTEXITCODE"
 }
 
-$SqlDriver = "C:\Development\Qt\6.10.2\msvc2022_64\plugins\sqldrivers\qsqlmysql.dll"
 $SqlDest = Join-Path $Staging "sqldrivers"
 if (-not (Test-Path $SqlDest)) {
     New-Item -ItemType Directory -Path $SqlDest | Out-Null
@@ -120,12 +178,6 @@ if (Test-Path $TouchQss) {
     Copy-Item $TouchQss $Staging -Force
 } else {
     Write-Warning "SmartHotelTouch.qss not found: $TouchQss"
-}
-
-$builtVersion = (Get-Item $ExePath).VersionInfo.FileVersion
-Write-Host "Built executable version: $builtVersion"
-if ($builtVersion -ne $VersionDot) {
-    throw "Executable version mismatch. Expected $VersionDot, got $builtVersion"
 }
 
 if (-not (Test-Path $Iscc)) {

@@ -6,9 +6,11 @@
 #include "cacheresthall.h"
 #include "dlgeditservtax.h"
 #include "cacheusersgroups.h"
+#include "excelyappconfig.h"
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonParseError>
 
 void WGlobalDbConfig::getCompSettings()
 {
@@ -142,6 +144,18 @@ void WGlobalDbConfig::getApp()
     if (fDD.nextRow()) {
         ui->leExternalRestaurantDb->setText(fDD.getString(0));
     }
+
+    const ExcelyAppConfig excely = ExcelyAppConfig::load();
+    ui->leExcelyEndpoint->setText(excely.pms.endpoint);
+    ui->leExcelyHotelCode->setText(excely.pms.hotelCode);
+    ui->leExcelyUsername->setText(excely.pms.username);
+    ui->leExcelyPassword->setText(excely.pms.password);
+    ui->leExcelyProtocolVersion->setText(excely.pms.protocolVersion);
+    const QString mapJson = excely.roomTypeMapJson();
+    ui->teExcelyRoomTypeMap->setPlainText(
+        mapJson.isEmpty()
+            ? QString()
+            : QString::fromUtf8(QJsonDocument::fromJson(mapJson.toUtf8()).toJson(QJsonDocument::Indented)));
 }
 
 void WGlobalDbConfig::getReportOptions()
@@ -268,6 +282,12 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     .addWidget(ui->chDailyPrintCanceled, "Daily: always print canceled")
     .addWidget(ui->leLog1, "Log 1")
     .addWidget(ui->leLog2, "Log 2")
+    .addWidget(ui->leExcelyEndpoint, "Excely endpoint")
+    .addWidget(ui->leExcelyHotelCode, "Excely hotel code")
+    .addWidget(ui->leExcelyUsername, "Excely username")
+    .addWidget(ui->leExcelyPassword, "Excely password")
+    .addWidget(ui->leExcelyProtocolVersion, "Excely protocol version")
+    .addWidget(ui->teExcelyRoomTypeMap, "Excely room type map")
     .addWidget(ui->chPrintVoucherAfterSave, "Print voucher after save")
     .addWidget(ui->lePenaltyList, "Penalty list")
     .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
@@ -374,6 +394,36 @@ void WGlobalDbConfig::on_btnSave_clicked()
     values.insert(def_removal_vaucher_id, ui->leRemovalVoucherId->text());
     values.insert(def_print_tax_after_receipt, ui->chPrintTaxAfterReceipt->isChecked() ? "1" : "0");
     values.insert(def_debug_mode, ui->chDebug->isChecked() ? "1" : "0");
+
+    ExcelyAppConfig excely;
+    excely.pms.endpoint = ui->leExcelyEndpoint->text().trimmed();
+    if (excely.pms.endpoint.isEmpty()) {
+        excely.pms.endpoint = QStringLiteral("https://pmsconnect.test.hopenapi.com/Api/PMSConnect.svc");
+    }
+    excely.pms.hotelCode = ui->leExcelyHotelCode->text().trimmed();
+    excely.pms.username = ui->leExcelyUsername->text().trimmed();
+    excely.pms.password = ui->leExcelyPassword->text();
+    excely.pms.protocolVersion = ui->leExcelyProtocolVersion->text().trimmed();
+    if (excely.pms.protocolVersion.isEmpty()) {
+        excely.pms.protocolVersion = QStringLiteral("1.18");
+    }
+    const QString mapText = ui->teExcelyRoomTypeMap->toPlainText().trimmed();
+    if (!mapText.isEmpty()) {
+        QJsonParseError pe;
+        const QJsonDocument doc = QJsonDocument::fromJson(mapText.toUtf8(), &pe);
+        if (pe.error != QJsonParseError::NoError || !doc.isObject()) {
+            message_error(tr("Excely room type map must be a valid JSON object:\n%1")
+                              .arg(pe.errorString()));
+            return;
+        }
+        excely.setRoomTypeMapJson(mapText);
+    }
+    QString mapErr;
+    if (!excely.save(&mapErr)) {
+        message_error(mapErr.isEmpty() ? tr("Failed to save Excely settings") : mapErr);
+        return;
+    }
+
     QString query = "insert into f_global_settings (f_settings, f_key, f_value) values ";
     bool first = true;
     QMapIterator<QString, QString> it(values);

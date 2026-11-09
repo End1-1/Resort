@@ -341,12 +341,24 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
         r->setSingleMode(true);
         if (r->exec() == QDialog::Accepted) {
             QString err;
-            if (WReservationRoomTab::check(r->fCode.toInt(), fSrc->dateEntry(index.row()), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
-                DoubleDatabase dd;
+            DoubleDatabase dd;
+            dd.startTransaction();
+            if (WReservationRoomTab::checkLocked(dd, r->fCode.toInt(), fSrc->dateEntry(index.row()), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
                 dd[":f_room"] = r->fCode.toInt();
-                dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
+                if (!dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))))) {
+                    dd.rollback();
+                    message_error(dd.fLastError);
+                    delete r;
+                    break;
+                }
                 dd[":f_room"] = r->fCode;
                 dd.update("m_register", where_id(ap(fSrc->reservationCode(index.row()))));
+                if (!dd.commit()) {
+                    dd.rollback();
+                    message_error(dd.fLastError);
+                    delete r;
+                    break;
+                }
                 QModelIndex mr = fSrc->model()->index(index.row(), col_room);
                 TrackControl::insert(TRACK_RESERVATION, "Room", fSrc->model()->data(mr).toString(), r->fCode, "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
                 fSrc->model()->setData(mr, r->fCode);
@@ -357,6 +369,7 @@ QWidget *WQuickReservationsDelegate::createEditor(QWidget *parent, const QStyleO
                 }
                 fSrc->broadcast(index.row());
             } else {
+                dd.rollback();
                 message_error(err);
             }
         }
@@ -471,14 +484,20 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
     case col_date_entry: {
             auto *d = static_cast<EDateEdit*>(editor);
             QString err;
-            if (WReservationRoomTab::check(fSrc->room(index.row()), d->date(), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
-                DoubleDatabase dd;
+            DoubleDatabase dd;
+            dd.startTransaction();
+            if (WReservationRoomTab::checkLocked(dd, fSrc->room(index.row()), d->date(), fSrc->dateDeparture(index.row()), fSrc->reservationCode(index.row()), err)) {
                 dd[":f_startdate"] = d->date();
-                dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
+                if (!dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row())))) || !dd.commit()) {
+                    dd.rollback();
+                    message_error(dd.fLastError);
+                    break;
+                }
                 TrackControl::insert(TRACK_RESERVATION, "Entry date", model->data(index).toString(), d->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
                 model->setData(index, d->date());
                 fSrc->broadcast(index.row());
             } else {
+                dd.rollback();
                 message_error(err);
             }
             break;
@@ -486,14 +505,20 @@ void WQuickReservationsDelegate::setModelData(QWidget *editor, QAbstractItemMode
     case col_date_departure: {
         auto *d = static_cast<EDateEdit*>(editor);
         QString err;
-        if (WReservationRoomTab::check(fSrc->room(index.row()), fSrc->dateEntry(index.row()), d->date(), fSrc->reservationCode(index.row()), err)) {
-            DoubleDatabase dd;
+        DoubleDatabase dd;
+        dd.startTransaction();
+        if (WReservationRoomTab::checkLocked(dd, fSrc->room(index.row()), fSrc->dateEntry(index.row()), d->date(), fSrc->reservationCode(index.row()), err)) {
             dd[":f_enddate"] = d->date();
-            dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row()))));
+            if (!dd.update("f_reservation", where_id(ap(fSrc->reservationCode(index.row())))) || !dd.commit()) {
+                dd.rollback();
+                message_error(dd.fLastError);
+                break;
+            }
             TrackControl::insert(TRACK_RESERVATION, "Departure date", model->data(index).toString(), d->text(), "", fSrc->invoiceCode(index.row()), fSrc->reservationCode(index.row()));
             model->setData(index, d->date());
             fSrc->broadcast(index.row());
         } else {
+            dd.rollback();
             message_error(err);
         }
         break;

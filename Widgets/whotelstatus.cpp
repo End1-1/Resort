@@ -4,6 +4,7 @@
 #include "pprintscene.h"
 #include "ptextrect.h"
 #include "pdefaults.h"
+#include "trackcontrol.h"
 
 #include <QPushButton>
 #include <QTableWidget>
@@ -220,6 +221,8 @@ WHotelStatus::~WHotelStatus()
 void WHotelStatus::setup()
 {
     setupTabTextAndIcon(tr("Hotel Status"), ":/images/info.png");
+    TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                         tr("Hotel Status"), QStringLiteral("WHotelStatus"));
 }
 
 void WHotelStatus::printTable(PPrintPreview *pp, PPrintScene *&ps, int &top, int &page,

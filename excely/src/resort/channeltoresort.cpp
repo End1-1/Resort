@@ -11,7 +11,10 @@ BookingDraft toResortDraft(const Channel::Booking &in)
     d.channel = in.channelId.isEmpty() ? QStringLiteral("exely") : in.channelId;
     d.chmId = in.channelReservationId;
     d.bookingExternalId = in.externalReservationId;
+    d.createDateTime = in.createDateTime;
+    d.createDateTimeRaw = in.createDateTimeRaw;
     d.lastModify = in.lastModifyDateTime;
+    d.lastModifyRaw = in.lastModifyDateTimeRaw;
     d.cardex = in.companyCode;
     d.companyName = in.companyName.isEmpty() ? in.companyCode : in.companyName;
     d.remarks = in.fullComment.isEmpty() ? in.comment : in.fullComment;
@@ -21,6 +24,18 @@ BookingDraft toResortDraft(const Channel::Booking &in)
     d.grandTotal = in.totalAfterTax;
     d.currencyCode = in.currencyCode;
     d.chmStatus = 1;
+
+    for (const Channel::Deposit &dep : in.deposits) {
+        if (dep.amount <= 0.0) {
+            continue;
+        }
+        DepositDraft dd;
+        dd.type = dep.type;
+        dd.amount = dep.amount;
+        dd.currencyCode = dep.currencyCode;
+        dd.paymentIndex = dep.paymentIndex;
+        d.deposits.append(dd);
+    }
 
     switch (in.status) {
     case Channel::BookingStatus::Cancelled:
@@ -44,7 +59,8 @@ BookingDraft toResortDraft(const Channel::Booking &in)
     d.mainGuest.nationShort = in.mainGuest.countryCode;
     d.mainGuest.isPrimary = true;
 
-    if (d.mainGuest.lastName.isEmpty() && !in.guests.isEmpty()) {
+    if ((d.mainGuest.lastName.isEmpty() && d.mainGuest.firstName.isEmpty())
+            && !in.guests.isEmpty()) {
         const Channel::Guest &g0 = in.guests.first();
         d.mainGuest.firstName = g0.firstName;
         d.mainGuest.middleName = g0.middleName;
@@ -52,6 +68,14 @@ BookingDraft toResortDraft(const Channel::Booking &in)
         d.mainGuest.email = g0.email;
         d.mainGuest.phone = g0.phone;
         d.mainGuest.nationShort = g0.countryCode;
+    } else if (d.mainGuest.lastName.isEmpty() && !in.guests.isEmpty()) {
+        const Channel::Guest &g0 = in.guests.first();
+        if (d.mainGuest.firstName.isEmpty()) d.mainGuest.firstName = g0.firstName;
+        if (d.mainGuest.middleName.isEmpty()) d.mainGuest.middleName = g0.middleName;
+        d.mainGuest.lastName = g0.lastName;
+        if (d.mainGuest.email.isEmpty()) d.mainGuest.email = g0.email;
+        if (d.mainGuest.phone.isEmpty()) d.mainGuest.phone = g0.phone;
+        if (d.mainGuest.nationShort.isEmpty()) d.mainGuest.nationShort = g0.countryCode;
     }
 
     for (const Channel::Guest &g : in.guests) {
@@ -80,6 +104,8 @@ BookingDraft toResortDraft(const Channel::Booking &in)
         }
         rd.men = rs.adults;
         rd.children = rs.children;
+        rd.babies = rs.babies;
+        rd.extraBed = rs.extraBed;
         rd.total = rs.amountAfterTax;
         rd.currencyCode = rs.currencyCode;
         if (rd.startDate.isValid() && rd.endDate.isValid()) {
@@ -162,10 +188,22 @@ QJsonObject BookingDraft::toImportJson() const
         jo.insert(QStringLiteral("total"), r.total);
         jo.insert(QStringLiteral("guest_count_men"), r.men);
         jo.insert(QStringLiteral("guest_count_oth"), r.children);
+        jo.insert(QStringLiteral("guest_count_baby"), r.babies);
         jo.insert(QStringLiteral("index"), r.indexNumber);
         roomsArr.append(jo);
     }
     o.insert(QStringLiteral("rooms"), roomsArr);
+
+    QJsonArray depositsArr;
+    for (const DepositDraft &dep : deposits) {
+        QJsonObject jo;
+        jo.insert(QStringLiteral("type"), dep.type);
+        jo.insert(QStringLiteral("amount"), dep.amount);
+        jo.insert(QStringLiteral("currency"), dep.currencyCode);
+        jo.insert(QStringLiteral("payment_index"), dep.paymentIndex);
+        depositsArr.append(jo);
+    }
+    o.insert(QStringLiteral("deposits"), depositsArr);
     return o;
 }
 

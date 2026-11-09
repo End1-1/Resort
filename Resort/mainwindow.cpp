@@ -148,6 +148,7 @@
 #include "wcontacts.h"
 #include "wcustomreports.h"
 #include "wglobaldbconfig.h"
+#include "wexcelyavailability.h"
 #include "wguests.h"
 #include "whotelstatus.h"
 #include "wmaindesk.h"
@@ -673,6 +674,7 @@ void MainWindow::enableMainMenu(bool value)
     ui->actionSetup_Tax_Printer->setVisible(r__(cr__setup_tax));
     ui->actionRoom_inventory->setVisible(r__(cr__directory_hotel_room_inventory));
     ui->actionRoom_inventory_states->setVisible(r__(cr__directory_hotel_room_inventory_state));
+    ui->actionExcely_availability->setVisible(r__(cr__excely_availability));
     ui->actionImages->setVisible(WORKING_USERGROUP == 1);
     ui->actionNationality_file->setVisible(r__(cr__nationality));
     ui->actionCall_rates->setVisible(r__(cr__call_rate));
@@ -2092,6 +2094,11 @@ void MainWindow::on_actionRoom_inventory_2_triggered()
 void MainWindow::on_actionRoom_inventory_states_triggered()
 {
     RERoomInventoryState::openReport();
+}
+
+void MainWindow::on_actionExcely_availability_triggered()
+{
+    addTab<WExcelyAvailability>();
 }
 
 void MainWindow::on_actionList_of_checkin_guests_triggered()

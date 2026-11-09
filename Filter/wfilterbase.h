@@ -19,6 +19,8 @@ public:
     virtual QString reportTitle();
     virtual bool officialTitle();
     virtual bool handlePrint();
+    /** Write TRACK_REPORT "Open report" (also done automatically from WReportGrid::addFilterWidget). */
+    void logReportOpened(const QString &title = QString());
 
     template<typename T, typename R>
     static T *openFilterReport() {

@@ -3,6 +3,7 @@
 #include "excely/pms/xmlhelpers.h"
 
 #include <QDateTime>
+#include <QHash>
 
 namespace Excely {
 namespace Pms {
@@ -101,8 +102,27 @@ static void parseGuestPerson(QXmlStreamReader &r, Channel::Guest *g)
             if (g->phone.isEmpty()) g->phone = p;
             skipElement(r);
         } else if (isStart(r, "CitizenCountryName")) {
-            g->countryCode = attr(r, "Code");
+            const QString code = attr(r, "Code").trimmed();
+            if (!code.isEmpty()) {
+                g->countryCode = code;
+            }
             skipElement(r);
+        } else if (isStart(r, "Address")) {
+            // Descend — CountryName may be nested
+            continue;
+        } else if (isStart(r, "CountryName")) {
+            QString code = attr(r, "Code").trimmed();
+            if (code.isEmpty()) {
+                code = r.readElementText().trimmed();
+            } else {
+                skipElement(r);
+            }
+            if (g->countryCode.isEmpty() && !code.isEmpty()) {
+                g->countryCode = code;
+            }
+        } else if (isStart(r, "PersonName")) {
+            // Descend into PersonName — GivenName/Surname are children
+            continue;
         } else if (r.isStartElement()) {
             skipElement(r);
         }
@@ -151,6 +171,170 @@ QString buildOtaHotelAvailRqXml(const QString &hotelCode, const QString &version
              escape(hotelCode));
 }
 
+QString buildOtaHotelAvailNotifRqXml(const QString &hotelCode,
+                                     const QString &version,
+                                     const QVector<AvailStatusMessage> &messages)
+{
+    QString msgs;
+    for (const AvailStatusMessage &m : messages) {
+        QString limitAttr;
+        if (m.sendBookingLimit) {
+            limitAttr = QStringLiteral(" BookingLimit=\"%1\"").arg(m.bookingLimit);
+        }
+        QString sac = QStringLiteral(
+            "<StatusApplicationControl Start=\"%1\" End=\"%2\" InvTypeCode=\"%3\"")
+                          .arg(escape(m.start.toString(Qt::ISODate)),
+                               escape(m.end.toString(Qt::ISODate)),
+                               escape(m.invTypeCode));
+        if (!m.ratePlanCode.isEmpty()) {
+            sac += QStringLiteral(" RatePlanCode=\"%1\"").arg(escape(m.ratePlanCode));
+        } else if (!m.invBlockCode.isEmpty()) {
+            sac += QStringLiteral(" InvBlockCode=\"%1\"").arg(escape(m.invBlockCode));
+        }
+        sac += QStringLiteral("/>");
+
+        QString restriction;
+        if (!m.restrictionStatus.isEmpty()) {
+            restriction = QStringLiteral("<RestrictionStatus Status=\"%1\"/>")
+                              .arg(escape(m.restrictionStatus));
+        }
+
+        QString los;
+        if (m.minLOS > 0) {
+            los = QStringLiteral(
+                "<LengthsOfStay>"
+                "<LengthOfStay MinMaxMessageType=\"SetMinLOS\" Time=\"%1\" TimeUnit=\"Day\"/>"
+                "</LengthsOfStay>")
+                      .arg(m.minLOS);
+        } else if (m.minLOS == 0) {
+            // Clear previously set MinLOS (Exely certification: Open alone does not remove it)
+            los = QStringLiteral(
+                "<LengthsOfStay>"
+                "<LengthOfStay MinMaxMessageType=\"RemoveMinLOS\"/>"
+                "</LengthsOfStay>");
+        }
+
+        msgs += QStringLiteral("<AvailStatusMessage%1>%2%3%4</AvailStatusMessage>")
+                    .arg(limitAttr, sac, restriction, los);
+    }
+
+    return QStringLiteral(
+        "<OTA_HotelAvailNotifRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" "
+        "Version=\"%1\" TimeStamp=\"%2\">"
+        "<AvailStatusMessages HotelCode=\"%3\">"
+        "%4"
+        "</AvailStatusMessages>"
+        "</OTA_HotelAvailNotifRQ>")
+        .arg(escape(version),
+             QDateTime::currentDateTime().toString(Qt::ISODate),
+             escape(hotelCode),
+             msgs);
+}
+
+QString buildOtaHotelRateAmountNotifRqXml(const QString &hotelCode,
+                                          const QString &version,
+                                          const QVector<RateAmountMessage> &messages)
+{
+    QString msgs;
+    for (const RateAmountMessage &m : messages) {
+        QVector<QPair<int, double>> bases = m.baseByGuestAmts;
+        if (bases.isEmpty() && m.amountAfterTax > 0.0) {
+            bases.append(qMakePair(qMax(1, m.numberOfGuests), m.amountAfterTax));
+        }
+
+        QString baseXml;
+        if (!bases.isEmpty()) {
+            baseXml = QStringLiteral("<BaseByGuestAmts>");
+            for (const auto &b : bases) {
+                baseXml += QStringLiteral(
+                    "<BaseByGuestAmt AmountAfterTax=\"%1\" NumberOfGuests=\"%2\" CurrencyCode=\"%3\"/>")
+                               .arg(QString::number(b.second, 'f', 2),
+                                    QString::number(qMax(1, b.first)),
+                                    escape(m.currencyCode));
+            }
+            baseXml += QStringLiteral("</BaseByGuestAmts>");
+        }
+
+        QString addXml;
+        if (!m.additionalGuests.isEmpty()) {
+            addXml = QStringLiteral("<AdditionalGuestAmounts>");
+            for (const AdditionalGuestAmount &a : m.additionalGuests) {
+                const QString cur = a.currencyCode.isEmpty() ? m.currencyCode : a.currencyCode;
+                QString attrs = QStringLiteral("AmountAfterTax=\"%1\" CurrencyCode=\"%2\"")
+                                    .arg(QString::number(a.amountAfterTax, 'f', 2), escape(cur));
+                if (a.maxAdditionalGuests > 0) {
+                    attrs += QStringLiteral(" MaxAdditionalGuests=\"%1\"")
+                                 .arg(a.maxAdditionalGuests);
+                }
+                if (a.sendBedRequired) {
+                    attrs += QStringLiteral(" BedRequired=\"%1\"")
+                                 .arg(a.bedRequired ? QStringLiteral("true")
+                                                    : QStringLiteral("false"));
+                }
+                if (a.ageQualifyingCode > 0) {
+                    attrs += QStringLiteral(" AgeQualifyingCode=\"%1\"")
+                                 .arg(a.ageQualifyingCode);
+                }
+                if (a.ageBucket >= 0) {
+                    attrs += QStringLiteral(" AgeBucket=\"%1\"").arg(a.ageBucket);
+                }
+                if (a.minAge >= 0) {
+                    attrs += QStringLiteral(" MinAge=\"%1\"").arg(a.minAge);
+                }
+                if (a.maxAge >= 0) {
+                    attrs += QStringLiteral(" MaxAge=\"%1\"").arg(a.maxAge);
+                }
+                addXml += QStringLiteral("<AdditionalGuestAmount %1/>").arg(attrs);
+            }
+            addXml += QStringLiteral("</AdditionalGuestAmounts>");
+        }
+
+        msgs += QStringLiteral(
+            "<RateAmountMessage>"
+            "<StatusApplicationControl InvTypeCode=\"%1\" RatePlanCode=\"%2\"/>"
+            "<Rates>"
+            "<Rate Start=\"%3\" End=\"%4\">"
+            "%5%6"
+            "</Rate>"
+            "</Rates>"
+            "</RateAmountMessage>")
+                    .arg(escape(m.invTypeCode),
+                         escape(m.ratePlanCode),
+                         escape(m.start.toString(Qt::ISODate)),
+                         escape(m.end.toString(Qt::ISODate)),
+                         baseXml,
+                         addXml);
+    }
+
+    return QStringLiteral(
+        "<OTA_HotelRateAmountNotifRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" "
+        "Version=\"%1\" TimeStamp=\"%2\">"
+        "<RateAmountMessages HotelCode=\"%3\">"
+        "%4"
+        "</RateAmountMessages>"
+        "</OTA_HotelRateAmountNotifRQ>")
+        .arg(escape(version),
+             QDateTime::currentDateTime().toString(Qt::ISODate),
+             escape(hotelCode),
+             msgs);
+}
+
+QString buildOtaCancelRqXml(const QString &version,
+                            const QString &channelReservationId,
+                            const QString &reason)
+{
+    const QString reasonText = reason.trimmed().isEmpty()
+            ? QStringLiteral("Cancelled by PMS")
+            : reason.trimmed();
+    return QStringLiteral(
+        "<OTA_CancelRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" Version=\"%1\">"
+        "<UniqueID ID=\"%2\" ID_Context=\"PMSConnect\" Reason=\"%3\"/>"
+        "</OTA_CancelRQ>")
+        .arg(escape(version),
+             escape(channelReservationId),
+             escape(reasonText));
+}
+
 QString buildOtaNotifReportReservedXml(const QString &hotelCode,
                                        const QString &version,
                                        const QString &uniqueId,
@@ -194,6 +378,63 @@ QString buildOtaNotifReportReservedXml(const QString &hotelCode,
              escape(uniqueId),
              roomStaysBlock,
              escape(pmsReservationId));
+}
+
+QString buildOtaNotifReportReservedRoomsXml(const QString &hotelCode,
+                                            const QString &version,
+                                            const QString &uniqueId,
+                                            const QString &createDateTime,
+                                            const QString &lastModifyDateTime,
+                                            const QVector<Channel::RoomConfirmation> &rooms)
+{
+    QStringList pmsIds;
+    QHash<QString, QStringList> indexesByPms;
+    for (const Channel::RoomConfirmation &rc : rooms) {
+        if (!indexesByPms.contains(rc.pmsReservationId)) {
+            pmsIds.append(rc.pmsReservationId);
+        }
+        QStringList &idx = indexesByPms[rc.pmsReservationId];
+        if (!rc.indexNumber.trimmed().isEmpty()) {
+            idx.append(rc.indexNumber);
+        }
+    }
+
+    QString reservations;
+    for (const QString &pmsId : pmsIds) {
+        QString roomStays;
+        for (const QString &idx : indexesByPms.value(pmsId)) {
+            roomStays += QStringLiteral("<RoomStay IndexNumber=\"%1\"/>").arg(escape(idx));
+        }
+        if (!roomStays.isEmpty()) {
+            roomStays = QStringLiteral("<RoomStays>%1</RoomStays>").arg(roomStays);
+        }
+        reservations += QStringLiteral(
+            "<HotelReservation CreateDateTime=\"%1\" LastModifyDateTime=\"%2\" ResStatus=\"Reserved\">"
+            "<UniqueID Type=\"14\" ID=\"%3\"/>"
+            "%4"
+            "<ResGlobalInfo>"
+            "<HotelReservationIDs>"
+            "<HotelReservationID ResID_Type=\"14\" ResID_Value=\"%5\"/>"
+            "</HotelReservationIDs>"
+            "</ResGlobalInfo>"
+            "</HotelReservation>")
+            .arg(escape(createDateTime),
+                 escape(lastModifyDateTime),
+                 escape(uniqueId),
+                 roomStays,
+                 escape(pmsId));
+    }
+
+    return QStringLiteral(
+        "<OTA_NotifReportRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" Version=\"%1\">"
+        "<Success/>"
+        "<NotifDetails HotelCode=\"%2\">"
+        "<HotelNotifReport>"
+        "<HotelReservations>%3</HotelReservations>"
+        "</HotelNotifReport>"
+        "</NotifDetails>"
+        "</OTA_NotifReportRQ>")
+        .arg(escape(version), escape(hotelCode), reservations);
 }
 
 QString buildOtaNotifReportDeniedXml(const QString &hotelCode,
@@ -296,8 +537,10 @@ bool parseResRetrieveRs(const QByteArray &xml,
             cur = Channel::Booking{};
             haveBooking = true;
             cur.status = parseStatus(attr(r, "ResStatus"));
-            cur.createDateTime = parseOtaDateTime(attr(r, "CreateDateTime"));
-            cur.lastModifyDateTime = parseOtaDateTime(attr(r, "LastModifyDateTime"));
+            cur.createDateTimeRaw = attr(r, "CreateDateTime");
+            cur.lastModifyDateTimeRaw = attr(r, "LastModifyDateTime");
+            cur.createDateTime = parseOtaDateTime(cur.createDateTimeRaw);
+            cur.lastModifyDateTime = parseOtaDateTime(cur.lastModifyDateTimeRaw);
             continue;
         }
         if (isEnd(r, "HotelReservation")) {
@@ -410,11 +653,22 @@ bool parseResRetrieveRs(const QByteArray &xml,
         }
         if (inRoomStay && isStart(r, "GuestCount")) {
             const QString aqc = attr(r, "AgeQualifyingCode");
-            const int count = attr(r, "Count").toInt();
+            const int count = qMax(1, attr(r, "Count").toInt());
+            const QString ageRaw = attr(r, "Age").trimmed();
+            bool ageOk = false;
+            const int ageYears = ageRaw.toInt(&ageOk);
+            // AdultExtraBed / ChildBandExtraBed → channel flag (host also compares vs f_bedQty)
+            if (aqc.contains(QLatin1String("ExtraBed"), Qt::CaseInsensitive)) {
+                room.extraBed = true;
+            }
             if (aqc.contains(QLatin1String("Adult"), Qt::CaseInsensitive)) {
-                room.adults += count > 0 ? count : 1;
+                room.adults += count;
+            } else if (ageOk && ageYears >= 0 && ageYears <= 2) {
+                // Age 0–2 → f_baby (no bed, not counted toward occupancy beds)
+                room.babies += count;
             } else {
-                room.children += count > 0 ? count : 1;
+                // Age > 2 or omitted → f_child (needs a bed, up to 18)
+                room.children += count;
             }
             skipElement(r);
             continue;

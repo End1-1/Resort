@@ -28,12 +28,118 @@
 #include "cacheinvoiceitem.h"
 #include "vauchers.h"
 #include "dlgreservationremarks.h"
+#include "excely/pms/pmsconnectclient.h"
+#include "excelyappconfig.h"
+#include "excelyavailpusher.h"
 #include "dlgreservationdateprices.h"
 #include "pprintcheckin.h"
 #include "utils.h"
 #include <QKeyEvent>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMap>
+
+namespace {
+
+QDate workingDate()
+{
+    return Base::fPreferences.getLocalDate(def_working_day);
+}
+
+bool rejectStayDates(const QDate &start, const QDate &end, const QString &rid, QString &errorMsg)
+{
+    if (start < workingDate()) {
+        CacheReservation cr;
+        if (cr.get(rid)) {
+            if (cr.fState() == RESERVE_RESERVE) {
+                errorMsg = QObject::tr("Invalid entry date");
+                return true;
+            }
+        }
+    }
+    if (start > end) {
+        errorMsg = QObject::tr("Date of entry cannot be greater than date of departure");
+        return true;
+    }
+    return false;
+}
+
+QDate stayDateFromRow(DoubleDatabase &dd, const QString &column)
+{
+    const QString raw = dd.getString(column).trimmed();
+    QDate d = QDate::fromString(raw.left(10), Qt::ISODate);
+    if (!d.isValid()) {
+        d = dd.getDate(column);
+    }
+    return d;
+}
+
+// true = overlap or unreadable dates (fail closed)
+bool roomConflicts(DoubleDatabase &dd, int room, const QDate &start, const QDate &end,
+                   const QString &rid, QString &errorMsg, bool lockRows)
+{
+    dd[":f_room"] = room;
+    dd[":f_s1"] = RESERVE_CHECKIN;
+    dd[":f_s2"] = RESERVE_RESERVE;
+    dd[":f_s3"] = RESERVE_OUTOFINVENTORY;
+    dd[":f_s4"] = RESERVE_OUTOFROOM;
+    dd[":f_s5"] = RESERVE_SERVICE;
+    dd[":date"] = workingDate();
+    // date_format: Qt6 + MySQL prepared SELECT returns an invalid QDate, and the old
+    // comparison then treated every existing stay as "no overlap".
+    QString sql = QStringLiteral(
+                      "select f_id, date_format(f_startdate, '%Y-%m-%d') as f_startdate, "
+                      "date_format(f_enddate, '%Y-%m-%d') as f_enddate, f_state "
+                      "from f_reservation where ((f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s5) "
+                      "or ((f_state=:f_s3 or f_state=:f_s4) and f_enddate>=:date)) "
+                      "and f_room=:f_room");
+    if (lockRows) {
+        sql += QStringLiteral(" for update");
+    }
+    if (!dd.exec(sql)) {
+        errorMsg = dd.fLastError.isEmpty()
+                   ? QObject::tr("Cannot check room availability")
+                   : dd.fLastError;
+        return true;
+    }
+    while (dd.nextRow()) {
+        if (!rid.isEmpty() && rid == dd.getString("f_id")) {
+            continue;
+        }
+        const QString otherId = dd.getString("f_id");
+        const QString rawStart = dd.getString(QStringLiteral("f_startdate")).trimmed();
+        const QString rawEnd = dd.getString(QStringLiteral("f_enddate")).trimmed();
+        if (rawStart.isEmpty() || rawEnd.isEmpty()
+                || rawStart.startsWith(QLatin1String("0000-00-00"))
+                || rawEnd.startsWith(QLatin1String("0000-00-00"))) {
+            continue;
+        }
+        const QDate ds = stayDateFromRow(dd, QStringLiteral("f_startdate"));
+        const QDate de = stayDateFromRow(dd, QStringLiteral("f_enddate"));
+        const int state = dd.getInt("f_state");
+        if (!ds.isValid() || !de.isValid()) {
+            errorMsg = QObject::tr("Conflict reservation id") + ": " + otherId;
+            return true;
+        }
+        if (state == RESERVE_OUTOFINVENTORY || state == RESERVE_OUTOFROOM) {
+            if (start == de || end == ds) {
+                errorMsg = QObject::tr("Conflict reservation id") + ": " + otherId;
+                return true;
+            }
+        }
+        if (end <= ds) {
+            continue;
+        }
+        if (start >= de) {
+            continue;
+        }
+        errorMsg = QObject::tr("Conflict reservation id") + ": " + otherId;
+        return true;
+    }
+    return false;
+}
+
+}
 
 static const int HINT_SEARCH_GUEST = 1;
 static const int HINT_CARDEX = 2;
@@ -108,63 +214,41 @@ WReservationRoomTab::~WReservationRoomTab()
 
 bool WReservationRoomTab::check(int room, const QDate &start, const QDate &end, const QString &rid, QString &errorMsg)
 {
-    if (start < WORKING_DATE) {
-        CacheReservation cr;
-        if (cr.get(rid)) {
-            if (cr.fState() == RESERVE_RESERVE) {
-                errorMsg = tr("Invalid entry date");
-                return false;
-            }
-        }
-    }
-    if (start > end) {
-        errorMsg = tr("Date of entry cannot be greater than date of departure");
+    if (rejectStayDates(start, end, rid, errorMsg)) {
         return false;
     }
+    if (room <= 0) {
+        return true;
+    }
     DoubleDatabase fDD;
-    if (room == 0) {
+    return !roomConflicts(fDD, room, start, end, rid, errorMsg, false);
+}
+
+bool WReservationRoomTab::checkLocked(DoubleDatabase &dd, int room, const QDate &start, const QDate &end,
+                                      const QString &rid, QString &errorMsg)
+{
+    if (rejectStayDates(start, end, rid, errorMsg)) {
+        return false;
+    }
+    if (room <= 0) {
         return true;
     }
-    fDD[":f_room"] = room;
-    fDD[":f_s1"] = RESERVE_CHECKIN;
-    fDD[":f_s2"] = RESERVE_RESERVE;
-    fDD[":f_s3"] = RESERVE_OUTOFINVENTORY;
-    fDD[":f_s4"] = RESERVE_OUTOFROOM;
-    fDD[":f_s5"] = RESERVE_SERVICE;
-    fDD[":date"] = WORKING_DATE;
-    fDD.exec("select f_id, f_startdate, f_enddate, f_state "
-             "from f_reservation where ((f_state=:f_s1 or f_state=:f_s2 or f_state=:f_s5) "
-             "or ((f_state=:f_s3 or f_state=:f_s4) and f_enddate>=:date)) "
-             " and f_room=:f_room order by f_startdate ");
-    if (fDD.rowCount() == 0) {
-        return true;
+    const QMap<QString, QVariant> saved = dd.fBindValues;
+    dd.fBindValues.clear();
+    dd[":f_id"] = room;
+    if (!dd.exec("select f_id from f_room where f_id=:f_id for update")) {
+        errorMsg = dd.fLastError.isEmpty() ? tr("Cannot lock room") : dd.fLastError;
+        dd.fBindValues = saved;
+        return false;
     }
-    while (fDD.nextRow()) {
-        if (!rid.isEmpty()) {
-            if (rid == fDD.getString("f_id")) {
-                continue;
-            }
-        }
-        QDate ds = fDD.getDate("f_startdate");
-        QDate de = fDD.getDate("f_enddate");
-        if (fDD.getInt("f_state") == RESERVE_OUTOFINVENTORY || fDD.getInt("f_state") == RESERVE_OUTOFROOM) {
-            if (start == de || end == ds) {
-                errorMsg = tr("Conflict reservation id") + ": " + fDD.getString("f_id");
-                return false;
-            }
-        }
-        if (end <= ds) {
-            continue;
-        }
-        if (start >= de) {
-            continue;
-        }
-        if (start < de) {
-            errorMsg = tr("Conflict reservation id") + ": " + fDD.getString("f_id");
-            return false;
-        }
+    if (!dd.nextRow()) {
+        errorMsg = tr("Room is not defined");
+        dd.fBindValues = saved;
+        return false;
     }
-    return true;
+    const bool conflict = roomConflicts(dd, room, start, end, rid, errorMsg, true);
+    dd.fBindValues = saved;
+    return !conflict;
 }
 
 void WReservationRoomTab::setBaseData(const QDate &date1, const QDate &date2, const QString &rcode)
@@ -393,11 +477,19 @@ bool WReservationRoomTab::save()
     fDD[":f_pickup"] = ui->chPickup->isChecked() ? 1 : 0;
     fDD[":f_lastEdit"] = WORKING_USERID;
     if (result) {
+        QString lockErr;
+        if (!checkLocked(fDD, ui->leRoomCode->asInt(), ui->deEntry->date(), ui->deDeparture->date(),
+                         ui->leReservId->text(), lockErr)) {
+            fDD.rollback();
+            message_error(tr("Cannot save reservation") + "<br>" + lockErr);
+            return false;
+        }
         if (ui->leReservId->isEmpty()) {
-            DoubleDatabase did;
-            did.open();
+            const QMap<QString, QVariant> savedBinds = fDD.fBindValues;
+            fDD.fBindValues.clear();
             QString rsId = uuidx(VAUCHER_RESERVATION_N);
-            result = did.insertId("f_reservation", rsId);
+            result = fDD.insertId("f_reservation", rsId);
+            fDD.fBindValues = savedBinds;
             fDD[":f_author"] = WORKING_USERID;
             if (result) {
                 ui->leReservId->setText(rsId);
@@ -491,6 +583,7 @@ bool WReservationRoomTab::save()
             BroadcastThread::cmdRefreshCache(cid_active_room, oldRoom);
             BroadcastThread::cmdRefreshCache(cid_active_room, ui->leRoomCode->text());
         }
+        ExcelyAvailPusher::requestAutoPush();
     } else {
         fDD.rollback();
     }
@@ -583,6 +676,7 @@ void WReservationRoomTab::loadReservation(const QString &id)
                     "f_lastEdit, "
                     "f_group, "
                     "f_booking, "
+                    "f_chm, "
                     "f_pickup, "
                     "f_version "
                     "from f_reservation "
@@ -644,7 +738,14 @@ void WReservationRoomTab::loadReservation(const QString &id)
     ui->lePricePerNight->setText(row.at(c++).toString());
     c++; //Skip VAT value
     ui->leVAT->setText(row.at(c++).toString());
-    ui->cbVAT->setIndexForData(row.at(c++).toInt());
+    int vatMode = row.at(c++).toInt();
+    if (vatMode <= 0) {
+        CacheCardex cardex;
+        if (cardex.get(ui->leCardexCode->text())) {
+            vatMode = cardex.fVatMode().toInt();
+        }
+    }
+    ui->cbVAT->setIndexForData(vatMode);
     ui->leTotal->setText(row.at(c++).toString());
     ui->leGrandTotal->setText(row.at(c++).toString());
     ui->leTotalUSD->setText(row.at(c++).toString());
@@ -667,7 +768,18 @@ void WReservationRoomTab::loadReservation(const QString &id)
         fLastModify = cu.fName();
     }
     c++; // skip group id
-    ui->leBooking->setText(row.at(c++).toString());
+    const QString bookingNo = row.at(c++).toString().trimmed();
+    const QString excelyNo = row.at(c++).toString().trimmed();
+    QString excelyBare = excelyNo;
+    const int hashPos = excelyBare.indexOf(QLatin1Char('#'));
+    if (hashPos >= 0) {
+        excelyBare = excelyBare.left(hashPos);
+    }
+    const bool channelNoIsExcely = !excelyBare.isEmpty()
+            && (bookingNo == excelyNo || bookingNo == excelyBare);
+    ui->leBooking->setText(channelNoIsExcely ? QString() : bookingNo);
+    ui->leChannelNo->setText(ui->leBooking->text());
+    ui->leExcelyBookinNo->setText(excelyNo);
     ui->chPickup->setChecked(row.at(c++).toInt());
     fVersion = row.at(c++).toInt();
     /// END OF ROW
@@ -685,11 +797,6 @@ void WReservationRoomTab::loadReservation(const QString &id)
         emit roomChanged(r.fName(), fTabIndex);
     }
     checkDatesCross();
-    int vatIndex = ui->cbVAT->currentIndex();
-    ui->cbVAT->setCurrentIndex(vatIndex);
-    if (ui->leReserveCode->asInt() == RESERVE_SERVICE) {
-        ui->cbVAT->setCurrentIndex(0);
-    }
     query = "select r.f_guest, g.f_title, concat(g.f_firstName, ' ' , g.f_lastName), "
             "g.f_tel1, g.f_remarks "
             "from f_reservation_guests r "
@@ -1302,7 +1409,38 @@ bool WReservationRoomTab::cancelReservation(bool confirm)
         fDD.commit();
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->leReservId->text());
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReservId->text());
-        if (confirm) {
+        ExcelyAvailPusher::requestAutoPush();
+
+        // Push cancel to Excely for channel bookings (f_chm)
+        fDD[":f_id"] = ui->leReservId->text();
+        fDD.exec("select f_chm from f_reservation where f_id=:f_id");
+        QString chmId;
+        if (fDD.nextRow()) {
+            chmId = fDD.getString("f_chm").trimmed();
+        }
+        if (!chmId.isEmpty()) {
+            // Multi-room keys are chm#index — CancelRQ needs bare channel UniqueID
+            const int hashPos = chmId.indexOf(QLatin1Char('#'));
+            if (hashPos > 0) {
+                chmId = chmId.left(hashPos);
+            }
+            QString cfgErr;
+            const ExcelyAppConfig cfg = ExcelyAppConfig::load();
+            if (cfg.hasCredentials(&cfgErr)) {
+                Excely::Pms::PmsConnectClient client(cfg.pms);
+                QString cancelErr;
+                if (!client.cancelReservation(chmId, cancelReason, &cancelErr)) {
+                    if (confirm) {
+                        message_error(tr("Reservation canceled locally, but Excely cancel failed:\n%1")
+                                          .arg(cancelErr.isEmpty() ? tr("unknown error") : cancelErr));
+                    }
+                } else if (confirm) {
+                    message_info(tr("Reservation was canceled (Excely notified)"));
+                }
+            } else if (confirm) {
+                message_info(tr("Reservation was canceled"));
+            }
+        } else if (confirm) {
             message_info(tr("Reservation was canceled"));
         }
     } else {
@@ -1383,6 +1521,8 @@ void WReservationRoomTab::copyLast(const QString &lastId)
     QString price = ui->leRooming->text();
     ui->leReservId->clear();
     ui->leInvoice->clear();
+    ui->leChannelNo->clear();
+    ui->leExcelyBookinNo->clear();
     fVersion = 0;
     ui->leReserveCode->setInt(RESERVE_RESERVE);
     ui->deEntry->setEnabled(true);

@@ -1525,6 +1525,16 @@
         </widget>
        </item>
        <item>
+        <widget class="EQCheckBox" name="chExcelyAvailability">
+         <property name="text">
+          <string>Excely availability</string>
+         </property>
+         <property name="Tag" stdset="0">
+          <number>153</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_8">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

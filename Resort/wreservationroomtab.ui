@@ -903,15 +903,8 @@ from</string>
             </property>
             <item row="0" column="0">
              <layout class="QGridLayout" name="gridLayout_6">
-              <item row="0" column="0">
-               <widget class="QLabel" name="lbCardex">
-                <property name="text">
-                 <string>Cardex</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="EQLineEdit" name="leCardexCode">
+              <item row="2" column="1">
+               <widget class="EQLineEdit" name="leCityLedgerCode">
                 <property name="maximumSize">
                  <size>
                   <width>60</width>
@@ -920,6 +913,20 @@ from</string>
                 </property>
                 <property name="ShowButton" stdset="0">
                  <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lbCityLedger">
+                <property name="text">
+                 <string>City ledger</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLineEdit" name="leBooking">
+                <property name="placeholderText">
+                 <string>Booking number</string>
                 </property>
                </widget>
               </item>
@@ -936,6 +943,36 @@ from</string>
                 </property>
                 <property name="readOnly">
                  <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1" colspan="2">
+               <widget class="EQLineEdit" name="leExcelyBookinNo">
+                <property name="focusPolicy">
+                 <enum>Qt::FocusPolicy::NoFocus</enum>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="EQLineEdit" name="leCardexCode">
+                <property name="maximumSize">
+                 <size>
+                  <width>60</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="ShowButton" stdset="0">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbCardex">
+                <property name="text">
+                 <string>Cardex</string>
                 </property>
                </widget>
               </item>
@@ -958,10 +995,46 @@ from</string>
                 </property>
                </widget>
               </item>
+              <item row="2" column="2">
+               <widget class="EQLineEdit" name="leCityLedgerName">
+                <property name="focusPolicy">
+                 <enum>Qt::FocusPolicy::NoFocus</enum>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="lbCityLedger_2">
+                <property name="text">
+                 <string>Excely No</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_39">
                 <property name="text">
                  <string>Cardex commission</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QLabel" name="lbCLedgerError">
+                <property name="maximumSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="res.qrc">:/images/question.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -981,58 +1054,19 @@ from</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QLineEdit" name="leBooking">
-                <property name="placeholderText">
-                 <string>Booking number</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="lbCityLedger">
+              <item row="4" column="0">
+               <widget class="QLabel" name="lbCityLedger_3">
                 <property name="text">
-                 <string>City ledger</string>
+                 <string>Channel No</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="EQLineEdit" name="leCityLedgerCode">
-                <property name="maximumSize">
-                 <size>
-                  <width>60</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="ShowButton" stdset="0">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="EQLineEdit" name="leCityLedgerName">
+              <item row="4" column="1" colspan="2">
+               <widget class="EQLineEdit" name="leChannelNo">
                 <property name="focusPolicy">
                  <enum>Qt::FocusPolicy::NoFocus</enum>
                 </property>
                 <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="3">
-               <widget class="QLabel" name="lbCLedgerError">
-                <property name="maximumSize">
-                 <size>
-                  <width>16</width>
-                  <height>16</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="res.qrc">:/images/question.png</pixmap>
-                </property>
-                <property name="scaledContents">
                  <bool>true</bool>
                 </property>
                </widget>

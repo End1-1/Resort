@@ -5,9 +5,12 @@
 #include "cacheusers.h"
 #include "reservewidgetaction.h"
 #include "cachereservation.h"
+#include "cachecardex.h"
 #include "dlgooroomprop.h"
 #include "vauchers.h"
 #include "paymentmode.h"
+#include "wreservationroomtab.h"
+#include "message.h"
 #include <QResizeEvent>
 
 ReserveWidget::ReserveWidget(ReserveRect *rr, QWidget *parent) :
@@ -49,20 +52,29 @@ ReserveWidget::~ReserveWidget()
 
 void ReserveWidget::createService()
 {
-    QMap<QString, CacheReservation> out;
-    bool startok = true;
-    bool endok = true;
-    CacheReservation cr;
-    cr.check(fDateStart, fDateEnd, fRoom.fCode().toInt(), out, startok, endok, "");
-    if (!startok || !endok || out.count() > 0) {
-        writelog("!startok !endok out.count> 0 in ReserveWidget:createService");
-        deleteLater();
+    DoubleDatabase fDD;
+    fDD.startTransaction();
+    QString err;
+    if (!WReservationRoomTab::checkLocked(fDD, fRoom.fCode().toInt(), fDateStart, fDateEnd, QString(), err)) {
+        fDD.rollback();
+        if (err.isEmpty()) {
+            err = tr("Cannot create draft");
+        }
+        writelog("room lock/overlap in ReserveWidget:createService " + err);
+        message_error(err);
         return;
     }
-    DoubleDatabase fDD;
     QString invId = uuidx(VAUCHER_INVOICE_N);
     fId = uuidx("RS");
-    fDD.insertId("f_reservation", fId);
+    if (!fDD.insertId("f_reservation", fId)) {
+        fDD.rollback();
+        const QString insertErr = fDD.fLastError.isEmpty()
+                ? tr("Cannot create draft")
+                : fDD.fLastError;
+        writelog("insert reservation failed in ReserveWidget:createService " + insertErr);
+        message_error(insertErr);
+        return;
+    }
     fDD[":f_id"] = fId;
     fDD[":f_state"] = RESERVE_SERVICE;
     fDD[":f_reserveState"] = CONFIRM_BLOCK;
@@ -72,12 +84,25 @@ void ReserveWidget::createService()
     fDD[":f_paymentType"] = PAYMENT_CASH;
     fDD[":f_man"] = 1;
     fDD[":f_mealIncluded"] = 1;
-    fDD[":f_cardex"] = __preferences.getDb(def_default_cardex);
+    const QString cardex = __preferences.getDb(def_default_cardex).toString();
+    fDD[":f_cardex"] = cardex;
+    CacheCardex cardexRow;
+    if (cardexRow.get(cardex)) {
+        fDD[":f_vatMode"] = cardexRow.fVatMode().toInt();
+    }
     fDD[":f_startDate"] = fDateStart;
     fDD[":f_endDate"] = fDateEnd;
     fDD[":f_author"] = __preferences.getLocal(def_working_user_id).toInt();
-    fDD[":f_invoice"] = invId;    
-    fDD.update("f_reservation", where_id(ap(fId)));
+    fDD[":f_invoice"] = invId;
+    if (!fDD.update("f_reservation", where_id(ap(fId))) || !fDD.commit()) {
+        fDD.rollback();
+        const QString commitErr = fDD.fLastError.isEmpty()
+                ? tr("Cannot create draft")
+                : fDD.fLastError;
+        writelog("commit reservation failed in ReserveWidget:createService " + commitErr);
+        message_error(commitErr);
+        return;
+    }
 
     TrackControl tc(TRACK_RESERVATION);
     tc.fReservation = fId;

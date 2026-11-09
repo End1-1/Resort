@@ -78,10 +78,14 @@ private slots:
     void on_btnBuilding_clicked();
 
     void on_btnExcely_clicked();
+    void on_chExcelyAuto_toggled(bool checked);
+    void excelyAutoTimeout();
 
 private:
     Ui::WMainDesk *ui;
     QTimer fTimer;
+    QTimer fExcelyAutoTimer;
+    bool fExcelyBusy = false;
     QDate fDateStart;
     QDate fDateEnd;
     DWMainDeskHint *fDockHint;
@@ -109,6 +113,7 @@ private:
     int xFromDate(const QDate &date);
     void roomsRowSelectionChanged();
     void daysColumnSelectionChanged();
+    void runExcelyImport(bool silent);
 };
 
 #endif // WMAINDESK_H

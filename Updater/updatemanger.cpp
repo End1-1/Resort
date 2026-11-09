@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QStringList>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QThread>
@@ -23,6 +24,36 @@ namespace {
 QString winHttpErrorMessage(DWORD err)
 {
     return QStringLiteral("WinHTTP error %1").arg(err);
+}
+
+void unblockDownloadedFile(const QString &path)
+{
+    const QString ads = QDir::toNativeSeparators(path) + QStringLiteral(":Zone.Identifier");
+    DeleteFileW(reinterpret_cast<LPCWSTR>(ads.utf16()));
+}
+
+QString setupLogTail(const QString &path)
+{
+    QFile f(path);
+    if(!f.open(QIODevice::ReadOnly)) {
+        return {};
+    }
+    const QByteArray data = f.readAll();
+    QString text;
+    if(data.size() >= 2
+            && static_cast<unsigned char>(data.at(0)) == 0xFF
+            && static_cast<unsigned char>(data.at(1)) == 0xFE) {
+        const int chars = (data.size() - 2) / static_cast<int>(sizeof(char16_t));
+        text = QString::fromUtf16(reinterpret_cast<const char16_t *>(data.constData() + 2), chars);
+    } else {
+        text = QString::fromLocal8Bit(data);
+    }
+    const QStringList lines = text.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    QStringList tail;
+    for(int i = qMax(0, lines.size() - 15); i < lines.size(); ++i) {
+        tail << lines.at(i).trimmed();
+    }
+    return tail.join(QLatin1Char('\n'));
 }
 
 bool downloadWithWinHttp(const QString &urlStr,
@@ -258,29 +289,29 @@ void UpdateManager::downloadFinishedOk(const QString &setupPath)
 void UpdateManager::launchSetup(const QString &setupPath)
 {
     emit statusChanged(QStringLiteral(
-        "Installing update…\nPlease wait. Do not close this window.\n"
-        "If Windows asks for permission, allow it."));
+        "Installing update…\n"
+        "If Windows asks for permission, click Yes."));
     setBusyProgress();
 
 #ifdef Q_OS_WIN
-    // Exit code 5 from Inno = could not get admin rights.
-    // AlwaysOnTop updater window can cover the UAC dialog — drop it first.
+    // The setup exe already requires administrator. Launching it with the
+    // "runas" verb starts a stub that exits with code 5 while the real
+    // installer is handed off. Use the default verb and let the manifest
+    // show UAC once. Hide our window so it cannot cover that prompt.
+    unblockDownloadedFile(setupPath);
     emit aboutToElevate();
     if (m_hostWindow) {
-        m_hostWindow->setWindowFlag(Qt::WindowStaysOnTopHint, false);
-        m_hostWindow->showNormal();
-        m_hostWindow->lower();
+        m_hostWindow->hide();
     }
 
     const QString workDir = QFileInfo(setupPath).absolutePath();
     const QString logPath = QDir(workDir).filePath(QStringLiteral("smarthotel_setup.log"));
     const QString argsWithLog =
-        QStringLiteral("/SILENT /SUPPRESSMSGBOXES /NORESTART /CLOSEAPPLICATIONS "
-                       "/FORCECLOSEAPPLICATIONS /LOG=\"%1\"")
+        QStringLiteral("/SILENT /SUPPRESSMSGBOXES /NORESTART /NOCLOSEAPPLICATIONS "
+                       "/LOG=\"%1\"")
             .arg(QDir::toNativeSeparators(logPath));
 
-    // Let Qt apply window flags before UAC appears.
-    QTimer::singleShot(400, this, [this, setupPath, argsWithLog, workDir, logPath]() {
+    QTimer::singleShot(100, this, [this, setupPath, argsWithLog, workDir, logPath]() {
         auto *thread = QThread::create([this, setupPath, argsWithLog, workDir, logPath]() {
             BOOL elevated = FALSE;
             HANDLE token = nullptr;
@@ -296,7 +327,7 @@ void UpdateManager::launchSetup(const QString &setupPath)
             SHELLEXECUTEINFOW sei{};
             sei.cbSize = sizeof(sei);
             sei.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NOASYNC;
-            sei.lpVerb = elevated ? L"open" : L"runas";
+            sei.lpVerb = elevated ? L"open" : nullptr;
             sei.lpFile = reinterpret_cast<LPCWSTR>(setupPath.utf16());
             sei.lpParameters = reinterpret_cast<LPCWSTR>(argsWithLog.utf16());
             sei.lpDirectory = reinterpret_cast<LPCWSTR>(workDir.utf16());
@@ -325,15 +356,14 @@ void UpdateManager::launchSetup(const QString &setupPath)
 
             QMetaObject::invokeMethod(this, [this, exitCode, setupPath, logPath]() {
                 if (exitCode != 0) {
+                    const QString tail = setupLogTail(logPath);
                     QString hint;
-                    if (exitCode == 5) {
+                    if (tail.isEmpty()) {
                         hint = QStringLiteral(
-                            "\nWindows did not grant administrator rights (UAC).\n"
-                            "Click Yes on the permission prompt, or run this file as administrator:\n%1")
+                            "\nAllow the Windows permission prompt, or run this file as administrator:\n%1")
                                    .arg(QDir::toNativeSeparators(setupPath));
-                    }
-                    if (QFile::exists(logPath)) {
-                        hint += QStringLiteral("\n\nLog: %1").arg(QDir::toNativeSeparators(logPath));
+                    } else {
+                        hint = QStringLiteral("\n\n%1").arg(tail);
                     }
                     emit error(QStringLiteral("Installer finished with an error (code %1).%2")
                                    .arg(exitCode)
@@ -358,8 +388,7 @@ void UpdateManager::launchSetup(const QString &setupPath)
         QStringLiteral("/SILENT"),
         QStringLiteral("/SUPPRESSMSGBOXES"),
         QStringLiteral("/NORESTART"),
-        QStringLiteral("/CLOSEAPPLICATIONS"),
-        QStringLiteral("/FORCECLOSEAPPLICATIONS"),
+        QStringLiteral("/NOCLOSEAPPLICATIONS"),
     });
     proc->setWorkingDirectory(QFileInfo(setupPath).absolutePath());
     connect(proc, &QProcess::errorOccurred, this, [this, proc, setupPath](QProcess::ProcessError) {

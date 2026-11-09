@@ -26,10 +26,22 @@ public:
 
     bool ping(QString *errorText = nullptr);
     bool hotelAvail(HotelCatalog *out, QVector<Channel::PmsError> *errors = nullptr);
+    bool hotelAvailNotif(const QVector<AvailStatusMessage> &messages,
+                         QVector<Channel::PmsError> *errors = nullptr);
+    bool hotelRateAmountNotif(const QVector<RateAmountMessage> &messages,
+                              QVector<Channel::PmsError> *errors = nullptr);
+    /** Cancel an already-delivered channel booking (OTA_CancelRQ). channelReservationId = f_chm without #suffix. */
+    bool cancelReservation(const QString &channelReservationId,
+                           const QString &reason,
+                           QString *errorText = nullptr);
     bool readUndelivered(QVector<Channel::Booking> *out, QVector<Channel::PmsError> *errors = nullptr);
     bool confirmReserved(const Channel::Booking &booking,
                          const QString &pmsReservationId,
                          QString *errorText = nullptr);
+    /** NotifReport Reserved with a separate HotelReservation per PMS id (multi-room bookings). */
+    bool confirmReservedRooms(const Channel::Booking &booking,
+                              const QVector<Channel::RoomConfirmation> &rooms,
+                              QString *errorText = nullptr);
     bool requestDenied(const Channel::Booking &booking,
                        const QString &reason,
                        QString *errorText = nullptr);
@@ -38,6 +50,9 @@ public:
     static QString soapActionNotifReport();
     static QString soapActionPing();
     static QString soapActionHotelAvail();
+    static QString soapActionHotelAvailNotif();
+    static QString soapActionHotelRateAmountNotif();
+    static QString soapActionCancel();
 
 private:
     bool postSoap(const QString &soapAction,

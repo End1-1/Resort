@@ -50,19 +50,26 @@ void DlgGroupRevive::on_btnRevive_clicked()
             continue;
         }
         QString err;
-        if (!WReservationRoomTab::check(ui->tbl->itemValue(i, 2).toInt(),
-                                        ui->tbl->dateEdit(i, 3)->date(),
-                                        ui->tbl->dateEdit(i, 4)->date(),
-                                        ui->tbl->itemValue(i, 1).toString(),
-                                        err)) {
+        DoubleDatabase dd;
+        dd.startTransaction();
+        if (!WReservationRoomTab::checkLocked(dd, ui->tbl->itemValue(i, 2).toInt(),
+                                              ui->tbl->dateEdit(i, 3)->date(),
+                                              ui->tbl->dateEdit(i, 4)->date(),
+                                              ui->tbl->itemValue(i, 1).toString(),
+                                              err)) {
+            dd.rollback();
             ui->tbl->checkBox(i, 0)->setChecked(false);
             ui->tbl->checkBox(i, 0)->setEnabled(false);
             ui->tbl->setItemWithValue(i, 6, err);
+            continue;
+        }
+        dd[":f_state"] = RESERVE_RESERVE;
+        if (!dd.update("f_reservation", where_id(ap(ui->tbl->itemValue(i, 1).toString()))) || !dd.commit()) {
+            dd.rollback();
+            ui->tbl->setItemWithValue(i, 6, dd.fLastError);
+            continue;
         }
         cnt++;
-        DoubleDatabase dd;
-        dd[":f_state"] = RESERVE_RESERVE;
-        dd.update("f_reservation", where_id(ap(ui->tbl->itemValue(i, 1).toString())));
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tbl->itemValue(i, 1).toString());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tbl->itemValue(i, 1).toString());
         TrackControl tc(TRACK_RESERVATION);

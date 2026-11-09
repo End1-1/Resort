@@ -2,6 +2,8 @@
 
 Qt/C++ client for **Exely PMSConnect protocol v1.18** — pull undelivered channel-manager bookings and confirm delivery.
 
+**Portable module:** designed for reuse in other PMS hosts. Agent/maintainer notes: **[AGENTS.md](AGENTS.md)** (update that file when you change protocol behavior or fix integration pitfalls).
+
 Linked into **Resort** as static lib `ExcelyPmsConnect`. Desk button **Excely** on `WMainDesk` runs a one-shot pull → DB sink → confirm.
 
 ## Layers
@@ -33,9 +35,22 @@ Imported reserves get `f_chmstatus=1` so the room chart paints lilac until the o
 - Auth: SOAP header `Security Username/Password` (`https://www.hopenapi.com/Api/PMSConnect`)
 - Read: `HotelReadReservationRQ` / body `OTA_ReadRQ` `SelectionType=Undelivered`
 - Confirm: `NotifReportRQ` / `OTA_NotifReportRQ` `ResStatus=Reserved` (+ optional `RequestDenied`)
+- Catalog: `HotelAvailRQ` / `OTA_HotelAvailRQ` → room types, rate plans, inv blocks
+- Availability upload: `HotelAvailNotifRQ` / `OTA_HotelAvailNotifRQ` (`BookingLimit`, Open/Close, optional MinLOS)
+- Prices upload: `HotelRateAmountNotifRQ` / `OTA_HotelRateAmountNotifRQ` (`AmountAfterTax` per room type + rate plan)
 - Test endpoint: `https://pmsconnect.test.hopenapi.com/Api/PMSConnect.svc`
 - Prod: `https://pmsconnect.hopenapi.com/Api/PMSConnect.svc`
-- Limits: ≤30 ReadRQ/hour; confirm within ~20 minutes; poll every **5 minutes**
+- Limits: ≤30 ReadRQ/hour; confirm within ~20 minutes; poll every **5 minutes**; AvailNotif ≤650 req/hour/hotel
+
+## Resort UI
+
+| Where | What |
+|-------|------|
+| Desk button **Excely** | One-shot pull undelivered bookings → `ExcelyResortSink` → confirm |
+| **Directory of Hotel → Excely availability** | Manual `HotelAvailNotif` + `HotelRateAmountNotif` (catalog, upload, resync year) |
+| **Global config → Application → Excely** | Credentials + `roomTypeMap` |
+
+Right: `cr__excely_availability` (153).
 
 ## Resort QSettings (`SmartHotel` / `SmartHotel`, group `excely/`)
 

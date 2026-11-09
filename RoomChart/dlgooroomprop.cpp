@@ -1,6 +1,7 @@
 #include "dlgooroomprop.h"
 #include "ui_dlgooroomprop.h"
 #include "cacheroom.h"
+#include "wreservationroomtab.h"
 
 DlgOORoomProp::DlgOORoomProp(const QString &code, QWidget *parent) :
     BaseExtendedDialog(parent),
@@ -33,10 +34,21 @@ void DlgOORoomProp::on_btnOk_clicked()
         return;
     }
     DoubleDatabase fDD;
+    fDD.startTransaction();
+    QString lockErr;
+    if (!WReservationRoomTab::checkLocked(fDD, ui->leRoom->asInt(), ui->deStart->date(), ui->deEnd->date(), ui->leReserve->text(), lockErr)) {
+        fDD.rollback();
+        message_error(lockErr);
+        return;
+    }
     fDD[":f_startDate"] = ui->deStart->date();
     fDD[":f_endDate"] = ui->deEnd->date();
     fDD[":f_remarks"] = ui->teRemarks->toPlainText();
-    fDD.update("f_reservation", where_id(ap(ui->leReserve->text())));
+    if (!fDD.update("f_reservation", where_id(ap(ui->leReserve->text()))) || !fDD.commit()) {
+        fDD.rollback();
+        message_error(fDD.fLastError);
+        return;
+    }
     accept();
     QString range = QString(" %1 - %2, %3")
             .arg(ui->deStart->text())

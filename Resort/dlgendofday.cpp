@@ -374,13 +374,18 @@ void DlgEndOfDay::loadData()
     ui->tblCharges->clearContents();
     ui->tblCharges->setRowCount(0);
     ui->lbSemaphore->setPixmap(QPixmap(":/images/ball-green.png"));
+    // Daily price is the room rate only. Extra bed and meal stay on the reservation.
+    // Without a daily row, f_pricePerNight already includes both.
+    const QString nightCharge =
+            "case when rp.f_price is null then r.f_pricePerNight "
+            "else rp.f_price + coalesce(r.f_extraBedFee, 0) + coalesce(r.f_mealPrice, 0) end";
     DoubleDatabase fDD;
     fDD[":f_date"] = WORKING_DATE;
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, "
                "concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "coalesce(rp.f_price, r.f_pricePerNight), "
+               + nightCharge + ", "
                " '', '', ra.f_en, r.f_cityledger "
                "from f_reservation r  "
                "inner join f_guests g on g.f_id=r.f_guest "
@@ -397,7 +402,7 @@ void DlgEndOfDay::loadData()
     fDD[":f_state"] = RESERVE_RESERVE;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id,  r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "coalesce(rp.f_price, r.f_pricePerNight), "
+               + nightCharge + ", "
                " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "
@@ -422,7 +427,7 @@ void DlgEndOfDay::loadData()
     fDD[":f_state"] = RESERVE_CHECKIN;
     fDD.exec("select r.f_invoice, r.f_vatMode, r.f_id, r.f_room, concat(g.f_title, ' ', g.f_firstName, ' ' , g.f_lastName), r.f_man + r.f_woman + r.f_child, "
                "r.f_startDate, r.f_endDate,"
-               "coalesce(rp.f_price, r.f_pricePerNight), "
+               + nightCharge + ", "
                " '', '', '', r.f_cityledger "
                "from f_reservation r "
                "inner join f_guests g on g.f_id=r.f_guest "

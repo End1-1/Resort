@@ -53,6 +53,21 @@
             </ProfileInfo>
           </Profiles>
         </ResGuest>
+        <ResGuest ResGuestRPH="2">
+          <Profiles>
+            <ProfileInfo>
+              <Profile>
+                <Customer>
+                  <PersonName>
+                    <GivenName>Jane</GivenName>
+                    <Surname>Smith</Surname>
+                  </PersonName>
+                  <CitizenCountryName Code="GBR"/>
+                </Customer>
+              </Profile>
+            </ProfileInfo>
+          </Profiles>
+        </ResGuest>
       </ResGuests>
       <ResGlobalInfo>
         <Guarantee GuaranteeCode="PrePay">

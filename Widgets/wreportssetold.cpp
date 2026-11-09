@@ -6,6 +6,7 @@
 #include "paymentmode.h"
 #include "wweb.h"
 #include "doubleutils.h"
+#include "trackcontrol.h"
 #include <QDir>
 #include <QDesktopServices>
 #include <QUrl>
@@ -76,6 +77,8 @@ WReportsSetOld::~WReportsSetOld()
 void WReportsSetOld::setup()
 {
     setupTabTextAndIcon(tr("Statistics"), ":/images/report.png");
+    TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                         tr("Statistics"), QStringLiteral("WReportsSetOld"));
 }
 
 QString WReportsSetOld::title()
@@ -325,6 +328,8 @@ void WReportsSetOld::on_btnGo_clicked()
         ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
         rg->setTab(ui->tabWidget, ui->tabWidget->count() - 1);
         rg->setupTabTextAndIcon(reportTitle, ":/images/report.png");
+        TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                             reportTitle, QStringLiteral("Statistics"));
         for (int i = 0; i < widths.count(); i++) {
             rg->fModel->setColumn(widths.at(i), "", titles.at(i));
         }
@@ -366,6 +371,8 @@ void WReportsSetOld::on_btnGo_clicked()
         ui->tabWidget->addTab(rg, QIcon(":/images/report.png"), reportTitle);
         rg->setTab(ui->tabWidget, ui->tabWidget->count() - 1);
         rg->setupTabTextAndIcon(reportTitle, ":/images/report.png");
+        TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                             reportTitle, QStringLiteral("Statistics"));
 
         rg->fModel->clearColumns();
         QStringList widths = fDD.getValue("f_widths").toString().split(";", Qt::SkipEmptyParts);

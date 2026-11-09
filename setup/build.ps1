@@ -98,15 +98,23 @@ $Updater = Resolve-ReleaseExe `
 $ExePath = $Resort.Exe
 $UpdaterExe = $Updater.Exe
 
-$VersionDot = $Resort.Version
-if ([string]::IsNullOrWhiteSpace($VersionDot)) {
+$FileVersion = $Resort.Version
+if ([string]::IsNullOrWhiteSpace($FileVersion)) {
     throw "Cannot read FileVersion from $ExePath"
+}
+# Installer name and displayed version are the first three numbers.
+# The fourth is the per-compile build counter (1.10.32.1298 → 1.10.32).
+$VersionParts = $FileVersion.Trim().Split('.')
+if ($VersionParts.Count -ge 3) {
+    $VersionDot = ($VersionParts[0..2] -join '.')
+} else {
+    $VersionDot = $FileVersion.Trim()
 }
 $VersionUs = $VersionDot.Replace(".", "_")
 $OutputBaseFilename = "setup_resort_$VersionUs"
 
 Write-Host "Packaging installer from latest release builds:"
-Write-Host ("  Resort:  {0}  (v{1}, {2:yyyy-MM-dd HH:mm})" -f $ExePath, $VersionDot, $Resort.Written.ToLocalTime())
+Write-Host ("  Resort:  {0}  (file v{1}, installer v{2}, {3:yyyy-MM-dd HH:mm})" -f $ExePath, $FileVersion, $VersionDot, $Resort.Written.ToLocalTime())
 Write-Host ("  Updater: {0}  (v{1}, {2:yyyy-MM-dd HH:mm})" -f $UpdaterExe, $Updater.Version, $Updater.Written.ToLocalTime())
 
 Write-Host "Preparing staging directory: $Staging"

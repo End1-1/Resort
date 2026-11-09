@@ -11,7 +11,6 @@
 #include <QProcessEnvironment>
 #include <QProgressBar>
 #include <QStandardPaths>
-#include <QThread>
 #include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -19,7 +18,6 @@
 
 #ifdef Q_OS_WIN
 #  include <windows.h>
-#  include <tlhelp32.h>
 #endif
 
 #include "updatemanger.h"
@@ -70,54 +68,78 @@ void prepareQtFromAppDir(const QString &appDir)
             QFile::encodeName(QDir(appDir).filePath(QStringLiteral("platforms"))));
 }
 
-bool isProcessRunning(const QString &exeName)
+bool copyFileForce(const QString &src, const QString &dst)
 {
-#ifdef Q_OS_WIN
-    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if(snap == INVALID_HANDLE_VALUE) {
+    if(!QFile::exists(src)) {
         return false;
     }
-    PROCESSENTRY32W pe{};
-    pe.dwSize = sizeof(pe);
-    bool found = false;
-    if(Process32FirstW(snap, &pe)) {
-        do {
-            if(QString::fromWCharArray(pe.szExeFile).compare(exeName, Qt::CaseInsensitive) == 0) {
-                found = true;
-                break;
-            }
-        } while(Process32NextW(snap, &pe));
+    QDir().mkpath(QFileInfo(dst).absolutePath());
+    if(QFile::exists(dst) && !QFile::remove(dst)) {
+        return false;
     }
-    CloseHandle(snap);
-    return found;
-#else
-    Q_UNUSED(exeName);
-    return false;
-#endif
+    return QFile::copy(src, dst);
 }
 
-bool waitUntilResortClosed(QLabel *label)
+// The host exe is started from %TEMP%. The Windows loader resolves Qt6*.dll
+// before main(), and it does not look in the original install directory.
+bool copyQtRuntime(const QString &appDir, const QString &hostDir)
 {
-    for(int i = 0; i < 30; ++i) {
-        if(!isProcessRunning(QStringLiteral("Resort.exe"))) {
-            return true;
+    const QDir src(appDir);
+    const QDir dst(hostDir);
+    const QStringList names = src.entryList(
+        {QStringLiteral("Qt6*.dll"),
+         QStringLiteral("d3dcompiler_47.dll"),
+         QStringLiteral("dxcompiler.dll"),
+         QStringLiteral("dxil.dll"),
+         QStringLiteral("opengl32sw.dll"),
+         QStringLiteral("vcruntime*.dll"),
+         QStringLiteral("msvcp140*.dll"),
+         QStringLiteral("concrt140.dll")},
+        QDir::Files);
+    for(const QString &name : names) {
+        if(!copyFileForce(src.filePath(name), dst.filePath(name))) {
+            return false;
         }
-        if(label) {
-            label->setText(QStringLiteral(
-                               "Waiting for SmartHotel to close… (%1)\n"
-                               "Please close the application if it is still open.")
-                           .arg(30 - i));
-        }
-        QCoreApplication::processEvents();
-        QThread::msleep(1000);
     }
-    return !isProcessRunning(QStringLiteral("Resort.exe"));
+    if(!QFile::exists(dst.filePath(QStringLiteral("Qt6Widgets.dll")))) {
+        return false;
+    }
+
+    const QStringList pluginDirs = {
+        QStringLiteral("platforms"),
+        QStringLiteral("styles")
+    };
+    for(const QString &sub : pluginDirs) {
+        const QDir from(src.filePath(sub));
+        if(!from.exists()) {
+            continue;
+        }
+        const QStringList files = from.entryList(QDir::Files);
+        for(const QString &name : files) {
+            if(!copyFileForce(from.filePath(name), QDir(dst.filePath(sub)).filePath(name))) {
+                return false;
+            }
+        }
+    }
+    return QFile::exists(QDir(dst.filePath(QStringLiteral("platforms")))
+                         .filePath(QStringLiteral("qwindows.dll")));
+}
+
+void killResort()
+{
+#ifdef Q_OS_WIN
+    QProcess::execute(QStringLiteral("taskkill.exe"),
+                      {QStringLiteral("/F"),
+                       QStringLiteral("/T"),
+                       QStringLiteral("/IM"),
+                       QStringLiteral("Resort.exe")});
+#endif
 }
 
 /**
  * Self-update strategy:
  * 1. App starts {app}\Updater.exe
- * 2. Updater copies itself to %TEMP%\SmartHotelUpdateHost.exe and relaunches from there
+ * 2. Updater copies itself and the Qt DLLs to %TEMP%\SmartHotelUpdate\ and relaunches from there
  * 3. Host downloads setup via WinHTTP and runs Inno /SILENT
  * 4. Setup installs the new Updater.exe into {app}
  */
@@ -126,7 +148,8 @@ bool ensureRunningFromTemp(int argc, char *argv[])
     const QString self = QFileInfo(QString::fromLocal8Bit(argv[0])).absoluteFilePath();
     const QString appDir = QFileInfo(self).absolutePath();
     const QString tempDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
-    const QString tempExe = QDir(tempDir).filePath(QStringLiteral("SmartHotelUpdateHost.exe"));
+    const QString hostDir = QDir(tempDir).filePath(QStringLiteral("SmartHotelUpdate"));
+    const QString tempExe = QDir(hostDir).filePath(QStringLiteral("SmartHotelUpdateHost.exe"));
 
     const QString selfNative = QDir::toNativeSeparators(self);
     const QString tempNative = QDir::toNativeSeparators(tempExe);
@@ -136,8 +159,10 @@ bool ensureRunningFromTemp(int argc, char *argv[])
         return true;
     }
 
-    QFile::remove(tempExe);
-    if(!QFile::copy(self, tempExe)) {
+    QDir().mkpath(hostDir);
+    QFile::remove(QDir(tempDir).filePath(QStringLiteral("PicassoUpdateHost.exe")));
+    QFile::remove(QDir(tempDir).filePath(QStringLiteral("SmartHotelUpdateHost.exe")));
+    if(!copyFileForce(self, tempExe) || !copyQtRuntime(appDir, hostDir)) {
         prepareQtFromAppDir(appDir);
         return true;
     }
@@ -225,16 +250,8 @@ int main(int argc, char *argv[])
     w.raise();
     w.activateWindow();
 
-    if(!waitUntilResortClosed(label)) {
-        QMessageBox::warning(
-            &w,
-            QStringLiteral("SmartHotel Update"),
-            QStringLiteral(
-                "SmartHotel is still open.\n\n"
-                "Close Resort.exe completely, then run the update again.\n"
-                "The installer cannot replace files while the program is running."));
-        return 2;
-    }
+    label->setText(QStringLiteral("Closing SmartHotel…"));
+    killResort();
 
     UpdateManager um(url, fileName);
     um.setProgressBar(pb);

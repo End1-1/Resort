@@ -3,6 +3,8 @@
 #include <QElapsedTimer>
 #include <QInputDialog>
 #include <QScrollBar>
+#include <QSet>
+#include <QSettings>
 #include "cacheone.h"
 #include "cachereservationcardex.h"
 #include "dayitemdelegate.h"
@@ -16,6 +18,7 @@
 #include "eqtablewidget.h"
 #include "excely/pms/exelybookingsource.h"
 #include "excelyappconfig.h"
+#include "excelyavailpusher.h"
 #include "excelyresortsink.h"
 #include "message.h"
 #include "monthitemdelegate.h"
@@ -128,6 +131,24 @@ WMainDesk::WMainDesk(QWidget *parent) :
     connect( &fTimer, SIGNAL(timeout()), this, SLOT(timeout()));
     timeout();
     fTimer.start(30000);
+    connect(&fExcelyAutoTimer, &QTimer::timeout, this, &WMainDesk::excelyAutoTimeout);
+    fExcelyAutoTimer.setInterval(2 * 60 * 1000);
+    const bool excelyChart = ExcelyAppConfig::load().chartEnabled;
+    ui->btnExcely->setVisible(excelyChart);
+    ui->chExcelyAuto->setVisible(excelyChart);
+    ui->wExcelyBox->setVisible(excelyChart);
+    if (excelyChart) {
+        QSettings s(QStringLiteral("SmartHotel"), QStringLiteral("SmartHotel"));
+        s.beginGroup(QStringLiteral("excely"));
+        const bool autoPull = s.value(QStringLiteral("autoPullChart"), false).toBool();
+        s.endGroup();
+        ui->chExcelyAuto->blockSignals(true);
+        ui->chExcelyAuto->setChecked(autoPull);
+        ui->chExcelyAuto->blockSignals(false);
+        if (autoPull) {
+            fExcelyAutoTimer.start();
+        }
+    }
     ui->btnEndOfDay->setVisible(r__(cr__eod));
     ui->btnGroupReservation->setVisible(r__(cr__reservation_group_reservation));
     ui->tblDay->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
@@ -780,25 +801,91 @@ void WMainDesk::on_btnBuilding_clicked()
 
 void WMainDesk::on_btnExcely_clicked()
 {
-    const ExcelyAppConfig cfg = ExcelyAppConfig::load();
-    QString credHint;
-    if (!cfg.hasCredentials(&credHint)) {
-        message_error(credHint);
+    runExcelyImport(false);
+}
+
+void WMainDesk::on_chExcelyAuto_toggled(bool checked)
+{
+    if (!ExcelyAppConfig::load().chartEnabled) {
+        fExcelyAutoTimer.stop();
+        return;
+    }
+    QSettings s(QStringLiteral("SmartHotel"), QStringLiteral("SmartHotel"));
+    s.beginGroup(QStringLiteral("excely"));
+    s.setValue(QStringLiteral("autoPullChart"), checked);
+    s.endGroup();
+    if (checked) {
+        fExcelyAutoTimer.start();
+        runExcelyImport(true);
+    } else {
+        fExcelyAutoTimer.stop();
+    }
+}
+
+void WMainDesk::excelyAutoTimeout()
+{
+    if (!ui->chExcelyAuto->isChecked()) {
+        return;
+    }
+    runExcelyImport(true);
+}
+
+void WMainDesk::runExcelyImport(bool silent)
+{
+    if (!ExcelyAppConfig::load().chartEnabled) {
+        return;
+    }
+    if (fExcelyBusy) {
         return;
     }
 
+    const ExcelyAppConfig cfg = ExcelyAppConfig::load();
+    QString credHint;
+    if (!cfg.hasCredentials(&credHint)) {
+        if (!silent) {
+            message_error(credHint);
+        }
+        return;
+    }
+
+    fExcelyBusy = true;
     ui->btnExcely->setEnabled(false);
-    QApplication::setOverrideCursor(Qt::WaitCursor);
+    if (!silent) {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+    }
 
     int created = 0;
     int updated = 0;
     int canceled = 0;
+    int dismissed = 0;
     int errors = 0;
     QStringList warnings;
     QStringList errorLines;
 
     Excely::Pms::ExelyBookingSource source(cfg.pms);
-    ExcelyResortSink sink(cfg.roomTypeMap);
+
+    // Known Exely rate plans (HotelAvail) — unknown code is OK only if booking has amounts
+    QSet<QString> knownRatePlans;
+    {
+        Excely::Pms::HotelCatalog catalog;
+        QVector<Excely::Channel::PmsError> catalogErrors;
+        if (source.client().hotelAvail(&catalog, &catalogErrors)) {
+            for (const Excely::Pms::RatePlanInfo &rp : catalog.ratePlans) {
+                if (!rp.ratePlanCode.isEmpty()) {
+                    knownRatePlans.insert(rp.ratePlanCode);
+                }
+            }
+        } else {
+            for (const Excely::Channel::PmsError &e : catalogErrors) {
+                warnings.append(tr("Excely catalog (rate plans): %1 %2")
+                                    .arg(e.code)
+                                    .arg(e.text));
+            }
+            warnings.append(tr("Rate plan catalog unavailable — unknown rates need booking amounts"));
+        }
+    }
+
+    ExcelyResortSink sink(cfg.roomTypeMap, knownRatePlans);
 
     QVector<Excely::Channel::Booking> list;
     QVector<Excely::Channel::PmsError> pullErrors;
@@ -808,11 +895,16 @@ void WMainDesk::on_btnExcely_clicked()
     }
 
     if (!pullOk) {
-        QApplication::restoreOverrideCursor();
+        if (!silent) {
+            QApplication::restoreOverrideCursor();
+        }
         ui->btnExcely->setEnabled(true);
-        message_error(errorLines.isEmpty()
-                          ? tr("Excely pull failed")
-                          : errorLines.join(QStringLiteral("\n")));
+        fExcelyBusy = false;
+        if (!silent) {
+            message_error(errorLines.isEmpty()
+                              ? tr("Excely pull failed")
+                              : errorLines.join(QStringLiteral("\n")));
+        }
         return;
     }
 
@@ -824,12 +916,36 @@ void WMainDesk::on_btnExcely_clicked()
             errorLines.append(QStringLiteral("%1: %2")
                                   .arg(b.channelReservationId,
                                        err.isEmpty() ? tr("import failed") : err));
-            QString e2;
-            source.rejectDelivery(b, err.isEmpty() ? QStringLiteral("Sink rejected") : err, &e2);
-            if (!e2.isEmpty()) {
-                errorLines.append(QStringLiteral("%1 reject: %2").arg(b.channelReservationId, e2));
-            }
+            // Do NOT RequestDenied here — that removes the booking from Exely undelivered
+            // queue and stops further delivery until manually re-queued. Leave for retry.
+            warnings.append(tr("%1 left undelivered for retry (not rejected)")
+                                .arg(b.channelReservationId));
             warnings.append(sink.takeWarnings());
+            continue;
+        }
+
+        warnings.append(sink.takeWarnings());
+
+        // Permanent rejects → RequestDenied (clears Exely undelivered queue).
+        // AlreadyCanceledLocally: Create/Modify for a booking already canceled in PMS.
+        // Rejected: unknown room type, or unknown rate plan with no amounts.
+        if (sink.lastOutcome() == ExcelyResortSink::Outcome::AlreadyCanceledLocally
+                || sink.lastOutcome() == ExcelyResortSink::Outcome::Rejected) {
+            ++dismissed;
+            QString e2;
+            const QString reason = sink.lastOutcome() == ExcelyResortSink::Outcome::Rejected
+                    ? (sink.rejectReason().isEmpty()
+                           ? tr("Rejected by PMS")
+                           : sink.rejectReason())
+                    : QStringLiteral("Already canceled in PMS");
+            if (!source.rejectDelivery(b, reason, &e2)) {
+                ++errors;
+                errorLines.append(QStringLiteral("%1 dismiss/reject: %2")
+                                      .arg(b.channelReservationId,
+                                           e2.isEmpty() ? tr("RequestDenied failed") : e2));
+            } else if (sink.lastOutcome() == ExcelyResortSink::Outcome::Rejected) {
+                warnings.append(tr("%1 rejected: %2").arg(b.channelReservationId, reason));
+            }
             continue;
         }
 
@@ -846,10 +962,12 @@ void WMainDesk::on_btnExcely_clicked()
         default:
             break;
         }
-        warnings.append(sink.takeWarnings());
 
         QString e2;
-        if (!source.confirmDelivered(b, pmsId, &e2)) {
+        const bool confirmed = sink.roomConfirmations().isEmpty()
+                ? source.confirmDelivered(b, pmsId, &e2)
+                : source.confirmDeliveredRooms(b, sink.roomConfirmations(), &e2);
+        if (!confirmed) {
             ++errors;
             errorLines.append(QStringLiteral("%1 confirm: %2")
                                   .arg(b.channelReservationId,
@@ -857,10 +975,50 @@ void WMainDesk::on_btnExcely_clicked()
         }
     }
 
-    QApplication::restoreOverrideCursor();
+    if (!silent) {
+        QApplication::restoreOverrideCursor();
+    }
     ui->btnExcely->setEnabled(true);
+    fExcelyBusy = false;
 
-    on_btnRefreshChart_clicked();
+    if (created > 0 || updated > 0 || canceled > 0 || !silent) {
+        on_btnRefreshChart_clicked();
+    }
+
+    if (created > 0 || updated > 0 || canceled > 0) {
+        ExcelyAvailPusher::requestAutoPush();
+    }
+
+    if (silent) {
+        // Empty pulls stay quiet; notify only when something actually changed
+        if (created > 0 || updated > 0 || canceled > 0 || errors > 0) {
+            QStringList summary;
+            summary << tr("Excely auto");
+            if (created > 0) {
+                summary << tr("Created: %1").arg(created);
+            }
+            if (updated > 0) {
+                summary << tr("Updated: %1").arg(updated);
+            }
+            if (canceled > 0) {
+                summary << tr("Canceled: %1").arg(canceled);
+            }
+            if (!warnings.isEmpty()) {
+                summary << QString() << tr("Warnings:") << warnings;
+            }
+            if (errors > 0) {
+                summary << tr("Errors: %1").arg(errors);
+                if (!errorLines.isEmpty()) {
+                    summary << errorLines;
+                }
+                message_error(summary.join(QLatin1Char('\n')));
+            } else {
+                summary << tr("New channel bookings are lilac until opened.");
+                message_info(summary.join(QLatin1Char('\n')));
+            }
+        }
+        return;
+    }
 
     QStringList summary;
     summary << tr("Excely import finished");
@@ -868,7 +1026,14 @@ void WMainDesk::on_btnExcely_clicked()
     summary << tr("Created: %1").arg(created);
     summary << tr("Updated: %1").arg(updated);
     summary << tr("Canceled: %1").arg(canceled);
+    summary << tr("Dismissed (already canceled): %1").arg(dismissed);
     summary << tr("Errors: %1").arg(errors);
+    if (list.isEmpty()) {
+        summary << QString();
+        summary << tr("No undelivered bookings from Exely.");
+        summary << tr("If you expect updates: Exely → Reports → Undelivered bookings to PMS "
+                      "→ Action → Deliver to PMS automatically (after a failed/rejected sync).");
+    }
     if (!warnings.isEmpty()) {
         summary << QString();
         summary << tr("Warnings:");

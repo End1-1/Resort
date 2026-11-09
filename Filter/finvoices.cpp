@@ -54,6 +54,7 @@ void FInvoices::apply(WReportGrid *rg)
         where += " and r.f_vatmode=3 ";
     }
 
+    rg->fIncludes[paymentsField()] = ui->chPayments->isChecked();
     where +=  "order by r.f_endDate, r.f_room ";
     buildQuery(rg, where);
     QList<int> cols;
@@ -83,6 +84,11 @@ QCheckBox* FInvoices::chFreeRooming()
     return ui->chContainsEmptyRooming;
 }
 
+QString FInvoices::paymentsField()
+{
+    return QStringLiteral("coalesce(p.f_payments,'') as f_payments");
+}
+
 void FInvoices::openReport(bool free)
 {
     QList<int> widths;
@@ -95,6 +101,7 @@ void FInvoices::openReport(bool free)
            << 100
            << 100
            << 100
+           << 180
            ;
     QStringList fields;
     fields << "r.f_invoice"
@@ -105,7 +112,8 @@ void FInvoices::openReport(bool free)
            << "coalesce(d.amount,0) as f_debet"
            << "coalesce(b.amount,0) as f_balance"
            << "coalesce(f.f, 0) as f"
-           << "r.f_booking";
+           << "r.f_booking"
+           << paymentsField();
     QStringList titles;
     titles << tr("Number")
            << tr("Date")
@@ -115,7 +123,8 @@ void FInvoices::openReport(bool free)
            << tr("Credit")
            << tr("Balance")
            << tr("Free")
-           << tr("Booking");
+           << tr("Booking")
+           << tr("Payments");
     QMap<QString, bool> includes;
     includes["r.f_invoice"] = true;
     includes["r.f_endDate"] = true;
@@ -126,6 +135,7 @@ void FInvoices::openReport(bool free)
     includes["coalesce(b.amount,0) as f_balance"] = true;
     includes["coalesce(f.f, 0) as f"] = true;
     includes["r.f_booking"] = true;
+    includes[paymentsField()] = false;
     QStringList tables;
     tables << "f_reservation r"
            << "f_guests g"
@@ -133,9 +143,18 @@ void FInvoices::openReport(bool free)
            << "(select f_inv, sum(f_amountAmd) as amount from m_register where f_sign=-1 and f_finance=1 and f_canceled=0 group by 1) d"
            << "(select f_inv, sum(f_amountAmd*f_sign) as amount from m_register where f_canceled=0 and f_finance=1 group by 1) b"
            << QString("(select f_inv, count(f_id) as f from m_register where f_canceled=0 and f_finance=1 and f_itemCode in (%1) and f_amountAmd<1 group by 1) f")
-           .arg(fPreferences.getDb("rooming_list").toString());
+           .arg(fPreferences.getDb("rooming_list").toString())
+           << QString("(select t.f_inv, group_concat(t.f_name order by t.f_id separator ', ') as f_payments "
+                      "from (select m.f_inv, pm.f_id as f_id, %1 as f_name "
+                      "from m_register m "
+                      "inner join f_payment_type pm on pm.f_id=m.f_paymentMode "
+                      "where m.f_canceled=0 and m.f_finance=1 and m.f_sign=-1 and m.f_paymentMode>0 "
+                      "group by m.f_inv, pm.f_id, %2) t "
+                      "group by t.f_inv) p")
+           .arg("pm.f_" + def_lang, "pm.f_" + def_lang);
     QStringList joins;
     joins << "from"
+          << "left"
           << "left"
           << "left"
           << "left"
@@ -149,6 +168,7 @@ void FInvoices::openReport(bool free)
               << "d.f_inv=r.f_invoice"
               << "b.f_inv=r.f_invoice"
               << "f.f_inv=r.f_invoice"
+              << "p.f_inv=r.f_invoice"
               ;
     QString title = tr("Invoices");
     QString icon = ":/images/invoice.png";

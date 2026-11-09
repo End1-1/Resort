@@ -5,6 +5,7 @@
 #include <QJsonParseError>
 #include <QObject>
 #include <QSettings>
+#include <QtGlobal>
 
 ExcelyAppConfig ExcelyAppConfig::load()
 {
@@ -28,6 +29,16 @@ ExcelyAppConfig ExcelyAppConfig::load()
     }
 
     cfg.setRoomTypeMapJson(QString::fromUtf8(s.value(QStringLiteral("roomTypeMap")).toByteArray()));
+    cfg.chartEnabled = s.value(QStringLiteral("chartEnabled"), false).toBool();
+    cfg.autoUploadAvailability = s.value(QStringLiteral("autoUploadAvailability"), false).toBool();
+    cfg.autoAvailHorizonDays = s.value(QStringLiteral("autoAvailHorizonDays"), 365).toInt();
+    if (cfg.autoAvailHorizonDays < 1) {
+        cfg.autoAvailHorizonDays = 365;
+    }
+    if (cfg.autoAvailHorizonDays > 730) {
+        cfg.autoAvailHorizonDays = 730;
+    }
+    cfg.availSyncInvBlock = s.value(QStringLiteral("availSyncInvBlock")).toString().trimmed();
 
     s.endGroup();
     return cfg;
@@ -59,6 +70,11 @@ bool ExcelyAppConfig::save(QString *errorText) const
                    ? QStringLiteral("1.18")
                    : pms.protocolVersion.trimmed());
     s.setValue(QStringLiteral("roomTypeMap"), mapJson.toUtf8());
+    s.setValue(QStringLiteral("chartEnabled"), chartEnabled);
+    s.setValue(QStringLiteral("autoUploadAvailability"), autoUploadAvailability);
+    s.setValue(QStringLiteral("autoAvailHorizonDays"),
+               autoAvailHorizonDays < 1 ? 365 : qMin(730, autoAvailHorizonDays));
+    s.setValue(QStringLiteral("availSyncInvBlock"), availSyncInvBlock.trimmed());
     s.endGroup();
     s.sync();
     return true;

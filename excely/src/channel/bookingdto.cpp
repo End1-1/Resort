@@ -110,6 +110,7 @@ QJsonObject Booking::toJson() const
         r.insert(QStringLiteral("days"), rs.nights);
         r.insert(QStringLiteral("guest_count_men"), rs.adults);
         r.insert(QStringLiteral("guest_count_oth"), rs.children);
+        r.insert(QStringLiteral("guest_count_baby"), rs.babies);
         r.insert(QStringLiteral("total"), rs.amountAfterTax);
         r.insert(QStringLiteral("currency"), rs.currencyCode);
         roomsArr.append(r);

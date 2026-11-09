@@ -22,6 +22,7 @@
 #include "ptextrect.h"
 #include "pimage.h"
 #include <QInputDialog>
+#include <QMap>
 
 DlgGroupReservationFuck::DlgGroupReservationFuck(QWidget *parent) :
     BaseWidget(parent),
@@ -716,8 +717,10 @@ void DlgGroupReservationFuck::save()
             continue;
         }
         QString errorStr;
-        if (!WReservationRoomTab::check(ui->tblRoom->lineEdit(i, 1)->asInt(),
-                                        ui->tblRoom->dateEdit(i, 4)->date(), ui->tblRoom->dateEdit(i, 5)->date(), ui->tblRoom->toString(i, 0), errorStr)) {
+        fDD.startTransaction();
+        if (!WReservationRoomTab::checkLocked(fDD, ui->tblRoom->lineEdit(i, 1)->asInt(),
+                                              ui->tblRoom->dateEdit(i, 4)->date(), ui->tblRoom->dateEdit(i, 5)->date(), ui->tblRoom->toString(i, 0), errorStr)) {
+            fDD.rollback();
             err = true;
             ui->tblRoom->setItemWithValue(i, 17, "X");
             continue;
@@ -794,10 +797,17 @@ void DlgGroupReservationFuck::save()
         fDD[":f_pickup"] = 0;
         fDD[":f_lastEdit"] = WORKING_USERID;
         if (ui->tblRoom->toString(i, 0).isEmpty()) {
-            DoubleDatabase did;
-            did.open();
+            const QMap<QString, QVariant> savedBinds = fDD.fBindValues;
+            fDD.fBindValues.clear();
             QString rsId = uuidx(VAUCHER_RESERVATION_N);
-            did.insertId("f_reservation", rsId);
+            if (!fDD.insertId("f_reservation", rsId)) {
+                fDD.fBindValues = savedBinds;
+                fDD.rollback();
+                err = true;
+                ui->tblRoom->setItemWithValue(i, 17, "X");
+                continue;
+            }
+            fDD.fBindValues = savedBinds;
             ui->tblRoom->setItemWithValue(i, 0, rsId);
             fTrackControl->resetChanges();
             fTrackControl->fReservation = ui->tblRoom->toString(i, 0);
@@ -882,6 +892,15 @@ void DlgGroupReservationFuck::save()
         fDD[":f_room"] = ui->tblRoom->lineEdit(i, 1)->asInt();
         fDD[":f_inv"] = invId;
         fDD.exec("update m_register set f_room=:f_room where f_inv=:f_inv");
+        if (!fDD.commit()) {
+            fDD.rollback();
+            if (isNew) {
+                ui->tblRoom->setItemWithValue(i, 0, "");
+            }
+            err = true;
+            ui->tblRoom->setItemWithValue(i, 17, "X");
+            continue;
+        }
         BroadcastThread::cmdRefreshCache(cid_reservation, ui->tblRoom->toString(i, 0));
         BroadcastThread::cmdRefreshCache(cid_group_reservation, ui->leGroupCode->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, ui->tblRoom->toString(i, 0));

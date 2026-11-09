@@ -20,6 +20,9 @@ public:
     bool confirmDelivered(const Channel::Booking &booking,
                           const QString &pmsReservationId,
                           QString *errorText = nullptr) override;
+    bool confirmDeliveredRooms(const Channel::Booking &booking,
+                               const QVector<Channel::RoomConfirmation> &rooms,
+                               QString *errorText = nullptr) override;
     bool rejectDelivery(const Channel::Booking &booking,
                         const QString &reason,
                         QString *errorText = nullptr) override;

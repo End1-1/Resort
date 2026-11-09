@@ -48,9 +48,17 @@ struct RoomStay {
     QDateTime departure;
     int nights = 0;
     int adults = 0;
-    int children = 0;
+    int children = 0;   // Age > 2 (or child without Age) — needs a bed
+    int babies = 0;     // Age 0..2 — no bed, not counted toward occupancy beds
+    bool extraBed = false; // AdultExtraBed / ChildBandExtraBed; host also vs f_bedQty
     double amountAfterTax = 0.0;
     QString currencyCode;
+};
+
+/** One channel RoomStay saved as its own PMS reservation (NotifReport per-stay confirmation). */
+struct RoomConfirmation {
+    QString indexNumber;       // RoomStay@IndexNumber from ResRetrieveRS (empty = whole booking)
+    QString pmsReservationId;
 };
 
 struct Deposit {
@@ -73,6 +81,9 @@ struct Booking {
     QString externalReservationId; // UniqueID ID_Context=External
     QDateTime createDateTime;
     QDateTime lastModifyDateTime;
+    // Verbatim attribute values: NotifReport must echo LastModifyDateTime exactly (ms, offset)
+    QString createDateTimeRaw;
+    QString lastModifyDateTimeRaw;
 
     QString hotelCode;
     QString companyCode;           // BookingChannel CompanyName@Code

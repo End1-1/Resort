@@ -176,7 +176,10 @@ void WInvoice::loadInvoice(const QString &id)
     ui->leInvoice->setText(id);
     QString query = "select rs.f_invoice, rs.f_id, 'invoice date', rs.f_room, "
                     "r.f_short as f_room_short, concat(g.f_firstName, ' ', g.f_lastName) as f_guest_name, "
-                    "g.f_passport, rs.f_cardex, c.f_name, coalesce(rp.f_price, rs.f_pricePerNight), rs.f_remarks, rs.f_startDate, rs.f_endDate,"
+                    "g.f_passport, rs.f_cardex, c.f_name, "
+                    "case when rp.f_price is null then rs.f_pricePerNight "
+                    "else rp.f_price + coalesce(rs.f_extraBedFee, 0) + coalesce(rs.f_mealPrice, 0) end, "
+                    "rs.f_remarks, rs.f_startDate, rs.f_endDate,"
                     "rs.f_man+rs.f_woman+rs.f_child, gs.total, rs.f_vatMode, v.f_" + def_lang + ", "
                     "rs.f_checkInTime, 0 as i_f_prepaid, ucheckin.f_username, rs.f_cityLedger, cl.f_name, "
                     "ra.f_" + def_lang + ", nights.ntotal, rs.f_booking, r.f_donotdisturbe, rs.f_version "

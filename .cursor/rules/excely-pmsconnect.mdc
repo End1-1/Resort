@@ -1,0 +1,35 @@
+---
+description: Excely PMSConnect reusable module — keep portable; update agent hints when fixing
+globs: excely/**/*,Resort/excely*,Resort/wexcely*,Resort/wmaindesk.cpp,docs/excely*
+alwaysApply: false
+---
+
+# Excely / PMSConnect
+
+`excely/` is a **standalone, reusable** PMSConnect client for Exely. It will be used by SmartHotel **and** a future separate PMS. Prefer protocol/DTO changes inside `excely/`; keep DB/UI in the host app.
+
+## Before you edit
+
+Read **[excely/AGENTS.md](excely/AGENTS.md)** — architecture, SOAP map, and pitfalls (guest `PersonName`, all `ResGuests`, ISO3→nation map, title empty string, currency WARN 61, no resurrect of canceled bookings, `OTA_CancelRQ`, avail delta/auto push, avail vs prices).
+
+## When you fix or add behavior
+
+1. Implement in `excely/` if it is protocol/DTO/client logic.
+2. Host adapter only for persistence/UI (example: `Resort/excelyresortsink.*`).
+3. **Update `excely/AGENTS.md`** with the new pitfall or API note (required).
+4. Update `docs/excely-integration-ru.md` if operator-facing steps change.
+5. Do not add Widgets/SQL dependencies into the static lib.
+
+## Quick don’ts
+
+- Don’t `skipElement(PersonName)` when parsing guests.
+- Don’t import only the primary guest — link every `ResGuest`.
+- Don’t store Exely ISO-3166 alpha-3 country codes as local nationality without mapping (`f_alpha3` → `f_short`).
+- Don’t bind null `QString()` for titles used in SQL `CONCAT`.
+- Don’t revive locally canceled `f_chm` rows on Create/Modify re-pull.
+- NotifReport must echo `LastModifyDateTime` / `CreateDateTime` exactly as received (raw string), never reformatted.
+- Multi-room booking: confirm each RoomStay with its own PMS reservation id (`confirmDeliveredRooms`).
+- Don’t `confirm Reserved` for already-canceled local bookings — use `RequestDenied` or the queue never clears.
+- Don’t `RequestDenied` on transient import/DB errors — that clears Exely undelivered and stops updates until re-queued.
+- Don’t use `RequestDenied` for post-confirm cancel — use `CancelRQ`.
+- Don’t assign an import room from cache alone. Lock `f_room` `FOR UPDATE` in the same transaction as the overlap check and the insert. Read stay dates as strings (`DATE_FORMAT`); a prepared `QDate` on Qt 6 / MySQL is invalid and the room looks free.

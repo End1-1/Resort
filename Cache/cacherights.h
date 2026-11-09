@@ -157,6 +157,7 @@
 #define cr__fiscal_report 149
 #define cr__update_menu_from_frontdesk 150
 #define cr__rest_view_guests 152
+#define cr__excely_availability 153
 #define cr__1
 #define cr__1
 #define cr__1

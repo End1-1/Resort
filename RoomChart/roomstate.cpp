@@ -5,6 +5,7 @@
 #include "cachereservation.h"
 #include "paymentmode.h"
 #include "cacheroomstate.h"
+#include "wreservationroomtab.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -136,6 +137,13 @@ void RoomState::on_btnOk_clicked()
         QString invId = uuidx(VAUCHER_INVOICE_N);
         add += QString(" %1 - %2")
                .arg(ui->deStart->text(), ui->deEnd->text());
+        fDD.startTransaction();
+        QString lockErr;
+        if (!WReservationRoomTab::checkLocked(fDD, fRoom.fCode().toInt(), ui->deStart->date(), ui->deEnd->date(), QString(), lockErr)) {
+            fDD.rollback();
+            message_error(tr("Cannot save reservation") + "<br>" + lockErr);
+            return;
+        }
         fDD[":f_state"] = RESERVE_OUTOFROOM;
         fDD[":f_reserveState"] = CONFIRM_BLOCK;
         fDD[":f_room"] = fRoom.fCode();
@@ -151,9 +159,16 @@ void RoomState::on_btnOk_clicked()
         fDD[":f_invoice"] = invId;
         fDD[":f_remarks"] = ui->teRemarks->toPlainText();
         fId = uuidx("RS");
-        fDD.insertId("f_reservation", fId);
-        fDD[":f_id"] = fId;
-        fDD.update("f_reservation", where_id(ap(fId)));
+        if (!fDD.insertId("f_reservation", fId)) {
+            fDD.rollback();
+            message_error(fDD.fLastError);
+            return;
+        }
+        if (!fDD.commit()) {
+            fDD.rollback();
+            message_error(fDD.fLastError);
+            return;
+        }
         fTrackControl = new TrackControl(TRACK_RESERVATION);
         fTrackControl->insert("-=CREATED OUTOFORDER=-", QString("%1 - %2")
                               .arg(ui->deStart->text())

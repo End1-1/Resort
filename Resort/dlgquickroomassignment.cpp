@@ -59,22 +59,26 @@ void DlgQuickRoomAssignment::on_btnCancel_clicked()
 
 void DlgQuickRoomAssignment::on_btnSave_clicked()
 {
-    QString err = fError;
+    QString err;
     if (ui->lefrRoom->asInt() == 0) {
         err += tr("Room from is empty") + "<br>";
     }
     if (ui->letoRoom->asInt() == 0) {
         err += tr("Room to is empty") + "<br>";
     }
+    DoubleDatabase dd;
+    dd.startTransaction();
     fError.clear();
-    if (!WReservationRoomTab::check(ui->letoRoom->asInt(), ui->deEntry->date(), ui->deDeparture->date(), ui->leReserve->text(), fError)) {
+    if (!WReservationRoomTab::checkLocked(dd, ui->letoRoom->asInt(), ui->deEntry->date(), ui->deDeparture->date(), ui->leReserve->text(), fError)) {
+        dd.rollback();
         ui->lbto->setPixmap(QPixmap(":/images/remarks.png"));
+        err += fError;
     }
     if (!err.isEmpty()) {
+        dd.rollback();
         message_error(err);
         return;
     }
-    DoubleDatabase dd;
     dd[":f_state"] = ROOM_STATE_DIRTY;
     dd.update("f_room", where_id(ui->lefrRoom->asInt()));
     dd[":f_room"] = ui->letoRoom->asInt();
@@ -83,6 +87,11 @@ void DlgQuickRoomAssignment::on_btnSave_clicked()
     dd.update("f_room", where_id(ui->letoRoom->asInt()));
     dd[":f_room"] = ui->letoRoom->asInt();
     dd.update("m_register", where_id(ap(ui->leReserve->text())));
+    if (!dd.commit()) {
+        dd.rollback();
+        message_error(dd.fLastError);
+        return;
+    }
     BroadcastThread::cmdRefreshCache(cid_reservation, ui->leReserve->text());
     BroadcastThread::cmdRefreshCache(cid_room, ui->lefrRoom->text());
     BroadcastThread::cmdRefreshCache(cid_room, ui->letoRoom->text());

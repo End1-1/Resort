@@ -10,7 +10,6 @@ FExpectedSimple::FExpectedSimple(QWidget *parent) :
     fReportGrid->setupTabTextAndIcon(tr("Expected arrivals / simple"),
                                      ":/images/arrival.png");
     connect(ui->wd, SIGNAL(changed()), this, SLOT(refresh()));
-    ui->wd->setVisible(false);
 }
 
 FExpectedSimple::~FExpectedSimple()

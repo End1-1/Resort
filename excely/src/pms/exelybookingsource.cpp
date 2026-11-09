@@ -31,6 +31,13 @@ bool ExelyBookingSource::confirmDelivered(const Channel::Booking &booking,
     return m_client.confirmReserved(booking, pmsReservationId, errorText);
 }
 
+bool ExelyBookingSource::confirmDeliveredRooms(const Channel::Booking &booking,
+                                               const QVector<Channel::RoomConfirmation> &rooms,
+                                               QString *errorText)
+{
+    return m_client.confirmReservedRooms(booking, rooms, errorText);
+}
+
 bool ExelyBookingSource::rejectDelivery(const Channel::Booking &booking,
                                         const QString &reason,
                                         QString *errorText)

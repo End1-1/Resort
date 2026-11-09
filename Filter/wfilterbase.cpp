@@ -15,6 +15,22 @@ WFilterBase::~WFilterBase()
 {
 }
 
+void WFilterBase::logReportOpened(const QString &title)
+{
+    QString name = title;
+    if (name.isEmpty() && fReportGrid) {
+        name = fReportGrid->fGridClassName;
+    }
+    if (name.isEmpty()) {
+        name = reportTitle();
+    }
+    if (name.isEmpty() || name == tr("Report title")) {
+        name = QString::fromLatin1(metaObject()->className());
+    }
+    TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"), name,
+                         QString::fromLatin1(metaObject()->className()));
+}
+
 QString WFilterBase::reportTitle()
 {
     return tr("Report title");

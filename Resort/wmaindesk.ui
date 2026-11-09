@@ -1259,38 +1259,60 @@ reservation</string>
       </widget>
      </item>
      <item row="12" column="0" colspan="2">
-      <widget class="QToolButton" name="btnExcely">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>555</width>
-         <height>555</height>
-        </size>
-       </property>
-       <property name="sizeIncrement">
-        <size>
-         <width>1</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Excely</string>
-       </property>
-       <property name="icon">
-        <iconset resource="res.qrc">
-         <normaloff>:/images/excely.png</normaloff>:/images/excely.png</iconset>
-       </property>
-       <property name="toolButtonStyle">
-        <enum>Qt::ToolButtonStyle::ToolButtonTextUnderIcon</enum>
-       </property>
+      <widget class="QWidget" name="wExcelyBox">
+       <layout class="QVBoxLayout" name="verticalLayoutExcely">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QToolButton" name="btnExcely">
+          <property name="visible">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Excely</string>
+          </property>
+          <property name="icon">
+           <iconset resource="res.qrc">
+            <normaloff>:/images/excely.png</normaloff>:/images/excely.png</iconset>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonStyle::ToolButtonTextUnderIcon</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="chExcelyAuto">
+          <property name="visible">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Pull undelivered Excely bookings every 2 minutes</string>
+          </property>
+          <property name="text">
+           <string>Auto</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
     </layout>

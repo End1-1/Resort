@@ -5,10 +5,12 @@
 #include <QFileDialog>
 #include <QLayout>
 #include <QMenu>
+#include <QPointer>
 #include <QPrinter>
 #include <QPrinterInfo>
 #include <QScrollBar>
 #include <QShortcut>
+#include <QTimer>
 #include "dlgconfiggrid.h"
 #include "dlgfiltervalues.h"
 #include "dlghelp.h"
@@ -494,7 +496,23 @@ void WReportGrid::addFilterWidget(WFilterBase *f)
         fFilter->firstElement()->setFocus();
     }
     fFilter->installEventFilter(this);
-    //adjustSize();
+    // Defer: some filters call addFilterWidget before setupTabTextAndIcon
+    QPointer<WReportGrid> self(this);
+    QPointer<WFilterBase> filter(f);
+    QTimer::singleShot(0, this, [self, filter]() {
+        if (!self || !filter || self->fFilter != filter) {
+            return;
+        }
+        QString name = self->fGridClassName;
+        if (name.isEmpty()) {
+            name = filter->reportTitle();
+        }
+        if (name.isEmpty() || name == tr("Report title")) {
+            name = QString::fromLatin1(filter->metaObject()->className());
+        }
+        TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"), name,
+                             QString::fromLatin1(filter->metaObject()->className()));
+    });
 }
 
 void WReportGrid::keyPressEvent(QKeyEvent *event)

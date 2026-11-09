@@ -30,6 +30,9 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 UninstallDisplayIcon={app}\{#MyAppExeName}
+; Do not ask Resort to close itself: closeEvent shows "Confirm to close".
+CloseApplications=no
+RestartApplications=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -46,3 +49,25 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+procedure KillResort;
+var
+  ResultCode: Integer;
+begin
+  { 128 = not running. /T stops child processes that keep the DLLs locked. }
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /T /IM {#MyAppExeName}', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Sleep(400);
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  KillResort;
+  Result := '';
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssInstall then
+    KillResort;
+end;

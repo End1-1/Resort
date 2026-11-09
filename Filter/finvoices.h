@@ -23,6 +23,7 @@ public:
     virtual QString reportTitle();
     QCheckBox* chFreeRooming();
     static void openReport(bool free);
+    static QString paymentsField();
 
 private:
     Ui::FInvoices* ui;

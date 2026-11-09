@@ -123,7 +123,6 @@ void WQuickRoomAssignment::on_btnRefresh_clicked()
 
 void WQuickRoomAssignment::on_btnSave_clicked()
 {
-    DoubleDatabase dd;
     for (int i = 0; i < ui->tbl->rowCount(); i++) {
         if (ui->tbl->toString(i, 5) == "INVALID ROOM" && ui->tbl->lineEdit(i, 1)->asInt() != 0) {
             continue;
@@ -134,14 +133,20 @@ void WQuickRoomAssignment::on_btnSave_clicked()
         if (l->text() == ui->tbl->toString(i, 1)) {
             continue;
         }
-        if (WReservationRoomTab::check(l->asInt(), QDate::fromString(ui->tbl->toString(i, 2), def_date_format), QDate::fromString(ui->tbl->toString(i, 3), def_date_format), ui->tbl->toString(i, 0), err)) {
-            ui->tbl->setItemWithValue(i, 5, "OK");
-        } else {
+        DoubleDatabase rowDb;
+        rowDb.startTransaction();
+        if (!WReservationRoomTab::checkLocked(rowDb, l->asInt(), QDate::fromString(ui->tbl->toString(i, 2), def_date_format), QDate::fromString(ui->tbl->toString(i, 3), def_date_format), ui->tbl->toString(i, 0), err)) {
+            rowDb.rollback();
             ui->tbl->setItemWithValue(i, 5, err);
             continue;
         }
-        dd[":f_room"] = l->asInt();
-        dd.update("f_reservation", where_id(ap(id)));
+        rowDb[":f_room"] = l->asInt();
+        if (!rowDb.update("f_reservation", where_id(ap(id))) || !rowDb.commit()) {
+            rowDb.rollback();
+            ui->tbl->setItemWithValue(i, 5, rowDb.fLastError.isEmpty() ? err : rowDb.fLastError);
+            continue;
+        }
+        ui->tbl->setItemWithValue(i, 5, "OK");
         BroadcastThread::cmdRefreshCache(cid_reservation, id);
         BroadcastThread::cmdRefreshCache(cid_room, l->text());
         BroadcastThread::cmdRefreshCache(cid_red_reservation, id);

@@ -18,6 +18,7 @@
 #define cache_reserv_status 15
 #define cache_city_ledger 16
 
+class DoubleDatabase;
 class WReservation;
 
 namespace Ui
@@ -32,6 +33,9 @@ public:
     explicit WReservationRoomTab(QWidget *parent = nullptr);
     ~WReservationRoomTab();
     static bool check(int room, const QDate &start, const QDate &end, const QString &rid, QString &errorMsg);
+    // Caller already started a transaction on dd. Locks f_room FOR UPDATE, then rechecks overlap
+    // on that same connection. Restores dd.fBindValues. Room 0 is not locked.
+    static bool checkLocked(DoubleDatabase &dd, int room, const QDate &start, const QDate &end, const QString &rid, QString &errorMsg);
     void setBaseData(const QDate &date1, const QDate &date2, const QString &rcode);
     void setTimes(const QTime &arrival, const QTime &departure);
     void setCardex(const QString &code);

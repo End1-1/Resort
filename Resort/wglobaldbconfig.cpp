@@ -156,6 +156,10 @@ void WGlobalDbConfig::getApp()
         mapJson.isEmpty()
             ? QString()
             : QString::fromUtf8(QJsonDocument::fromJson(mapJson.toUtf8()).toJson(QJsonDocument::Indented)));
+    ui->chExcelyChart->setChecked(excely.chartEnabled);
+    ui->chExcelyAutoAvail->setChecked(excely.autoUploadAvailability);
+    ui->spExcelyAvailDays->setValue(excely.autoAvailHorizonDays);
+    ui->leExcelyAvailInvBlock->setText(excely.availSyncInvBlock);
 }
 
 void WGlobalDbConfig::getReportOptions()
@@ -288,6 +292,10 @@ WGlobalDbConfig::WGlobalDbConfig(QWidget *parent) :
     .addWidget(ui->leExcelyPassword, "Excely password")
     .addWidget(ui->leExcelyProtocolVersion, "Excely protocol version")
     .addWidget(ui->teExcelyRoomTypeMap, "Excely room type map")
+    .addWidget(ui->chExcelyChart, "Excely on room chart")
+    .addWidget(ui->chExcelyAutoAvail, "Excely auto upload availability")
+    .addWidget(ui->spExcelyAvailDays, "Excely avail push days")
+    .addWidget(ui->leExcelyAvailInvBlock, "Excely avail inv block")
     .addWidget(ui->chPrintVoucherAfterSave, "Print voucher after save")
     .addWidget(ui->lePenaltyList, "Penalty list")
     .addWidget(ui->leRoomMoveVoucher, "Room move voucher")
@@ -418,6 +426,10 @@ void WGlobalDbConfig::on_btnSave_clicked()
         }
         excely.setRoomTypeMapJson(mapText);
     }
+    excely.chartEnabled = ui->chExcelyChart->isChecked();
+    excely.autoUploadAvailability = ui->chExcelyAutoAvail->isChecked();
+    excely.autoAvailHorizonDays = ui->spExcelyAvailDays->value();
+    excely.availSyncInvBlock = ui->leExcelyAvailInvBlock->text().trimmed();
     QString mapErr;
     if (!excely.save(&mapErr)) {
         message_error(mapErr.isEmpty() ? tr("Failed to save Excely settings") : mapErr);

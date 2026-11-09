@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WExcelyAvailability</class>
+ <widget class="QWidget" name="WExcelyAvailability">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Excely availability</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gbConnection">
+     <property name="title">
+      <string>Connection</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayoutConn">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbHotel">
+        <property name="text">
+         <string>Hotel code</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="leHotelCode">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="btnRefreshCatalog">
+        <property name="text">
+         <string>Refresh catalog</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabMain">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabAvail">
+      <attribute name="title">
+       <string>Availability</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutAvail">
+       <item>
+        <widget class="QGroupBox" name="gbAvail">
+         <property name="title">
+          <string>Availability</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayoutAvail">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbRoomType">
+            <property name="text">
+             <string>Room type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QComboBox" name="cbRoomType"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbTarget">
+            <property name="text">
+             <string>Apply to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QRadioButton" name="rbRatePlan">
+            <property name="text">
+             <string>Rate plan</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" colspan="2">
+           <widget class="QRadioButton" name="rbInvBlock">
+            <property name="text">
+             <string>Inventory block</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbRatePlan">
+            <property name="text">
+             <string>Rate plan</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="3">
+           <widget class="QComboBox" name="cbRatePlan"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbInvBlock">
+            <property name="text">
+             <string>Inv block</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1" colspan="3">
+           <widget class="QComboBox" name="cbInvBlock">
+            <property name="editable">
+             <bool>true</bool>
+            </property>
+            <property name="insertPolicy">
+             <enum>QComboBox::InsertPolicy::NoInsert</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbStart">
+            <property name="text">
+             <string>Start</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QDateEdit" name="deStart">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd.MM.yyyy</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QLabel" name="lbEnd">
+            <property name="text">
+             <string>End</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QDateEdit" name="deEnd">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd.MM.yyyy</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbBookingLimit">
+            <property name="text">
+             <string>Available rooms</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="spBookingLimit">
+            <property name="maximum">
+             <number>9999</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="lbStatus">
+            <property name="text">
+             <string>Sales status</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QComboBox" name="cbStatus">
+            <item>
+             <property name="text">
+              <string>Open</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Close</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>(do not send)</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbMinLOS">
+            <property name="text">
+             <string>Min LOS</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QSpinBox" name="spMinLOS">
+            <property name="minimum">
+             <number>-1</number>
+            </property>
+            <property name="maximum">
+             <number>365</number>
+            </property>
+            <property name="value">
+             <number>-1</number>
+            </property>
+            <property name="specialValueText">
+             <string>(omit)</string>
+            </property>
+            <property name="toolTip">
+             <string>(omit)=do not send; 0=RemoveMinLOS; 1+=SetMinLOS days</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayoutAvailButtons">
+         <item>
+          <widget class="QPushButton" name="btnUpload">
+           <property name="text">
+            <string>Upload availability</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnResyncYear">
+           <property name="text">
+            <string>Resync avail. year</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnPushPmsDelta">
+           <property name="toolTip">
+            <string>Compute free rooms from PMS and send only changed dates</string>
+           </property>
+           <property name="text">
+            <string>Push PMS avail (delta)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnPushPmsYear">
+           <property name="toolTip">
+            <string>Push PMS availability for one year (delta only)</string>
+           </property>
+           <property name="text">
+            <string>Push PMS year (delta)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnPushPmsFull">
+           <property name="toolTip">
+            <string>Full resync: send PMS availability for one year for every date (ignores delta cache, resets baseline)</string>
+           </property>
+           <property name="text">
+            <string>Full resync from PMS (year)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerAvail">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacerAvail">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabPrices">
+      <attribute name="title">
+       <string>Prices (batch)</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutPrices">
+       <item>
+        <widget class="QGroupBox" name="gbPriceRow">
+         <property name="title">
+          <string>Add rate line</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayoutPriceRow">
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbPriceRoomType">
+            <property name="text">
+             <string>Room type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QComboBox" name="cbPriceRoomType"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="lbPriceRatePlan">
+            <property name="text">
+             <string>Rate plan</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="3">
+           <widget class="QComboBox" name="cbPriceRatePlan"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="lbPriceStart">
+            <property name="text">
+             <string>Start</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDateEdit" name="dePriceStart">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd.MM.yyyy</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="lbPriceEnd">
+            <property name="text">
+             <string>End</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QDateEdit" name="dePriceEnd">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+            <property name="displayFormat">
+             <string>dd.MM.yyyy</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="lbPriceAmount">
+            <property name="text">
+             <string>Price / night</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="dsPrice">
+            <property name="decimals">
+             <number>2</number>
+            </property>
+            <property name="maximum">
+             <double>99999999.990000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QLabel" name="lbCurrency">
+            <property name="text">
+             <string>Currency</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLineEdit" name="leCurrency">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>AMD</string>
+            </property>
+            <property name="placeholderText">
+             <string>AMD</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="lbPriceKind">
+            <property name="text">
+             <string>Price type</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="3">
+           <widget class="QComboBox" name="cbPriceKind"/>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="lbGuests">
+            <property name="text">
+             <string>Guests / Max extra</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="spGuests">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>20</number>
+            </property>
+            <property name="value">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="2">
+           <widget class="QLabel" name="lbAgeBucket">
+            <property name="text">
+             <string>Age bucket</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QSpinBox" name="spAgeBucket">
+            <property name="minimum">
+             <number>-1</number>
+            </property>
+            <property name="maximum">
+             <number>20</number>
+            </property>
+            <property name="specialValueText">
+             <string>(omit)</string>
+            </property>
+            <property name="value">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="lbMinAge">
+            <property name="text">
+             <string>Min age</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QSpinBox" name="spMinAge">
+            <property name="minimum">
+             <number>-1</number>
+            </property>
+            <property name="maximum">
+             <number>18</number>
+            </property>
+            <property name="specialValueText">
+             <string>(omit)</string>
+            </property>
+            <property name="value">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="lbMaxAge">
+            <property name="text">
+             <string>Max age</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QSpinBox" name="spMaxAge">
+            <property name="minimum">
+             <number>-1</number>
+            </property>
+            <property name="maximum">
+             <number>18</number>
+            </property>
+            <property name="specialValueText">
+             <string>(omit)</string>
+            </property>
+            <property name="value">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="4">
+           <widget class="QPushButton" name="btnAddPriceRow">
+            <property name="text">
+             <string>+ Add to table</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tblPrices">
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
+         </property>
+         <column>
+          <property name="text">
+           <string>Room type</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Rate plan</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Start</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>End</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Price</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Currency</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Type</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Detail</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayoutPriceButtons">
+         <item>
+          <widget class="QPushButton" name="btnRemovePriceRows">
+           <property name="text">
+            <string>Remove selected</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnClearPrices">
+           <property name="text">
+            <string>Clear table</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacerPrices">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnUploadPriceBatch">
+           <property name="toolTip">
+            <string>Send all table rows in one HotelRateAmountNotifRQ</string>
+           </property>
+           <property name="text">
+            <string>Upload all prices (1 request)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="lbPriceBatchHint">
+         <property name="styleSheet">
+          <string notr="true">color: gray;</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Collect rate lines with +, then upload once. Skips rate plans marked [prices locked].</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="teLog">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Status log</string>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>160</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

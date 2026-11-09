@@ -192,6 +192,7 @@ void DlgUserRights::setup(QList<QVariant>& values)
     .addWidget(ui->chTaxReport, QString::number(fGroupId) + ": " + "Fiscal report")
     .addWidget(ui->chInitRestaurantFromOffice, QString::number(fGroupId) + ": " + "Init restaurant dishes from external db")
     .addWidget(ui->chGuestArrivalDeparture, QString::number(fGroupId) + ": " + "Arrival departure very simple")
+    .addWidget(ui->chExcelyAvailability, QString::number(fGroupId) + ": " + "Excely availability")
     ;
     DoubleDatabase fDD;
     fDD[":f_group"] = fGroupId;

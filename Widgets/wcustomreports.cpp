@@ -4,6 +4,7 @@
 #include "ecomboboxcompleter.h"
 #include "ecombomonth.h"
 #include "edateedit.h"
+#include "trackcontrol.h"
 #include <QSpacerItem>
 
 WCustomReports::WCustomReports(QWidget *parent) :
@@ -56,6 +57,8 @@ WCustomReports::~WCustomReports()
 void WCustomReports::setup()
 {
     setupTabTextAndIcon(tr("Reports set"), ":/images/report.png");
+    TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                         tr("Reports set"), QStringLiteral("WCustomReports"));
 }
 
 void WCustomReports::on_btnShowMenu_clicked()
@@ -68,6 +71,9 @@ void WCustomReports::on_trMenu_clicked(const QModelIndex &index)
     if (index.data(Qt::UserRole).toInt() == 0) {
         return;
     }
+    TrackControl::insert(TRACK_REPORT, QStringLiteral("Open report"),
+                         index.data().toString(),
+                         QStringLiteral("WCustomReports:%1").arg(index.data(Qt::UserRole).toInt()));
     foreach (QWidget* w, fFilterWidgets) {
         ui->lFilter->removeWidget(w);
         delete w;

@@ -313,6 +313,8 @@ set(SOURCES_RESORT
     dwmaindeskhint.ui
     excelyappconfig.cpp
     excelyappconfig.h
+    excelyavailpusher.cpp
+    excelyavailpusher.h
     excelyresortsink.cpp
     excelyresortsink.h
     fnatbyperiod.cpp
@@ -383,6 +385,9 @@ set(SOURCES_RESORT
     wglobaldbconfig.cpp
     wglobaldbconfig.h
     wglobaldbconfig.ui
+    wexcelyavailability.cpp
+    wexcelyavailability.h
+    wexcelyavailability.ui
     wgroupreserverect.cpp
     wgroupreserverect.h
     wgroupreserverect.ui

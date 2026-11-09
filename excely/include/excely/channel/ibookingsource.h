@@ -37,6 +37,19 @@ public:
                                   const QString &pmsReservationId,
                                   QString *errorText = nullptr) = 0;
 
+    /**
+     * Acknowledge a booking saved as several PMS reservations (one per RoomStay).
+     * Default: whole booking under the first PMS id.
+     */
+    virtual bool confirmDeliveredRooms(const Booking &booking,
+                                       const QVector<RoomConfirmation> &rooms,
+                                       QString *errorText = nullptr)
+    {
+        return confirmDelivered(booking,
+                                rooms.isEmpty() ? QString() : rooms.first().pmsReservationId,
+                                errorText);
+    }
+
     /** Tell the channel the booking could not be created in PMS. */
     virtual bool rejectDelivery(const Booking &booking,
                                 const QString &reason,

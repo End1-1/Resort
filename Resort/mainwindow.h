@@ -169,6 +169,7 @@ private slots:
     void on_actionAvaiable_rooms_triggered();
     void on_actionRoom_inventory_2_triggered();
     void on_actionRoom_inventory_states_triggered();
+    void on_actionExcely_availability_triggered();
     void on_actionList_of_checkin_guests_triggered();
     void on_actionLenght_of_stay_triggered();
     void on_actionExport_reservations_triggered();

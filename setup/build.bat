@@ -14,5 +14,4 @@ if not %ERR%==0 (
 
 echo.
 echo Build finished successfully.
-pause
 exit /b 0

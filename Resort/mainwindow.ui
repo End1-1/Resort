@@ -155,6 +155,7 @@
     <addaction name="actionAccounts_2"/>
     <addaction name="actionRoom_inventory"/>
     <addaction name="actionRoom_inventory_states"/>
+    <addaction name="actionExcely_availability"/>
     <addaction name="actionFiscal_machines"/>
     <addaction name="actionImages"/>
    </widget>
@@ -1321,6 +1322,15 @@
    </property>
    <property name="text">
     <string>Room inventory states</string>
+   </property>
+  </action>
+  <action name="actionExcely_availability">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/configure.png</normaloff>:/images/configure.png</iconset>
+   </property>
+   <property name="text">
+    <string>Excely availability</string>
    </property>
   </action>
   <action name="actionList_of_checkin_guests">
